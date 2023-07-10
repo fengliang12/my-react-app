@@ -1,0 +1,136 @@
+import Taro from "@tarojs/taro";
+import config from "@/config/index";
+import axios, {
+  AxiosResponse,
+  AxiosRequestConfig,
+} from "@/src/plugins/cg-axios/index";
+
+const isH5 = process.env.TARO_ENV === "h5";
+// 创建axios实例
+const instance = axios.create({
+  baseURL: isH5 ? "http://localhost:10086/api" : config.basePathUrl,
+  timeout: 60000,
+});
+
+// axios实例添加request阻流器
+instance.interceptors.request.use((_config) => {
+  if (Taro.getStorageSync("token")) {
+    _config.headers.Authorization = Taro.getStorageSync("token");
+  }
+  return _config;
+});
+
+// axios实例添加response阻流器
+instance.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  (err: any) => {
+    console.log(err);
+    Taro.hideLoading();
+    // token失效
+    if (err.status === 400 && err.data.code === "401") {
+      return refreshToken(err.config);
+    }
+    // 网络异常
+    if (err.status === -1) {
+      if (isTokenApi(err.config)) {
+        return refreshToken(err.config);
+      } else {
+        return refreshRequest(err.config);
+      }
+    }
+    // 服务器异常
+    if (err.status >= 500 && err.status < 600) {
+      Taro.showToast({
+        icon: "none",
+        title: "系统繁忙,请稍后再试",
+        duration: 5000,
+      });
+    }
+    // 服务器自定义报错
+    if (err.status >= 400 && err.status < 500) {
+      console.log("服务器自定义错误");
+      if (config.errCodeList?.includes(err.data.code)) {
+        return Promise.resolve(err);
+      }
+      Taro.showModal({
+        content: err.data?.message,
+      });
+    }
+
+    return Promise.reject(err);
+  }
+);
+
+/** 刷新Token, 默认只刷新一次 */
+function refreshToken(params: AxiosRequestConfig) {
+  return Taro.login()
+    .then((res: any) => {
+      return Taro.request({
+        url: config.loginUrl + res.code,
+      });
+    })
+    .then(
+      (res: any) => {
+        Taro.setStorageSync("token", res.data.jwtString);
+        if (!isTokenApi(params)) {
+          return refreshRequest(params);
+        } else {
+          const response: AxiosResponse = {
+            data: res.data,
+            status: res.statusCode,
+            statusText: res.errMsg,
+            headers: res.header,
+            config: params,
+          };
+          return response;
+        }
+      },
+      (err: any) => {
+        Taro.showModal({
+          title: "网络异常",
+          content: err.errMsg,
+        });
+        return Promise.reject(err);
+      }
+    );
+}
+
+/** 重新发起请求 */
+function refreshRequest(_config: AxiosRequestConfig) {
+  return Taro.request({
+    url: _config.url!,
+    header: Object.assign({}, _config.headers, {
+      Authorization: Taro.getStorageSync("token"),
+    }),
+    data: _config.data,
+    method: _config.method as any,
+    timeout: 60000,
+  }).then(
+    (res: any) => {
+      const response: AxiosResponse = {
+        data: res.data,
+        status: res.statusCode,
+        statusText: res.errMsg,
+        headers: res.header,
+        config: _config,
+      };
+      return response;
+    },
+    (err: any) => {
+      Taro.showModal({
+        title: "网络异常",
+        content: err.errMsg,
+      });
+      return Promise.reject(err);
+    }
+  );
+}
+
+/** 判断是否是请求token接口 */
+function isTokenApi(request: AxiosRequestConfig) {
+  return request.url!.indexOf(config.loginUrl) !== -1;
+}
+
+export default instance;
