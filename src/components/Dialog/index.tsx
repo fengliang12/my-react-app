@@ -1,10 +1,11 @@
-import React, { CSSProperties } from "react";
-import { View, Image } from "@tarojs/components";
-import { T17 } from "@/assets/image/index";
-import classNames from "classnames";
-import { useMemoizedFn } from "ahooks";
-
 import "./index.less";
+
+import { Image, View } from "@tarojs/components";
+import { useMemoizedFn } from "ahooks";
+import classNames from "classnames";
+import React, { CSSProperties } from "react";
+
+import { T17 } from "@/assets/image/index";
 
 type DialogProps = {
   show: boolean;

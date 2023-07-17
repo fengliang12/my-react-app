@@ -15,6 +15,13 @@
           "query": "code=test0428",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/bind/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
