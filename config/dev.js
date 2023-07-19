@@ -2,14 +2,14 @@ module.exports = {
   env: {
     NODE_ENV: '"development"',
   },
-  plugins: ['@tarojs/plugin-react-devtools'],
+  // plugins: ['@tarojs/plugin-react-devtools'],
   defineConstants: {},
   mini: {
-    webpackChain: (chain, webpack) => {
+    webpackChain: (chain) => {
       chain.merge({
         plugin: {
           install: {
-            plugin: require('terser-webpack-plugin'),
+            plugin: require("terser-webpack-plugin"),
             args: [
               {
                 terserOptions: {
@@ -22,7 +22,7 @@ module.exports = {
             ],
           },
         },
-      })
+      });
     },
   },
   h5: {},

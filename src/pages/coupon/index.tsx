@@ -1,6 +1,6 @@
 import "./index.less";
 
-import { ScrollView, Text, View } from "@tarojs/components";
+import { ScrollView, View } from "@tarojs/components";
 import { useMemoizedFn } from "ahooks";
 import { useRef, useState } from "react";
 
@@ -71,16 +71,22 @@ const Index = () => {
                     </View>
                     <View className="gift-item-right vhCenter flex-col">
                       <View className="text-36">先锋礼遇</View>
-                      <View className="text-18">2023.10.1-2023.12.15</View>
+                      <View className="text-18 my-10">
+                        2023.10.1-2023.12.15
+                      </View>
                       <View className="text-24">查看详情 v</View>
                     </View>
                   </View>
                   <View className="gift-detail">
-                    <View>1 卡券详情：腮红试色卡片1片及拉古纳试色卡1片 </View>
-                    <View>
+                    <View className="text-left">
+                      1 卡券详情：腮红试色卡片1片及拉古纳试色卡1片{" "}
+                    </View>
+                    <View className="text-left">
                       2 凭此卡券在有效期内至NARS线下专柜 即可免费领取礼遇
                     </View>
-                    <View>3 此卡券逾期失效，不予补发</View>
+                    <View className="text-left">
+                      3 此卡券逾期失效，不予补发
+                    </View>
                     <View className="qr-code bg-white">
                       <CQRCodeCustom
                         text="11111111111111"

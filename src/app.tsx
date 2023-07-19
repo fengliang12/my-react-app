@@ -1,5 +1,5 @@
 import "./app.less";
-import "./assets/scss/common.css";
+import "windi.css";
 
 import Taro from "@tarojs/taro";
 import { omit } from "lodash-es";

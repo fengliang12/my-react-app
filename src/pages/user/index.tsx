@@ -1,16 +1,15 @@
-import Layout from "@/src/components/Layout";
-import config from "@/config/index";
-import Page from "@/components/Page";
+import "./index.less";
+
 import Taro from "@tarojs/taro";
 import { useAsyncEffect } from "ahooks";
 
-import "./index.less";
-
+import Page from "@/components/Page";
+import config from "@/config/index";
+import Layout from "@/src/components/Layout";
 
 const app = Taro.getApp();
 
 const Index = () => {
-
   useAsyncEffect(async () => {
     await app.init();
   }, []);
