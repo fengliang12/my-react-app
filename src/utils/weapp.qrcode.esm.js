@@ -1,4 +1,5 @@
 /**
+ * https://github.com/yingye/weapp-qrcode#readme
  * weapp.qrcode.js v1.1.2 (undefined)
  */
 
@@ -146,7 +147,7 @@ function QRCode(t, e) {
           (this.dataCache = QRCode.createData(
             this.typeNumber,
             this.errorCorrectLevel,
-            this.dataList
+            this.dataList,
           )),
         this.mapData(this.dataCache, e);
     },
@@ -289,7 +290,7 @@ function QRCode(t, e) {
     for (i = 0; i < o.length; i++) s += o[i].dataCount;
     if (n.getLengthInBits() > 8 * s)
       throw new Error(
-        "code length overflow. (" + n.getLengthInBits() + ">" + 8 * s + ")"
+        "code length overflow. (" + n.getLengthInBits() + ">" + 8 * s + ")",
       );
     for (
       n.getLengthInBits() + 4 <= 8 * s && n.put(0, 4);
@@ -617,7 +618,7 @@ function drawQrcode(t, e) {
         foreground: "#000000",
         image: { imageResource: "", width: 80, height: 80, round: !0 },
       },
-      t
+      t,
     )).canvasId || t.canvas)
   ) {
     if ((t.paddingColor || (t.paddingColor = t.background), e)) {
@@ -657,7 +658,7 @@ function drawQrcode(t, e) {
                 Math.round(l * a) + t.padding,
                 Math.round(u * s) + t.padding,
                 h,
-                f
+                f,
               );
             }
           if (t.image.imageResource) {
@@ -686,7 +687,7 @@ function drawQrcode(t, e) {
             } else n.drawImage(t.image.imageResource, a, s, e, o), n.restore();
           }
           return n;
-        })()
+        })(),
       );
     });
   }
@@ -707,7 +708,7 @@ function drawQrcode(t, e) {
     )
       for (var o = 0; o < t.getLength(); o++)
         e[r + o] ^= QRMath.gexp(
-          QRMath.glog(this.get(r)) + QRMath.glog(t.get(o))
+          QRMath.glog(this.get(r)) + QRMath.glog(t.get(o)),
         );
     return new QRPolynomial(e, 0);
   },
@@ -892,7 +893,7 @@ function drawQrcode(t, e) {
     var r = QRRSBlock.getRsBlockTable(t, e);
     if (void 0 == r)
       throw new Error(
-        "bad rs block @ typeNumber:" + t + "/errorCorrectLevel:" + e
+        "bad rs block @ typeNumber:" + t + "/errorCorrectLevel:" + e,
       );
     for (var o = r.length / 3, n = new Array(), i = 0; i < o; i++)
       for (

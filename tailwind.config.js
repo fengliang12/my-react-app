@@ -80,7 +80,8 @@ module.exports = {
         secondary: "#ffed4a",
         danger: "#3490dc",
         grayBtn: "#1a1a1a",
-        grayBg: "#2f3031",
+        grayBg: "#6C6C6C",
+        black2: "#212121",
       }),
       backgroundImage: {
         "member-day-bg":

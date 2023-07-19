@@ -15,6 +15,13 @@ export default {
     navigationStyle: "custom",
     backgroundColor: "#ffffff",
   },
+  subpackages: [
+    {
+      root: "subPages/redeem",
+      name: "redeem",
+      pages: ["history/index", "orderList/index"],
+    },
+  ],
   tabBar: {
     backgroundColor: "#fff",
     borderStyle: "white",

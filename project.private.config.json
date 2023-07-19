@@ -17,15 +17,29 @@
           "scene": null
         },
         {
-          "name": "",
+          "name": "会员注册",
           "pathName": "pages/bind/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "",
+          "name": "卡券中心",
           "pathName": "pages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "积分历史",
+          "pathName": "subPages/redeem/history/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "订单列表",
+          "pathName": "subPages/redeem/orderList/index",
           "query": "",
           "launchMode": "default",
           "scene": null

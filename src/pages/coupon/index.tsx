@@ -14,6 +14,7 @@ import { textData } from "./testData";
 const Index = () => {
   const activeIndex = useRef({ index: 0 });
   const [couponList, setCouponList] = useState<any>(textData);
+  const [indexList, setIndexList] = useState<number[]>([]);
   const tabList = [
     { title: "待使用", index: 0, state: 3 },
     { title: "已使用", index: 1, state: 0 },
@@ -58,7 +59,7 @@ const Index = () => {
       <ScrollView className="scroll_view" scrollY>
         {couponList?.length > 0 ? (
           <View className="gifts">
-            {couponList?.map((item) => {
+            {couponList?.map((item, index) => {
               return (
                 <View className="gift-item" key={item.id}>
                   <View className="gift-top">
@@ -74,29 +75,42 @@ const Index = () => {
                       <View className="text-18 my-10">
                         2023.10.1-2023.12.15
                       </View>
-                      <View className="text-24">查看详情 v</View>
+                      <View
+                        className="text-24"
+                        onClick={() => {
+                          let i = indexList.findIndex((item) => item === index);
+                          i === -1
+                            ? indexList.push(index)
+                            : indexList.splice(i, 1);
+                          setIndexList([...indexList]);
+                        }}
+                      >
+                        查看详情 v
+                      </View>
                     </View>
                   </View>
-                  <View className="gift-detail">
-                    <View className="text-left">
-                      1 卡券详情：腮红试色卡片1片及拉古纳试色卡1片{" "}
+                  {indexList.includes(index) && (
+                    <View className="gift-detail">
+                      <View className="text-left">
+                        1 卡券详情：腮红试色卡片1片及拉古纳试色卡1片{" "}
+                      </View>
+                      <View className="text-left">
+                        2 凭此卡券在有效期内至NARS线下专柜 即可免费领取礼遇
+                      </View>
+                      <View className="text-left">
+                        3 此卡券逾期失效，不予补发
+                      </View>
+                      <View className="qr-code bg-white">
+                        <CQRCodeCustom
+                          text="11111111111111"
+                          width={250}
+                          height={250}
+                          padding={10}
+                          background="#FFFFFF"
+                        ></CQRCodeCustom>
+                      </View>
                     </View>
-                    <View className="text-left">
-                      2 凭此卡券在有效期内至NARS线下专柜 即可免费领取礼遇
-                    </View>
-                    <View className="text-left">
-                      3 此卡券逾期失效，不予补发
-                    </View>
-                    <View className="qr-code bg-white">
-                      <CQRCodeCustom
-                        text="11111111111111"
-                        width={250}
-                        height={250}
-                        padding={10}
-                        background="#FFFFFF"
-                      ></CQRCodeCustom>
-                    </View>
-                  </View>
+                  )}
                 </View>
               );
             })}
