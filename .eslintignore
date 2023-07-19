@@ -1,2 +1,3 @@
 src/components/Layout/*
+src/components/Common/CPainter/painter/*
 src/utils/weapp.qrcode.esm.js

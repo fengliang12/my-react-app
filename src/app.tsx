@@ -12,6 +12,8 @@ import config from "@/config/index";
 import { SET_USER } from "@/store/constants/index";
 import configStore from "@/store/index";
 
+import updateManager from "./utils/updateManager";
+
 layout.init({
   storeCode: config.storeCode,
   baseUrl: config.basePathUrl,
@@ -180,6 +182,7 @@ class App extends Component<any> {
     },
   };
   async onLaunch() {
+    updateManager();
     this.taroGlobalData.globalData.systemInfo = Taro.getSystemInfoSync();
     this.taroGlobalData.init();
   }
