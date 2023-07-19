@@ -48,7 +48,7 @@ const MultiplePicker: React.FC<T_Props> = (props) => {
       let tempList = tempHandleData;
       for (let i = 0; i < customKeyList.length; i++) {
         let index = tempList.findIndex(
-          (item: any) => item[label] === elem[customKeyList[i]]
+          (item: any) => item[label] === elem[customKeyList[i]],
         );
         if (index !== -1) {
           tempList = tempList[index][children];

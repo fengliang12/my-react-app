@@ -1,8 +1,9 @@
 import Taro from "@tarojs/taro";
+
 import config from "@/config/index";
 import axios, {
-  AxiosResponse,
   AxiosRequestConfig,
+  AxiosResponse,
 } from "@/src/plugins/cg-axios/index";
 
 const isH5 = process.env.TARO_ENV === "h5";
@@ -54,13 +55,13 @@ instance.interceptors.response.use(
       if (config.errCodeList?.includes(err.data.code)) {
         return Promise.resolve(err);
       }
-      Taro.showModal({
-        content: err.data?.message,
-      });
+      // Taro.showModal({
+      //   content: err.data?.message,
+      // });
     }
 
     return Promise.reject(err);
-  }
+  },
 );
 
 /** 刷新Token, 默认只刷新一次 */
@@ -93,7 +94,7 @@ function refreshToken(params: AxiosRequestConfig) {
           content: err.errMsg,
         });
         return Promise.reject(err);
-      }
+      },
     );
 }
 
@@ -124,7 +125,7 @@ function refreshRequest(_config: AxiosRequestConfig) {
         content: err.errMsg,
       });
       return Promise.reject(err);
-    }
+    },
   );
 }
 

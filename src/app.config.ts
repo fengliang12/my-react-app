@@ -4,7 +4,8 @@ export default {
     "pages/h5/index",
     "pages/user/index",
     "pages/activity/index",
-    "pages/bind/index"
+    "pages/bind/index",
+    "pages/coupon/index",
   ],
   window: {
     backgroundTextStyle: "light",
@@ -12,7 +13,7 @@ export default {
     navigationBarTitleText: "NARS会员中心",
     navigationBarTextStyle: "black",
     navigationStyle: "custom",
-    backgroundColor: "#ffffff"
+    backgroundColor: "#ffffff",
   },
   tabBar: {
     backgroundColor: "#fff",

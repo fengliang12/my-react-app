@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require("path");
 
 const config = {
   projectName: "mini-ec",
@@ -12,24 +12,25 @@ const config = {
   sourceRoot: "src",
   outputRoot: "dist",
   alias: {
-    '@/src': path.resolve(__dirname, '..', 'src'),
-    '@/api': path.resolve(__dirname, '..', 'src/api'),
-    '@/components': path.resolve(__dirname, '..', 'src/components'),
-    '@/utils': path.resolve(__dirname, '..', 'src/utils'),
-    '@/assets': path.resolve(__dirname, '..', 'src/assets'),
-    '@/config': path.resolve(__dirname, '..', 'src/config'),
-    '@/store': path.resolve(__dirname, '..', 'src/store')
+    src: path.resolve(__dirname, "..", "src"),
+    "@/src": path.resolve(__dirname, "..", "src"),
+    "@/api": path.resolve(__dirname, "..", "src/api"),
+    "@/components": path.resolve(__dirname, "..", "src/components"),
+    "@/utils": path.resolve(__dirname, "..", "src/utils"),
+    "@/assets": path.resolve(__dirname, "..", "src/assets"),
+    "@/config": path.resolve(__dirname, "..", "src/config"),
+    "@/store": path.resolve(__dirname, "..", "src/store"),
   },
-  plugins: ['taro-plugin-compiler-optimization'],
+  plugins: ["taro-plugin-compiler-optimization"],
   defineConstants: {},
   copy: {
     patterns: [],
     options: {},
   },
   framework: "react",
-  compiler: 'webpack5',
+  compiler: "webpack5",
   cache: {
-    enable: false // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
+    enable: false, // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
   },
   mini: {
     postcss: {
@@ -53,7 +54,7 @@ const config = {
     },
     miniCssExtractPluginOption: {
       //忽略css文件引入顺序
-      ignoreOrder: true
+      ignoreOrder: true,
     },
   },
   h5: {

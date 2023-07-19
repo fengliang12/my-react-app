@@ -1,14 +1,16 @@
+import "./app.less";
+import "./assets/scss/common.css";
+
 import Taro from "@tarojs/taro";
+import { omit } from "lodash-es";
 import { Component } from "react";
 import { Provider } from "react-redux";
-import { omit } from 'lodash-es'
-import api from "@/api/index";
-import config from "@/config/index";
-import { layout } from "@/components/Layout/config/index";
-import configStore from "@/store/index";
-import { SET_USER } from "@/store/constants/index";
 
-import "./app.less";
+import api from "@/api/index";
+import { layout } from "@/components/Layout/config/index";
+import config from "@/config/index";
+import { SET_USER } from "@/store/constants/index";
+import configStore from "@/store/index";
 
 layout.init({
   storeCode: config.storeCode,
@@ -29,10 +31,12 @@ class App extends Component<any> {
     init: (refresh) => {
       if (this.initPromise === null || refresh) {
         const { environment } = Taro.getSystemInfoSync();
-        const isQyWx = environment === 'wxwork'
-        let loginFn: any = isQyWx ? Taro['qy'].login : Taro.login
+        const isQyWx = environment === "wxwork";
+        let loginFn: any = isQyWx ? Taro["qy"].login : Taro.login;
         this.initPromise = loginFn()
-          .then(({ code }) => isQyWx ? api.common.loginQY(code) : api.common.login(code))
+          .then(({ code }) =>
+            isQyWx ? api.common.loginQY(code) : api.common.login(code),
+          )
           .then(async ({ data }) => {
             Taro.setStorageSync("token", data.jwtString);
             // 视图数据放Store
@@ -42,11 +46,11 @@ class App extends Component<any> {
                 isMember: data.customerBasicInfo.member,
                 nickName: data.customerBasicInfo.nickName,
                 avatarUrl: data.customerBasicInfo.avatarUrl,
-                gender: data.customerBasicInfo.gender === 1 ? '男' : '女'
-              }
-            })
+                gender: data.customerBasicInfo.gender === 1 ? "男" : "女",
+              },
+            });
             // 非视图数据放globalData
-            this.taroGlobalData.globalData.userInfo = omit(data, ['jwtString']);
+            this.taroGlobalData.globalData.userInfo = omit(data, ["jwtString"]);
           })
           .catch(() => {
             this.initPromise = null;
@@ -165,7 +169,7 @@ class App extends Component<any> {
         // 默认跳转首页
         if (
           err.errMsg.indexOf(
-            "navigateBack:fail cannot navigate back at first page"
+            "navigateBack:fail cannot navigate back at first page",
           ) !== -1
         ) {
           return await Taro.switchTab({

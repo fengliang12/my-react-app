@@ -1,24 +1,21 @@
 import "./index.less";
 
-import {
-  Button,
-  Image,
-  Input,
-  Picker,
-  Text,
-  Textarea,
-  View,
-} from "@tarojs/components";
+import { Image, Input, Picker, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useAsyncEffect, useMemoizedFn, useSetState } from "ahooks";
 import dayjs from "dayjs";
 import { omit } from "lodash-es";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { Bg2, Ck1, Ck2, P1, P2 } from "@/assets/image/index";
+import { P1, P2 } from "@/assets/image/index";
 import Page from "@/components/Page";
-import config from "@/config/index";
 import api from "@/src/api";
+import Avatar from "@/src/components/Common/Avatar";
+import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
+import MultiplePicker from "@/src/components/Common/MultiplePicker";
+
+import { counterList } from "./testData";
 
 const app = Taro.getApp();
 
@@ -26,6 +23,7 @@ const genderArr = ["女", "男"];
 
 const Index = () => {
   const isMember = useSelector((state: Store.States) => state.user.isMember);
+  const [selectCounter, setSelectCounter] = useState<any>();
   const [user, setUser] = useSetState<any>({
     nickName: "",
     birthDate: "",
@@ -33,45 +31,20 @@ const Index = () => {
     gender: "",
     mobile: "",
     avatarUrl: "",
-    concealUrl: "/pages/bind/index",
-    ck1: false,
-    ck2: false,
     shopType: "",
+    cityCode: "",
+    storeCode: "",
+    address: "",
   });
   useAsyncEffect(async () => {
     await app.init();
   }, []);
 
-  const getPhoneNumber = useMemoizedFn(async (e) => {
-    const { errMsg, code, encryptedData, iv } = e.detail;
-    if (errMsg === "getPhoneNumber:ok") {
-      const { data, status } = await api.user.decodePhoneNumber(
-        {
-          encryptedData,
-          iv,
-          code,
-        },
-        {
-          isCreateUser: false,
-        },
-      );
-      if (status === 200) {
-        setUser({
-          mobile: data,
-        });
-      }
-    }
-  });
-  const uploadAvatarUrl = useMemoizedFn(async () => {
-    const { data } = await api.common.upLoadFile({ filePath: user.avatarUrl });
-    return config.cosImgPrefix + data;
-  });
-  const toOther = useMemoizedFn((e, code) => {
-    e.stopPropagation?.();
-    app.to(`/pages/text/index?code=${code}`);
-  });
+  /**
+   * 提交注册
+   */
   const submit = useMemoizedFn(async () => {
-    const { nickName, birthDate, avatarUrl, mobile, gender, ck1, ck2 } = user;
+    const { nickName, birthDate, avatarUrl, mobile, gender } = user;
     if (!nickName) {
       return Taro.showToast({ title: "请输入姓名", icon: "none" });
     }
@@ -84,22 +57,19 @@ const Index = () => {
     if (!gender) {
       return Taro.showToast({ title: "请选择性别", icon: "none" });
     }
-    if (!ck1) {
-      return Taro.showToast({ title: "请同意会员章程", icon: "none" });
-    }
-    if (!ck2) {
-      return Taro.showToast({ title: "请同意个人信息处理规则", icon: "none" });
-    }
+
     let newAvatarUrl = avatarUrl;
-    if (newAvatarUrl && newAvatarUrl.indexOf(config.cosImgPrefix) === -1) {
-      newAvatarUrl = await uploadAvatarUrl();
-    }
+
     if (!isMember) {
       createMember(newAvatarUrl);
     } else {
       updateMember(newAvatarUrl);
     }
   });
+
+  /**
+   * 创建会员
+   */
   const createMember = useMemoizedFn(async (newAvatarUrl) => {
     const { status } = await api.user.createMember({
       ...user,
@@ -122,6 +92,10 @@ const Index = () => {
       }, 2000);
     }
   });
+
+  /**
+   * 更新会员
+   */
   const updateMember = useMemoizedFn(async (newAvatarUrl) => {
     const { status } = await api.user.updateMember({
       ...omit(user, ["mobile"]),
@@ -180,15 +154,13 @@ const Index = () => {
                 className="img"
                 mode="widthFix"
               />
-              <Button
-                className="btn-no btn"
-                openType="chooseAvatar"
-                onChooseAvatar={(e) =>
+              <Avatar
+                callback={(avatarUrl) =>
                   setUser({
-                    avatarUrl: e.detail.avatarUrl,
+                    avatarUrl: avatarUrl,
                   })
                 }
-              ></Button>
+              ></Avatar>
               <View>上传头像</View>
             </View>
             <View className="item">
@@ -214,11 +186,13 @@ const Index = () => {
                 {!user.mobile && <View className="mobile-auth">一键获取</View>}
                 {user.mobile}
                 {!isMember && (
-                  <Button
-                    className="btn-no btn-mobile"
-                    openType="getPhoneNumber"
-                    onGetPhoneNumber={getPhoneNumber}
-                  />
+                  <GetPhoneNumber
+                    callback={(mobile) =>
+                      setUser({
+                        mobile: mobile,
+                      })
+                    }
+                  ></GetPhoneNumber>
                 )}
               </View>
             </View>
@@ -265,21 +239,23 @@ const Index = () => {
             <View className="item">
               <View className="left">所在城市*</View>
               <View className="right">
-                <Picker
-                  mode="selector"
-                  range={genderArr}
-                  onChange={(e) => {
-                    setUser({ gender: genderArr[e.detail.value] });
+                <MultiplePicker
+                  cascadeCount={2}
+                  isCascadeData={false}
+                  pickerData={counterList}
+                  customKeyList={["province", "city"]}
+                  callback={(counter) => {
+                    setSelectCounter(counter);
+                    setUser({ counterId: counter.code });
                   }}
                 >
                   <View className="birthDate">
-                    {!user.gender && (
-                      <View className="ipt-placeholder">请选择</View>
-                    )}
-                    {user.gender}
+                    <View className="ipt-placeholder">
+                      {selectCounter ? selectCounter.city : "请选择"}
+                    </View>
                     <Image src={P2} mode="widthFix" className="btm" />
                   </View>
-                </Picker>
+                </MultiplePicker>
               </View>
             </View>
             <View className="counter-tip">
@@ -300,7 +276,6 @@ const Index = () => {
                       <View className="ipt-placeholder">请选择</View>
                     )}
                     {user.gender}
-                    <Image src={P2} mode="widthFix" className="btm" />
                   </View>
                 </Picker>
               </View>
@@ -308,14 +283,14 @@ const Index = () => {
             <View className="item">
               <View className="left">地址信息</View>
               <View className="right">
-                <Textarea
-                  className="textarea-input"
+                <Input
+                  className="right-input"
                   placeholder="请输入"
                   placeholderClass="ipt-placeholder"
-                  value={user.nickName}
+                  value={user.address}
                   onInput={(e) =>
                     setUser({
-                      nickName: e.detail.value,
+                      address: e.detail.value,
                     })
                   }
                 />

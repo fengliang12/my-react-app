@@ -17,7 +17,7 @@ interface T_props extends ViewProps {
 const HeaderTabbar: React.FC<Partial<T_props>> = (props) => {
   let { tabList, activeIndex, tabClick } = props;
   return (
-        <View className="header_tab" {...props}>
+    <View className="header_tab" {...props}>
       {tabList?.length &&
         tabList.map((item: any) => {
           return (

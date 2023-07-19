@@ -1,32 +1,38 @@
-
-
+import config from "../../config/index";
 import http from "../axios";
-import config from "../../config/index"
 
 const { storeCode } = config;
 
-const login = (code) => http.get(`/sp-portal/store/${storeCode}/wechat/login/${code}`)
+const login = (code) =>
+  http.get(`/sp-portal/store/${storeCode}/wechat/login/${code}`);
 
-const loginQY = (code) => http.get(`/counter-portal/store/${storeCode}/enterpriseWeChat/login/credential/${code}`)
+const loginQY = (code) =>
+  http.get(
+    `/counter-portal/store/${storeCode}/enterpriseWeChat/login/credential/${code}`,
+  );
 
-const sendSMS = (path) => http.post(`/sp-portal/store/${storeCode}/wechat/sendSmsCode2`, path.mobile)
+const sendSMS = (path) =>
+  http.post(`/sp-portal/store/${storeCode}/wechat/sendSmsCode2`, path.mobile);
 
-const findKvDataByType = (path) => http.post(`/sp-portal/store/${storeCode}/config/kvdata/findType/${path.type}`)
+const findKvDataByType = (path) =>
+  http.post(
+    `/sp-portal/store/${storeCode}/config/kvdata/findType/${path.type}`,
+  );
 
-const upLoadFile = (data) => http.upload(`/sp-portal/store/${storeCode}/upload_file`, { filePath: data.filePath })
-
+const upLoadFile = (data) =>
+  http.upload(`/sp-portal/store/${storeCode}/upload_file`, {
+    filePath: data.filePath,
+  });
 
 export default {
-    /** 授权获取用户信息和token */
-    login,
-    /** 授权获取用户信息和token-企业微信 */
-    loginQY,
-    /** 发送短信接口 */
-    sendSMS,
-    /** 查询配置信息 */
-    findKvDataByType,
-    /** 文件上传地址(CDN)  */
-    upLoadFile,
-}
-
-
+  /** 授权获取用户信息和token */
+  login,
+  /** 授权获取用户信息和token-企业微信 */
+  loginQY,
+  /** 发送短信接口 */
+  sendSMS,
+  /** 查询配置信息 */
+  findKvDataByType,
+  /** 文件上传地址(CDN)  */
+  upLoadFile,
+};

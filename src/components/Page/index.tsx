@@ -1,12 +1,14 @@
-import React from "react";
-import { useMemoizedFn } from "ahooks";
+import "./index.less";
+
 import { Button, View } from "@tarojs/components";
-import Nav, { NavType } from "../Nav";
 import Taro from "@tarojs/taro";
+import { useMemoizedFn } from "ahooks";
+import React from "react";
+import { useSelector } from "react-redux";
+
 import api from "@/src/api";
 
-import "./index.less";
-import { useSelector } from "react-redux";
+import Nav, { NavType } from "../Nav";
 
 type PageType = {
   /** 是否需要注册 */
@@ -29,7 +31,7 @@ const Page: React.FC<PageType> = ({
   isNeedNav = true,
   children,
 }) => {
-  const isMember = useSelector((state: any) => state.user.isMember)
+  const isMember = useSelector((state: any) => state.user.isMember);
   const checkBind = useMemoizedFn((e) => {
     if (!isMember && isNeedBind) {
       e.stopPropagation?.();
@@ -47,7 +49,7 @@ const Page: React.FC<PageType> = ({
         },
         {
           isCreateUser: true,
-        }
+        },
       );
       if (status === 200) {
         app.init(true);
