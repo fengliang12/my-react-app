@@ -6,6 +6,7 @@ export default {
     "pages/activity/index",
     "pages/bind/index",
     "pages/coupon/index",
+    "pages/register/index",
   ],
   window: {
     backgroundTextStyle: "light",

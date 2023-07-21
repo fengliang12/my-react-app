@@ -1,0 +1,26 @@
+.tips_text {
+  font-size: 20px;
+  line-height: 28px;
+  margin-top: 30px;
+  text-align: left;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+
+  .square {
+    width: 25px;
+    height: 25px;
+    border: 2px solid #ffffff;
+    margin-top: 5px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotateZ(360deg);
+    .checked {
+      width: 15px;
+      height: 15px;
+      background-color: #ffffff;
+    }
+  }
+}

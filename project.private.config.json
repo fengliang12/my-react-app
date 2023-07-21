@@ -17,7 +17,7 @@
           "scene": null
         },
         {
-          "name": "会员注册",
+          "name": "会员信息修改",
           "pathName": "pages/bind/index",
           "query": "",
           "launchMode": "default",
@@ -40,6 +40,13 @@
         {
           "name": "订单列表",
           "pathName": "subPages/redeem/orderList/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "会员注册",
+          "pathName": "pages/register/index",
           "query": "",
           "launchMode": "default",
           "scene": null
