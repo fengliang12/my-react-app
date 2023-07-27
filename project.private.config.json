@@ -50,6 +50,41 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "服务预约",
+          "pathName": "subPages/service-appointment/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "预约介绍",
+          "pathName": "subPages/service-appointment/introduce/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "预约填写",
+          "pathName": "subPages/service-appointment/appointment/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "预约详情",
+          "pathName": "subPages/service-appointment/detail/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "预约列表",
+          "pathName": "subPages/service-appointment/list/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

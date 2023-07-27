@@ -22,6 +22,17 @@ export default {
       name: "redeem",
       pages: ["history/index", "orderList/index"],
     },
+    {
+      root: "subPages/service-appointment",
+      name: "serviceAppointment",
+      pages: [
+        "index",
+        "introduce/index",
+        "appointment/index",
+        "detail/index",
+        "list/index",
+      ],
+    },
   ],
   tabBar: {
     backgroundColor: "#fff",
