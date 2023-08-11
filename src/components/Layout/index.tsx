@@ -163,13 +163,13 @@ type LayoutProps = {
   }[]
   /** 虚拟列表 */
   virtialRule?: {
-    /** 
+    /**
      * 开启机型
-     * getSystemInfoSync的model属性值,不配置相当于所有机型都开启 
+     * getSystemInfoSync的model属性值,不配置相当于所有机型都开启
      * */
     model?: string[]
-    /** 
-     * 数值越大,体验效果越好,性能越差   
+    /**
+     * 数值越大,体验效果越好,性能越差
      * 数值越小,性能越好,体验效果越差
      * 最小值为1
      */
@@ -635,6 +635,7 @@ const Layout: React.FC<LayoutProps> = ({
   });
   /** 计算页面数据 */
   const computedPage = useMemoizedFn(() => {
+
     if (pageRef.current) {
       const page = pageRef.current;
       if (page && !page.config.openShare && !closeShare) {

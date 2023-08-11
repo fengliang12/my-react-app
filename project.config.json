@@ -3,8 +3,8 @@
   "description": "",
   "setting": {
     "urlCheck": true,
-    "es6": true,
-    "enhance": true,
+    "es6": false,
+    "enhance": false,
     "compileHotReLoad": false,
     "postcss": false,
     "preloadBackgroundData": false,
@@ -22,7 +22,8 @@
     },
     "condition": false,
     "packNpmRelationList": [],
-    "ignoreUploadUnusedFiles": true
+    "ignoreUploadUnusedFiles": true,
+    "minifyWXSS": false
   },
   "compileType": "miniprogram",
   "simulatorType": "wechat",

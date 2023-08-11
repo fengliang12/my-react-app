@@ -20,7 +20,7 @@ export default {
     {
       root: "subPages/redeem",
       name: "redeem",
-      pages: ["history/index", "orderList/index"],
+      pages: ["index", "history/index", "orderList/index"],
     },
     {
       root: "subPages/service-appointment",
@@ -35,22 +35,28 @@ export default {
     },
   ],
   tabBar: {
-    backgroundColor: "#fff",
+    backgroundColor: "#000000",
     borderStyle: "white",
-    color: "#b2b2b2",
-    selectedColor: "#000",
+    color: "#FFFFFF",
+    selectedColor: "#FFFFFF",
     list: [
       {
         pagePath: "pages/index/index",
-        text: "首页",
-        iconPath: "assets/image/tabbar/home_2.png",
-        selectedIconPath: "assets/image/tabbar/home_3.png",
+        text: "先锋礼遇",
+        iconPath: "assets/image/tabbar/home.jpg",
+        selectedIconPath: "assets/image/tabbar/home.jpg",
+      },
+      {
+        pagePath: "pages/activity/index",
+        text: "NARS妆园",
+        iconPath: "assets/image/tabbar/activity.jpg",
+        selectedIconPath: "assets/image/tabbar/activity.jpg",
       },
       {
         pagePath: "pages/user/index",
         text: "个人中心",
-        iconPath: "assets/image/tabbar/user_4.png",
-        selectedIconPath: "assets/image/tabbar/user_1.png",
+        iconPath: "assets/image/tabbar/user.jpg",
+        selectedIconPath: "assets/image/tabbar/user.jpg",
       },
     ],
   },

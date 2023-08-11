@@ -10,9 +10,9 @@ const IS_PRO =
 
 const baseConfig = {
   /** 品牌StoreCode */
-  storeCode: "yoseido",
+  storeCode: "nars",
   /** 网络图片前缀 */
-  cosImgPrefix: "https://storage.yoseido.com.cn/",
+  cosImgPrefix: "https://lianwei-project-dev.oss-cn-shanghai.aliyuncs.com/",
   /** 主题页面Code配置 */
   pageCode: {
     /** 会员中心首页 */

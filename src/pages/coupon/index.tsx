@@ -1,9 +1,11 @@
 import "./index.less";
 
 import { ScrollView, View } from "@tarojs/components";
+import Taro, { useDidShow } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useRef, useState } from "react";
 
+import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
@@ -11,29 +13,46 @@ import HeaderTabbar from "@/src/components/Common/HeaderTabbar";
 
 import { textData } from "./testData";
 
+const app = Taro.getApp<App.GlobalData>();
+
+type tabType = { title: string; index: number; status: CouponStatusType };
+const tabList: Array<tabType> = [
+  { title: "待使用", index: 0, status: "usable" },
+  { title: "已使用", index: 1, status: "redeem" },
+  { title: "已过期", index: 2, status: "expire" },
+];
+
 const Index = () => {
   const activeIndex = useRef({ index: 0 });
   const [couponList, setCouponList] = useState<any>(textData);
   const [indexList, setIndexList] = useState<number[]>([]);
-  const tabList = [
-    { title: "待使用", index: 0, state: 3 },
-    { title: "已使用", index: 1, state: 0 },
-    { title: "已过期", index: 2, state: 4 },
-  ];
+
+  /**
+   * 获取卡券列表
+   */
+  const getMyCouponListByStatus = useMemoizedFn(async () => {
+    setCouponList([]);
+    let status = tabList[activeIndex.current.index].status;
+    const { data } = await api.coupon.getCustomerCouponByStatus({
+      status: status,
+    });
+    setCouponList(data);
+  });
+
+  useDidShow(async () => {
+    await app.init();
+    getMyCouponListByStatus();
+  });
 
   /**
    * 点击菜单栏切换
    */
   const tabClick = useMemoizedFn((index) => {
     setCouponList([...textData]);
+    if (activeIndex.current.index === index) return;
     activeIndex.current.index = index;
-    initPage();
+    getMyCouponListByStatus();
   });
-
-  /**
-   * 初始化页面
-   */
-  const initPage = async () => {};
 
   return (
     <View className="coupon">

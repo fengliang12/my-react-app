@@ -1,5 +1,5 @@
-import http from "../axios";
 import config from "../../config/index";
+import http from "../axios";
 
 const getCustomerBasicInfo = () =>
   http.get(`/ec-portal/store/${config.storeCode}/customer/basic_info`);
@@ -7,7 +7,7 @@ const getCustomerBasicInfo = () =>
 const appendCustomerBasicInfo = (data) =>
   http.post(
     `/ec-portal/store/${config.storeCode}/customer/basic_info/append`,
-    data
+    data,
   );
 
 const createMember = (data) =>
@@ -22,12 +22,12 @@ const decodeUserInfo = (data) =>
 const decodePhoneNumber = (data, path) =>
   http.post(
     `/sp-portal/store/${config.storeCode}/wechat/decodeWeChatPhone/${path.isCreateUser}`,
-    data
+    data,
   );
 
 const getCustomerCouponByStatus = (path) =>
   http.get(
-    `/ec-portal/store/${config.storeCode}/customer/coupon/${path.status}`
+    `/ec-portal/store/${config.storeCode}/customer/coupon/${path.status}`,
   );
 
 const getValidCoupon = (query) =>
@@ -37,43 +37,43 @@ const getValidCoupon = (query) =>
 
 const getCouponInfoById = (couponId) =>
   http.get(
-    `/ec-portal/store/${config.storeCode}/customer/coupon/detail/${couponId}`
+    `/ec-portal/store/${config.storeCode}/customer/coupon/detail/${couponId}`,
   );
 
 const isCanReceiveCoupon = (data) =>
   http.post(
     `/sp-portal/store/${config.storeCode}/receiveCoupon/vaildPackage`,
-    data
+    data,
   );
 
 const canReceiveCoupon = (id: string) =>
   http.get(
-    `/sp-portal/store/${config.storeCode}/receiveCoupon/validCoupon/${id}`
+    `/sp-portal/store/${config.storeCode}/receiveCoupon/validCoupon/${id}`,
   );
 
 const receiveCoupon = (path, query) =>
   http.post(
     `/sp-portal/store/${config.storeCode}/receiveCoupon/${path.id}`,
     null,
-    { params: query }
+    { params: query },
   );
 
 const getMemberInfo = (data) =>
   http.post(
     `/sp-portal/store/${config.storeCode}/dataLake/member/aggregation`,
-    data
+    data,
   );
 
 const getMemberCoupon = (data) =>
   http.post(
     `/sp-portal/store/${config.storeCode}/dataLake/member/coupon`,
-    data
+    data,
   );
 
 const getMemberCouponByGrade = (data) =>
   http.post(
     `/sp-portal/store/${config.storeCode}/dataLake/member/grade/coupon`,
-    data
+    data,
   );
 
 const upDateUserInfo = (data) =>
@@ -85,7 +85,7 @@ const loadSYMember = () =>
 const loadSYPointDetails = (data) =>
   http.post(
     `/sp-portal/store/${config.storeCode}/shuYunMember/memberPointChangeDetails`,
-    data
+    data,
   );
 
 const getShopId = (id) =>

@@ -85,6 +85,27 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/activity/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "首页",
+          "pathName": "pages/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "积分商城",
+          "pathName": "subPages/redeem/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

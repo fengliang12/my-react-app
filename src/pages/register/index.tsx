@@ -15,6 +15,7 @@ import Avatar from "@/src/components/Common/Avatar";
 import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import PrivacyPolicyText from "@/src/components/Common/PrivacyPolicyText";
+import { formatDateTime } from "@/src/utils";
 
 import { counterList } from "./testData";
 
@@ -47,6 +48,9 @@ const Index = () => {
    */
   const submit = useMemoizedFn(async () => {
     const { nickName, birthDate, avatarUrl, mobile, gender } = user;
+    if (!agree) {
+      return Taro.showToast({ title: "请先同意隐私条款", icon: "none" });
+    }
     if (!nickName) {
       return Taro.showToast({ title: "请输入姓名", icon: "none" });
     }
@@ -119,8 +123,9 @@ const Index = () => {
 
   useAsyncEffect(async () => {
     if (isMember) {
-      const { name, birthDate, mobile, avatarUrl, gender } =
-        app.getMemberInfo();
+      const { realName, birthDate, mobile, avatarUrl, gender } =
+        app.globalData?.userInfo?.customerBasicInfo || {};
+
       let genderName = user.gender;
       if (gender === 1) {
         genderName = "男";
@@ -129,8 +134,8 @@ const Index = () => {
         genderName = "女";
       }
       setUser({
-        nickName: name === "微信用户" ? "" : name,
-        birthDate,
+        nickName: realName === "微信用户" ? "" : realName,
+        birthDate: formatDateTime(birthDate, 3),
         mobile,
         gender: genderName,
         avatarUrl,
@@ -146,6 +151,7 @@ const Index = () => {
           placeholder: false,
           backgroundColor: "black",
           logo: "white",
+          title: "MY NARS",
         }}
       >
         <View className="bind">

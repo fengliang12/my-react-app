@@ -1,0 +1,23 @@
+.MiniGoodClass {
+  .active {
+    border-bottom: 1px solid #000000;
+  }
+  .GoodItem {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .gray {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+
+    filter: grayscale(100%);
+    //上面代码是兼容火狐与谷歌的样式
+    //下面代码是兼容ie9以下浏览器的样式，包括ie9
+    filter: gray;
+  }
+  .shadow-custom {
+    box-shadow: 0px 0px 19px 0px rgba(152, 152, 152, 1);
+  }
+}
