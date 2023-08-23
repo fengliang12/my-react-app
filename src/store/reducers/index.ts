@@ -1,9 +1,11 @@
-import { combineReducers } from 'redux'
-import user from './user'
-import common from './common'
+import { combineReducers } from "redux";
 
+import common from "./common";
+import exchangeGood from "./exchangeGood";
+import user from "./user";
 
 export default combineReducers({
-    user,
-    common
-})
+  user,
+  common,
+  exchangeGood,
+});

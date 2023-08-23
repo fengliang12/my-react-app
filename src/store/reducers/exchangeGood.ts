@@ -2,13 +2,13 @@ import { forOwn, isNil, set } from "lodash-es";
 
 import { createReducer } from "../help";
 
-const INITIAL_STATE = {
-  navHeight: 0,
+const INITIAL_STATE: Store.ExchangeGood = {
+  goods: [],
 };
 
 export default createReducer(
   {
-    SET_COMMON(state, action: { payload: Partial<Store.Common> }) {
+    SET_EXCHANGE_GOOD(state, action: { payload: Partial<Store.ExchangeGood> }) {
       if (action.payload) {
         forOwn(action.payload, function (value, key) {
           if (!isNil(value)) {

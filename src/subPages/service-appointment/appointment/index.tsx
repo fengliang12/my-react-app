@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
 import to from "@/src/utils/to";
 
 const Index = () => {
@@ -16,7 +17,7 @@ const Index = () => {
     <View className="service-introduce min-h-screen bg-black text-white flex flex-col">
       <CHeader
         back
-        titleImage="https://biomember.blob.core.chinacloudapi.cn/gac/nars/title_image.png"
+        titleImage={`${config.imgBaseUrl}/icon/title_image.png`}
         fill
         backgroundColor="rgba(0,0,0,1)"
         titleCss="height:85rpx"
@@ -28,7 +29,7 @@ const Index = () => {
       <View className="text-76 text-left ml-67 font-thin">先锋妆容</View>
       <CImage
         className="w-690 h-517 mt-70 ml-30 mb-53"
-        src="https://biomember.blob.core.chinacloudapi.cn/gac/nars/appointment_detail.jpg"
+        src={`${config.imgBaseUrl}/appointment/appointment_detail.jpg`}
       ></CImage>
       <View className="mb-30">
         <Picker mode="selector" range={[]} onChange={(e) => {}}>

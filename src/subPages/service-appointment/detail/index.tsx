@@ -3,13 +3,14 @@ import { Text, View } from "@tarojs/components";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import config from "@/src/config";
 
 const Index = () => {
   return (
     <View className="service-introduce min-h-screen bg-black text-white flex flex-col">
       <CHeader
         back
-        titleImage="https://biomember.blob.core.chinacloudapi.cn/gac/nars/title_image.png"
+        titleImage={`${config.imgBaseUrl}/icon/title_image.png`}
         fill
         backgroundColor="rgba(0,0,0,1)"
         titleCss="height:85rpx"
@@ -17,7 +18,7 @@ const Index = () => {
       ></CHeader>
       <CImage
         className="w-690 h-517 mt-40 ml-30"
-        src="https://biomember.blob.core.chinacloudapi.cn/gac/nars/appointment_detail.jpg"
+        src={`${config.imgBaseUrl}/appointment/appointment_detail.jpg`}
       ></CImage>
       <View className="w-560 text-36 text-left font-thin mt-60 ml-85">
         预约服务:先锋妆容

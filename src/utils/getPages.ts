@@ -4,9 +4,12 @@ interface params<T> {
   getKey?: string;
   getCurrentPage?: T;
 }
-export const getPages: <T>(
+
+type PropTypes = <T>(
   params: params<T>,
-) => T extends false ? Taro.Page[] : string = ({
+) => T extends false ? Taro.Page[] : string;
+
+export const getPages: PropTypes = ({
   getKey = "route",
   getCurrentPage = true,
 } = {}) => {

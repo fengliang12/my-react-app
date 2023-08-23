@@ -1,5 +1,5 @@
 declare namespace Store {
-  type States = { user: User; common: Common };
+  type States = { user: User; common: Common; exchangeGood: ExchangeGood };
   type User = {
     /** 是否是会员 */
     isMember: boolean;
@@ -15,5 +15,8 @@ declare namespace Store {
   type Common = {
     /** Nav高度 */
     navHeight: number;
+  };
+  type ExchangeGood = {
+    goods: Array<any>;
   };
 }

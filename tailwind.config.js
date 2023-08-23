@@ -83,10 +83,6 @@ module.exports = {
         grayBg: "#6C6C6C",
         black2: "#212121",
       }),
-      backgroundImage: {
-        "member-day-bg":
-          "url('https://ysminiproguatrgdiag.blob.core.chinacloudapi.cn/gac/activities/trialCenter/bg.jpg')",
-      },
     },
     spacing: {
       ...generateSpacing(1501),

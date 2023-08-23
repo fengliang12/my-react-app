@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
 import CHeader from "@/src/components/Common/CHeader";
+import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
 
 const orderList = [{ label: "全部订单", value: "all" }];
 const Index = () => {
@@ -14,29 +16,41 @@ const Index = () => {
     <View className="order-list bg-black flex h-screen flex-col items-center justify-start text-white">
       <CHeader
         back
-        title="订单列表"
+        title=""
         titleColor="#ffffff"
         fill
         backgroundColor="rgba(0,0,0,1)"
       ></CHeader>
-      <View className="w-688 flex justify-between mt-70 mb-30">
-        <View className="w-268 h-97 bg-grayBg vhCenter">
+      <View className="w-full">
+        <CImage
+          className="w-138 h-60 ml-60"
+          src={`${config.imgBaseUrl}/icon/title_image.png`}
+        ></CImage>
+      </View>
+      <View className="w-688 flex justify-around mt-70 mb-60">
+        <View
+          className="w-228 h-60  vhCenter"
+          style={{ border: "1px solid #FFFFFF" }}
+        >
           <Picker
-            mode="selector"
-            range={orderList}
-            rangeKey="label"
-            value={orderIndex}
+            mode="date"
+            value={date}
+            start="2010-01"
+            end={endTime}
+            fields="month"
             onChange={(e) => {
-              let index = Number(e.detail.value);
-              setOrderIndex(index);
+              let value = e.detail.value;
+              setDate(value);
             }}
           >
-            <Text>
-              {orderIndex === -1 ? "请选择" : orderList[orderIndex].label}
-            </Text>
+            <Text>{date ? date : "请选择日期"}</Text>
           </Picker>
         </View>
-        <View className="w-400 h-97 bg-grayBg vhCenter">
+        <View>-</View>
+        <View
+          className="w-228 h-60 vhCenter"
+          style={{ border: "1px solid #FFFFFF" }}
+        >
           <Picker
             mode="date"
             value={date}
@@ -54,26 +68,17 @@ const Index = () => {
       </View>
       <ScrollView className="flex-1" scrollY>
         <View className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30">
-          <View className="flex items-start">
-            <Text className="w-150">订单店铺：</Text>
+          <View className="flex justify-between">
+            <Text className="flex-1">2023-11-15</Text>
+            <Text>待领取</Text>
+          </View>
+          <View className="flex items-start mt-25">
+            <Text className="w-150">领取柜台：</Text>
             <Text className="flex-1">NARS上海新天地</Text>
           </View>
           <View className="flex items-start my-10">
-            <Text className="w-150">订单日期：</Text>
-            <Text className="flex-1">2021-06-02 17:50:21</Text>
-          </View>
-          <View className="flex items-start">
-            <Text className="w-150">消费明细：</Text>
-            <View className="flex-1">
-              <View className="flex flex-col">
-                <Text>NARS腮红 愉悦红粉</Text>
-                <Text>单价：300 数量：1 N</Text>
-              </View>
-              <View className="flex flex-col mt-20">
-                <Text>NARS腮红 愉悦红粉</Text>
-                <Text>单价：300 数量：1 N</Text>
-              </View>
-            </View>
+            <Text className="w-150">订单编号：</Text>
+            <Text className="flex-1">112341928392829</Text>
           </View>
         </View>
         <View className="w-full h-20"></View>

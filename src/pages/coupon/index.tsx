@@ -10,6 +10,7 @@ import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import HeaderTabbar from "@/src/components/Common/HeaderTabbar";
+import config from "@/src/config";
 
 import { textData } from "./testData";
 
@@ -66,7 +67,7 @@ const Index = () => {
       <CImage
         className="img1"
         mode="widthFix"
-        src="https://biomember.blob.core.chinacloudapi.cn/gac/scrm/image/663aea988e770f1e8740a8a5eae749461689652713686njbhudpy.jpg"
+        src={`${config.imgBaseUrl}/coupon/header.jpg`}
       ></CImage>
 
       <HeaderTabbar

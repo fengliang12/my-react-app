@@ -20,7 +20,14 @@ export default {
     {
       root: "subPages/redeem",
       name: "redeem",
-      pages: ["index", "history/index", "orderList/index"],
+      pages: [
+        "index",
+        "history/index",
+        "orderList/index",
+        "orderDetail/index",
+        "confirm/index",
+        "success/index",
+      ],
     },
     {
       root: "subPages/service-appointment",

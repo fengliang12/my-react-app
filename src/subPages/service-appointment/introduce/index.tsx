@@ -2,6 +2,7 @@ import { Text, View } from "@tarojs/components";
 
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
 import to from "@/src/utils/to";
 
 const Index = () => {
@@ -9,7 +10,7 @@ const Index = () => {
     <View className="service-introduce min-h-screen bg-black text-white flex flex-col">
       <CHeader
         back
-        titleImage="https://biomember.blob.core.chinacloudapi.cn/gac/nars/title_image.png"
+        titleImage={`${config.imgBaseUrl}/icon/title_image.png`}
         fill
         backgroundColor="rgba(0,0,0,1)"
         titleCss="height:85rpx"
@@ -21,7 +22,7 @@ const Index = () => {
       <View className="text-76 text-left ml-67 font-thin">先锋妆容</View>
       <CImage
         className="w-690 h-517 mt-70 ml-30"
-        src="https://biomember.blob.core.chinacloudapi.cn/gac/nars/appointment_detail.jpg"
+        src={`${config.imgBaseUrl}/appointment/appointment_detail.jpg`}
       ></CImage>
       <View className="w-610 text-35 text-left font-thin mt-54 ml-70">
         NARS彩妆师将帮助NARS会员探索自 我本色

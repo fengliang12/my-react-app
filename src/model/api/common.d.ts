@@ -10,73 +10,73 @@ declare namespace Api {
       /** 会员基础信息 */
       type ICustomerBasicInfo = {
         /** 注册页面地址 */
-        agreementInfo: string
+        agreementInfo: string;
         /** 会员注册时间 */
-        agreementTime: string
+        agreementTime: string;
         /** 头像 */
-        avatarUrl: string
+        avatarUrl: string;
         /** 城市 */
-        city: string
+        city: string;
         /** 国家 */
-        country: string
+        country: string;
         /** 性别
          * 0是未知，1是男，2是女 */
-        gender: number
+        gender: number;
         /** 语言 */
-        language: string
+        language: string;
         /** 是否是会员 */
-        member: boolean
+        member: boolean;
         /** 手机号 */
-        mobile: string
+        mobile: string;
         /** 用户昵称 */
-        nickName: string
+        nickName: string;
         /** 省份 */
-        province: string
+        province: string;
         /** 成为潜客时间 */
-        registerTime: string
+        registerTime: string;
         /** 生日 */
-        birthDate: string
+        birthDate: string;
         /** marsId */
-        marsId: string
+        marsId: string;
         /** 会员等级 */
-        tags: string[]
-        memberShipTime: any
-      }
+        tags: string[];
+        memberShipTime: any;
+      };
 
       type hotZonePosition = {
         /** 热区高度 */
-        height: number,
+        height: number;
         /** 热区id，没用 */
-        id: string,
+        id: string;
         /** 当type是link时，跳转路径 */
-        linkUrl?: 'link' | 'popup',
+        linkUrl?: "link" | "popup";
         /** 当type是popup时，弹窗code */
-        popupCode?: string,
+        popupCode?: string;
         /** 热区类型,link或者popup*/
-        type: string,
+        type: string;
         /** 热区宽度 */
-        width: number,
+        width: number;
         /** 热区左上角横坐标 */
-        x: number,
+        x: number;
         /** 热区左上角纵坐标 */
-        y: number,
-      }
+        y: number;
+      };
 
       /** 配置中心配置 */
       type IconSetting = {
         /** icon跳转地址 */
-        iconHref?: string
+        iconHref?: string;
         /** icon图片地址 */
-        iconUrl?: string,
+        iconUrl?: string;
         /** 标签 */
-        label?: string[],
+        label?: string[];
         /** 开始时间 */
-        from?: string,
+        from?: string;
         /** 结束时间 */
-        to?: string,
+        to?: string;
         /** 热区 */
-        hotZonePosition?: [] | undefined,
-      }
+        hotZonePosition?: [] | undefined;
+      };
     }
     /** 授权获取用户信息和token
      *  @URL {basePathUrl}/api/sp-portal/wechat/{storeCode}/login/{code}
@@ -84,34 +84,33 @@ declare namespace Api {
      */
     namespace Login {
       /** 接口定义 */
-      type FuncT = (path: IRequestPath) => MRP<IResponse>
+      type FuncT = (path: IRequestPath) => MRP<IResponse>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** wx.login成功返回的code */
-        code: string
-      }
+        code: string;
+      };
       /** 返回参数 */
       type IResponse = {
         /** 购物车商品数量 */
-        cartItemNum: number
+        cartItemNum: number;
         /** 会员信息 */
-        customerBasicInfo: Public.ICustomerBasicInfo
+        customerBasicInfo: Public.ICustomerBasicInfo;
         /** 后端返回自定义Token */
-        jwtString: string
+        jwtString: string;
         /** 微信开放平台唯一标识 */
-        unionId: string
+        unionId: string;
         /** 小程序唯一标识 */
-        openId: string
+        openId: string;
         /** 会员唯一标识 */
-        customerId: string
+        customerId: string;
         /**新老客 */
-        old: boolean
+        old: boolean;
         /**首次购买时间 */
-        firstShopTime: string
-      }
-
+        firstShopTime: string;
+      };
     }
     /** 发送短信接口
      *  @URL {basePathUrl}/api/sp-portal/wechat/{storeCode}/sendSmsCode/{mobile}
@@ -119,14 +118,14 @@ declare namespace Api {
      */
     namespace SendSMS {
       /** 接口定义 */
-      type FuncT = (path: IRequestPath) => MRP<boolean>
+      type FuncT = (path: IRequestPath) => MRP<boolean>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** 手机号 */
-        mobile: string
-      }
+        mobile: string;
+      };
     }
     /** 查询配置信息
      *  @URL {basePathUrl}/api/sp-portal/store/{storeCode}/config/kvdata/findType/{type}
@@ -134,44 +133,44 @@ declare namespace Api {
      */
     namespace FindKvDataByType {
       /** 接口定义 */
-      type FuncT = (type: string) => MRP<Array<IResponse>>
+      type FuncT = (type: string) => MRP<Array<IResponse>>;
       /** 返回参数 */
       type IResponse = {
-        [x: string]: any
+        [x: string]: any;
         /** 商城编码 */
-        account: string
+        account: string;
         /** 内容 */
-        content: string
+        content: string;
         /** 创建时间 */
-        createTime: string
+        createTime: string;
         /** 图片URL地址 */
-        icon: string
+        icon: string;
         /** icon集合 */
         iconList: {
           /** icon跳转地址 */
-          iconHref: string
+          iconHref: string;
           /** icon图片地址 */
-          iconUrl: string,
+          iconUrl: string;
           /** 标签 */
-          label?: string[],
+          label?: string[];
           /** 热区 */
-          hotZonePosition?: any[],
-        }[]
+          hotZonePosition?: any[];
+        }[];
         /** string */
-        id: string
+        id: string;
         /** 中文名称 */
-        name_cn: string
+        name_cn: string;
         /** 英文名称 */
-        name_en: string
+        name_en: string;
         /** 上线时间 */
-        onlineTime: string
+        onlineTime: string;
         /** 上线时间格式化 */
-        onlineTimeFormat: string
+        onlineTimeFormat: string;
         /** 状态 */
-        status: string
+        status: string;
         /** 关键字类型 */
-        type: string
-      }
+        type: string;
+      };
     }
     /** 查询配置信息
      *  @URL {basePathUrl}/api/sp-portal/store/{storeCode}/config/kvdata/findType/{type}
@@ -179,47 +178,47 @@ declare namespace Api {
      */
     namespace FindFirstKvConfig {
       /** 接口定义 */
-      type FuncT = (path: IRequestPath) => MRP<IResponse | null>
+      type FuncT = (path: IRequestPath) => MRP<IResponse | null>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** 关键字 */
-        type: string
-      }
+        type: string;
+      };
       /** 返回参数 */
       type IResponse = {
-        [x: string]: any
+        [x: string]: any;
         /** 商城编码 */
-        account: string
+        account: string;
         /** 内容 */
-        content: string
+        content: string;
         /** 创建时间 */
-        createTime: string
+        createTime: string;
         /** 图片URL地址 */
-        icon: string
+        icon: string;
         /** icon集合 */
         iconList: {
           /** icon跳转地址 */
-          iconHref: string
+          iconHref: string;
           /** icon图片地址 */
-          iconUrl: string
-        }[]
+          iconUrl: string;
+        }[];
         /** string */
-        id: string
+        id: string;
         /** 中文名称 */
-        name_cn: string
+        name_cn: string;
         /** 英文名称 */
-        name_en: string
+        name_en: string;
         /** 上线时间 */
-        onlineTime: string
+        onlineTime: string;
         /** 上线时间格式化 */
-        onlineTimeFormat: string
+        onlineTimeFormat: string;
         /** 状态 */
-        status: string
+        status: string;
         /** 关键字类型 */
-        type: string
-      }
+        type: string;
+      };
     }
     /** 查询配置信息
      *  @URL {basePathUrl}/api/sp-portal/store/{storeCode}/config/kvdata/findType/{type}
@@ -228,96 +227,96 @@ declare namespace Api {
     namespace FindFirstKvIconList {
       type IconSetting = Api.Common.Public.IconSetting;
       /** 接口定义 */
-      type FuncT = (path: IRequestPath) => MRP<Array<IconSetting>>
+      type FuncT = (path: IRequestPath) => MRP<Array<IconSetting>>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** 关键字 */
-        type: string
-      }
+        type: string;
+      };
     }
     /** 批量查询配置信息 ***/
     namespace FindKvDataByBacth {
       /** 接口定义 */
-      type FuncT = (types: string []) => MRP<IResponse>
+      type FuncT = (types: string[]) => MRP<IResponse>;
 
       /** 返回参数 */
       interface IResponse {
         [prop: string]: {
           /** 商城编码 */
-          account: string
+          account: string;
           /** 内容 */
-          content: string
+          content: string;
           /** 创建时间 */
-          createTime: string
+          createTime: string;
           /** 图片URL地址 */
-          icon: string
+          icon: string;
           /** icon集合 */
           iconList: {
             /** icon跳转地址 */
-            iconHref: string
+            iconHref: string;
             /** icon图片地址 */
-            iconUrl: string
-          }[]
+            iconUrl: string;
+          }[];
           /** string */
-          id: string
+          id: string;
           /** 中文名称 */
-          name_cn: string
+          name_cn: string;
           /** 英文名称 */
-          name_en: string
+          name_en: string;
           /** 上线时间 */
-          onlineTime: string
+          onlineTime: string;
           /** 上线时间格式化 */
-          onlineTimeFormat: string
+          onlineTimeFormat: string;
           /** 状态 */
-          status: string
+          status: string;
           /** 关键字类型 */
-          type: string
-        }
+          type: string;
+        };
       }
     }
 
     /** 查询活动弹窗popUp配置 ***/
     namespace FindPopupList {
       enum PopupType {
-        HOME,//首页
-        PERSONAL_CENTER,//"个人中心页"
+        HOME, //首页
+        PERSONAL_CENTER, //"个人中心页"
         PRODUCT_DETAILS, //"产品详情页"
         ACTIVITY, //"活动页"
         CARDCOUPON5, //"卡券"
         SHOPINGCART, //"购物车"
         MAINTENANCE, //"维护页"
         REGISTER, //"注册弹窗"
-        ADVERTISING,// "广告页"
-        PAYMENT,// "支付页"
+        ADVERTISING, // "广告页"
+        PAYMENT, // "支付页"
         MASTERCLASS, //"大师讲堂"
-        GIVE_ACTIVITY // 0.01加赠订阅弹窗
+        GIVE_ACTIVITY, // 0.01加赠订阅弹窗
       }
-      
+
       interface IPopupInfo {
-        activityCode: string
-        activityName: string
-        hasWechatPopUp: boolean,
-        img: string,
-        info: string,
-        longPressToSave: boolean,
-        manualConfirm: boolean,
-        page: string,
-        popupType: PopupType,
-        show: boolean,
-        wechatPopUpClientId: string,
+        activityCode: string;
+        activityName: string;
+        hasWechatPopUp: boolean;
+        img: string;
+        info: string;
+        longPressToSave: boolean;
+        manualConfirm: boolean;
+        page: string;
+        popupType: PopupType;
+        show: boolean;
+        wechatPopUpClientId: string;
         nextCouponIds?: Array<string>;
       }
 
       /** 接口定义 */
-      type FuncT = (typeList: IRequestBody) => MRP<IResponse>
+      type FuncT = (typeList: IRequestBody) => MRP<IResponse>;
       /** 请求参数 Path */
-      type IRequestBody = PopupType[]
+      type IRequestBody = PopupType[];
       /** 接口定义 */
-      type FuncT1 = (codeList: string[]) => MRP<IResponse>
+      type FuncT1 = (codeList: string[]) => MRP<IResponse>;
       /** 返回数据 */
-      type IResponse = IPopupInfo[]
+      type IResponse = IPopupInfo[];
     }
 
     /** 查询单条配置信息
@@ -326,46 +325,46 @@ declare namespace Api {
      */
     namespace FindKvDataFirstByType {
       /** 接口定义 */
-      type FuncT = (path: IRequestPath) => MRP<IResponse>
+      type FuncT = (path: IRequestPath) => MRP<IResponse>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** 关键字 */
-        type: string
-      }
+        type: string;
+      };
       /** 返回参数 */
       type IResponse = {
         /** 商城编码 */
-        account: string
+        account: string;
         /** 内容 */
-        content: string
+        content: string;
         /** 创建时间 */
-        createTime: string
+        createTime: string;
         /** 图片URL地址 */
-        icon: string
+        icon: string;
         /** 图片集合 */
         iconList: {
           /** 图片地址 */
-          iconUrl: string,
+          iconUrl: string;
           /** 图片跳转地址 */
-          iconHref: string
-        }[]
+          iconHref: string;
+        }[];
         /** string */
-        id: string
+        id: string;
         /** 中文名称 */
-        name_cn: string
+        name_cn: string;
         /** 英文名称 */
-        name_en: string
+        name_en: string;
         /** 上线时间 */
-        onlineTime: string
+        onlineTime: string;
         /** 上线时间格式化 */
-        onlineTimeFormat: string
+        onlineTimeFormat: string;
         /** 状态 */
-        status: string
+        status: string;
         /** 关键字类型 */
-        type: string
-      }
+        type: string;
+      };
     }
     /** 文件上传地址(CDN)
      *  @URL {basePathUrl}/api/sp-portal/store/{storeCode}/upload_file
@@ -373,17 +372,17 @@ declare namespace Api {
      */
     namespace UploadFile {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<string>
+      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<string>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
-      }
+        storeCode?: string;
+      };
       /** 请求参数 Body */
       type IRequestBody = {
         /** 图片临时路径 */
-        filePath: string
-      }
+        filePath: string;
+      };
     }
     /** 创建太阳码图片
      *  @URL {basePathUrl}/api/sp-portal/wechat/{storeCode}/wxa
@@ -391,25 +390,25 @@ declare namespace Api {
      */
     namespace CreateQrCode {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<string>
+      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<string>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
-      }
+        storeCode?: string;
+      };
       /** 请求参数 Body */
       type IRequestBody = {
         /** 扫码进入的小程序页面路径，最大长度 128 字节，不能为空； */
-        path: string
+        path: string;
         /** 二维码的宽度，单位 px。最小 280px，最大 1280px */
-        width?: number
+        width?: number;
         /** 自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调 */
-        auto_color?: boolean
+        auto_color?: boolean;
         /** auto_color 为 false 时生效，使用 rgb 设置颜色 例如 {"r":"xxx","g":"xxx","b":"xxx"} 十进制表示 */
-        line_color?: boolean
+        line_color?: boolean;
         /** 是否需要透明底色，为 true 时，生成透明底色的小程序码 */
-        is_hyaline?: boolean
-      }
+        is_hyaline?: boolean;
+      };
     }
     /** 订阅消息-取消订单
      *  @URL {basePathUrl}/api/sp-portal/store/{storeCode}/message/orderPaidCancelSubscribeMsg/{orderId}
@@ -417,14 +416,14 @@ declare namespace Api {
      */
     namespace OrderPaidCancelSubscribeMsg {
       /** 接口定义 */
-      type FuncT = (path: IRequestPath) => MRP<null>
+      type FuncT = (path: IRequestPath) => MRP<null>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** 订单Id */
-        orderId: string
-      }
+        orderId: string;
+      };
     }
     /** OCPA
      *  @URL {basePathUrl}/api/sp-portal/store/{storeCode}/ocpa/addUserActions
@@ -432,27 +431,27 @@ declare namespace Api {
      */
     namespace OCPA {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<null>
+      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<null>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
-      }
+        storeCode?: string;
+      };
       /** 请求参数 Body */
       type IRequestBody = {
         /** 商城编码 */
-        account: string
+        account: string;
         /** 动作类型 */
-        actionType: string
+        actionType: string;
         /** ClickId */
-        clickId?: string
+        clickId?: string;
         /** 小程序页面地址 */
-        url?: string
+        url?: string;
         /** 微信用户唯一标识 */
-        openId: string
+        openId: string;
         /** 页面类型 */
-        viewContentType?: string
-      }
+        viewContentType?: string;
+      };
     }
     /** 查看客户是否授权和发券模板ID
      *  @URL {basePathUrl}/api/sp-portal/wechat/{storeCode}/{tenantId}/customer/auth
@@ -460,26 +459,26 @@ declare namespace Api {
      */
     namespace CustomerAuth {
       /** 接口定义 */
-      type FuncT = (query: IRequestQuery, path: IRequestPath) => MRP<IResponse>
+      type FuncT = (query: IRequestQuery, path: IRequestPath) => MRP<IResponse>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** tenanId */
-        tenantId: string
-      }
+        tenantId: string;
+      };
       /** 请求参数 Query */
       type IRequestQuery = {
         /** 用户Id */
-        customerId: string
-      }
+        customerId: string;
+      };
       /** 返回参数 */
       type IResponse = {
         /** 是否需要授权 */
-        authorization: boolean
+        authorization: boolean;
         /** 卡券Id */
-        couponId: string
-      }
+        couponId: string;
+      };
     }
     /** 查看客户是否授权和发券模板ID
      *  @URL {basePathUrl}/api/sp-portal/store/{storeCode}/subsribe/save
@@ -487,23 +486,23 @@ declare namespace Api {
      */
     namespace SaveSubscribe {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<string>
+      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<string>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
-      }
+        storeCode?: string;
+      };
       /** 请求参数 Body */
       type IRequestBody = {
-        groupId?: string
-        id?: string
-        openId?: string
-        page?: string
-        size?: string
-        storeCode?: string
+        groupId?: string;
+        id?: string;
+        openId?: string;
+        page?: string;
+        size?: string;
+        storeCode?: string;
         /** 模板Code，多模板Code以,隔开 */
-        templateCode: string
-      }
+        templateCode: string;
+      };
     }
 
     /** 订阅提醒-保存订阅
@@ -512,30 +511,29 @@ declare namespace Api {
      */
     namespace SaveSubscribeRemind {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<string>
+      type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<string>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
-      }
+        storeCode?: string;
+      };
       /** 请求参数 Body */
       type IRequestBody = {
         /** 用户标识 */
-        customerId?: string
+        customerId?: string;
         /** 用户小程序唯一标识符 */
-        openId?: string
+        openId?: string;
         /** 模板code */
-        templateCode: string
+        templateCode: string;
         subscribeMessage?: {
           /** 活动标题 */
-          title?: string
+          title?: string;
           /** 活动信息 */
-          message?: string
+          message?: string;
           /** 暂时用作房间id */
-          id?: string
-        }
-
-      }
+          id?: string;
+        };
+      };
     }
 
     /** 订阅提醒-是否订阅过
@@ -544,35 +542,33 @@ declare namespace Api {
      */
     namespace IsSubscribeRemind {
       /** 接口定义 */
-      type FuncT = (data: string[], path?: IRequestPath) => MRP<IResponse[]>
+      type FuncT = (data: string[], path?: IRequestPath) => MRP<IResponse[]>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
-      }
+        storeCode?: string;
+      };
       /** 返回参数 */
       type IResponse = {
         /** 是否订阅 */
-        status: boolean
+        status: boolean;
         /** 模板Code */
-        templateCode: string
-      }
+        templateCode: string;
+      };
     }
 
     /** 查询该订单是否是已支付订单
      *  @URL {basePathUrl}/api/sp-portal/store/${config.storeCode}/payment/queryIsPaid/${id}
      *  @Method GET
-    */
+     */
     namespace queryOrderIsPay {
-      type FuncT = (path: IRequestPath) => MRP<IResponse>
+      type FuncT = (path: IRequestPath) => MRP<IResponse>;
       /** 请求参数 Path */
       type IRequestPath = {
-        orderId: string
-      }
+        orderId: string;
+      };
       /** 返回参数 */
-      type IResponse = {
-
-      }
+      type IResponse = {};
     }
 
     /** 获取自定义tabBar
@@ -581,40 +577,40 @@ declare namespace Api {
      */
     namespace GetTabBar {
       /** 接口定义 */
-      type FuncT = (path: IRequestPath) => MRP<IResponse>
+      type FuncT = (path: IRequestPath) => MRP<IResponse>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** id */
-        id: string
-      }
+        id: string;
+      };
       /** 返回参数 */
       type IResponse = {
         /** 是否订阅 */
-        backgroundColour: string
+        backgroundColour: string;
         /** 唯一id */
-        id: string
+        id: string;
         /** 导航配置 */
         navigationSettings: {
           /** 默认图标 */
-          defaultIcon: string
+          defaultIcon: string;
           /** 默认图标 */
-          id: string
+          id: string;
           /** 链接 */
-          linkUrl: string
+          linkUrl: string;
           /** 导航文字 */
-          name: string
+          name: string;
           /** 优先级 */
-          priority: number
+          priority: number;
           /** 选中图标 */
-          selectedIcon: string
-        }[]
+          selectedIcon: string;
+        }[];
         /** 选中文字的颜色 */
-        selectWordColour: string
+        selectWordColour: string;
         /** 文字颜色 */
-        wordColour: string
-      }
+        wordColour: string;
+      };
     }
 
     /** 获取页面通用配置
@@ -623,49 +619,46 @@ declare namespace Api {
      */
     namespace GetPageConfig {
       /** 接口定义 */
-      type FuncT = (path: IRequestPath) => MRP<IResponse[]>
+      type FuncT = (path: IRequestPath) => MRP<IResponse[]>;
       /** 请求参数 Path */
       type IRequestPath = {
         /** 商城编码 */
-        storeCode?: string
+        storeCode?: string;
         /** 使用类型 */
-        useType: string
-      }
+        useType: string;
+      };
       /** 返回参数 */
       type IResponse = {
         /** 内容 */
-        content: string
+        content: string;
         /** 创建时间 */
-        createTime: string
+        createTime: string;
         /** 图标URL */
-        icon: string
+        icon: string;
         /** 图标列表，用途：轮播图、侧边icon  */
         iconList: {
           /** 图片超链接 */
-          iconHref: string
+          iconHref: string;
           /** 图片地址 */
-          iconUrl: string
-        }[]
+          iconUrl: string;
+        }[];
         /** Id */
-        id: string
+        id: string;
         /** moduleId */
-        moduleId: string
+        moduleId: string;
         /** 中文 */
-        name_cn: string
+        name_cn: string;
         /** 英文名 */
-        name_en: string
+        name_en: string;
         /** onlineTime  */
-        onlineTime: string
+        onlineTime: string;
         /** 是否启用 */
-        status: string
+        status: string;
         /** 类型 */
-        type: string
+        type: string;
         /** 使用类型（目前专属用于区分侧边icon） */
-        useType: string
-      }
+        useType: string;
+      };
     }
   }
 }
-
-
-

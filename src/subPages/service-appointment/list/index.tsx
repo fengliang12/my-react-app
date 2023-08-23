@@ -2,6 +2,7 @@ import { Text, View } from "@tarojs/components";
 
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
 
 const Index = () => {
   return (
@@ -19,7 +20,7 @@ const Index = () => {
       <View className="w-690 h-310 bg-grayBg p-25 flex box-border ml-30 mb-40">
         <CImage
           className="w-318 h-259"
-          src="https://biomember.blob.core.chinacloudapi.cn/gac/nars/appointment_icon.jpg"
+          src={`${config.imgBaseUrl}/appointment/appointment_icon.jpg`}
         ></CImage>
         <View className="flex-1 vhCenter flex-col text-center">
           <View className="text-36">先锋妆容</View>
@@ -33,7 +34,7 @@ const Index = () => {
       <View className="w-690 h-310 bg-grayBg p-25 flex box-border ml-30  mb-40">
         <CImage
           className="w-318 h-259"
-          src="https://biomember.blob.core.chinacloudapi.cn/gac/nars/appointment_icon.jpg"
+          src={`${config.imgBaseUrl}/appointment/appointment_icon.jpg`}
         ></CImage>
         <View className="flex-1 vhCenter flex-col text-center">
           <View className="text-36">先锋妆容</View>

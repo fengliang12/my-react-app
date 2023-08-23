@@ -106,6 +106,27 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "兑礼成功",
+          "pathName": "subPages/redeem/success/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "订单列表",
+          "pathName": "subPages/redeem/orderList/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "订单详情",
+          "pathName": "subPages/redeem/orderDetail/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

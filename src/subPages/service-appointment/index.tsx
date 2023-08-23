@@ -4,6 +4,7 @@ import { ScrollView, View } from "@tarojs/components";
 
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
 import to from "@/src/utils/to";
 
 const Index = () => {
@@ -34,7 +35,7 @@ const Index = () => {
     <View className="service-appointment text-white flex flex-col">
       <CHeader
         back
-        titleImage="https://biomember.blob.core.chinacloudapi.cn/gac/nars/title_image.png"
+        titleImage={`${config.imgBaseUrl}/icon/title_image.png`}
         fill
         backgroundColor="rgba(0,0,0,1)"
         titleCss="height:85rpx"
@@ -64,7 +65,7 @@ const Index = () => {
             >
               <CImage
                 className="w-full h-full"
-                src="https://biomember.blob.core.chinacloudapi.cn/gac/nars/appointment_icon.jpg"
+                src={`${config.imgBaseUrl}/appointment/appointment_icon.jpg`}
               ></CImage>
               <View
                 className="w-full h-70 absolute top-70 left-0 text-white vhCenter"

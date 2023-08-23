@@ -3,13 +3,14 @@ import "./index.scss";
 import { View } from "@tarojs/components";
 import { useEffect, useState } from "react";
 
+import { cart1 } from "@/assets/image/index";
 import CImage from "@/src/components/Common/CImage";
 
 interface T_Props {
   goodClassList: any;
   clickSelectGood: (e: any) => void;
   addCart: (e: any) => void;
-  goPage: (pageType: string, e: any) => void;
+  goPage: (e: any) => void;
 }
 
 const GoodClass: React.FC<T_Props> = (props) => {
@@ -85,20 +86,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
                   >
                     <CImage className="w-230 h-230" src={child.mainImage} />
                     <View className="w-full h-1 bg-black"></View>
-                    {/* {(child?.sellOut ||
-                      !child?.status ||
-                      child?.perSkuLimit) && (
-                      <View
-                        className="w-125 h-52 absolute top-114 left-84 vhCenter text-21 text-black z-99 rounded-9"
-                        style="background-color:rgba(0,0,0,0.5);border:1px solid #ffffff"
-                      >
-                        {child?.perSkuLimit
-                          ? "已兑礼"
-                          : !child?.status
-                          ? "已下架"
-                          : "暂无库存"}
-                      </View>
-                    )} */}
+
                     <View className="text-22 my-10 w-full text-left">
                       {child.name}
                     </View>
@@ -106,22 +94,30 @@ const GoodClass: React.FC<T_Props> = (props) => {
                       {child.point}分
                     </View>
                   </View>
+                  {child?.sellOut && (
+                    <View
+                      className="w-full h-full absolute top-0 left-0 text-white vhCenter text-48 z-99 rounded-9"
+                      style="background-color:rgba(0,0,0,0.5);"
+                    >
+                      售罄
+                    </View>
+                  )}
                   <View
-                    className="w-full h-50 text-24 text-center mt-10 text-white"
+                    className="w-full h-50 text-24 flex text-center mt-10 text-white"
                     style={{ border: "1px solid #000" }}
                   >
                     <View
-                      className="w-150 h-full flex-1 bg-black vhCenter"
-                      onClick={() => goPage("vipExchange", child)}
+                      className="w-150 h-full bg-black vhCenter"
+                      onClick={() => goPage(child)}
                     >
                       立即兑换
                     </View>
                     <View
-                      className="flex-1"
+                      className="flex-1 vhCenter"
                       style="border-right:1px solid #ffffff"
                       onClick={() => addCart(child)}
                     >
-                      加入购物车
+                      <CImage className="w-44 h-44" src={cart1}></CImage>
                     </View>
                   </View>
                 </View>

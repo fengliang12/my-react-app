@@ -1,1 +1,1 @@
-export const SET_COMMON = 'SET_COMMON'
+export const SET_COMMON = "SET_COMMON";
