@@ -6,11 +6,15 @@ import { useMemoizedFn, useSetState } from "ahooks";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import { Back, LogoB, LogoW } from "@/assets/image/index";
+import { Back } from "@/assets/image/index";
 
 export type NavType = {
   /** 导航标题 */
   title?: string;
+  /** 导航图片 */
+  titleImage?: string;
+  /** 字体颜色 */
+  titleColor?: string;
   /** 是否占位 */
   placeholder?: boolean;
   /** 背景色 */
@@ -23,6 +27,7 @@ const app = Taro.getApp();
 
 const Nav: React.FC<NavType> = ({
   title,
+  titleImage = "",
   placeholder,
   backgroundColor,
   logo = "black",
@@ -91,12 +96,8 @@ const Nav: React.FC<NavType> = ({
         )}
         <View className="center" onClick={toTop}>
           {title}
-          {!title && (
-            <Image
-              className="logo"
-              src={logo === "white" ? LogoW : LogoB}
-              mode="widthFix"
-            ></Image>
+          {titleImage && (
+            <Image className="logo" src={titleImage} mode="widthFix"></Image>
           )}
         </View>
       </View>

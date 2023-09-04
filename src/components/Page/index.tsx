@@ -7,6 +7,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import api from "@/src/api";
+import pageSettingConfig from "@/src/config/pageSettingConfig";
 
 import Nav, { NavType } from "../Nav";
 
@@ -35,7 +36,7 @@ const Page: React.FC<PageType> = ({
   const checkBind = useMemoizedFn((e) => {
     if (!isMember && isNeedBind) {
       e.stopPropagation?.();
-      app.to("/pages/bind/index");
+      app.to(pageSettingConfig.registerPath);
     }
   });
   const getPhoneNumber = useMemoizedFn(async (e) => {

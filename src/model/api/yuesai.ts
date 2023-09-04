@@ -9,27 +9,27 @@ declare namespace Api {
     namespace Public {
       interface customerAddress {
         //收件人
-        addressee: string
+        addressee: string;
         //地址的别名
-        aliasName: string
+        aliasName: string;
         //城市
-        city: string
+        city: string;
         //国家
-        country: string
+        country: string;
         //详细地址
-        detail: string
+        detail: string;
         //区县
-        district: string
+        district: string;
         //手机号
-        mobile: string
+        mobile: string;
         //邮编
-        postCode: string
+        postCode: string;
         //是否默认地址
-        preferred: boolean
+        preferred: boolean;
         //省份
-        province: string
+        province: string;
         //电话
-        telephone: string
+        telephone: string;
       }
     }
     namespace Register {
@@ -37,21 +37,21 @@ declare namespace Api {
 
       interface IRequestBody {
         //会员dl的marsId
-        marsId: string
+        marsId: string;
         //活动id
-        activityId: string
+        activityId: string;
         //生日
-        birthday: string
+        birthday: string;
         //客户地址信息
-        customerAddress: Public.customerAddress
+        customerAddress: Public.customerAddress;
         //注册页路径
-        concealUrl: string
+        concealUrl: string;
         //是否同意注册协议
-        conceal: boolean
+        conceal: boolean;
       }
 
       interface IResponse {
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
 
@@ -59,25 +59,25 @@ declare namespace Api {
       type FuncT = (activtyId: string, mobile: string) => MRP<IResponse>;
 
       interface IResponse {
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
 
     namespace SendSample {
-      type FuncT = (counterCode) => MRP<IResponse>; 
+      type FuncT = (counterCode) => MRP<IResponse>;
       interface IResponse {
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
 
     namespace CheckRisk {
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
       interface IRequestBody {
         /** 会员手机号 */
-        phone: string
+        phone: string;
       }
       interface IResponse {
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
 
@@ -85,18 +85,18 @@ declare namespace Api {
       type FuncT = (data: IRequestBody) => MRP<IResponse>;
       interface IRequestBody {
         /** campaignId */
-        campaignId: string,
+        campaignId: string;
         /** 柜台code */
-        counterCode: string,
+        counterCode: string;
         /** 会员唯一标识 */
-        customerId: string,
+        customerId: string;
         /** 纬度 */
-        latitude: number,
+        latitude: number;
         /** 经度 */
-        longitude: number
+        longitude: number;
       }
       interface IResponse {
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
   }

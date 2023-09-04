@@ -12,6 +12,7 @@ import config from "@/config/index";
 import { SET_USER } from "@/store/constants/index";
 import configStore from "@/store/index";
 
+import pageSettingConfig from "./config/pageSettingConfig";
 import updateManager from "./utils/updateManager";
 
 layout.init({
@@ -175,7 +176,7 @@ class App extends Component<any> {
           ) !== -1
         ) {
           return await Taro.switchTab({
-            url: "/pages/index/index",
+            url: pageSettingConfig.homePath,
           });
         }
       }
@@ -195,7 +196,7 @@ class App extends Component<any> {
   }
   onPageNotFound() {
     Taro.switchTab({
-      url: "/pages/index/index",
+      url: pageSettingConfig.homePath,
     });
   }
   render() {

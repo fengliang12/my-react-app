@@ -10,229 +10,231 @@ declare namespace Api {
       /** 购物车接口通用RequestBody */
       interface ICartRequestBody {
         /** 活动code */
-        activityCode?: string,
+        activityCode?: string;
         /** 自定义扩展信息 */
-        customInfos?: Array<Public.ICustomInfo>
+        customInfos?: Array<Public.ICustomInfo>;
         /** 商品数量 */
-        quantity: number
+        quantity: number;
         /** sku标识 */
-        skuId: string
+        skuId: string;
         /** 是否选中 */
-        selected: boolean,
+        selected: boolean;
         /** 购物车条目id */
-        cartItemId?: string,
+        cartItemId?: string;
       }
 
       /** 购物车接口通用Response */
       interface ICartResponse {
         /** 有效礼品 */
-        goods: ICartItem[]
+        goods: ICartItem[];
         /** 失效礼品 */
-        invalidGoods: ICartItem[]
+        invalidGoods: ICartItem[];
       }
 
       /** 购物车内礼品详情 */
       interface ICartItem {
         /** 购物车条目id */
-        cartItemId: string,
+        cartItemId: string;
         /** 创建时间 */
-        createdTime: string
+        createdTime: string;
         /** 会员等级限制 */
-        customerTag: ICustomerTag[]
+        customerTag: ICustomerTag[];
         /** 描述信息 */
-        description: string
+        description: string;
         /** 图片详情 */
-        detailImages: string[]
+        detailImages: string[];
         /** 活动积分 */
-        discountPoint: number
+        discountPoint: number;
         /** 有效期开始时间 */
-        from: string
+        from: string;
         /** 礼品编码 */
-        giftCode: string
+        giftCode: string;
         /** 商品类目 */
-        goodsCategory: string
+        goodsCategory: string;
         /** 限购信息 */
-        goodsSkuSalesRule: IGoodsSkuSalesRule
+        goodsSkuSalesRule: IGoodsSkuSalesRule;
         /** 唯一标识 */
-        id: string
+        id: string;
         /** 是否限购 */
-        limiting: boolean
+        limiting: boolean;
         /** sku主图 */
-        mainImage: string
+        mainImage: string;
         /** crm系统积分兑礼Code */
-        messageCode: string
+        messageCode: string;
         /** 礼品名称 */
-        name: string
+        name: string;
         /** 是否套装商品 */
-        packageGoods: boolean
+        packageGoods: boolean;
         /** 套装 */
-        packageGoodsSkuSettingViewList: IPackageGoodsSkuSettingView
+        packageGoodsSkuSettingViewList: IPackageGoodsSkuSettingView;
         /** 兑礼积分 */
-        point: number
+        point: number;
         /** 兑礼金额 */
-        price: number
+        price: number;
         /** sku数量 */
-        quantity: number
+        quantity: number;
         /** 限兑数量(限制客人在这个周期的兑礼数量) */
         quantitySalesRule: {
           /**频次范围:忽略 IGNORE,全生命周期FULL LIFE每年BY YEAR 每月 BY MONTH 每天BY DAY */
           range: "IGNORE" | "FULL LIFE" | "BY YEAR" | "BY MONTH" | "BY DAY";
           times: number;
-        }
+        };
         /** 销售时效状态 */
-        saleTimeStatus: string
+        saleTimeStatus: string;
         /** 销售类目 */
-        salesCategoryList: string[]
+        salesCategoryList: string[];
         /** 是否勾选标识 */
-        selected: boolean
+        selected: boolean;
         /** 已售罄 */
-        sellOut: boolean
+        sellOut: boolean;
         /** 橱窗图 */
-        shopWindowImages: string[]
+        shopWindowImages: string[];
         /** 套装商品是否使用单独库存 */
-        singletonStock: boolean
+        singletonStock: boolean;
         /** skuId */
-        skuId: string
+        skuId: string;
         /** 上下架状态 */
-        status: boolean
+        status: boolean;
         /** 缓存的库存 */
-        stock: number
+        stock: number;
         /** 是否支付限购时段 */
-        supportLimitTime: boolean
+        supportLimitTime: boolean;
         /** 结束时段比如24:00 */
-        timeEnd: string
+        timeEnd: string;
         /** 开始时段比如10:00 */
-        timeStart: string
+        timeStart: string;
         /** 有效期结束时间 */
-        to: string
+        to: string;
         /** 礼品类型 */
-        type: string
+        type: string;
         /** 更新时间 */
-        updatedTime: string
+        updatedTime: string;
 
         /** 自由属性 */
-        [prop: string]: any
+        [prop: string]: any;
       }
 
       /** 购物车用户标签 */
       interface ICustomerTag {
         /** 补充说明 */
-        description: string
+        description: string;
         /** 唯一标识 */
-        id: string
+        id: string;
         /** 标签名称 */
-        name: string
+        name: string;
       }
 
       /** 购物车礼品销售规则 */
       interface IGoodsSkuSalesRule {
         /** 天数 */
-        days: number
+        days: number;
         /** 限制类型 */
-        range: 'IGNORE' | 'NO_LIMIT' | 'FULL_LIFE' | 'BY_YEAR' | 'BY_MONTH' | 'BY_DAY' | 'INTERVAL'
+        range:
+          | "IGNORE"
+          | "NO_LIMIT"
+          | "FULL_LIFE"
+          | "BY_YEAR"
+          | "BY_MONTH"
+          | "BY_DAY"
+          | "INTERVAL";
         /** 次数 */
-        times: number
+        times: number;
       }
 
       /** 购物车套装设置 */
       interface IPackageGoodsSkuSettingView {
         /** 可选的明细 */
-        detailList: IBonusPointView[]
+        detailList: IBonusPointView[];
         /** 套装数量 */
-        quantity: number
+        quantity: number;
         /** 可选的SkuList */
-        skuList: string[]
+        skuList: string[];
       }
 
       /** 套装内单个礼品详情 */
       interface IBonusPointView {
-        [prop: string]: any
+        [prop: string]: any;
       }
 
       /** 提交购物车订单的礼品明细信息 */
       interface IBonusPointCartItems {
         /** 积分商品表标识，由skuId代替 */
-        bonusId: string
+        bonusId: string;
         /** 购物车条目标识 */
-        cartItemId: string
+        cartItemId: string;
         /** 优惠券code */
-        code?: string
+        code?: string;
         /** 自定义扩展信息 */
-        customInfos?: ICustomInfo[]
+        customInfos?: ICustomInfo[];
         /** 礼品编码 */
-        giftCode: string
+        giftCode: string;
         /** 兑礼单价积分 */
-        point: number
+        point: number;
         /** 兑礼单价金额 */
-        price?: number
+        price?: number;
         /** sku数量 */
-        quantity: number
+        quantity: number;
         /** sku标识 */
-        skuId: string
+        skuId: string;
       }
 
       /** 自定义扩展信息 */
       interface ICustomInfo {
         /** 自定义扩展名称 */
-        name: string
+        name: string;
         /** 自定义扩展值 */
-        value: string
+        value: string;
       }
 
       /** 配送信息 */
       interface IDeliverInfo {
         /** 收件人姓名 */
-        addressee: string
+        addressee: string;
         /** 市 */
-        city: string
+        city: string;
         /** 详细地址 */
-        detail: string
+        detail: string;
         /** 区 */
-        district: string
+        district: string;
         /** 收件人手机号 */
-        mobile: string
+        mobile: string;
         /** 邮编 */
-        postcode: string
+        postcode: string;
         /** 省 */
-        province: string
+        province: string;
         /** 配送方式 = ['express', 'self_pick_up'] */
-        type?: DeliverType
+        type?: DeliverType;
       }
-
     }
     /** 查询购物车详情
      *  @Method POST
      */
     namespace GetCart {
       /** 接口定义 */
-      type FuncT = (activityCode?: string) => MRP<IResponse>
+      type FuncT = (activityCode?: string) => MRP<IResponse>;
 
       /** 返回参数 */
-      interface IResponse extends Public.ICartResponse {
-      }
+      interface IResponse extends Public.ICartResponse {}
     }
     /** 获取购物车内礼品数量
      *  @Method GET
      * */
     namespace GetCartCount {
       /** 接口定义 */
-      type FuncT = () => MRP<number>
+      type FuncT = () => MRP<number>;
     }
     /** 更新购物车数据
      *  @Method POST
      */
     namespace UpdateCart {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       /** 请求参数 Body */
-      interface IRequestBody extends Public.ICartRequestBody {
-
-      }
+      interface IRequestBody extends Public.ICartRequestBody {}
 
       /** 返回参数 */
-      interface IResponse extends Public.ICartResponse {
-      }
+      interface IResponse extends Public.ICartResponse {}
     }
     /** 商品添加到购物车
      *  @Method POST
@@ -242,98 +244,93 @@ declare namespace Api {
        * 接口定义
        * config: AxiosRequestConfig
        * */
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       /** 请求参数 Body */
-      interface IRequestBody extends Public.ICartRequestBody {
-      }
+      interface IRequestBody extends Public.ICartRequestBody {}
 
       /** 返回参数 */
-      interface IResponse extends Public.ICartResponse {
-      }
+      interface IResponse extends Public.ICartResponse {}
     }
     /** 切换购物车全选状态
      *  @Method POST
      */
     namespace SelectAllCart {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       /** 请求参数 Body */
       interface IRequestBody {
         /** 活动code */
-        activityCode: string
+        activityCode: string;
         /** 是否全选 */
-        selected: boolean
+        selected: boolean;
         /** 选择的skuId数组 */
-        skuList?: string[]
+        skuList?: string[];
       }
 
       /** 返回参数 */
-      interface IResponse extends Public.ICartResponse {
-      }
+      interface IResponse extends Public.ICartResponse {}
     }
     /** 切换购物车单选状态
      *  @Method POST
      */
     namespace SelectOneGift {
       /** 接口定义 */
-      type FuncT = (skuId: string) => MRP<IResponse>
+      type FuncT = (skuId: string) => MRP<IResponse>;
 
       /** 返回参数 */
-      interface IResponse extends Public.ICartResponse {
-      }
+      interface IResponse extends Public.ICartResponse {}
     }
     /** 清空购物车(购物车删除商品)
      *  @Method POST
      */
     namespace RemoveCart {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       /** 请求参数 Body */
       interface IRequestBody {
         /** 活动code */
-        activityCode?: string
+        activityCode?: string;
         /** 购物车条目标识列表 */
-        cartItemIdList?: Array<string>
+        cartItemIdList?: Array<string>;
         /** 是否删除所有 */
-        removeAll?: boolean
+        removeAll?: boolean;
       }
 
       /** 返回参数 */
-      interface IResponse extends Public.ICartResponse {
-      }
+      interface IResponse extends Public.ICartResponse {}
     }
     /** 从购物车途径，点击提交订单
      *  @Method POST
      */
     namespace SubmitCart {
       /** 接口定义 */
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       /** 请求参数 Body */
       interface IRequestBody {
         /** 活动code */
-        activityCode: string
+        activityCode: string;
         /** 活动id */
-        activityId: string
+        activityId: string;
         /** 渠道标识(公众号、小程序、PC、线下门店) = ['wm', 'wa', 'pc', 'store'] */
-        channelId: ChannelType
+        channelId: ChannelType;
         /** 自定义扩展信息 */
-        customInfos?: Array<Public.ICustomInfo>
+        customInfos?: Array<Public.ICustomInfo>;
         /** 配送信息 */
-        deliverInfo: Public.IDeliverInfo | null
+        deliverInfo: Public.IDeliverInfo | null;
         /** 礼品详细信息 */
-        bonusPointCartItems: Public.IBonusPointCartItems[]
+        bonusPointCartItems: Public.IBonusPointCartItems[];
         /** 特殊兑礼code */
-        code?: string
+        code?: string;
       }
 
       /** 返回参数 */
       interface IResponse {
         /** 成功订单id */
-        orderId: string
+        orderId: string;
       }
     }
     /** 信用积分计算
@@ -341,10 +338,10 @@ declare namespace Api {
      */
     namespace CreditPointsCalc {
       /** 接口定义 */
-      type FuncT = (data: number) => MRP<IResponse>
+      type FuncT = (data: number) => MRP<IResponse>;
 
       /** 返回参数 */
-      type IResponse = number
+      type IResponse = number;
     }
 
     /** 快递100查询
@@ -369,6 +366,3 @@ declare namespace Api {
     }
   }
 }
-
-
-

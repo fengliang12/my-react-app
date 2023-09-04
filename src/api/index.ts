@@ -1,3 +1,4 @@
+import arvatoReservation from "./arvatoReservation/index";
 import buyBonusPoint from "./buyBonusPoint/index";
 import cart from "./cart/index";
 import common from "./common/index";
@@ -17,4 +18,5 @@ export default {
   goods,
   buyBonusPoint,
   cart,
+  arvatoReservation,
 };

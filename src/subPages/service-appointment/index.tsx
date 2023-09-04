@@ -1,13 +1,26 @@
-import "./index.less";
-
 import { ScrollView, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
+import { useAsyncEffect } from "ahooks";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
+import api from "@/api/index";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 import to from "@/src/utils/to";
 
+const app: App.GlobalData = Taro.getApp();
 const Index = () => {
+  const userInfo = useSelector((state: Store.States) => state.user);
+  const [projects, setProjects] = useState<any>();
+
+  useAsyncEffect(async () => {
+    await app.init();
+    let res = await api.arvatoReservation.getProjects();
+    setProjects(res?.data);
+  }, []);
+
   /**
    * 初始化页面
    */
@@ -32,7 +45,7 @@ const Index = () => {
     },
   ];
   return (
-    <View className="service-appointment text-white flex flex-col">
+    <View className="min-h-screen bg-black text-white flex flex-col">
       <CHeader
         back
         titleImage={`${config.imgBaseUrl}/icon/title_image.png`}

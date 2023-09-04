@@ -4,13 +4,13 @@ import { Text, View } from "@tarojs/components";
 import Taro, { usePageScroll } from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 
+import pageSettingConfig from "@/src/config/pageSettingConfig";
 import easycolor from "@/utils/easycolor";
 import { getHeaderHeight } from "@/utils/getHeaderHeight";
 import { getPages } from "@/utils/getPages";
 import to from "@/utils/to";
 
 import CImage from "../CImage";
-import pageSettingConfig from "./pageSettingConfig";
 
 export interface CHeaderType {
   //是否填充

@@ -12,11 +12,10 @@ import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import HeaderTabbar from "@/src/components/Common/HeaderTabbar";
 import config from "@/src/config";
 
-import { textData } from "./testData";
-
 const app = Taro.getApp<App.GlobalData>();
 
 type tabType = { title: string; index: number; status: CouponStatusType };
+
 const tabList: Array<tabType> = [
   { title: "待使用", index: 0, status: "usable" },
   { title: "已使用", index: 1, status: "redeem" },
@@ -25,7 +24,7 @@ const tabList: Array<tabType> = [
 
 const Index = () => {
   const activeIndex = useRef({ index: 0 });
-  const [couponList, setCouponList] = useState<any>(textData);
+  const [couponList, setCouponList] = useState<any>([]);
   const [indexList, setIndexList] = useState<number[]>([]);
 
   /**
@@ -49,14 +48,17 @@ const Index = () => {
    * 点击菜单栏切换
    */
   const tabClick = useMemoizedFn((index) => {
-    setCouponList([...textData]);
+    setCouponList([]);
     if (activeIndex.current.index === index) return;
     activeIndex.current.index = index;
     getMyCouponListByStatus();
   });
 
   return (
-    <View className="coupon">
+    <View
+      className="text-white w-screen h-screen flex flex-col items-center justify-start box-border"
+      style="background-color: #181818;"
+    >
       <CHeader
         back
         titleColor="#ffffff"
@@ -65,7 +67,7 @@ const Index = () => {
       ></CHeader>
 
       <CImage
-        className="img1"
+        className="w-full"
         mode="widthFix"
         src={`${config.imgBaseUrl}/coupon/header.jpg`}
       ></CImage>
@@ -76,21 +78,25 @@ const Index = () => {
         tabClick={tabClick}
       ></HeaderTabbar>
 
-      <ScrollView className="scroll_view" scrollY>
+      <ScrollView className="flex-1 overflow-hidden" scrollY>
         {couponList?.length > 0 ? (
-          <View className="gifts">
+          <View className="px-30 py-18">
             {couponList?.map((item, index) => {
               return (
-                <View className="gift-item" key={item.id}>
-                  <View className="gift-top">
-                    <View className="gift-item-left vhCenter">
+                <View
+                  className="p-22 mb-30"
+                  style="background-color: #373737"
+                  key={item.id}
+                >
+                  <View className="flex justify-between">
+                    <View className="w-230 h-174 bg-white overflow-hidden vhCenter">
                       <CImage
-                        className="gift-img"
+                        className="h-114 float-left"
                         mode="heightFix"
                         src={item.mainImage}
                       ></CImage>
                     </View>
-                    <View className="gift-item-right vhCenter flex-col">
+                    <View className="flex-1 px-10 py-20 text-white text-28 vhCenter flex-col">
                       <View className="text-36">先锋礼遇</View>
                       <View className="text-18 my-10">
                         2023.10.1-2023.12.15
@@ -110,7 +116,10 @@ const Index = () => {
                     </View>
                   </View>
                   {indexList.includes(index) && (
-                    <View className="gift-detail">
+                    <View
+                      className="w-670 box-border text-26 text-center px-64 py-40"
+                      style="background: #6c6c6c"
+                    >
                       <View className="text-left">
                         1 卡券详情：腮红试色卡片1片及拉古纳试色卡1片{" "}
                       </View>
@@ -120,7 +129,7 @@ const Index = () => {
                       <View className="text-left">
                         3 此卡券逾期失效，不予补发
                       </View>
-                      <View className="qr-code bg-white">
+                      <View className="inline-block mt-30 bg-white">
                         <CQRCodeCustom
                           text="11111111111111"
                           width={250}

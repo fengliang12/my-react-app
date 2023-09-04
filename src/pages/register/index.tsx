@@ -154,16 +154,15 @@ const Index = () => {
           title: "MY NARS",
         }}
       >
-        <View className="bind">
-          <View className="bind-top">
+        <View className="register">
+          <View className="register-top">
             <View className="text-white text-center text-36 mb-50">
               欢迎加入NARS会员
             </View>
             <View className="head">
               <Image
                 src={user.avatarUrl || P1}
-                className="img"
-                mode="widthFix"
+                className="w-160 h-160 mb-10 rounded-160"
               />
               <Avatar
                 callback={(avatarUrl) =>
@@ -179,7 +178,7 @@ const Index = () => {
               <View className="right">
                 <Input
                   type="nickname"
-                  className="right-input"
+                  className="text-right"
                   placeholder="请输入"
                   placeholderClass="ipt-placeholder"
                   value={user.nickName}
@@ -194,7 +193,11 @@ const Index = () => {
             <View className="item">
               <View className="left">手机号*</View>
               <View className="right">
-                {!user.mobile && <View className="mobile-auth">一键获取</View>}
+                {!user.mobile && (
+                  <View className="w-170 h-60 vhCenter text-black bg-white text-28 rounded-60">
+                    一键获取
+                  </View>
+                )}
                 {user.mobile}
                 {!isMember && (
                   <GetPhoneNumber
@@ -217,12 +220,17 @@ const Index = () => {
                   onChange={(e) => setUser({ birthDate: e.detail.value })}
                   end={dayjs().subtract(14, "year").format("YYYY-MM-DD")}
                 >
-                  <View className="birthDate">
+                  <View className="flex items-center mr-20">
                     {!user.birthDate && (
-                      <View className="txt">生日信息一经确认，无法修改</View>
+                      <View
+                        className="text-20 font-thin"
+                        style={{ color: "#c1c1c1" }}
+                      >
+                        生日信息一经确认，无法修改
+                      </View>
                     )}
                     {user.birthDate}
-                    <Image src={P2} mode="widthFix" className="btm" />
+                    <Image src={P2} mode="widthFix" className="w-14 ml-15" />
                   </View>
                 </Picker>
               </View>
@@ -237,12 +245,12 @@ const Index = () => {
                     setUser({ gender: genderArr[e.detail.value] });
                   }}
                 >
-                  <View className="birthDate">
+                  <View className="flex items-center mr-20">
                     {!user.gender && (
                       <View className="ipt-placeholder">请选择</View>
                     )}
                     {user.gender}
-                    <Image src={P2} mode="widthFix" className="btm" />
+                    <Image src={P2} mode="widthFix" className="w-14 ml-15" />
                   </View>
                 </Picker>
               </View>
@@ -260,11 +268,11 @@ const Index = () => {
                     setUser({ counterId: counter.code });
                   }}
                 >
-                  <View className="birthDate">
+                  <View className="flex items-center mr-20">
                     <View className="ipt-placeholder">
                       {selectCounter ? selectCounter.city : "请选择"}
                     </View>
-                    <Image src={P2} mode="widthFix" className="btm" />
+                    <Image src={P2} mode="widthFix" className="w-14 ml-15" />
                   </View>
                 </MultiplePicker>
               </View>
@@ -274,7 +282,10 @@ const Index = () => {
               checkColor="#ffffff"
               style="color:#ffffff;font-size:22rpx;margin-top:180rpx"
             ></PrivacyPolicyText>
-            <View className="submit" onClick={submit}>
+            <View
+              className="mt-85 w-540 h-70 bg-white rounded-10 text-black text-34 vhCenter"
+              onClick={submit}
+            >
               {isMember ? "完善信息" : "提交注册"}
             </View>
           </View>

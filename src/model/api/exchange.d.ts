@@ -1,60 +1,57 @@
 declare namespace Api {
-  namespace Public {
-
-  }
+  namespace Public {}
   namespace Exchange {
-
     namespace GetGiftsByActivityCode {
-      type FunT = (IRequestBody) => MRP<any[]>
+      type FunT = (IRequestBody) => MRP<any[]>;
 
       interface IRequestBody {
         /** 兑礼中台活动code */
-        activityCode: string,
+        activityCode: string;
         /** 类目id，传'0'是所有 */
-        categoryId: '0',
+        categoryId: "0";
         /** 等级数组 */
-        customerLevelNameList: string [],
+        customerLevelNameList: string[];
         /** 销售状态，true上架，false下架 */
-        saleStatus: boolean,
+        saleStatus: boolean;
       }
     }
 
     namespace GetNestedGiftsByActivityCode {
-      type FunT = (IRequestBody) => MRP<IResponse>
+      type FunT = (IRequestBody) => MRP<IResponse>;
 
       interface IRequestBody {
         /** 兑礼中台活动code */
-        activityCode: string,
+        activityCode: string;
         /** 类目id，传'0'是所有 */
-        categoryId: '0',
+        categoryId: "0";
         /** 等级数组 */
-        customerLevelNameList: string [],
+        customerLevelNameList: string[];
         /** 销售状态，true上架，false下架 */
-        saleStatus: boolean,
+        saleStatus: boolean;
       }
 
       interface IResponse {
-        goodsListViewList: any[]
-        id: string
-        name: string,
-        parent: string
+        goodsListViewList: any[];
+        id: string;
+        name: string;
+        parent: string;
 
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
 
     namespace getOrderPage {
-      type FunT = (IRequestBody) => MRP<any>
+      type FunT = (IRequestBody) => MRP<any>;
 
       interface IRequestBody {
         /** 兑礼中台活动code */
-        activityCode: string,
+        activityCode: string;
         /** 截止时间 */
-        buyEndTime: string,
+        buyEndTime: string;
         /** 起始时间 */
-        buyStartTime: string,
+        buyStartTime: string;
         /** 会员id */
-        customerId: string,
+        customerId: string;
         /**
          *  wait_pay          待付款（已创建）
          *  cancelled         已取消（未支付取消）
@@ -67,11 +64,19 @@ declare namespace Api {
          *  refunded          退单完成
          *
          * 订单状态 */
-        orderStatus: "wait_pay" | "cancelled" | "wait_group" | "wait_shipment" | "wait_receive" | "wait_estimate" | "success" | "refunded",
+        orderStatus:
+          | "wait_pay"
+          | "cancelled"
+          | "wait_group"
+          | "wait_shipment"
+          | "wait_receive"
+          | "wait_estimate"
+          | "success"
+          | "refunded";
         /** 页码 */
-        pageIndex: number,
+        pageIndex: number;
         /** 每页数据量 */
-        pageSize: number,
+        pageSize: number;
       }
     }
 
@@ -80,7 +85,7 @@ declare namespace Api {
       interface IResponse {
         onlineBuy: boolean;
         /**返回code 0:可兑礼 1:会员为黑名单 2:无兑礼资质 , */
-        redemptionCode: string; 
+        redemptionCode: string;
         redemptionDesc: string;
         creditPoints: number;
         remainPoints: number;
@@ -90,44 +95,43 @@ declare namespace Api {
 
     namespace queryIntegralOrderLocked {
       type FunT = () => MRP<IResponse>;
-      type IResponse = boolean
+      type IResponse = boolean;
     }
 
     namespace integralOrderRefund {
-      type FunT = (orderId:string) => MRP<IResponse>;
+      type FunT = (orderId: string) => MRP<IResponse>;
       interface IResponse {
-        code : string;
-        data : any;
-        message : string;
+        code: string;
+        data: any;
+        message: string;
       }
     }
 
     namespace memberDayCouponRight {
       type FunT = () => MRP<IResponse>;
       interface IResponse {
-        popup : boolean;
+        popup: boolean;
       }
     }
 
     namespace memberDayCheckBuyValidate {
-
       interface IRequestBody {
         /** 兑礼中台活动code */
-        activityCode: string,
-        quantity: number,
-        skuId: string,
+        activityCode: string;
+        quantity: number;
+        skuId: string;
       }
-      type FunT = (query: IRequestBody) => MRP<IResponse>
+      type FunT = (query: IRequestBody) => MRP<IResponse>;
       interface IResponse {
-        code : string;
-        message : string;
+        code: string;
+        message: string;
       }
     }
 
     namespace checkMsg {
-      type IRequestBody = string
-      type FunT = (query: IRequestBody) => MRP<IResponse>
-      type IResponse = boolean
+      type IRequestBody = string;
+      type FunT = (query: IRequestBody) => MRP<IResponse>;
+      type IResponse = boolean;
     }
   }
 }

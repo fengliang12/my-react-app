@@ -4,174 +4,174 @@ declare namespace Api {
      * 获取当月可预约数量
      */
     namespace CurrentMonth {
-      type FuncT = () => MRP<IResponse>
+      type FuncT = () => MRP<IResponse>;
 
       interface IResponse {
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
     /**
      * 获取可预约的城市列表
      */
     namespace GetAvailableCity {
-      type FuncT = () => MRP<IResponse>
+      type FuncT = () => MRP<IResponse>;
 
       interface IResponse {
         /** 城市标识 */
-        cityCode: string
+        cityCode: string;
         /** 城市名称 */
-        cityName: string
+        cityName: string;
 
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
     /**
      * 获取可预约的门店列表
      */
     namespace GetAvailableStore {
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       interface IRequestBody {
         /** 城市标识 */
-        cityCode?: string
+        cityCode?: string;
         /** 门店标识 */
-        storeCode?: string
+        storeCode?: string;
       }
 
       interface IResponse {
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
     /**
      * 空瓶回收无商品信息预约
      */
     namespace SubmitNoProduct {
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       interface IRequestBody {
         /** 预约空瓶回收数量 */
-        appointQuantity: string
+        appointQuantity: string;
         /** 预约日期 */
-        appointmentDate: string
+        appointmentDate: string;
         /** 柜台编号 */
-        counterCode: string
+        counterCode: string;
         /** 会员手机号 */
-        customerMobile: string
+        customerMobile: string;
         /** 会员名字 */
-        customerName: string
+        customerName: string;
         /** 预约标识 */
-        id?: string
+        id?: string;
       }
 
       interface IResponse {
         /** 预约标识 */
-        id: string
+        id: string;
         /** 预约编号 */
-        reservationCode: string
+        reservationCode: string;
 
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
     /**
      * 获取单个客户预约记录，无商品 信息
      */
     namespace AppointmentListNoProduct {
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       interface IRequestBody {
         /** 当前第几页，默认 1 */
-        currentPage: number
+        currentPage: number;
         /** 每页大小，默认 10 */
-        limit: number
+        limit: number;
         /** 预约状态 (1-已预约，2-已核销，3-已过期，4-处理中，5-已取消 */
-        status?: number
+        status?: number;
       }
 
       interface IResponse {
         /** 当前页码 */
-        currentPage: number
+        currentPage: number;
         /** 每页大小 */
-        limit: number
+        limit: number;
         /** 总记录数 */
-        totalCount: number
+        totalCount: number;
         /** 总页数 */
-        totalPages: number
+        totalPages: number;
         /** 预约列表 */
-        items: orderList[]
+        items: orderList[];
 
-        [prop: string]: any
+        [prop: string]: any;
       }
 
       interface orderList {
         /** 预约空瓶回收数量 */
-        appointQuantity: number
+        appointQuantity: number;
         /** 预约日期 */
-        appointmentDate: string
+        appointmentDate: string;
         /** 预约状态 (1-已预约，2-已核销，3-已过期，4-处理中，5-已取消*/
-        appointmentStatus: '1' | '2' | '3' | '4' | '5'
+        appointmentStatus: "1" | "2" | "3" | "4" | "5";
         /** 取消时间 */
-        cancelTime: string
+        cancelTime: string;
         /** 会员编号 */
-        consumerDlId: string
+        consumerDlId: string;
         /** 柜台编号 */
-        counterCode: string
+        counterCode: string;
         /** 柜台名称 */
-        counterName: string
+        counterName: string;
         /** 小程序会员ID */
-        custId: string
+        custId: string;
         /** 预约标识 */
-        id: string
+        id: string;
         /** 是否已发放积分 */
-        pointsFlag: boolean
+        pointsFlag: boolean;
         /** 实际空瓶回收数量（已核销记录有数据） */
-        quantity: number
+        quantity: number;
         /** 回收编号 */
-        recycleCode: string
+        recycleCode: string;
         /** 预约编号 */
-        reservationCode: string
+        reservationCode: string;
         /** 核销时间 */
-        verificationTime: string
+        verificationTime: string;
 
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
     /** 根据订单号获取已回收的空瓶和已预约但未核销的空瓶 */
     namespace BottleQuantity {
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       interface IRequestBody {
         /** 订单号 */
-        orderNos: Array<string>
+        orderNos: Array<string>;
       }
 
       interface IResponse {
         /** 订单号 */
-        dlOrderNo: string
+        dlOrderNo: string;
         /** 订单详情号 */
-        dlDetailNo: string
+        dlDetailNo: string;
         /** 空瓶对应商品编码 */
-        bottleProductCode: string
+        bottleProductCode: string;
         /** gift 套组 code */
-        giftCode: string
+        giftCode: string;
         /** 已回收空瓶数量 */
-        reclaimedQuantity: string
+        reclaimedQuantity: string;
         /** 已预约未核销空瓶数量 */
-        appointQuantity: string
+        appointQuantity: string;
 
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
     /** 取消预约 */
     namespace EmptyBottleCancel {
-      type FuncT = (data: IRequestBody) => MRP<IResponse>
+      type FuncT = (data: IRequestBody) => MRP<IResponse>;
 
       interface IRequestBody {
         /** 预约标识 */
-        id: string
+        id: string;
       }
 
       interface IResponse {
-        [prop: string]: any
+        [prop: string]: any;
       }
     }
   }

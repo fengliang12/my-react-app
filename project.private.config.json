@@ -17,15 +17,15 @@
           "scene": null
         },
         {
-          "name": "会员信息修改",
-          "pathName": "pages/bind/index",
+          "name": "个人中心",
+          "pathName": "pages/tabbar/user/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
           "name": "卡券中心",
-          "pathName": "pages/coupon/index",
+          "pathName": "subPages/coupon/index",
           "query": "",
           "launchMode": "default",
           "scene": null
@@ -95,7 +95,7 @@
         },
         {
           "name": "首页",
-          "pathName": "pages/index/index",
+          "pathName": "pages/tabbar/index/index",
           "query": "",
           "launchMode": "default",
           "scene": null

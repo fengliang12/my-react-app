@@ -21,7 +21,7 @@ const Index: React.FC<PropsType> = (props) => {
   const [selectCounter, setSelectCounter] = useState<any>(null);
 
   useEffect(() => {
-    setShowApply(true);
+    // setShowApply(true);
     getCounterList();
   }, []);
 
@@ -40,8 +40,6 @@ const Index: React.FC<PropsType> = (props) => {
    * 确认
    */
   const confirm = () => {
-    console.log("applyType", applyType, selectCounter);
-
     if (!applyType) {
       toast("请先选择领取方式");
       return;
