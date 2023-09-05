@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 
 import Layout from "@/src/components/Layout";
+import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
 
 const Index = () => {
@@ -16,11 +17,8 @@ const Index = () => {
       }}
       isNeedBind
     >
-      <Layout
-        globalStyle={{ backgroundColor: "transparent" }}
-        code="user"
-        closeAction={!userInfo.isMember}
-      />
+      <MemberCard></MemberCard>
+      <Layout code="user" closeAction={!userInfo.isMember}></Layout>
     </Page>
   );
 };

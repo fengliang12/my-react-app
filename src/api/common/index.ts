@@ -24,6 +24,12 @@ const upLoadFile = (data) =>
     filePath: data.filePath,
   });
 
+/** 获取中台地址 */
+const getZTArea = () =>
+  http.get("https://res-wxec-unipt.lorealchina.com/integral/area.json", {
+    noToken: true,
+  });
+
 export default {
   /** 授权获取用户信息和token */
   login,
@@ -35,4 +41,6 @@ export default {
   findKvDataByType,
   /** 文件上传地址(CDN)  */
   upLoadFile,
+  /**获取中台地址 */
+  getZTArea,
 };

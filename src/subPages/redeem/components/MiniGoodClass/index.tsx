@@ -1,6 +1,7 @@
 import "./index.scss";
 
 import { View } from "@tarojs/components";
+import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
 
 import { cart1 } from "@/assets/image/index";
@@ -8,7 +9,7 @@ import CImage from "@/src/components/Common/CImage";
 
 interface T_Props {
   goodClassList: any;
-  clickSelectGood: (e: any) => void;
+  clickSelectGood?: (e: any) => void;
   addCart: (e: any) => void;
   goPage: (e: any) => void;
 }
@@ -39,9 +40,9 @@ const GoodClass: React.FC<T_Props> = (props) => {
    * 点击积分栏
    * @param index
    */
-  const tabClick = (index: string) => {
+  const tabClick = useMemoizedFn((index: string) => {
     setActiveIndex(index);
-  };
+  });
 
   return (
     <View className="MiniGoodClass text-black text-center py-40 px-70">
@@ -80,14 +81,9 @@ const GoodClass: React.FC<T_Props> = (props) => {
                   className="GoodItem w-290 px-30 py-20 shadow-custom flex flex-col items-center mb-40 relative box-border"
                   key={index}
                 >
-                  <View
-                    className="w-full relative"
-                    onClick={() => clickSelectGood(child.id)}
-                  >
+                  <View className="w-full relative">
                     <CImage className="w-230 h-230" src={child.mainImage} />
-                    <View className="w-full h-1 bg-black"></View>
-
-                    <View className="text-22 my-10 w-full text-left">
+                    <View className="text-22 h-60 my-10 w-full text-left">
                       {child.name}
                     </View>
                     <View className="text-22 my-10 w-full text-left">

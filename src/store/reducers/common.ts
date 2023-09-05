@@ -4,11 +4,21 @@ import { createReducer } from "../help";
 
 const INITIAL_STATE = {
   navHeight: 0,
+  changeExchange: true,
 };
 
 export default createReducer(
   {
     SET_COMMON(state, action: { payload: Partial<Store.Common> }) {
+      if (action.payload) {
+        forOwn(action.payload, function (value, key) {
+          if (!isNil(value)) {
+            set(state, key, value);
+          }
+        });
+      }
+    },
+    CHANGE_EXCHANGE(state, action: { payload: Partial<Store.Common> }) {
       if (action.payload) {
         forOwn(action.payload, function (value, key) {
           if (!isNil(value)) {

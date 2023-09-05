@@ -5,11 +5,13 @@ import React, { useEffect, useState } from "react";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import to from "@/src/utils/to";
 
 const orderList = [{ label: "全部订单", value: "all" }];
 const Index = () => {
   const [orderIndex, setOrderIndex] = useState<number>(0);
-  const [date, setDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const endTime = dayjs(Date.now()).format("YYYY-MM");
 
   return (
@@ -34,16 +36,16 @@ const Index = () => {
         >
           <Picker
             mode="date"
-            value={date}
+            value={startDate}
             start="2010-01"
             end={endTime}
             fields="month"
             onChange={(e) => {
               let value = e.detail.value;
-              setDate(value);
+              setStartDate(value);
             }}
           >
-            <Text>{date ? date : "请选择日期"}</Text>
+            <Text>{startDate ? startDate : "请选择日期"}</Text>
           </Picker>
         </View>
         <View>-</View>
@@ -53,21 +55,26 @@ const Index = () => {
         >
           <Picker
             mode="date"
-            value={date}
+            value={endDate}
             start="2010-01"
             end={endTime}
             fields="month"
             onChange={(e) => {
               let value = e.detail.value;
-              setDate(value);
+              setEndDate(value);
             }}
           >
-            <Text>{date ? date : "请选择日期"}</Text>
+            <Text>{endDate ? endDate : "请选择日期"}</Text>
           </Picker>
         </View>
       </View>
+
+      {/* 订单列表 */}
       <ScrollView className="flex-1" scrollY>
-        <View className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30">
+        <View
+          className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30"
+          onClick={() => to("/subPages/redeem/orderDetail/index")}
+        >
           <View className="flex justify-between">
             <Text className="flex-1">2023-11-15</Text>
             <Text>待领取</Text>
@@ -80,8 +87,8 @@ const Index = () => {
             <Text className="w-150">订单编号：</Text>
             <Text className="flex-1">112341928392829</Text>
           </View>
+          <View className="w-full h-20 bg-white"></View>
         </View>
-        <View className="w-full h-20"></View>
       </ScrollView>
     </View>
   );

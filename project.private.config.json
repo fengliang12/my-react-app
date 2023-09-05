@@ -127,6 +127,13 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "订单历史",
+          "pathName": "subPages/redeem/history/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

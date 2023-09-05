@@ -15,8 +15,11 @@ declare namespace Store {
   type Common = {
     /** Nav高度 */
     navHeight: number;
+    /** */
+    changeExchange: boolean;
   };
   type ExchangeGood = {
     goods: Array<any>;
+    counter: any;
   };
 }

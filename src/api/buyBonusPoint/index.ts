@@ -10,8 +10,12 @@ const commonUrl = `/ec-portal/store/${storeCode}/buy_bonusPoint`;
 const getBonusPointList: any = (params) =>
   http.get<any>(`${commonUrl}/listView`, { params });
 
+/** 积分兑礼 提交购买 */
+const submitPointOrder: any = (path) =>
+  http.post<any>(`${commonUrl}/submit`, path);
+
 /** 积分兑换记录*/
 const getPointsRecord: any = () =>
   http.get<any>(`${commonUrl}/listDetails?page=0&size=1000`);
 
-export default { getBonusPointList, getPointsRecord };
+export default { getBonusPointList, submitPointOrder, getPointsRecord };

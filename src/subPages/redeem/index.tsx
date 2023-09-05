@@ -8,6 +8,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import handleGoodClass from "@/src/utils/handleGoodClass";
 import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
 import AddCart from "./components/AddCart";
 import ApplyType from "./components/ApplyType";
@@ -31,9 +32,12 @@ const Index = () => {
   const [goodList, setGoodList] = useState<any>([]);
   const getGoodList = useMemoizedFn(async () => {
     await app.init();
+    Taro.showLoading({ title: "加载中", mask: true });
     let res = await api.buyBonusPoint.getBonusPointList({
       counterId: applyObj.counterId,
     });
+    Taro.hideLoading();
+
     if (res?.data?.length) {
       const list = handleGoodClass(res.data);
       setGoodList(list);
@@ -47,29 +51,39 @@ const Index = () => {
   }, [applyObj?.applyType, getGoodList]);
 
   /**
-   * 选择商品
-   * @param e
-   * @returns
+   * 直接购买
    */
-  const clickSelectGood = (id) => {};
+  const goPage = useMemoizedFn((good) => {
+    dispatch({
+      type: "SET_EXCHANGE_GOOD",
+      payload: {
+        goods: [good],
+      },
+    });
+    to(
+      `/subPages/redeem/confirm/index?type=${applyObj.applyType}`,
+      "navigateTo",
+    );
+  });
 
   /**
    * 添加购物车
    */
-  const addCart = async (item: any) => {
-    console.log("商品", item);
+  const addCart = useMemoizedFn(async (item: any) => {
     let res = await api.cart.append({
       integral: true,
       quantity: 1,
       skuId: item.skuId,
       customPointsPayPlan: {
-        redeemPoints: 1000,
+        redeemPoints: item.point,
         notValidateUsablePoints: true,
         usePoints: true,
       },
     });
-    console.log("res", res);
-  };
+    if (res) {
+      toast("商品添加成功");
+    }
+  });
 
   return (
     <View className="h-screen bg-black flex flex-col">
@@ -84,30 +98,28 @@ const Index = () => {
       <View className="h-240 vhCenter text-white text-26">
         <View className="flex-1 vhCenter flex-col">
           <Text className="text-80">2000</Text>
-          <Text>{`积分明细 >`}</Text>
+          <Text
+            onClick={() => to("/subPages/redeem/history/index")}
+          >{`积分明细 >`}</Text>
         </View>
         <View className="w-1 h-100 bg-white"></View>
         <View className="flex-1 vhCenter flex-col">
-          <Text className="underline">兑礼记录</Text>
+          <Text
+            className="underline"
+            onClick={() => to("/subPages/redeem/orderList/index")}
+          >
+            兑礼记录
+          </Text>
           <Text className="underline mt-30">兑换规则</Text>
         </View>
       </View>
 
+      {/* 产品信息 */}
       <View className="flex-1 bg-white rounded-t-50">
-        {/* 产品信息 */}
         <MiniGoodClass
           goodClassList={goodList}
-          clickSelectGood={clickSelectGood}
           addCart={addCart}
-          goPage={(good) => {
-            dispatch({
-              type: "SET_EXCHANGE_GOOD",
-              payload: {
-                goods: [good],
-              },
-            });
-            to("/subPages/redeem/confirm/index", "navigateTo");
-          }}
+          goPage={goPage}
         ></MiniGoodClass>
       </View>
 

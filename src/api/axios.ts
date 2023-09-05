@@ -15,8 +15,9 @@ const instance = axios.create({
 
 // axios实例添加request阻流器
 instance.interceptors.request.use((_config) => {
-  if (Taro.getStorageSync("token")) {
-    _config.headers.Authorization = Taro.getStorageSync("token");
+  if (!_config.noToken) {
+    _config.headers.Authorization =
+      config?.DEBUG_TOKEN || Taro.getStorageSync("token");
   }
   return _config;
 });

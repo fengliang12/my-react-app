@@ -1,0 +1,62 @@
+.module {
+  text-align: center;
+  .sh-form {
+    position: relative;
+    border-radius: 24px;
+    box-sizing: border-box;
+    text-align: left;
+    .address_title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .address_item {
+      font-size: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 30rpx 0;
+      position: relative;
+      .iconDown {
+        position: absolute;
+        right: 20px;
+      }
+
+      .input-placeholder {
+        width: 300px;
+        font-size: 24px;
+        font-weight: 400;
+        color: #7d7c7c;
+      }
+    }
+    .label {
+      width: 160px;
+    }
+    .input_item {
+      height: 55px;
+      border: 2rpx solid #666;
+      border-radius: 35px;
+      padding-left: 20px;
+      line-height: 55px;
+      // width: 440rpx;
+      flex: 1;
+      box-sizing: border-box;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .picker-content {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .textarea-item {
+      flex: 1;
+      height: 150rpx;
+      border: 2rpx solid #666;
+      border-radius: 20rpx;
+      padding: 20rpx;
+    }
+  }
+}

@@ -1,7 +1,8 @@
 import { Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useDidShow } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CPopup from "@/src/components/Common/CPopup";
@@ -15,16 +16,18 @@ interface PropsType {
 const app: App.GlobalData = Taro.getApp();
 const Index: React.FC<PropsType> = (props) => {
   let { callback } = props;
+  const changeExchange = useSelector(
+    (state: Store.States) => state.common.changeExchange,
+  );
+  const dispatch = useDispatch();
   const [counterList, setCounterList] = useState<any>([]);
   const [showApply, setShowApply] = useState<boolean>(false);
-  const [applyType, setApplyType] = useState<string>("self_pick_up");
+  const [applyType, setApplyType] = useState<string>("express");
   const [selectCounter, setSelectCounter] = useState<any>(null);
 
-  useEffect(() => {
-    // setShowApply(true);
-    getCounterList();
-  }, []);
-
+  /**
+   * 获取门店
+   */
   const getCounterList = useMemoizedFn(async () => {
     await app.init();
     let res = await api.counter.getCounterList();
@@ -36,10 +39,34 @@ const Index: React.FC<PropsType> = (props) => {
     setCounterList(list);
   });
 
+  useEffect(() => {
+    dispatch({
+      type: "CHANGE_EXCHANGE",
+      payload: {
+        changeExchange: true,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (changeExchange) {
+      setShowApply(true);
+      getCounterList();
+      dispatch({
+        type: "CHANGE_EXCHANGE",
+        payload: {
+          changeExchange: false,
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changeExchange]);
+
   /**
    * 确认
    */
-  const confirm = () => {
+  const confirm = useMemoizedFn(() => {
     if (!applyType) {
       toast("请先选择领取方式");
       return;
@@ -48,13 +75,20 @@ const Index: React.FC<PropsType> = (props) => {
       toast("请先选择申领柜台");
       return;
     }
+    dispatch({
+      type: "SET_COUNTER",
+      payload: {
+        counter: selectCounter,
+      },
+    });
+
     setShowApply(false);
     callback &&
       callback({
         applyType: applyType,
         counterId: selectCounter?.id ?? "",
       });
-  };
+  });
 
   return (
     <>

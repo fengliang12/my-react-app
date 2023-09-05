@@ -76,3 +76,26 @@ export const formTime = (time, type = "YYYY年MM月DD日") => {
   let temp = formatDateTime(time, 3, "/");
   return dayjs(temp).format(type);
 };
+
+/** 验证手机号 */
+export const isPhone = (phone: string) => /^[1][0-9]{10}$/.test(phone);
+
+export const verifyAddressInfo: (e: T_Area_Form) => Promise<string> = (
+  addressInfo,
+) => {
+  return new Promise((resolve, reject) => {
+    const {
+      addressee = "",
+      mobile = "",
+      province = "",
+      city = "",
+      district = "",
+      detail = "",
+    } = addressInfo;
+    if (!addressee) reject("请填写收件人姓名");
+    if (!isPhone(mobile)) reject("请填写有效的手机号");
+    if (!province || !city || !district) reject("请选择收货地址");
+    if (!detail) reject("请选择详细地址");
+    resolve("success");
+  });
+};

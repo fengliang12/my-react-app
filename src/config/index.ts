@@ -10,7 +10,7 @@ const IS_PRO =
 
 const baseConfig = {
   /** 品牌StoreCode */
-  storeCode: "nars",
+  storeCode: "baum",
   /** 网络图片前缀 */
   cosImgPrefix: "https://lianwei-project-dev.oss-cn-shanghai.aliyuncs.com/",
   /** 主题页面Code配置 */
