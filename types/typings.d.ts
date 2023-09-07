@@ -5,6 +5,8 @@ declare namespace Store {
     isMember: boolean;
     /** 昵称 */
     nickName: string;
+    /** 昵称 */
+    realName: string;
     /** 头像 */
     avatarUrl: string;
     /** 性别 */

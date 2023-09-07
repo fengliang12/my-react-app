@@ -56,9 +56,7 @@ instance.interceptors.response.use(
       if (config.errCodeList?.includes(err.data.code)) {
         return Promise.resolve(err);
       }
-      // Taro.showModal({
-      //   content: err.data?.message,
-      // });
+      Taro.showToast({ title: err.data?.message, icon: "none" });
     }
 
     return Promise.reject(err);

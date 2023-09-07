@@ -1,7 +1,7 @@
 declare namespace App {
   type GlobalData = {
     /** 接口初始化方法 */
-    init: (e?: { refresh?: boolean }) => Promise<any> | null;
+    init: (refresh?: boolean) => Promise<any> | null;
     /** 路由跳转 */
     to: toType;
     /** 所有scope授权封装 */

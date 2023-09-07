@@ -16,6 +16,9 @@ const createMember = (data) =>
 const updateMember = (data) =>
   http.post(`/sp-portal/store/${config.storeCode}/wechat/updateMember`, data);
 
+const appendMember = (data) =>
+  http.post(`/sp-portal/store/${config.storeCode}/wechat/appendMember`, data);
+
 const decodeUserInfo = (data) =>
   http.post(`/sp-portal/store/${config.storeCode}/wechat/decodeUserInfo`, data);
 
@@ -128,6 +131,6 @@ export default {
   loadSYMember,
   /** 数云积分明细查询 */
   loadSYPointDetails,
-
   getShopId,
+  appendMember,
 };

@@ -4,7 +4,7 @@ import http from "../axios";
 
 const { storeCode } = config;
 
-const commonUrl = `http://47.100.83.219:16303/api/nars-portal/store/${storeCode}/arvatoReservation`;
+const commonUrl = `/nars-portal/store/${storeCode}/arvatoReservation`;
 
 /** 获取可预约门店列表 */
 const getCounters: Api.User.GetCustomerCouponByStatus.FuncT = (projectCode) => {

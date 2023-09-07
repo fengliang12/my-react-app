@@ -8,7 +8,7 @@ import { omit } from "lodash-es";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { P1, P2 } from "@/assets/image/index";
+import { P1, P6 } from "@/assets/image/index";
 import Page from "@/components/Page";
 import api from "@/src/api";
 import Avatar from "@/src/components/Common/Avatar";
@@ -19,7 +19,7 @@ import { formatDateTime } from "@/src/utils";
 
 import { counterList } from "./testData";
 
-const app = Taro.getApp();
+const app: App.GlobalData = Taro.getApp();
 
 const genderArr = ["女", "男"];
 
@@ -34,14 +34,37 @@ const Index = () => {
     gender: "",
     mobile: "",
     avatarUrl: "",
-    shopType: "",
+    shopType: "wa",
     cityCode: "",
     storeCode: "",
     address: "",
   });
+
+  /**
+   * 用户信息反显
+   */
   useAsyncEffect(async () => {
-    await app.init();
-  }, []);
+    if (isMember) {
+      const userInfo = await app.init();
+      const { realName, birthDate, mobile, avatarUrl, gender } =
+        userInfo?.customerBasicInfo;
+
+      let genderName = user.gender;
+      if (gender === 1) {
+        genderName = "男";
+      }
+      if (gender === 2) {
+        genderName = "女";
+      }
+      setUser({
+        nickName: realName === "微信用户" ? "" : realName,
+        birthDate: formatDateTime(birthDate, 3),
+        mobile,
+        gender: genderName,
+        avatarUrl,
+      });
+    }
+  }, [isMember]);
 
   /**
    * 提交注册
@@ -65,12 +88,7 @@ const Index = () => {
     }
 
     let newAvatarUrl = avatarUrl;
-
-    if (!isMember) {
-      createMember(newAvatarUrl);
-    } else {
-      updateMember(newAvatarUrl);
-    }
+    createMember(newAvatarUrl);
   });
 
   /**
@@ -99,59 +117,16 @@ const Index = () => {
     }
   });
 
-  /**
-   * 更新会员
-   */
-  const updateMember = useMemoizedFn(async (newAvatarUrl) => {
-    const { status } = await api.user.updateMember({
-      ...omit(user, ["mobile"]),
-      avatarUrl: newAvatarUrl,
-      gender: user.gender === "男" ? 1 : 2,
-      realName: user.nickName,
-    });
-    if (status === 200) {
-      await app.init(true);
-      Taro.showToast({
-        title: "更新成功！",
-        mask: true,
-      });
-      setTimeout(async () => {
-        app.to(1);
-      }, 2000);
-    }
-  });
-
-  useAsyncEffect(async () => {
-    if (isMember) {
-      const { realName, birthDate, mobile, avatarUrl, gender } =
-        app.globalData?.userInfo?.customerBasicInfo || {};
-
-      let genderName = user.gender;
-      if (gender === 1) {
-        genderName = "男";
-      }
-      if (gender === 2) {
-        genderName = "女";
-      }
-      setUser({
-        nickName: realName === "微信用户" ? "" : realName,
-        birthDate: formatDateTime(birthDate, 3),
-        mobile,
-        gender: genderName,
-        avatarUrl,
-      });
-    }
-  }, [isMember]);
-
   return (
     <>
       <Page
         isNeedBind={false}
         navConfig={{
-          placeholder: false,
-          backgroundColor: "black",
-          logo: "white",
           title: "MY NARS",
+          fill: false,
+          backgroundColor: "black",
+          titleColor: "#FFFFFF",
+          back: true,
         }}
       >
         <View className="register">
@@ -230,7 +205,7 @@ const Index = () => {
                       </View>
                     )}
                     {user.birthDate}
-                    <Image src={P2} mode="widthFix" className="w-14 ml-15" />
+                    <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
                 </Picker>
               </View>
@@ -250,7 +225,7 @@ const Index = () => {
                       <View className="ipt-placeholder">请选择</View>
                     )}
                     {user.gender}
-                    <Image src={P2} mode="widthFix" className="w-14 ml-15" />
+                    <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
                 </Picker>
               </View>
@@ -272,7 +247,7 @@ const Index = () => {
                     <View className="ipt-placeholder">
                       {selectCounter ? selectCounter.city : "请选择"}
                     </View>
-                    <Image src={P2} mode="widthFix" className="w-14 ml-15" />
+                    <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
                 </MultiplePicker>
               </View>

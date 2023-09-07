@@ -9,16 +9,23 @@ const Index = () => {
 
   return (
     <Page
+      isNeedBind
       navConfig={{
         title: "MY NARS",
-        placeholder: true,
+        fill: true,
         backgroundColor: "#000000",
         titleColor: "#FFFFFF",
       }}
-      isNeedBind
     >
       <MemberCard></MemberCard>
-      <Layout code="index" closeAction={!userInfo.isMember} />
+      <Layout
+        loadPageConfig={{
+          type: "id",
+          value: "ju30Dw5AoyH72tpayiKUro8dNygCLHUV",
+        }}
+        globalStyle={{ backgroundColor: "#000000" }}
+        closeAction={!userInfo.isMember}
+      />
     </Page>
   );
 };

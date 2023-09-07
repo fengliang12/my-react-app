@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import { P5 } from "@/src/assets/image";
 import config from "@/src/config";
+import to from "@/src/utils/to";
 
 import CImage from "../Common/CImage";
 
@@ -27,14 +28,16 @@ const Index = () => {
             <CImage
               className="w-120 h-120 mr-20 rounded-120"
               src={userInfo.avatarUrl || P5}
+              onClick={() => to("/pages/update/index")}
             ></CImage>
             <CImage
               className="w-30 h-30 absolute bottom-10 left-80"
               src={`${config.imgBaseUrl}/index/icon_edit.png`}
+              onClick={() => to("/pages/update/index")}
             ></CImage>
             <View>
               <View className="text-32">普通会员</View>
-              <View className="text-38">Kelly</View>
+              <View className="text-38">{userInfo.realName}</View>
               <View className="flex items-end text-18">
                 <CImage
                   className="w-18 h-18 mr-6"

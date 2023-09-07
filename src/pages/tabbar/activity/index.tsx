@@ -8,15 +8,22 @@ const Index = () => {
 
   return (
     <Page
+      isNeedBind
       navConfig={{
         title: "",
-        placeholder: false,
+        fill: false,
         backgroundColor: "rgba(0,0,0,0)",
         titleColor: "#FFFFFF",
       }}
-      isNeedBind
     >
-      <Layout code="activity" closeAction={!userInfo.isMember} />
+      <Layout
+        loadPageConfig={{
+          type: "id",
+          value: "wyGqbO4buEsPjwCO8yF5gXmmF160F9Ok",
+        }}
+        globalStyle={{ backgroundColor: "#000000" }}
+        closeAction={!userInfo.isMember}
+      />
     </Page>
   );
 };

@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import api from "@/src/api";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 
-import Nav, { NavType } from "../Nav";
+import CHeader, { CHeaderType } from "../Common/CHeader";
 
 type PageType = {
   /** 是否需要注册 */
@@ -19,7 +19,7 @@ type PageType = {
   /** 是否需要导航栏 */
   isNeedNav?: boolean;
   /** 导航配置 */
-  navConfig?: NavType;
+  navConfig?: Partial<CHeaderType>;
   [props: string]: any;
 };
 
@@ -59,7 +59,7 @@ const Page: React.FC<PageType> = ({
   });
   return (
     <>
-      <View>{isNeedNav && <Nav {...(navConfig ?? {})} />}</View>
+      <View>{isNeedNav && <CHeader {...navConfig}></CHeader>}</View>
       <View
         onClick={checkBind}
         style={{ position: "relative", width: "100vw" }}
