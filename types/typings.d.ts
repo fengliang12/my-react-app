@@ -11,8 +11,12 @@ declare namespace Store {
     avatarUrl: string;
     /** 性别 */
     gender: string;
+    /** 等级 */
+    grade: string;
     /** 积分 */
     points: number;
+    /** 下一等级消费 */
+    nextGradeAmount: 0;
   };
   type Common = {
     /** Nav高度 */

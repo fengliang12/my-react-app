@@ -10,9 +10,32 @@ import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 import to from "@/src/utils/to";
 
+/**
+ * 初始化页面
+ */
+const list = [
+  {
+    label: "底妆定制",
+  },
+  {
+    label: "通勤妆容",
+  },
+  {
+    label: "基础眼妆",
+  },
+  {
+    label: "约会妆容",
+  },
+  {
+    label: "定制颊彩",
+  },
+  {
+    label: "先锋妆容",
+  },
+];
+
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
-  const userInfo = useSelector((state: Store.States) => state.user);
   const [projects, setProjects] = useState<any>();
 
   useAsyncEffect(async () => {
@@ -21,29 +44,6 @@ const Index = () => {
     setProjects(res?.data);
   }, []);
 
-  /**
-   * 初始化页面
-   */
-  const list = [
-    {
-      label: "底妆定制",
-    },
-    {
-      label: "通勤妆容",
-    },
-    {
-      label: "基础眼妆",
-    },
-    {
-      label: "约会妆容",
-    },
-    {
-      label: "定制颊彩",
-    },
-    {
-      label: "先锋妆容",
-    },
-  ];
   return (
     <View className="min-h-screen bg-black text-white flex flex-col">
       <CHeader

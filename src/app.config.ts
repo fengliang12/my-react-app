@@ -1,8 +1,8 @@
 export default {
   pages: [
     "pages/tabbar/index/index",
-    "pages/tabbar/activity/index",
     "pages/tabbar/user/index",
+    "pages/activity/index",
     "pages/h5/index",
     "pages/update/index",
     "pages/register/index",
@@ -56,12 +56,6 @@ export default {
         text: "先锋礼遇",
         iconPath: "assets/image/tabbar/home.jpg",
         selectedIconPath: "assets/image/tabbar/home.jpg",
-      },
-      {
-        pagePath: "pages/tabbar/activity/index",
-        text: "NARS妆园",
-        iconPath: "assets/image/tabbar/activity.jpg",
-        selectedIconPath: "assets/image/tabbar/activity.jpg",
       },
       {
         pagePath: "pages/tabbar/user/index",

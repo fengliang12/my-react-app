@@ -5,6 +5,7 @@ import common from "./common/index";
 import counter from "./counter/index";
 import coupon from "./coupon/index";
 import goods from "./goods/index";
+import shuYunMember from "./shuYunMember/index";
 import user from "./user/index";
 
 /** 注册接口 */
@@ -19,4 +20,5 @@ export default {
   buyBonusPoint,
   cart,
   arvatoReservation,
+  shuYunMember,
 };

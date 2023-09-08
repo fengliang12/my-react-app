@@ -12,7 +12,5 @@ if (
   middlewares.push(require("redux-logger").createLogger());
 }
 
-export default function configStore() {
-  const store = createStore(rootReducer, applyMiddleware(...middlewares));
-  return store;
-}
+const store = createStore(rootReducer, applyMiddleware(...middlewares));
+export default store;

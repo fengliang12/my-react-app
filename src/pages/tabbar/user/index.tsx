@@ -19,10 +19,7 @@ const Index = () => {
     >
       <MemberCard></MemberCard>
       <Layout
-        loadPageConfig={{
-          type: "id",
-          value: "395l4aDmOrKbVAZY0iM4PDSasCBIV2Xj",
-        }}
+        code="user"
         globalStyle={{ backgroundColor: "#000000" }}
         closeAction={!userInfo.isMember}
       />

@@ -40,7 +40,7 @@ const Index = () => {
   useAsyncEffect(async () => {
     if (isMember) {
       const userInfo = await app.init();
-      let { realName, birthDate, gender } = userInfo.customerBasicInfo;
+      let { realName, birthDate, gender } = userInfo?.customerBasicInfo;
       birthDate = formatDateTime(birthDate);
       let genderName = "";
       if (gender === 1) {

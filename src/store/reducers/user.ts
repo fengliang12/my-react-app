@@ -8,6 +8,9 @@ const INITIAL_STATE: Store.User = {
   avatarUrl: "",
   gender: "",
   points: 0,
+  nextGradeAmount: 0,
+  grade: "",
+  realName: "",
 };
 
 export default createReducer(
