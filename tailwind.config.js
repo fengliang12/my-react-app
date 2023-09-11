@@ -82,6 +82,7 @@ module.exports = {
         grayBtn: "#1a1a1a",
         grayBg: "#6C6C6C",
         black2: "#212121",
+        762022: "#762022",
       }),
     },
     spacing: {

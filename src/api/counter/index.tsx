@@ -6,9 +6,14 @@ const { storeCode } = config;
 
 const commonUrl = `/sp-portal/store/${storeCode}/counter`;
 
-/** 查询用户优惠券(不同状态) */
 const getCounterList: Api.Counter.GetCounterList.FuncT = () => {
   return http.get(`${commonUrl}/list`);
 };
 
-export default { getCounterList };
+/** 获取柜台 */
+const getCounterByCity: Api.Apply.GetCounterByCity.FuncT = (data) =>
+  http.get<any>(`${commonUrl}/city/list`, {
+    params: data,
+  });
+
+export default { getCounterList, getCounterByCity };

@@ -15,6 +15,9 @@ export const LogoW = require("./logo_w.png");
 export const Ck1 = require("./Ck1.png");
 export const Ck2 = require("./Ck2.png");
 
+export const CloseB = require("./close_b.png");
+export const CloseW = require("./close_w.png");
+
 export const Bg1 = `${config.cosImgPrefix}big/bg1.png`;
 export const Bg2 = `${config.cosImgPrefix}big/bg2.png`;
 export const C1 = `${config.cosImgPrefix}big/c1.png`;

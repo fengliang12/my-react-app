@@ -12,6 +12,7 @@ interface Popup {
   className?: string;
   backgroundColor?: string;
 }
+
 const CPopup: React.FC<Popup> = (props) => {
   const { maskClose = true, catchMove = true, className } = props;
   const closePopup = () => {

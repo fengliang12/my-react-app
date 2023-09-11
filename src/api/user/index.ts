@@ -16,6 +16,9 @@ const createMember = (data) =>
 const updateMember = (data) =>
   http.post(`/sp-portal/store/${config.storeCode}/wechat/updateMember`, data);
 
+const unbinding = () =>
+  http.post(`/sp-portal/store/${config.storeCode}/wechat/unbinding`);
+
 const appendMember = (data) =>
   http.post(`/sp-portal/store/${config.storeCode}/wechat/appendMember`, data);
 
@@ -133,4 +136,5 @@ export default {
   loadSYPointDetails,
   getShopId,
   appendMember,
+  unbinding,
 };

@@ -48,19 +48,19 @@ export default {
   tabBar: {
     backgroundColor: "#000000",
     borderStyle: "white",
-    color: "#FFFFFF",
+    color: "#999999",
     selectedColor: "#FFFFFF",
     list: [
       {
         pagePath: "pages/tabbar/index/index",
         text: "先锋礼遇",
-        iconPath: "assets/image/tabbar/home.jpg",
+        iconPath: "assets/image/tabbar/home02.jpg",
         selectedIconPath: "assets/image/tabbar/home.jpg",
       },
       {
         pagePath: "pages/tabbar/user/index",
         text: "个人中心",
-        iconPath: "assets/image/tabbar/user.jpg",
+        iconPath: "assets/image/tabbar/user02.jpg",
         selectedIconPath: "assets/image/tabbar/user.jpg",
       },
     ],

@@ -99,3 +99,12 @@ export const verifyAddressInfo: (e: T_Area_Form) => Promise<string> = (
     resolve("success");
   });
 };
+
+// 手机号掩码
+export const maskPhone = (phone: string) => {
+  if (phone.includes("*")) return phone;
+
+  var reg = /(\d{3})\d{4}(\d{4})/;
+  var tel = phone.replace(reg, "$1****$2");
+  return tel;
+};

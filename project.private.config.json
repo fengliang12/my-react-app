@@ -10,8 +10,8 @@
     "miniprogram": {
       "list": [
         {
-          "name": "测试绑定",
-          "pathName": "pages/activity/index",
+          "name": "用户信息更改",
+          "pathName": "pages/update/index",
           "query": "code=test0428",
           "launchMode": "default",
           "scene": null
@@ -24,8 +24,8 @@
           "scene": null
         },
         {
-          "name": "卡券中心",
-          "pathName": "subPages/coupon/index",
+          "name": "注册会员",
+          "pathName": "pages/register/index",
           "query": "",
           "launchMode": "default",
           "scene": null

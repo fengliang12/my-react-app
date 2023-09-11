@@ -1,14 +1,11 @@
 import Taro from "@tarojs/taro";
-import { omit } from "lodash";
 
 import api from "../api";
 import store from "../store";
 import { SET_USER } from "../store/constants";
 
-const app: App.GlobalData = Taro.getApp();
-
 export const createInit = () => {
-  let initPromise: Promise<any> | null = null;
+  let initPromise: Promise<Store.User> | null = null;
   return (refresh, shuYunMember = true) => {
     if (initPromise === null || refresh) {
       const { environment } = Taro.getSystemInfoSync();
@@ -25,19 +22,29 @@ export const createInit = () => {
           }
 
           Taro.setStorageSync("token", data.jwtString);
+
+          let userInfo = {
+            mobile: data.customerBasicInfo?.mobile || "",
+            isMember: data.customerBasicInfo?.member || false,
+            nickName: data.customerBasicInfo?.nickName || "",
+            realName: data.customerBasicInfo?.realName || "",
+            birthDate: data.customerBasicInfo?.birthDate || "",
+            customInfos: data.customerBasicInfo?.customInfos || [],
+            avatarUrl: data.customerBasicInfo?.avatarUrl || "",
+            gender: data.customerBasicInfo?.gender || 0,
+            province: data.customerBasicInfo?.province || "",
+            city: data.customerBasicInfo?.city || "",
+            district: data.customerBasicInfo?.district || "",
+            country: data.customerBasicInfo?.country || "",
+            marsId: data.customerBasicInfo?.marsId || "",
+            id: data.customerBasicInfo?.id || "",
+          };
           // 视图数据放Store
           store.dispatch({
             type: SET_USER,
-            payload: {
-              isMember: data.customerBasicInfo?.member || false,
-              nickName: data.customerBasicInfo?.nickName || "",
-              realName: data.customerBasicInfo?.realName || "",
-              avatarUrl: data.customerBasicInfo?.avatarUrl || "",
-              gender: data.customerBasicInfo.gender === 1 ? "男" : "女",
-            },
+            payload: userInfo,
           });
-          app.globalData.userInfo = omit(data, ["jwtString"]);
-          return data;
+          return userInfo;
         })
         .catch(() => {
           initPromise = null;
@@ -50,4 +57,7 @@ export const createInit = () => {
 /**
  * 获取数云接口
  */
-export const getShuYunMemberInfo = async () => {};
+export const getShuYunMemberInfo = async () => {
+  // let res = await api.shuYunMember.queryMember();
+  // console.log(res);
+};

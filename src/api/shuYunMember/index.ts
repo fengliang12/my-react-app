@@ -6,7 +6,22 @@ const commonUrl = `/nars-portal/store/${config.storeCode}/shuYunMember`;
 // 距离下一等级金额
 const nextGradeAmount = () => http.get(`${commonUrl}/nextGradeAmount`);
 
+// 会员等级查询-手机号
+const queryGrade = () => http.get(`${commonUrl}/queryGrade`);
+
+// 会员积分变更历史查询-分页
+const queryGradeLog = (data) => http.post(`${commonUrl}/queryGradeLog`, data);
+
+// 会员信息查询
+const queryMember = () => http.get(`${commonUrl}/queryMember`);
+
 export default {
   /** 距离下一等级金额 */
   nextGradeAmount,
+  // 会员等级查询
+  queryGrade,
+  // 会员积分变更历史查询
+  queryGradeLog,
+  // 会员信息查询
+  queryMember,
 };
