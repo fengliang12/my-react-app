@@ -3,7 +3,8 @@ import { View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useCountDown } from "ahooks";
 import React, { useState } from "react";
-import { customer } from "src/taro-public/api";
+
+import api from "@/src/api";
 
 interface CImageOther extends ViewProps {
   initSendText?: string;
@@ -50,7 +51,7 @@ const SendVerifyCode: React.FC<CImageOther> = (props) => {
     Taro.showLoading({ title: "加载中", mask: true });
     sendApi
       ? await sendApi()
-      : await customer.sendSmsVerifyCode({ mobile: props.mobile });
+      : await api.user.sendSmsCode2({ mobile: props.mobile });
     setCount(Date.now() + seconds * 1000);
     Taro.hideLoading();
   };

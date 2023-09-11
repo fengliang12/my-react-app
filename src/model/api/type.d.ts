@@ -55,7 +55,7 @@ type UserStatusType = "NORMAL" | "LOCKED" | "CANCEL";
  * 优惠券状态
  * expire过期、usable可用、redeem已用
  */
-type CouponStatusType = "expire" | "usable" | "redeem" | "locked";
+type CouponStatusType = "10" | "20" | "90";
 
 /** 组件类型
  * Simple 简单组件

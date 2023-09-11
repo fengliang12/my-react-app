@@ -1,10 +1,21 @@
 import { Text, View } from "@tarojs/components";
-import React, { useEffect } from "react";
+import { useAsyncEffect } from "ahooks";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
+import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 
 const Index = () => {
-  useEffect(() => {});
+  const [list, setList] = useState<any>();
+  const mobile = useSelector((state: Store.States) => state.user.mobile);
+  useAsyncEffect(async () => {
+    let res = await api.shuYunMember.queryGradeLog({
+      mobile: mobile,
+      page: 0,
+      size: 1000,
+    });
+  }, [mobile]);
 
   return (
     <View className="redeem-history bg-black min-h-screen text-white">

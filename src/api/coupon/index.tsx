@@ -4,15 +4,8 @@ import http from "../axios";
 
 const { storeCode } = config;
 
-const commonUrl = `/ec-portal/store/${storeCode}/customer/coupon`;
-
-/** 查询用户优惠券(不同状态) */
-const getCustomerCouponByStatus: Api.User.GetCustomerCouponByStatus.FuncT = (
-  path,
-) => {
-  let status =
-    path.status === "usable" ? "usable?needSendCoupon=true" : path.status;
-  return http.get(`${commonUrl}/${status}`);
+const posCoupon = () => {
+  return http.get(`/nars-portal/store/${storeCode}/posCoupon/list`);
 };
 
-export default { getCustomerCouponByStatus };
+export default { posCoupon };
