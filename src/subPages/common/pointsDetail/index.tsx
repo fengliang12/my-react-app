@@ -10,10 +10,10 @@ const Index = () => {
   const [list, setList] = useState<any>();
   const mobile = useSelector((state: Store.States) => state.user.mobile);
   useAsyncEffect(async () => {
-    let res = await api.shuYunMember.queryGradeLog({
+    let res = await api.shuYunMember.queryPointsLog({
       mobile: mobile,
-      page: 0,
-      size: 1000,
+      page: 1,
+      size: 10,
     });
   }, [mobile]);
 

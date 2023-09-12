@@ -10,7 +10,7 @@ const nextGradeAmount = () => http.get(`${commonUrl}/nextGradeAmount`);
 const queryGrade = () => http.get(`${commonUrl}/queryGrade`);
 
 // 会员积分变更历史查询-分页
-const queryGradeLog = (data) => http.post(`${commonUrl}/queryGradeLog`, data);
+const queryPointsLog = (data) => http.post(`${commonUrl}/queryPointsLog`, data);
 
 // 会员信息查询
 const queryMember = () => http.get(`${commonUrl}/queryMember`);
@@ -21,7 +21,7 @@ export default {
   // 会员等级查询
   queryGrade,
   // 会员积分变更历史查询
-  queryGradeLog,
+  queryPointsLog,
   // 会员信息查询
   queryMember,
 };

@@ -98,7 +98,7 @@ const Index: React.FC<PropsType> = (props) => {
             </View>
             <View
               className="flex-1 h-full flex items-end flex-col"
-              onClick={() => goNextPage("/subPages/redeem/history/index")}
+              onClick={() => goNextPage("/subPages/common/pointsDetail/index")}
             >
               <View className="text-46">{userInfo.points}</View>
               <CImage

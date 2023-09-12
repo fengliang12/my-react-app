@@ -29,7 +29,7 @@ const Index = () => {
           src={`${config.imgBaseUrl}/icon/title_image.png`}
         ></CImage>
       </View>
-      <View className="w-688 flex justify-around mt-70 mb-60 text-28">
+      <View className="w-688 flex justify-around items-center mt-70 mb-60 text-28">
         <View
           className="w-228 h-60  vhCenter"
           style={{ border: "1px solid #FFFFFF" }}

@@ -6,6 +6,7 @@ const { storeCode } = config;
 
 const commonUrl = `/sp-portal/store/${storeCode}/counter`;
 
+/** 获取柜台 */
 const getCounterList: Api.Counter.GetCounterList.FuncT = () => {
   return http.get(`${commonUrl}/list`);
 };
