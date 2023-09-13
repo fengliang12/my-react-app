@@ -43,11 +43,6 @@ const Index = () => {
     Taro.hideLoading();
   });
 
-  useDidShow(async () => {
-    await app.init();
-    getMyCouponListByStatus();
-  });
-
   /**
    * 点击菜单栏切换
    */
@@ -57,6 +52,7 @@ const Index = () => {
   });
 
   useDidShow(async () => {
+    await app.init();
     getMyCouponListByStatus();
   });
 
