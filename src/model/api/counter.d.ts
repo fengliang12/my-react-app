@@ -58,6 +58,8 @@ declare namespace Api {
         channel?: string;
         type?: string;
         counterCodes?: string[];
+
+        province?: string; // 前端拓展字段
       };
 
       type IResponse = NearbyCounter[];

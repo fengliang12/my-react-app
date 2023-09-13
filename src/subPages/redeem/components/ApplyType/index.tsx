@@ -37,6 +37,7 @@ const Index: React.FC<PropsType> = (props) => {
       id: item.id,
     }));
     setCounterList(list);
+    console.log(list);
   });
 
   useEffect(() => {
@@ -131,7 +132,7 @@ const Index: React.FC<PropsType> = (props) => {
                   style={{ border: "1px solid #959595", lineHeight: "55rpx" }}
                 >
                   {!selectCounter ? (
-                    <Text>省/市/区</Text>
+                    <Text>省/市/柜台</Text>
                   ) : (
                     <Text>{selectCounter?.name}</Text>
                   )}

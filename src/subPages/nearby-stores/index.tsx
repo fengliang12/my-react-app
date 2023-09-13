@@ -1,7 +1,7 @@
-import { Picker, View } from "@tarojs/components";
-import Taro, { useDidShow } from "@tarojs/taro";
-import { useMount, useRequest, useUpdateEffect } from "ahooks";
-import { useEffect, useState } from "react";
+import { Picker, Text, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
+import { useMemoizedFn, useMount, useRequest, useUpdateEffect } from "ahooks";
+import { useMemo, useState } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
@@ -12,20 +12,20 @@ import toast from "@/src/utils/toast";
 const app: App.GlobalData = Taro.getApp();
 
 const NearbyStores = () => {
+  /** 获取柜台列表 */
   const { data: counterList = [], run: getNearCounterList } = useRequest(
     async (params) => {
       await app.init();
-      return api.counter.getNearCounterList(params).then((res) => res.data);
+      return api.counter.getNearCounterList(params).then((res) => {
+        initProvinceList(res.data);
+        if (!provinceList.length) return [];
+        return res.data;
+      });
     },
     { manual: true },
   );
 
-  /** 获取城市列表 */
-  const { data: provinceList, run: getCounterCity } = useRequest(async () => {
-    await app.init();
-    return api.counter.getCounterCity().then((res) => res.data);
-  });
-
+  /** 请求参数 */
   const [getCounterParams, setGetCounterParams] =
     useState<Api.Counter.GetCounterNearList.IRequest>({});
 
@@ -34,11 +34,57 @@ const NearbyStores = () => {
     getNearCounterList(getCounterParams);
   }, [getCounterParams, getNearCounterList]);
 
+  const [provinceList, setProvinceList] = useState<
+    Array<{
+      label: string;
+      children: Array<string>;
+    }>
+  >([]);
+
+  const cityList = useMemo(
+    () =>
+      provinceList.find((item) => item.label === getCounterParams.province)
+        ?.children || [],
+    [provinceList, getCounterParams.province],
+  );
+
+  /** 初始化省市 */
+  const initProvinceList = useMemoizedFn((initCounterList) => {
+    if (provinceList.length) return;
+    let tempProvinceList: Array<{
+      label: string;
+      children: Array<string>;
+    }> = [];
+
+    initCounterList.forEach((counter) => {
+      let index = tempProvinceList.findIndex(
+        (province) => province.label === counter.address.province,
+      );
+      if (index !== -1) {
+        // 存在 去除重复的市
+        if (!tempProvinceList[index].children.includes(counter.address.city)) {
+          tempProvinceList[index].children.push(counter.address.city);
+        }
+      } else {
+        tempProvinceList.push({
+          label: counter.address.province,
+          children: [counter.address.city],
+        });
+      }
+    });
+    setGetCounterParams((prev) => ({
+      ...prev,
+      province: tempProvinceList[0].label,
+      city: tempProvinceList[0].children[0],
+    }));
+    setProvinceList(tempProvinceList);
+  });
+
+  /** 初始化 */
   useMount(async () => {
     Taro.getLocation({
       success: async (res) => {
         const { latitude, longitude } = res;
-        console.log("res====>", res);
         setGetCounterParams((prev) => ({
           ...prev,
           lat: latitude,
@@ -74,6 +120,25 @@ const NearbyStores = () => {
     });
   };
 
+  /** 修改省份 */
+  const onChangeProvince = (e) => {
+    const index = e.detail.value;
+    setGetCounterParams((prev) => ({
+      ...prev,
+      province: provinceList[index].label,
+      city: provinceList[index].children[0],
+    }));
+  };
+
+  /** 修改城市 */
+  const onChangeCity = (e) => {
+    const index = e.detail.value;
+    setGetCounterParams((prev) => ({
+      ...prev,
+      city: cityList[index],
+    }));
+  };
+
   return (
     <>
       <CHeader
@@ -90,13 +155,22 @@ const NearbyStores = () => {
         className="w-full"
       />
 
-      <View className="flex justify-center items-center text-white mt-30">
-        <Picker className="w-240 ">
-          <View className="border border-solid border-white w-full h-60"></View>
+      <View className="flex justify-center items-center text-white mt-30 text-24">
+        <Picker
+          range={provinceList}
+          rangeKey="label"
+          className="w-240"
+          onChange={onChangeProvince}
+        >
+          <View className="border border-solid border-white w-full h-60 flex items-center px-10 justify-between box-border">
+            <Text>{getCounterParams.province}</Text>
+          </View>
         </Picker>
         <View className="mx-30">-</View>
-        <Picker className="w-240 ">
-          <View className="border border-solid border-white w-full h-60"></View>
+        <Picker range={cityList} className="w-240" onChange={onChangeCity}>
+          <View className="border border-solid border-white w-full h-60 flex items-center px-10 justify-between box-border">
+            <Text>{getCounterParams.city}</Text>
+          </View>
         </Picker>
       </View>
 
