@@ -1,10 +1,11 @@
 import { Text, View } from "@tarojs/components";
 import { useBoolean, useMemoizedFn } from "ahooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { CloseB, P5 } from "@/src/assets/image";
 import config from "@/src/config";
+import handleDataType from "@/src/utils/handleDataType";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
 
@@ -15,6 +16,7 @@ import CQRCodeCustom from "../Common/CQRCodeCustom";
 interface PropsType {
   showBindPopup: () => void;
 }
+
 const Index: React.FC<PropsType> = (props) => {
   let { showBindPopup } = props;
   const userInfo = useSelector((state: Store.States) => state.user);
@@ -24,6 +26,15 @@ const Index: React.FC<PropsType> = (props) => {
   const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
     useBoolean(false);
 
+  useEffect(() => {
+    if (
+      !handleDataType(userInfo.nextGradeNeedAmount) ||
+      !handleDataType(userInfo.needAmount)
+    )
+      return;
+    let i = (1 - userInfo.nextGradeNeedAmount / userInfo.needAmount) / 100;
+    setProcess(i);
+  }, [userInfo.needAmount, userInfo.nextGradeNeedAmount]);
   /**
    * 前往编辑页面
    */
@@ -64,7 +75,7 @@ const Index: React.FC<PropsType> = (props) => {
               <View>
                 {isMember ? (
                   <>
-                    <View className="text-32">普通会员</View>
+                    <View className="text-32">{userInfo.gradeName}</View>
                     <View className="text-38">{userInfo.realName}</View>
                     <View className="flex items-end text-18" onClick={setTrue}>
                       <CImage
@@ -87,9 +98,9 @@ const Index: React.FC<PropsType> = (props) => {
             </View>
             <View
               className="flex-1 h-full flex items-end flex-col"
-              onClick={() => goNextPage("/subPages/redeem/history/index")}
+              onClick={() => goNextPage("/subPages/common/pointsDetail/index")}
             >
-              <View className="text-46">0</View>
+              <View className="text-46">{userInfo.points}</View>
               <CImage
                 className="w-116 h-24"
                 src={`${config.imgBaseUrl}/index/icon_redeem.png`}
@@ -108,7 +119,8 @@ const Index: React.FC<PropsType> = (props) => {
             ></View>
           </View>
           <View className="w-full h-6 text-black text-right text-18 mt-30">
-            任意消费即可升级成为玩妆达人
+            还需要消费{userInfo.nextGradeNeedAmount}元即可升级成为
+            {userInfo.nextGradeName}
           </View>
           <View
             className="absolute bottom-20 left-25 text-18 underline"
@@ -126,8 +138,8 @@ const Index: React.FC<PropsType> = (props) => {
             <View className="w-full py-80  relative vhCenter flex-col bg-white rounded-10">
               <View className="mb-60 text-36 font-bold">我的二维码</View>
               <View className="w-400 h-400">
-                {userInfo?.id && (
-                  <CQRCodeCustom text={userInfo?.id}></CQRCodeCustom>
+                {userInfo?.marsId && (
+                  <CQRCodeCustom text={userInfo?.marsId}></CQRCodeCustom>
                 )}
               </View>
             </View>

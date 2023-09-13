@@ -3,7 +3,7 @@ import "./index.less";
 import { ScrollView, View } from "@tarojs/components";
 import Taro, { useDidShow } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
@@ -11,32 +11,44 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import HeaderTabbar from "@/src/components/Common/HeaderTabbar";
 import config from "@/src/config";
+import { formatDateTime } from "@/src/utils";
 
-const app = Taro.getApp<App.GlobalData>();
-
-type tabType = { title: string; index: number; status: CouponStatusType };
-
+type tabType = { title: string; value: CouponStatusType };
 const tabList: Array<tabType> = [
-  { title: "待使用", index: 0, status: "usable" },
-  { title: "已使用", index: 1, status: "redeem" },
-  { title: "已过期", index: 2, status: "expire" },
+  { title: "待使用", value: "10" },
+  { title: "已使用", value: "20" },
+  { title: "已过期", value: "90" },
 ];
+const app: App.GlobalData = Taro.getApp();
 
 const Index = () => {
-  const activeIndex = useRef({ index: 0 });
   const [couponList, setCouponList] = useState<any>([]);
   const [indexList, setIndexList] = useState<number[]>([]);
+  const [couponStatus, setCouponStatus] = useState<string>("10");
+  const loading = useRef<boolean>(false);
 
   /**
    * 获取卡券列表
    */
   const getMyCouponListByStatus = useMemoizedFn(async () => {
+    await app.init();
+    if (loading.current) return;
+
     setCouponList([]);
-    let status = tabList[activeIndex.current.index].status;
-    const { data } = await api.coupon.getCustomerCouponByStatus({
-      status: status,
-    });
-    setCouponList(data);
+    loading.current = true;
+    Taro.showLoading({ title: "加载中", mask: true });
+    const { data } = await api.coupon.posCoupon();
+    setCouponList(data.filter((item) => item.status === couponStatus));
+    loading.current = false;
+    Taro.hideLoading();
+  });
+
+  /**
+   * 点击菜单栏切换
+   */
+  const tabClick = useMemoizedFn((val) => {
+    if (couponStatus === val) return;
+    setCouponStatus(val);
   });
 
   useDidShow(async () => {
@@ -44,15 +56,11 @@ const Index = () => {
     getMyCouponListByStatus();
   });
 
-  /**
-   * 点击菜单栏切换
-   */
-  const tabClick = useMemoizedFn((index) => {
-    setCouponList([]);
-    if (activeIndex.current.index === index) return;
-    activeIndex.current.index = index;
-    getMyCouponListByStatus();
-  });
+  useEffect(() => {
+    if (couponStatus) {
+      getMyCouponListByStatus();
+    }
+  }, [couponStatus, getMyCouponListByStatus]);
 
   return (
     <View
@@ -74,7 +82,7 @@ const Index = () => {
 
       <HeaderTabbar
         tabList={tabList}
-        activeIndex={activeIndex.current.index}
+        value={couponStatus}
         tabClick={tabClick}
       ></HeaderTabbar>
 
@@ -93,13 +101,14 @@ const Index = () => {
                       <CImage
                         className="h-114 float-left"
                         mode="heightFix"
-                        src={item.mainImage}
+                        src={item.imageUrl}
                       ></CImage>
                     </View>
                     <View className="flex-1 px-10 py-20 text-white text-28 vhCenter flex-col">
-                      <View className="text-36">先锋礼遇</View>
+                      <View className="text-36">{item.ticketName}</View>
                       <View className="text-18 my-10">
-                        2023.10.1-2023.12.15
+                        {formatDateTime(item.useBeginDate, 3, ".")}-
+                        {formatDateTime(item.useEndDate, 3, ".")}
                       </View>
                       <View
                         className="text-24"
@@ -121,7 +130,7 @@ const Index = () => {
                       style="background: #6c6c6c"
                     >
                       <View className="text-left">
-                        1 卡券详情：腮红试色卡片1片及拉古纳试色卡1片{" "}
+                        1 卡券详情：{item.ticketName}
                       </View>
                       <View className="text-left">
                         2 凭此卡券在有效期内至NARS线下专柜 即可免费领取礼遇
@@ -131,7 +140,7 @@ const Index = () => {
                       </View>
                       <View className="inline-block mt-30 bg-white">
                         <CQRCodeCustom
-                          text="11111111111111"
+                          text={item.ticketSerialNo}
                           width={250}
                           height={250}
                           padding={10}

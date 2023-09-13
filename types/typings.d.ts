@@ -21,20 +21,28 @@ declare namespace Store {
     city: string;
     /** 性别 */
     gender: string;
-    /** 积分 */
-    points: number;
     /** 等级 */
     grade: string;
     /** 会员编号 */
     marsId: string;
     /** id */
     id: string;
-    /** 下一个等级 */
-    nextGradeAmount: string;
     /** 地址信息 */
     district: string;
     /** 柜台 */
     country: string;
+    /**当前等级名称 */
+    gradeName: string;
+    /** 会员id */
+    memberId: string;
+    /** 下一个等级需要总积分 */
+    needAmount: number;
+    /** 下一个等级名称 */
+    nextGradeName: string;
+    /** 下一个等级需要金额 */
+    nextGradeNeedAmount: number;
+    /** 积分 */
+    points: number;
   };
   type Common = {
     /** Nav高度 */

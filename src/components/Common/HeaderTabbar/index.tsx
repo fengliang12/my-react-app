@@ -5,27 +5,26 @@ import React from "react";
 
 interface T_tabItem {
   title: string;
-  index: number;
   [props: string]: any;
 }
 interface T_props extends ViewProps {
   tabList: T_tabItem[];
-  activeIndex: number;
+  value: any;
   tabClick: (index: number) => void;
 }
 
 const HeaderTabbar: React.FC<Partial<T_props>> = (props) => {
-  let { tabList, activeIndex, tabClick } = props;
+  let { tabList, value, tabClick } = props;
   return (
-    <View className="header_tab" {...props}>
+    <View className={`header_tab ${props.className}`} style={props.style}>
       {tabList?.length &&
         tabList.map((item: any) => {
           return (
             <View
               className={
-                item?.index === activeIndex ? "tab-item  active" : "tab-item "
+                item?.value === value ? "tab-item  active" : "tab-item "
               }
-              onClick={() => tabClick?.(item?.index)}
+              onClick={() => tabClick?.(item?.value)}
               key={item.title}
             >
               {item.title}

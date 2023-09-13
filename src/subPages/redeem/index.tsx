@@ -1,12 +1,15 @@
 import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useMemoizedFn, useSetState } from "ahooks";
+import { useBoolean, useMemoizedFn, useSetState } from "ahooks";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
+import CImage from "@/src/components/Common/CImage";
+import CPopup from "@/src/components/Common/CPopup";
 import handleGoodClass from "@/src/utils/handleGoodClass";
+import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -21,6 +24,9 @@ interface ApplyType {
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const dispatch = useDispatch();
+  const userInfo = useSelector((state: Store.States) => state.user);
+  const [show, { setTrue, setFalse }] = useBoolean(false);
+
   const [applyObj, setApplyObj] = useSetState<ApplyType>({
     applyType: "",
     counterId: "",
@@ -33,9 +39,10 @@ const Index = () => {
   const getGoodList = useMemoizedFn(async () => {
     await app.init();
     Taro.showLoading({ title: "加载中", mask: true });
-    let res = await api.buyBonusPoint.getBonusPointList({
-      counterId: applyObj.counterId,
-    });
+    let params = {
+      counterId: applyObj?.counterId || undefined,
+    };
+    let res = await api.buyBonusPoint.getBonusPointList(params);
     Taro.hideLoading();
 
     if (res?.data?.length) {
@@ -97,9 +104,9 @@ const Index = () => {
 
       <View className="h-240 vhCenter text-white text-26">
         <View className="flex-1 vhCenter flex-col">
-          <Text className="text-80">2000</Text>
+          <Text className="text-80">{userInfo.points}</Text>
           <Text
-            onClick={() => to("/subPages/redeem/history/index")}
+            onClick={() => to("/subPages/common/pointsDetail/index")}
           >{`积分明细 >`}</Text>
         </View>
         <View className="w-1 h-100 bg-white"></View>
@@ -110,7 +117,9 @@ const Index = () => {
           >
             兑礼记录
           </Text>
-          <Text className="underline mt-30">兑换规则</Text>
+          <Text className="underline mt-30" onClick={setTrue}>
+            兑换规则
+          </Text>
         </View>
       </View>
 
@@ -132,6 +141,22 @@ const Index = () => {
 
       {/* 购物车 */}
       <AddCart></AddCart>
+
+      {/* 活动规则 */}
+      <View style={setShow(show)}>
+        <CPopup maskClose closePopup={setFalse}>
+          <View className="w-690 h-1008 bg-white rounded-20">
+            <CImage
+              className="w-full h-full"
+              src="https://can-uat-prod-baum-oss.oss-cn-shanghai.aliyuncs.com/coupon/rule.png"
+            ></CImage>
+            <View
+              className="absolute w-80 h-80 top-20 right-10 vhCenter"
+              onClick={setFalse}
+            ></View>
+          </View>
+        </CPopup>
+      </View>
     </View>
   );
 };

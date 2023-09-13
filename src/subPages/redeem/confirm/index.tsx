@@ -22,6 +22,7 @@ const OrderConfirm = () => {
   const selectCounter = useSelector(
     (state: Store.States) => state.exchangeGood.counter,
   );
+  const [payType, setPayType] = useState<string>("points");
 
   console.log("selectCounter", selectCounter);
 
@@ -153,6 +154,30 @@ const OrderConfirm = () => {
               exchangeGood?.goods?.map((item) => {
                 return <OrderGood good={item} key={item.id}></OrderGood>;
               })}
+          </View>
+          <View className="text-24">
+            <View
+              className="flex items-center"
+              onClick={() => setPayType("points")}
+            >
+              <View className="borderBlack w-16 h-16 rounded-24 mr-6 vhCenter">
+                {payType === "points" && (
+                  <View className="w-12 h-12 rounded-12 bg-black"></View>
+                )}
+              </View>
+              <Text>300积分抵扣邮费</Text>
+            </View>
+            <View
+              className="flex items-center"
+              onClick={() => setPayType("money")}
+            >
+              <View className="borderBlack w-16 h-16 rounded-24 mr-6 vhCenter">
+                {payType === "money" && (
+                  <View className="w-12 h-12 rounded-12 bg-black"></View>
+                )}
+              </View>
+              <Text>9.9元付邮到家</Text>
+            </View>
           </View>
           <View className="w-full h-1 bg-black mt-80"></View>
           <View className="text-55 flex justify-between mt-50">

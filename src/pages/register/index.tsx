@@ -14,8 +14,10 @@ import Avatar from "@/src/components/Common/Avatar";
 import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import PrivacyPolicyText from "@/src/components/Common/PrivacyPolicyText";
+import SendVerifyCode from "@/src/components/Common/SendVerifyCode";
 import config from "@/src/config";
 import { formatDateTime, isPhone } from "@/src/utils";
+import { getPages } from "@/src/utils/getPages";
 import subscribeMsg from "@/src/utils/subscribeMsg";
 
 const app: App.GlobalData = Taro.getApp();
@@ -35,6 +37,7 @@ const Index = () => {
     city: "",
     withSmsCode: false,
     shopType: "wa",
+    smsCode: "",
   });
 
   /**
@@ -89,7 +92,8 @@ const Index = () => {
    * 提交注册
    */
   const submit = useMemoizedFn(async () => {
-    const { nickName, birthDate, avatarUrl, mobile, gender, city } = user;
+    const { nickName, birthDate, avatarUrl, mobile, gender, city, smsCode } =
+      user;
     if (!avatarUrl) {
       return Taro.showToast({ title: "请先上传头像", icon: "none" });
     }
@@ -101,6 +105,9 @@ const Index = () => {
     }
     if (!mobile || !isPhone(mobile)) {
       return Taro.showToast({ title: "请输入正确的手机号", icon: "none" });
+    }
+    if (!smsCode && inputMobileType) {
+      return Taro.showToast({ title: "请输入验证码", icon: "none" });
     }
     if (!birthDate) {
       return Taro.showToast({ title: "请选择生日", icon: "none" });
@@ -126,6 +133,7 @@ const Index = () => {
       gender: user.gender === "男" ? 1 : 2,
       realName: user.nickName,
       registerChannel: user.shopType,
+      withSmsCode: inputMobileType,
     });
     Taro.hideLoading();
 
@@ -136,7 +144,12 @@ const Index = () => {
         mask: true,
       });
       setTimeout(async () => {
-        app.to(1);
+        let list: any = getPages({ getKey: "route", getCurrentPage: false });
+        if (list.length > 1) {
+          app.to(1);
+        } else {
+          app.to("/pages/index/index", "reLaunch");
+        }
       }, 2000);
     }
   });
@@ -227,6 +240,31 @@ const Index = () => {
                 )}
               </View>
             </View>
+            {inputMobileType && (
+              <View className="item" style="padding-right:0">
+                <View className="left">验证码*</View>
+                <View className="right">
+                  <Input
+                    type="number"
+                    className="text-right"
+                    placeholder="请输入验证码"
+                    placeholderClass="ipt-placeholder"
+                    value={user.smsCode}
+                    onInput={(e) =>
+                      setUser({
+                        smsCode: e.detail.value,
+                      })
+                    }
+                  />
+                  <View
+                    className="text-22 bg-white vhCenter px-10 text-black ml-20"
+                    style="white-space: nowrap;"
+                  >
+                    <SendVerifyCode mobile={user.mobile}></SendVerifyCode>
+                  </View>
+                </View>
+              </View>
+            )}
             <View className="item">
               <View className="left">生日*</View>
               <View className="right">
@@ -237,10 +275,10 @@ const Index = () => {
                   onChange={(e) => setUser({ birthDate: e.detail.value })}
                   end={dayjs().subtract(0, "year").format("YYYY-MM-DD")}
                 >
-                  <View className="flex items-center mr-20">
+                  <View className="flex items-center justify-end mr-20 text-right w-full">
                     {!user.birthDate && (
                       <View
-                        className="text-20 font-thin"
+                        className="text-20 font-thin w-full"
                         style={{ color: "#c1c1c1" }}
                       >
                         生日信息一经确认，无法修改
@@ -262,9 +300,9 @@ const Index = () => {
                     setUser({ gender: genderArr[e.detail.value] });
                   }}
                 >
-                  <View className="flex items-center mr-20">
+                  <View className="flex items-center justify-end mr-20 w-full text-right">
                     {!user.gender && (
-                      <View className="ipt-placeholder">请选择性别</View>
+                      <View className="ipt-placeholder w-full">请选择性别</View>
                     )}
                     {user.gender}
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
@@ -285,8 +323,8 @@ const Index = () => {
                     setUser({ city: counter.city });
                   }}
                 >
-                  <View className="flex items-center mr-20">
-                    <View className="ipt-placeholder">
+                  <View className="flex items-center mr-20 text-right w-full">
+                    <View className="ipt-placeholder w-full">
                       {selectCounter ? selectCounter.city : "请选择所在城市"}
                     </View>
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
@@ -297,7 +335,7 @@ const Index = () => {
             <PrivacyPolicyText
               callback={PrivacyPolicy}
               checkColor="#ffffff"
-              style="color:#ffffff;font-size:22rpx;margin-top:180rpx"
+              style="color:#ffffff;font-size:22rpx;margin-top:150rpx"
             ></PrivacyPolicyText>
             <View
               className="mt-85 w-540 h-70 bg-white rounded-10 text-black text-34 vhCenter"

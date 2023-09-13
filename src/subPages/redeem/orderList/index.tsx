@@ -29,7 +29,7 @@ const Index = () => {
           src={`${config.imgBaseUrl}/icon/title_image.png`}
         ></CImage>
       </View>
-      <View className="w-688 flex justify-around mt-70 mb-60">
+      <View className="w-688 flex justify-around items-center mt-70 mb-60 text-28">
         <View
           className="w-228 h-60  vhCenter"
           style={{ border: "1px solid #FFFFFF" }}
@@ -45,10 +45,12 @@ const Index = () => {
               setStartDate(value);
             }}
           >
-            <Text>{startDate ? startDate : "请选择日期"}</Text>
+            <Text className="w-full h-60 vhCenter">
+              {startDate ? startDate : "请选择日期"}
+            </Text>
           </Picker>
         </View>
-        <View>-</View>
+        <View className="w-50 h-2 bg-white"></View>
         <View
           className="w-228 h-60 vhCenter"
           style={{ border: "1px solid #FFFFFF" }}
@@ -64,7 +66,9 @@ const Index = () => {
               setEndDate(value);
             }}
           >
-            <Text>{endDate ? endDate : "请选择日期"}</Text>
+            <Text className="w-full h-60 vhCenter">
+              {endDate ? endDate : "请选择日期"}
+            </Text>
           </Picker>
         </View>
       </View>

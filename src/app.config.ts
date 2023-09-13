@@ -21,12 +21,16 @@ export default {
       name: "redeem",
       pages: [
         "index",
-        "history/index",
         "orderList/index",
         "orderDetail/index",
         "confirm/index",
         "success/index",
       ],
+    },
+    {
+      root: "subPages/common",
+      name: "common",
+      pages: ["pointsDetail/index", "consumeRecord/index"],
     },
     {
       root: "subPages/service-appointment",

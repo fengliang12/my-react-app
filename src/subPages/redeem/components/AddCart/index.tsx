@@ -1,33 +1,50 @@
 import { ScrollView, Text, View } from "@tarojs/components";
-import { useSetState } from "ahooks";
+import { useAsyncEffect, useMemoizedFn, useSetState } from "ahooks";
 import React, { useEffect, useState } from "react";
 
 import { cart } from "@/assets/image/index";
+import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
-import CPopup from "@/src/components/Common/CPopup";
 import config from "@/src/config";
+import to from "@/src/utils/to";
+
+import testData from "./testData";
 
 interface StateType {
   show: boolean;
 }
 const Index = () => {
-  useEffect(() => {});
-
-  const [carts, setCarts] = useState<any>([
-    {
-      sellOut: 1,
-      selected: true,
-      mainImage:
-        "https://res-wxec-unipt.lorealchina.com/prod/gac_points/20230531/fcae670e-8488-4874-a140-65be83a4f706.png",
-      point: "2000",
-      name: "NARS遮瑕蜜1.4g +NARS大白饼3g",
-      num: 1,
-    },
-  ]);
-
+  const [carts, setCarts] = useState<any>(testData);
   const [state, setState] = useSetState<StateType>({
     show: false,
   });
+
+  useAsyncEffect(async () => {
+    let res = await api.cart.locate();
+  }, []);
+
+  /**
+   * 勾选
+   */
+  const handleSelect = useMemoizedFn((item) => {
+    item.selected = !item.selected;
+    setCarts([...carts]);
+  });
+
+  /**
+   * 删除
+   */
+  const handleDelete = useMemoizedFn((item) => {});
+
+  /**
+   * 删除
+   */
+  const handleReduce = useMemoizedFn((item) => {});
+
+  /**
+   * 添加
+   */
+  const handleAdd = useMemoizedFn((item) => {});
 
   return (
     <View className="index">
@@ -47,59 +64,60 @@ const Index = () => {
             }}
           ></View>
           {/* 购物车弹窗 */}
-          <View className="fixed left-0 bottom-0 z-12000  w-750 h-1000 bg-white flex items-center flex-col rounded-t-40">
-            <Text className="w-600 font-bold mt-68">兑换礼品详情</Text>
-            <ScrollView className="w-600 h-500 mt-40" scrollY>
+          <View className="fixed left-0 bottom-0 z-12000  w-750 h-1100 bg-white flex items-center flex-col rounded-t-40">
+            <Text className="w-650 font-bold mt-68">兑换礼品详情</Text>
+            <ScrollView className="w-full h-650 mt-40" scrollY>
               {carts?.length > 0 &&
                 carts.map((item) => {
                   return (
                     <View
-                      className="flex items-center justify-start"
+                      className="w-full px-50 box-border flex items-center justify-start pb-50"
                       key={item.id}
                     >
                       <View
-                        className={`w-30 h-30 rounded-30 flex items-center justify-center ${
-                          (item.sellOut || item.timeEnd || !item.status) &&
-                          "disabled"
-                        }`}
-                        style="border:1px solid #000000"
+                        className="vhCenter"
+                        onClick={() => handleSelect(item)}
                       >
-                        {item.selected && (
-                          <View className="w-20 h-20 rounded-20 bg-black"></View>
-                        )}
+                        <View
+                          className={`w-24 h-24 borderBlack rounded-24 flex items-center justify-center ${
+                            (item.sellOut || item.timeEnd || !item.status) &&
+                            "disabled"
+                          }`}
+                        >
+                          {item.selected && (
+                            <View className="w-20 h-20 rounded-20 bg-black"></View>
+                          )}
+                        </View>
+
+                        <CImage
+                          className="w-180 h-180 ml-20"
+                          src={item?.mainImage}
+                        />
                       </View>
 
-                      <CImage
-                        className="w-220 h-220 ml-20"
-                        src={item?.mainImage}
-                      />
-
-                      <View className="flex-1 h-full flex flex-col justify-between relative ml-40">
-                        <View className="flex justify-between top">
-                          <View className="detail">
-                            <View>{item?.name}</View>
-                            <View className="volume">{item?.point}积分</View>
-                          </View>
+                      <View className="flex-1 h-180 vhCenter flex-col ml-40 text-28">
+                        <View>
+                          <View>{item?.name}</View>
+                          <View className="mt-20">{item?.point}积分</View>
                         </View>
-                        <View className="absolute bottom-0 right-0 flex items-end justify-between">
-                          <View className="flex items-center justify-center">
-                            <CImage
-                              className="sub  flex items-center justify-center"
-                              data-type="sub"
-                              src={`${config.baseImgUrl}/redeem/icon-reduce.png`}
-                            />
-                            <View className="flex items-center justify-center quantity">
-                              {item.num}
-                            </View>
-                            <CImage
-                              className="add  flex items-center justify-center"
-                              data-type="add"
-                              src={`${config.baseImgUrl}/redeem/icon-add.png`}
-                            />
-                          </View>
+                      </View>
+                      <View className="min-w-100 h-140 flex items-end justify-between flex-col">
+                        <CImage
+                          className="w-28 h-32"
+                          src={`${config.imgBaseUrl}/redeem/icon-delete.png`}
+                          onClick={() => handleDelete(item)}
+                        />
+                        <View className="w-full flex items-center justify-between">
                           <CImage
-                            className="close"
-                            src={`${config.baseImgUrl}/redeem/icon-delete.png`}
+                            className="w-24 h-22"
+                            src={`${config.imgBaseUrl}/redeem/reduce.png`}
+                            onClick={() => handleReduce(item)}
+                          />
+                          <View className="mx-10">{item.num}</View>
+                          <CImage
+                            className="w-28 h-28"
+                            src={`${config.imgBaseUrl}/redeem/add.png`}
+                            onClick={() => handleAdd(item)}
                           />
                         </View>
                       </View>
@@ -108,19 +126,22 @@ const Index = () => {
                 })}
             </ScrollView>
 
-            <View className="w-600 h-2 bg-black"></View>
-            <View className="w-600 text-50 flex items-center justify-between mt-30">
+            <View className="w-600 h-2 bg-black font-bold"></View>
+            <View className="w-600 text-36 flex items-center justify-between mt-30">
               <Text>总计兑换</Text>
               <Text>2件</Text>
             </View>
-            <View className="w-600 text-50 flex items-center justify-between mt-20">
+            <View className="w-600 text-36 flex items-center justify-between mt-20">
               <Text>总计消耗</Text>
               <Text>3000分</Text>
             </View>
             <View
               className="w-222 h-50 mt-40 vhCenter"
               style={{ backgroundColor: "#EFEFEF" }}
-              onClick={() => setState({ show: false })}
+              onClick={() => {
+                setState({ show: false });
+                to("/subPages/redeem/confirm/index");
+              }}
             >
               确认兑换
             </View>

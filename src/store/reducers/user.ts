@@ -17,9 +17,13 @@ const INITIAL_STATE: Store.User = {
   city: "",
   marsId: "",
   id: "",
-  nextGradeAmount: "",
   district: "",
   country: "",
+  gradeName: "",
+  memberId: "",
+  needAmount: 0,
+  nextGradeName: "",
+  nextGradeNeedAmount: 0,
 };
 
 export default createReducer(

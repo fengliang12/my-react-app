@@ -116,27 +116,30 @@ const Index: React.FC<PropsType> = (props) => {
                 <View className="text-12">*可前往线下门店领取</View>
               </View>
             </View>
-            {/* 省市区 */}
-            <MultiplePicker
-              isCascadeData={false}
-              cascadeCount={3}
-              pickerData={counterList}
-              customKeyList={["province", "city", "name"]}
-              callback={(counter) => {
-                setSelectCounter(counter);
-              }}
-            >
-              <View
-                className="w-360 h-55 mt-20 text-26 px-10"
-                style={{ border: "1px solid #959595", lineHeight: "55rpx" }}
+            <View className="w-360 h-55 mt-20 text-26 px-10">
+              <MultiplePicker
+                isCascadeData={false}
+                cascadeCount={3}
+                pickerData={counterList}
+                customKeyList={["province", "city", "name"]}
+                callback={(counter) => {
+                  setSelectCounter(counter);
+                }}
               >
-                {!selectCounter ? (
-                  <Text>省/市/区</Text>
-                ) : (
-                  <Text>{selectCounter?.name}</Text>
-                )}
-              </View>
-            </MultiplePicker>
+                <View
+                  className="w-full h-full px-10"
+                  style={{ border: "1px solid #959595", lineHeight: "55rpx" }}
+                >
+                  {!selectCounter ? (
+                    <Text>省/市/区</Text>
+                  ) : (
+                    <Text>{selectCounter?.name}</Text>
+                  )}
+                </View>
+              </MultiplePicker>
+            </View>
+            {/* 省市区 */}
+
             <View
               className="flex items-center justify-start w-340 mt-30"
               onClick={() => setApplyType("express")}
@@ -152,8 +155,8 @@ const Index: React.FC<PropsType> = (props) => {
                   ></View>
                 )}
               </View>
-              <View>
-                <View>付邮/随单邮寄到家</View>
+              <View className="flex-1">
+                <View>邮寄到家（付邮/积分抵邮）</View>
                 <View className="text-12">*可前往官方商城购买后领取随单</View>
               </View>
             </View>

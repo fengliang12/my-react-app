@@ -38,13 +38,6 @@
           "scene": null
         },
         {
-          "name": "积分历史",
-          "pathName": "subPages/redeem/history/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
           "name": "订单列表",
           "pathName": "subPages/redeem/orderList/index",
           "query": "",
@@ -136,8 +129,15 @@
           "scene": null
         },
         {
-          "name": "积分明细",
-          "pathName": "subPages/redeem/history/index",
+          "name": "消费记录",
+          "pathName": "subPages/common/consumeRecord/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "订单提交",
+          "pathName": "subPages/redeem/confirm/index",
           "query": "",
           "launchMode": "default",
           "scene": null

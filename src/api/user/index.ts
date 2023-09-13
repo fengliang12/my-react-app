@@ -25,6 +25,16 @@ const appendMember = (data) =>
 const decodeUserInfo = (data) =>
   http.post(`/sp-portal/store/${config.storeCode}/wechat/decodeUserInfo`, data);
 
+const sendSmsCode2 = (data) =>
+  http.post(
+    `/sp-portal/store/${config.storeCode}/wechat/sendSmsCode2`,
+    data.mobile,
+  );
+
+const sendAcxiomSmsCode = (data) =>
+  http.post(
+    `/sp-portal/store/${config.storeCode}/wechat/sendAcxiomSmsCode/${data.mobile}`,
+  );
 const decodePhoneNumber = (data, path) =>
   http.post(
     `/sp-portal/store/${config.storeCode}/wechat/decodeWeChatPhone/${path.isCreateUser}`,
@@ -137,4 +147,6 @@ export default {
   getShopId,
   appendMember,
   unbinding,
+  sendSmsCode2,
+  sendAcxiomSmsCode,
 };

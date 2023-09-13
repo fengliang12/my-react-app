@@ -58,6 +58,18 @@ export const createInit = () => {
  * 获取数云接口
  */
 export const getShuYunMemberInfo = async () => {
-  // let res = await api.shuYunMember.queryMember();
-  // console.log(res);
+  let { data } = await api.shuYunMember.queryMember();
+  let userInfo = {
+    gradeName: data.gradeName,
+    memberId: data.memberId,
+    needAmount: data.needAmount,
+    nextGradeName: data.nextGradeName,
+    nextGradeNeedAmount: data.nextGradeNeedAmount,
+    points: data.points,
+  };
+  // 视图数据放Store
+  store.dispatch({
+    type: SET_USER,
+    payload: userInfo,
+  });
 };
