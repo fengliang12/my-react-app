@@ -10,6 +10,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "附近门店",
+          "pathName": "subPages/nearby-stores/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "用户信息更改",
           "pathName": "pages/update/index",
           "query": "code=test0428",
