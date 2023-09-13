@@ -7,33 +7,39 @@ const { storeCode } = config;
 const commonUrl = `/nars-portal/store/${storeCode}/arvatoReservation`;
 
 /** 获取可预约门店列表 */
-const getCounters: Api.User.GetCustomerCouponByStatus.FuncT = (projectCode) => {
+const getCounters: Api.ArvatoReservation.GetCounters.FuncT = (projectCode) => {
   return http.get(`${commonUrl}/counters/${projectCode}`);
 };
 
-/** 获取可预约门店列表 */
-const modify: Api.User.GetCustomerCouponByStatus.FuncT = (data) => {
+/** 修改预约 */
+const modify: Api.ArvatoReservation.Modify.FuncT = (data) => {
   return http.post(`${commonUrl}/modify`, data);
 };
 
 /** 获取可预约时间段列表 */
-const getPeriods: Api.User.GetCustomerCouponByStatus.FuncT = (storeId) => {
+const getPeriods: Api.ArvatoReservation.GetPeriods.FuncT = (storeId) => {
   return http.get(`${commonUrl}/periods/${storeId}`);
 };
 
 /** 查询服务预约项目列表 */
-const getProjects: any = () => {
+const getProjects: Api.ArvatoReservation.GetProjects.FuncT = () => {
   return http.get(`${commonUrl}/projects`);
 };
 
-/** 查询服务预约项目列表 */
-const getRecords: Api.User.GetCustomerCouponByStatus.FuncT = (data) => {
-  return http.post(`${commonUrl}/records`, data);
+/** 预约记录列表 */
+const getRecords: Api.ArvatoReservation.GetRecords.FuncT = (params) => {
+  return http.post(
+    `${commonUrl}/records`,
+    {},
+    {
+      params,
+    },
+  );
 };
 
-/** 查询服务预约项目列表 */
-const submit: Api.User.GetCustomerCouponByStatus.FuncT = (data) => {
-  return http.get(`${commonUrl}/submit`, data);
+/** 提交预约 */
+const submit: Api.ArvatoReservation.Submit.FuncT = (data) => {
+  return http.post(`${commonUrl}/submit`, data);
 };
 
 export default {
