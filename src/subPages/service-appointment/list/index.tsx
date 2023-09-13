@@ -1,6 +1,6 @@
-import { Text, View } from "@tarojs/components";
-import Taro, { useDidHide, useDidShow, useReachBottom } from "@tarojs/taro";
-import { useAsyncEffect, usePagination, useRequest } from "ahooks";
+import { View } from "@tarojs/components";
+import Taro, { useDidShow } from "@tarojs/taro";
+import { useRequest } from "ahooks";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 

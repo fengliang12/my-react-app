@@ -1,15 +1,15 @@
 import { Picker, Text, View } from "@tarojs/components";
 import Taro, { useRouter } from "@tarojs/taro";
-import { useAsyncEffect, useMemoizedFn, useRequest } from "ahooks";
+import { useRequest } from "ahooks";
 import dayjs from "dayjs";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import api from "@/api/index";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
-import toast from "@/src/utils/toast";
 import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
 const app: App.GlobalData = Taro.getApp();
 

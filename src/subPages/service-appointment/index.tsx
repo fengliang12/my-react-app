@@ -1,8 +1,6 @@
 import { ScrollView, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useAsyncEffect } from "ahooks";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useRequest } from "ahooks";
 
 import api from "@/api/index";
 import CHeader from "@/src/components/Common/CHeader";
@@ -12,14 +10,10 @@ import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
-  const [projects, setProjects] = useState<any>([]);
-
-  useAsyncEffect(async () => {
+  const { data: projects = [] } = useRequest(async () => {
     await app.init();
-    let res = await api.arvatoReservation.getProjects();
-    setProjects(res?.data);
-  }, []);
-
+    return await api.arvatoReservation.getProjects().then((res) => res.data);
+  });
 
   return (
     <View className="min-h-screen bg-black text-white flex flex-col">
