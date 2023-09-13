@@ -155,7 +155,7 @@ const Index: React.FC<PropsType> = (props) => {
                   ></View>
                 )}
               </View>
-              <View>
+              <View className="flex-1">
                 <View>邮寄到家（付邮/积分抵邮）</View>
                 <View className="text-12">*可前往官方商城购买后领取随单</View>
               </View>

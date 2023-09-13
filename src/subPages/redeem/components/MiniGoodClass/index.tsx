@@ -120,7 +120,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
               );
             })
           ) : (
-            <View className="w-full text-center">暂无商品数据</View>
+            <View className="w-full text-center mt-400">暂无商品数据</View>
           )}
         </View>
       </View>

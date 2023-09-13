@@ -5,6 +5,8 @@ import common from "./common/index";
 import counter from "./counter/index";
 import coupon from "./coupon/index";
 import goods from "./goods/index";
+import memberOrder from "./memberOrder";
+import salesCategory from "./salesCategory";
 import shuYunMember from "./shuYunMember/index";
 import user from "./user/index";
 
@@ -21,4 +23,6 @@ export default {
   cart,
   arvatoReservation,
   shuYunMember,
+  salesCategory,
+  memberOrder,
 };

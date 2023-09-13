@@ -127,6 +127,13 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "订单提交",
+          "pathName": "subPages/redeem/confirm/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
