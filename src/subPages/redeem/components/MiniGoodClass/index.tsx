@@ -95,10 +95,10 @@ const GoodClass: React.FC<T_Props> = (props) => {
                   </View>
                   {child?.sellOut && (
                     <View
-                      className="w-full h-full absolute top-0 left-0 text-white vhCenter text-48 z-99 rounded-9"
+                      className="w-full h-full absolute top-0 left-0 text-white vhCenter text-38 z-99 rounded-9"
                       style="background-color:rgba(0,0,0,0.5);"
                     >
-                      售罄
+                      售 罄
                     </View>
                   )}
                   <View

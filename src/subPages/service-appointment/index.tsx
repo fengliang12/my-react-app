@@ -11,8 +11,12 @@ import to from "@/src/utils/to";
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const { data: projects = [] } = useRequest(async () => {
+    Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
-    return await api.arvatoReservation.getProjects().then((res) => res.data);
+    return await api.arvatoReservation.getProjects().then((res) => {
+      Taro.hideLoading();
+      return res.data;
+    });
   });
 
   return (
@@ -28,15 +32,13 @@ const Index = () => {
       <View className="text-52 text-center mt-100 font-thin">
         预约门店专属服务
       </View>
-      {/* <View className="text-35 text-center mt-50 font-thin">
+      <View className="text-35 text-center mt-50 font-thin">
         亲爱的NARS唇妆达人
       </View>
-      <View className="text-35 text-center mt-10 font-thin">
-        您还有2次服务机会
-      </View> */}
+
       <ScrollView className="flex-1 mt-100" scrollY>
         <View className="h-full flex items-center justify-center flex-wrap">
-          {projects.map((item: any, index) => (
+          {projects.map((item, index) => (
             <View
               key={index}
               className="w-300 h-244 relative mx-10 mb-30"

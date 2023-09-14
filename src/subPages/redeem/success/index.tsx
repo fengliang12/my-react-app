@@ -9,6 +9,12 @@ import OrderGood from "../components/OrderGood";
 
 const OrderConfirm = () => {
   const exchangeGood = useSelector((state: Store.States) => state.exchangeGood);
+  const applyType = useSelector(
+    (state: Store.States) => state.exchangeGood.applyType,
+  );
+  const counter = useSelector(
+    (state: Store.States) => state.exchangeGood.counter,
+  );
 
   return (
     <View className="w-screen min-h-screen bg-black flex flex-col justify-start items-center text-white">
@@ -32,9 +38,9 @@ const OrderConfirm = () => {
         <View>
           <View>领取柜台</View>
           <View className="flex justify-between mt-60">
-            <Text>上海</Text>
-            <Text>上海</Text>
-            <Text>nars上海新天地</Text>
+            <Text>{counter.province}</Text>
+            <Text>{counter.city}</Text>
+            <Text>{counter.name}</Text>
           </View>
         </View>
         <View className="box_title mt-50 font-bold">兑换礼品详情</View>

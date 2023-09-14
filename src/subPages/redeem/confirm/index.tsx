@@ -85,7 +85,7 @@ const OrderConfirm = () => {
       deliverInfo: addressInfo,
       integral: true,
       customPointsPayPlan: {
-        notValidateUsablePoints: true,
+        notValidateUsablePoints: false,
         redeemPoints: totalPoint,
         usePoints: true,
       },
@@ -102,7 +102,7 @@ const OrderConfirm = () => {
     Taro.hideLoading();
 
     if (status === 200) {
-      to("/subPages/redeem/success/index");
+      to("/subPages/redeem/success/index", "redirectTo");
     }
   });
 
@@ -180,12 +180,12 @@ const OrderConfirm = () => {
           )}
 
           <View className="w-full h-1 bg-black mt-50"></View>
-          <View className="text-55 flex justify-between mt-50">
+          <View className="text-38 flex justify-between mt-50">
             <View className="">总计消耗</View>
             <View>{totalPoint}积分</View>
           </View>
           <View
-            className="w-220 h-50 vhCenter bg-black text-white text-26 m-auto mt-230"
+            className="w-220 h-50 vhCenter bg-black text-white text-26 m-auto mt-100"
             onClick={handleReceive}
           >
             确定提交

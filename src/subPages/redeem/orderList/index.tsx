@@ -108,27 +108,32 @@ const Index = () => {
         {list && list?.length > 0 ? (
           list?.map((item) => {
             return (
-              <View
-                className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30"
-                onClick={() => to("/subPages/redeem/orderDetail/index")}
-                key={item.id}
-              >
-                <View className="flex justify-between">
-                  <Text className="flex-1">
-                    {formatDateTime(item.createTime)}
-                  </Text>
-                  <Text>{item.status}</Text>
+              <>
+                <View
+                  className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30"
+                  onClick={() =>
+                    to(`/subPages/redeem/orderDetail/index?orderId=${item.id}`)
+                  }
+                  key={item.id}
+                >
+                  <View className="flex justify-between">
+                    <Text className="flex-1">
+                      {formatDateTime(item.createTime)}
+                    </Text>
+                    <Text>{item.statusName}</Text>
+                  </View>
+                  <View className="flex items-start mt-25">
+                    <Text className="w-150">领取柜台：</Text>
+                    <Text className="flex-1">NARS上海新天地</Text>
+                  </View>
+                  <View className="flex items-start my-10">
+                    <Text className="w-150">订单编号：</Text>
+                    <Text className="flex-1">{item.id}</Text>
+                  </View>
+                  <View className="w-full h-20"></View>
                 </View>
-                <View className="flex items-start mt-25">
-                  <Text className="w-150">领取柜台：</Text>
-                  <Text className="flex-1">NARS上海新天地</Text>
-                </View>
-                <View className="flex items-start my-10">
-                  <Text className="w-150">订单编号：</Text>
-                  <Text className="flex-1">{item.id}</Text>
-                </View>
-                <View className="w-full h-20 bg-white"></View>
-              </View>
+                <View className="w-full h-30"></View>
+              </>
             );
           })
         ) : (

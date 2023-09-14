@@ -50,12 +50,12 @@ const Index = () => {
       <View className="w-610 text-35 text-left font-thin mt-54 ml-70">
         <text>{project?.reason}</text>
       </View>
-      {/* <View className="w-610 text-35 text-left font-thin ml-70">
+      <View className="w-610 text-35 text-left font-thin ml-70">
         共创先锋自我妆容,
       </View>
       <View className="w-610 text-35 text-left font-thin ml-70">
         并搭配NARS独有的上妆手法和优秀的 美妆产品，打造独一无二先锋妆容
-      </View> */}
+      </View>
       <View
         className="w-224 text-26 h-50 m-auto text-black vhCenter bg-white my-30"
         onClick={() => {

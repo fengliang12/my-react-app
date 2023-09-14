@@ -1,6 +1,6 @@
 import { Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
-import { useBoolean, useMemoizedFn, useSetState } from "ahooks";
+import Taro, { useRouter, useUnload } from "@tarojs/taro";
+import { useBoolean, useMemoizedFn, useMount, useSetState } from "ahooks";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -59,6 +59,17 @@ const Index = () => {
       getGoodList();
     }
   }, [applyType, counter, getGoodList]);
+
+  useUnload(() => {
+    dispatch({
+      type: "CHANGE_EXCHANGE_GOOD",
+      payload: {
+        goods: [],
+        applyType: "",
+        counter: null,
+      },
+    });
+  });
 
   /**
    * 直接购买

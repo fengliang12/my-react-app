@@ -76,7 +76,12 @@ const Index: React.FC<PropsType> = (props) => {
               <View>
                 {isMember ? (
                   <>
-                    <View className="text-32">{userInfo.gradeName}</View>
+                    <View
+                      className="text-32"
+                      style={`background-image:url(${config.imgBaseUrl}/icon/${userInfo.grade}.png);background-size:100% 100%`}
+                    >
+                      {userInfo.gradeName}
+                    </View>
                     <View className="text-38">{userInfo.realName}</View>
                     <View className="flex items-end text-18" onClick={setTrue}>
                       <CImage

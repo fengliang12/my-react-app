@@ -61,8 +61,7 @@ const Index: React.FC<PropsType> = (props) => {
         },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [changeExchange]);
+  }, [changeExchange, dispatch, getCounterList]);
 
   /**
    * 确认
@@ -90,11 +89,11 @@ const Index: React.FC<PropsType> = (props) => {
   return (
     <>
       {showApply && (
-        <CPopup>
+        <CPopup catchMove>
           <View className="w-550 h-600 bg-white vhCenter flex-col">
             <Text className="font-bold text-38">选择领取方式</Text>
             <View
-              className="flex items-center justify-start w-400 mt-50"
+              className="flex items-center justify-start w-440 mt-50"
               onClick={() => setApplyType("self_pick_up")}
             >
               <View
@@ -113,7 +112,7 @@ const Index: React.FC<PropsType> = (props) => {
                 <View className="text-12">*可前往线下门店领取</View>
               </View>
             </View>
-            <View className="w-420 h-55 mt-20 text-26 px-10">
+            <View className="w-440 h-55 mt-20 text-26 px-10">
               <MultiplePicker
                 isCascadeData={false}
                 cascadeCount={3}
@@ -139,7 +138,7 @@ const Index: React.FC<PropsType> = (props) => {
             {/* 省市区 */}
 
             <View
-              className="flex items-center justify-start w-400 mt-30"
+              className="flex items-center justify-start w-440 mt-30"
               onClick={() => {
                 setSelectCounter(null);
                 setApplyType("express");
@@ -157,12 +156,12 @@ const Index: React.FC<PropsType> = (props) => {
                 )}
               </View>
               <View className="flex-1">
-                <View>邮寄到家（付邮/积分抵邮）</View>
-                <View className="text-12">*可前往官方商城购买后领取随单</View>
+                <Text decode>邮寄到家(付邮/积分抵邮)</Text>
+                <View className="text-16">*可前往官方商城购买后领取随单</View>
               </View>
             </View>
             <View
-              className="w-155 h-55 text-28 vhCenter bg-black text-white mt-50"
+              className="w-180 h-55 text-28 vhCenter bg-black text-white mt-50"
               onClick={confirm}
             >
               确定
