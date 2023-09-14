@@ -9,47 +9,50 @@ import CImage from "@/src/components/Common/CImage";
 
 interface T_Props {
   goodClassList: any;
+  originList: any;
   clickSelectGood?: (e: any) => void;
   addCart: (e: any) => void;
   goPage: (e: any) => void;
 }
 
 const GoodClass: React.FC<T_Props> = (props) => {
-  let { goodClassList, clickSelectGood, addCart, goPage } = props;
-  const [activeIndex, setActiveIndex] = useState<string>();
+  let { goodClassList, originList, clickSelectGood, addCart, goPage } = props;
+  const [activeIndex, setActiveIndex] = useState<string>("all");
   const [selectList, setSelectList] = useState([]);
-  useEffect(() => {
-    if (!goodClassList?.length || activeIndex) return;
-    setActiveIndex(goodClassList[0].point);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [goodClassList]);
 
   /**
    * 对应tab下的商品
    */
   useEffect(() => {
     if (!goodClassList || !activeIndex) return;
-    let list = goodClassList.filter(
-      (item: any) => item.point === activeIndex,
-    )[0].data;
-    setSelectList(list);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex, goodClassList]);
+    if (activeIndex === "all") {
+      setSelectList(originList);
+    } else {
+      let list = goodClassList.filter(
+        (item: any) => item.point === activeIndex,
+      )[0].data;
+      setSelectList(list);
+    }
+  }, [activeIndex, goodClassList, originList]);
 
   /**
    * 点击积分栏
    * @param index
    */
   const tabClick = useMemoizedFn((index: string) => {
-    setActiveIndex(index);
+    if (index === activeIndex) {
+      setActiveIndex("all");
+    } else {
+      setActiveIndex(index);
+    }
   });
 
   return (
     <View className="MiniGoodClass text-black text-center py-40 px-70">
       {/* 积分导航 */}
       <View
-        className="w-full text-black text-28 pb-40 mb-40 overflow-x-scroll"
-        style="border-bottom:1px solid #000000"
+        className="w-full text-black text-28 pb-40 mb-40 overflow-x-scroll;borderBottomBlack"
+        style="white-space: nowrap;"
       >
         {goodClassList?.length ? (
           goodClassList.map((item: any, index: number) => {

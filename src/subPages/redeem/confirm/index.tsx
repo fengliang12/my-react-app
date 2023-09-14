@@ -1,6 +1,6 @@
 import { Text, View } from "@tarojs/components";
 import Taro, { Page, useDidHide, useDidShow, useRouter } from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
+import { useBoolean, useMemoizedFn } from "ahooks";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,18 +13,22 @@ import toast from "@/src/utils/toast";
 
 import ExchangeExpress from "../components/ExchangeExpress";
 import OrderGood from "../components/OrderGood";
+import PostageType from "../components/PostageType";
 
 const OrderConfirm = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
-  let { type } = router.params;
   const exchangeGood = useSelector((state: Store.States) => state.exchangeGood);
-  const selectCounter = useSelector(
+  const applyType = useSelector(
+    (state: Store.States) => state.exchangeGood.applyType,
+  );
+  const counter = useSelector(
     (state: Store.States) => state.exchangeGood.counter,
   );
-  const [payType, setPayType] = useState<string>("points");
-
-  console.log("selectCounter", selectCounter);
+  const [postageType, setPostageType] = useState<string>("points");
+  const [totalPoint, setTotalPoint] = useState<number>(0);
+  const [addressInfo, setAddressInfo] =
+    useState<Api.Cart.Public.IDeliverInfo>();
+  const [showDialog, { setTrue, setFalse }] = useBoolean(false);
 
   useDidShow(() => {
     handleTotalPoint();
@@ -33,69 +37,80 @@ const OrderConfirm = () => {
   /**
    * 处理总分
    */
-  const [totalPoint, setTotalPoint] = useState<number>(0);
   const handleTotalPoint = useMemoizedFn(() => {
     let total = 0;
     exchangeGood.goods.forEach((e) => {
-      let num = e.num ? e.num : 1;
+      let quantity = e.quantity ? e.quantity : 1;
       if (e.point) {
         total += e?.discountPoint
-          ? num * e.point * e.discountPoint
-          : num * e.point;
+          ? quantity * e.point * e.discountPoint
+          : quantity * e.point;
       }
     });
     setTotalPoint(total);
   });
 
   /**
-   * 点击兑换
-   */
-  const [showDialog, setShowDialog] = useState<boolean>(false);
-  const handleReceive = useMemoizedFn(async () => {
-    setShowDialog(true);
-    saveAddress();
-  });
-
-  /**
    * 输入地址form
    */
-  const [addressInfo, setAddressInfo] = useState<T_Area_Form>();
-  const inputFormFn = useMemoizedFn((form: T_Area_Form) => {
+  const inputFormFn = useMemoizedFn((form: Api.Cart.Public.IDeliverInfo) => {
     setAddressInfo(form);
   });
 
   /**
-   * 保存地址
+   * 点击兑换
    */
-  const saveAddress = useMemoizedFn(async () => {
-    if (addressInfo && type === "express") {
-      toast({ title: "请先填写收件信息", mask: true });
+  const handleReceive = useMemoizedFn(async () => {
+    if (applyType === "express") {
+      if (!addressInfo) return toast("请先填写收获信息");
       verifyAddressInfo(addressInfo)
         .then(async () => {
-          // await address.saveAddress(addressInfo);
-          setShowDialog(true);
+          setTrue();
         })
         .catch((err) => {
           toast({ title: err, mask: true });
         });
-      return;
+    } else {
+      setTrue();
     }
-    setShowDialog(true);
   });
 
   /**
    * 确认兑礼订单
    */
   const confirm = useMemoizedFn(async () => {
-    // let res = await api.buyBonusPoint.submitPointOrder();
-    to("/subPages/redeem/success/index");
+    Taro.showLoading({ title: "加载中", mask: true });
+    let { status } = await api.cart.submit({
+      channelId: "wm",
+      deliverInfo: addressInfo,
+      integral: true,
+      customPointsPayPlan: {
+        notValidateUsablePoints: true,
+        redeemPoints: totalPoint,
+        usePoints: true,
+      },
+      exchangeSkuList: [
+        {
+          items: exchangeGood.goods.map((item) => ({
+            quantity: item.quantity,
+            skuId: item.skuId,
+          })),
+        },
+      ],
+      useCoupon: false,
+    });
+    Taro.hideLoading();
+
+    if (status === 200) {
+      to("/subPages/redeem/success/index");
+    }
   });
 
   /**
    * 取消弹窗
    */
   const cancel = useMemoizedFn(() => {
-    setShowDialog(false);
+    setFalse();
   });
 
   /**
@@ -131,17 +146,17 @@ const OrderConfirm = () => {
             *切换领取方式后礼品库存可能产生变化
           </View>
           <View className=" text-left">
-            {type === "express" ? "邮寄到家" : "到柜领取"}
+            {applyType === "express" ? "邮寄到家" : "到柜领取"}
           </View>
           <View className="w-full flex justify-between">
             <Text>
-              {type === "express" ? "客人收件信息" : selectCounter?.name}
+              {applyType === "express" ? "客人收件信息" : counter?.name}
             </Text>
             <Text className="underline" onClick={changeExchangeType}>
               切换领取方式
             </Text>
           </View>
-          {type === "express" && (
+          {applyType === "express" && (
             <ExchangeExpress inputFormFn={inputFormFn}></ExchangeExpress>
           )}
         </View>
@@ -155,31 +170,16 @@ const OrderConfirm = () => {
                 return <OrderGood good={item} key={item.id}></OrderGood>;
               })}
           </View>
-          <View className="text-24">
-            <View
-              className="flex items-center"
-              onClick={() => setPayType("points")}
-            >
-              <View className="borderBlack w-16 h-16 rounded-24 mr-6 vhCenter">
-                {payType === "points" && (
-                  <View className="w-12 h-12 rounded-12 bg-black"></View>
-                )}
-              </View>
-              <Text>300积分抵扣邮费</Text>
-            </View>
-            <View
-              className="flex items-center"
-              onClick={() => setPayType("money")}
-            >
-              <View className="borderBlack w-16 h-16 rounded-24 mr-6 vhCenter">
-                {payType === "money" && (
-                  <View className="w-12 h-12 rounded-12 bg-black"></View>
-                )}
-              </View>
-              <Text>9.9元付邮到家</Text>
-            </View>
-          </View>
-          <View className="w-full h-1 bg-black mt-80"></View>
+
+          {/* 邮费支付方式 */}
+          {applyType === "express" && (
+            <PostageType
+              postageType={postageType}
+              setPostageType={setPostageType}
+            ></PostageType>
+          )}
+
+          <View className="w-full h-1 bg-black mt-50"></View>
           <View className="text-55 flex justify-between mt-50">
             <View className="">总计消耗</View>
             <View>{totalPoint}积分</View>

@@ -10,7 +10,7 @@ import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import toast from "@/src/utils/toast";
 
 interface PropsType {
-  callback: (e: any) => void;
+  callback?: () => void;
 }
 
 const app: App.GlobalData = Taro.getApp();
@@ -22,7 +22,7 @@ const Index: React.FC<PropsType> = (props) => {
   const dispatch = useDispatch();
   const [counterList, setCounterList] = useState<any>([]);
   const [showApply, setShowApply] = useState<boolean>(false);
-  const [applyType, setApplyType] = useState<string>("express");
+  const [applyType, setApplyType] = useState<string>("self_pick_up");
   const [selectCounter, setSelectCounter] = useState<any>(null);
 
   /**
@@ -76,28 +76,24 @@ const Index: React.FC<PropsType> = (props) => {
       return;
     }
     dispatch({
-      type: "SET_COUNTER",
+      type: "CHANGE_EXCHANGE_GOOD",
       payload: {
+        applyType: applyType,
         counter: selectCounter,
       },
     });
-
+    callback && callback();
     setShowApply(false);
-    callback &&
-      callback({
-        applyType: applyType,
-        counterId: selectCounter?.id ?? "",
-      });
   });
 
   return (
     <>
       {showApply && (
         <CPopup>
-          <View className="w-468 h-526 bg-white vhCenter flex-col">
-            <Text className="font-bold">选择领取方式</Text>
+          <View className="w-550 h-600 bg-white vhCenter flex-col">
+            <Text className="font-bold text-38">选择领取方式</Text>
             <View
-              className="flex items-center justify-start w-340 mt-50"
+              className="flex items-center justify-start w-400 mt-50"
               onClick={() => setApplyType("self_pick_up")}
             >
               <View
@@ -116,13 +112,14 @@ const Index: React.FC<PropsType> = (props) => {
                 <View className="text-12">*可前往线下门店领取</View>
               </View>
             </View>
-            <View className="w-360 h-55 mt-20 text-26 px-10">
+            <View className="w-420 h-55 mt-20 text-26 px-10">
               <MultiplePicker
                 isCascadeData={false}
                 cascadeCount={3}
                 pickerData={counterList}
                 customKeyList={["province", "city", "name"]}
                 callback={(counter) => {
+                  if (applyType === "express") return toast("请先选择免费到柜");
                   setSelectCounter(counter);
                 }}
               >
@@ -141,8 +138,11 @@ const Index: React.FC<PropsType> = (props) => {
             {/* 省市区 */}
 
             <View
-              className="flex items-center justify-start w-340 mt-30"
-              onClick={() => setApplyType("express")}
+              className="flex items-center justify-start w-400 mt-30"
+              onClick={() => {
+                setSelectCounter(null);
+                setApplyType("express");
+              }}
             >
               <View
                 className="w-30 h-30 rounded-30 mr-20 vhCenter"

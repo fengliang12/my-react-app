@@ -51,6 +51,7 @@ declare namespace Store {
     changeExchange: boolean;
   };
   type ExchangeGood = {
+    applyType: string;
     goods: Array<any>;
     counter: any;
   };

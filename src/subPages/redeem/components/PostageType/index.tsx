@@ -1,0 +1,38 @@
+import { Text, View } from "@tarojs/components";
+import React, { useEffect } from "react";
+
+interface PropsType {
+  postageType: string;
+  setPostageType: (e: string) => void;
+}
+const Index: React.FC<PropsType> = (props) => {
+  let { postageType, setPostageType } = props;
+
+  return (
+    <View className="text-24 mt-40">
+      <View
+        className="flex items-center"
+        onClick={() => setPostageType("points")}
+      >
+        <View className="borderBlack w-16 h-16 rounded-24 mr-6 vhCenter">
+          {postageType === "points" && (
+            <View className="w-12 h-12 rounded-12 bg-black"></View>
+          )}
+        </View>
+        <Text>300积分抵扣邮费</Text>
+      </View>
+      <View
+        className="flex items-center"
+        onClick={() => setPostageType("money")}
+      >
+        <View className="borderBlack w-16 h-16 rounded-24 mr-6 vhCenter">
+          {postageType === "money" && (
+            <View className="w-12 h-12 rounded-12 bg-black"></View>
+          )}
+        </View>
+        <Text>9.9元付邮到家</Text>
+      </View>
+    </View>
+  );
+};
+export default Index;

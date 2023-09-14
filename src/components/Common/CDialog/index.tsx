@@ -32,7 +32,7 @@ const CDialog: React.FC<T_Props> = (props) => {
       }}
     >
       <View className={props?.className}>
-        <View className="w-full text-center mt-90 font-bold">
+        <View className="w-full text-center mt-40 font-bold">
           <Text>{title}</Text>
         </View>
         <View className="mt-70 text-center">

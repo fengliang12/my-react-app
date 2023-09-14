@@ -1,19 +1,49 @@
 import { Picker, ScrollView, Text, View } from "@tarojs/components";
+import Taro, { useDidShow } from "@tarojs/taro";
+import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
+import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import { formatDateTime, getTimeStamp } from "@/src/utils";
 import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
-const orderList = [{ label: "全部订单", value: "all" }];
+const app: App.GlobalData = Taro.getApp();
 const Index = () => {
-  const [orderIndex, setOrderIndex] = useState<number>(0);
+  const [list, setList] = useState<Api.Order.Public.IContent[]>();
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const endTime = dayjs(Date.now()).format("YYYY-MM");
 
+  /**
+   * 获取订单列表
+   */
+  const getOrderByStatus = useMemoizedFn(async () => {
+    Taro.showLoading({ title: "加载中", mask: true });
+    await app.init();
+    let res = await api.memberOrder.getOrderByStatus(
+      { size: 0, page: 100 },
+      { status: "all" },
+    );
+    Taro.hideLoading();
+    setList(res?.data.content);
+  });
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      if (getTimeStamp(startDate) > getTimeStamp(endDate))
+        return toast("结束时间不能大于开始时间");
+      getOrderByStatus();
+    }
+  }, [startDate, endDate, getOrderByStatus]);
+
+  useDidShow(() => {
+    getOrderByStatus();
+  });
   return (
     <View className="order-list bg-black flex h-screen flex-col items-center justify-start text-white">
       <CHeader
@@ -38,7 +68,7 @@ const Index = () => {
             mode="date"
             value={startDate}
             start="2010-01"
-            end={endTime}
+            end={endDate || endTime}
             fields="month"
             onChange={(e) => {
               let value = e.detail.value;
@@ -58,7 +88,7 @@ const Index = () => {
           <Picker
             mode="date"
             value={endDate}
-            start="2010-01"
+            start={startDate || "2010-01"}
             end={endTime}
             fields="month"
             onChange={(e) => {
@@ -75,24 +105,37 @@ const Index = () => {
 
       {/* 订单列表 */}
       <ScrollView className="flex-1" scrollY>
-        <View
-          className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30"
-          onClick={() => to("/subPages/redeem/orderDetail/index")}
-        >
-          <View className="flex justify-between">
-            <Text className="flex-1">2023-11-15</Text>
-            <Text>待领取</Text>
+        {list && list?.length > 0 ? (
+          list?.map((item) => {
+            return (
+              <View
+                className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30"
+                onClick={() => to("/subPages/redeem/orderDetail/index")}
+                key={item.id}
+              >
+                <View className="flex justify-between">
+                  <Text className="flex-1">
+                    {formatDateTime(item.createTime)}
+                  </Text>
+                  <Text>{item.status}</Text>
+                </View>
+                <View className="flex items-start mt-25">
+                  <Text className="w-150">领取柜台：</Text>
+                  <Text className="flex-1">NARS上海新天地</Text>
+                </View>
+                <View className="flex items-start my-10">
+                  <Text className="w-150">订单编号：</Text>
+                  <Text className="flex-1">{item.id}</Text>
+                </View>
+                <View className="w-full h-20 bg-white"></View>
+              </View>
+            );
+          })
+        ) : (
+          <View className="text-center pt-50 box-border text-28">
+            暂无兑礼记录
           </View>
-          <View className="flex items-start mt-25">
-            <Text className="w-150">领取柜台：</Text>
-            <Text className="flex-1">NARS上海新天地</Text>
-          </View>
-          <View className="flex items-start my-10">
-            <Text className="w-150">订单编号：</Text>
-            <Text className="flex-1">112341928392829</Text>
-          </View>
-          <View className="w-full h-20 bg-white"></View>
-        </View>
+        )}
       </ScrollView>
     </View>
   );

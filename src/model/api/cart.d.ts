@@ -225,6 +225,21 @@ declare namespace Api {
         type: PromitionType;
         goodsGifts?: any;
       }
+
+      interface GiftRequest {
+        /** 礼品列表 */
+        items: GiftRequestItem[];
+        /** 活动标识 */
+        promotionId?: string;
+      }
+
+      interface GiftRequestItem {
+        /** 数量 */
+        quantity: number;
+        /** sku标识 */
+        skuId: string;
+      }
+
       /** 礼品赠送报告-礼品信息 */
       interface IGiftsReport_gifts {
         /** 变更数量 */
@@ -290,6 +305,8 @@ declare namespace Api {
       }
       /** 请求参数 Body */
       interface IRequestBody {
+        /**是否积分兑礼 , */
+        integral: boolean;
         /** 优惠券列表 */
         coupons?: Array<Public.ICoupon>;
         /** 促销码 */
@@ -298,6 +315,8 @@ declare namespace Api {
         useCoupon?: boolean;
         /** 自定义使用积分 */
         customPointsPayPlan?: Public.ICustomPointsPayPlan;
+        /**柜台编码 */
+        counterId?: string;
       }
       /** 返回参数 */
       interface IResponse extends Public.ICartResponse {}
@@ -370,6 +389,7 @@ declare namespace Api {
         /** 是否使用优惠券 */
         useCoupon?: boolean;
         customPointsPayPlan: Public.ICustomPointsPayPlan;
+        counterId?: string;
       }
       /** 返回参数 */
       interface IResponse extends Public.ICartResponse {}
@@ -464,17 +484,21 @@ declare namespace Api {
         /** 自定义扩展信息 */
         customInfos?: Array<Public.ICustomInfo>;
         /** 配送信息 */
-        deliverInfo: Public.IDeliverInfo;
+        deliverInfo?: Public.IDeliverInfo;
         /** 发票信息 */
         invoiceInfo?: Public.IInvoiceInfo;
         /** 促销码 */
         promotionCode?: string;
+        /** 是否试用积分 */
+        integral: boolean;
         /** 是否使用优惠券 */
         useCoupon: boolean;
         /** 是否礼赠订单 */
         giveGift?: boolean;
+        /** */
         /** 自定义使用积分 */
         customPointsPayPlan?: Public.ICustomPointsPayPlan;
+        exchangeSkuList: Array<Public.GiftRequest>;
         /** 支付信息 */
         paymentInfo?: Partial<{
           /** 关联消息标识，用于微信或其它渠道发送相关通知信息 */

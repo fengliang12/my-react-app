@@ -22,25 +22,26 @@ const tabList: Array<tabType> = [
 const app: App.GlobalData = Taro.getApp();
 
 const Index = () => {
+  const [originList, setOriginList] = useState<any>([]);
   const [couponList, setCouponList] = useState<any>([]);
   const [indexList, setIndexList] = useState<number[]>([]);
   const [couponStatus, setCouponStatus] = useState<string>("10");
-  const loading = useRef<boolean>(false);
 
-  /**
-   * 获取卡券列表
-   */
-  const getMyCouponListByStatus = useMemoizedFn(async () => {
+  useDidShow(async () => {
     await app.init();
-    if (loading.current) return;
-
-    setCouponList([]);
-    loading.current = true;
     Taro.showLoading({ title: "加载中", mask: true });
     const { data } = await api.coupon.posCoupon();
-    setCouponList(data.filter((item) => item.status === couponStatus));
-    loading.current = false;
+    setOriginList(data);
     Taro.hideLoading();
+  });
+
+  /**
+   * 根据状态获取卡券列表
+   */
+  const getMyCouponStatus = useMemoizedFn(() => {
+    if (originList?.length && couponStatus) {
+      setCouponList(originList.filter((item) => item.status === couponStatus));
+    }
   });
 
   /**
@@ -51,16 +52,11 @@ const Index = () => {
     setCouponStatus(val);
   });
 
-  useDidShow(async () => {
-    await app.init();
-    getMyCouponListByStatus();
-  });
-
   useEffect(() => {
     if (couponStatus) {
-      getMyCouponListByStatus();
+      getMyCouponStatus();
     }
-  }, [couponStatus, getMyCouponListByStatus]);
+  }, [couponStatus, originList, getMyCouponStatus]);
 
   return (
     <View
@@ -106,12 +102,12 @@ const Index = () => {
                     </View>
                     <View className="flex-1 px-10 py-20 text-white text-28 vhCenter flex-col">
                       <View className="text-36">{item.ticketName}</View>
-                      <View className="text-18 my-10">
-                        {formatDateTime(item.useBeginDate, 3, ".")}-
+                      <View className="text-20 my-10">
+                        {formatDateTime(item.useBeginDate, 3, ".")} -{" "}
                         {formatDateTime(item.useEndDate, 3, ".")}
                       </View>
                       <View
-                        className="text-24"
+                        className="text-24 mt-10"
                         onClick={() => {
                           let i = indexList.findIndex((item) => item === index);
                           i === -1

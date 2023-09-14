@@ -6,22 +6,22 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import OmsAddress from "@/src/components/Common/OmsAddress";
-import to from "@/src/utils/to";
 
 interface T_props extends ViewProps {
-  inputFormFn: (form: T_Area_Form) => void;
+  inputFormFn: (form: Api.Cart.Public.IDeliverInfo) => void;
 }
 
 const ExchangeExpress: React.FC<T_props> = (props) => {
   const dispatch = useDispatch();
   const { inputFormFn } = props;
-  const [areaForm, setReceiver] = useState<T_Area_Form>({
+  const [areaForm, setReceiver] = useState<Api.Cart.Public.IDeliverInfo>({
     addressee: "",
-    mobile: "",
-    detail: "",
-    province: "",
     city: "",
+    detail: "",
     district: "",
+    mobile: "",
+    province: "",
+    postcode: "",
   });
 
   const getAddress = useMemoizedFn(async () => {

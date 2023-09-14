@@ -26,36 +26,39 @@ const Index = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: Store.States) => state.user);
   const [show, { setTrue, setFalse }] = useBoolean(false);
-
-  const [applyObj, setApplyObj] = useSetState<ApplyType>({
-    applyType: "",
-    counterId: "",
-  });
+  const applyType = useSelector(
+    (state: Store.States) => state.exchangeGood.applyType,
+  );
+  const counter = useSelector(
+    (state: Store.States) => state.exchangeGood.counter,
+  );
 
   /**
    * 获取商品列表
    */
+  const [originList, setOriginList] = useState<any>([]);
   const [goodList, setGoodList] = useState<any>([]);
   const getGoodList = useMemoizedFn(async () => {
     await app.init();
     Taro.showLoading({ title: "加载中", mask: true });
     let params = {
-      counterId: applyObj?.counterId || undefined,
+      counterId: counter?.id || undefined,
     };
     let res = await api.buyBonusPoint.getBonusPointList(params);
     Taro.hideLoading();
 
     if (res?.data?.length) {
+      setOriginList(res?.data);
       const list = handleGoodClass(res.data);
       setGoodList(list);
     }
   });
 
   useEffect(() => {
-    if (applyObj.applyType) {
+    if (applyType) {
       getGoodList();
     }
-  }, [applyObj?.applyType, getGoodList]);
+  }, [applyType, counter, getGoodList]);
 
   /**
    * 直接购买
@@ -64,36 +67,36 @@ const Index = () => {
     dispatch({
       type: "SET_EXCHANGE_GOOD",
       payload: {
-        goods: [good],
+        goods: [{ ...good, quantity: 1 }],
       },
     });
-    to(
-      `/subPages/redeem/confirm/index?type=${applyObj.applyType}`,
-      "navigateTo",
-    );
+    to(`/subPages/redeem/confirm/index`, "navigateTo");
   });
 
   /**
    * 添加购物车
    */
   const addCart = useMemoizedFn(async (item: any) => {
+    Taro.showLoading({ title: "加载中", mask: true });
     let res = await api.cart.append({
       integral: true,
       quantity: 1,
       skuId: item.skuId,
+      counterId: counter?.id,
       customPointsPayPlan: {
         redeemPoints: item.point,
-        notValidateUsablePoints: true,
+        notValidateUsablePoints: false,
         usePoints: true,
       },
     });
+    Taro.hideLoading();
     if (res) {
       toast("商品添加成功");
     }
   });
 
   return (
-    <View className="h-screen bg-black flex flex-col">
+    <View className="min-h-screen bg-black flex flex-col">
       <CHeader
         back
         fill
@@ -127,17 +130,14 @@ const Index = () => {
       <View className="flex-1 bg-white rounded-t-50">
         <MiniGoodClass
           goodClassList={goodList}
+          originList={originList}
           addCart={addCart}
           goPage={goPage}
         ></MiniGoodClass>
       </View>
 
       {/* 选择领取方式 */}
-      <ApplyType
-        callback={(e) => {
-          setApplyObj({ ...e });
-        }}
-      ></ApplyType>
+      <ApplyType></ApplyType>
 
       {/* 购物车 */}
       <AddCart></AddCart>

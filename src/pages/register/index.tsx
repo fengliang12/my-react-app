@@ -138,12 +138,13 @@ const Index = () => {
     Taro.hideLoading();
 
     if (status === 200) {
-      await app.init(true);
       Taro.showToast({
         title: "注册成功！",
         mask: true,
+        duration: 3000,
       });
       setTimeout(async () => {
+        await app.init(true);
         let list: any = getPages({ getKey: "route", getCurrentPage: false });
         if (list.length > 1) {
           app.to(1);

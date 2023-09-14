@@ -3,11 +3,12 @@ import { useBoolean, useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { CloseB, P5 } from "@/src/assets/image";
+import { CloseB, P5, P6 } from "@/src/assets/image";
 import config from "@/src/config";
 import handleDataType from "@/src/utils/handleDataType";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
 import CImage from "../Common/CImage";
 import CPopup from "../Common/CPopup";
@@ -119,7 +120,10 @@ const Index: React.FC<PropsType> = (props) => {
             ></View>
           </View>
           <View className="w-full h-6 text-black text-right text-18 mt-30">
-            还需要消费{userInfo.nextGradeNeedAmount}元即可升级成为
+            {userInfo.nextGradeNeedAmount <= 1
+              ? `任意消费`
+              : `再次消费${userInfo.nextGradeNeedAmount}元`}
+            即可升级成为
             {userInfo.nextGradeName}
           </View>
           <View
@@ -128,6 +132,13 @@ const Index: React.FC<PropsType> = (props) => {
           >
             会员规则
           </View>
+        </View>
+        <View
+          className="text-white text-18 text-center mt-50 vhCenter"
+          onClick={() => toast("敬请期待")}
+        >
+          查看我的徽章
+          <CImage className="w-18 h-12 ml-10" src={P6}></CImage>
         </View>
       </View>
 

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
+import { formatDateTime } from "@/src/utils";
 
 const Index = () => {
   const [list, setList] = useState<any>([]);
@@ -38,10 +39,12 @@ const Index = () => {
             return (
               <View className="px-55 py-30 font-thin" key={index}>
                 <View className="flex justify-between text-35">
-                  <Text>专柜购买</Text>
-                  <Text>+200</Text>
+                  <Text>{item.description}</Text>
+                  <Text>+{item.point}</Text>
                 </View>
-                <View className="text-26 mt-20">2022.3.28</View>
+                <View className="text-26 mt-20">
+                  {formatDateTime(item.changeTime, 3, ".")}
+                </View>
               </View>
             );
           })
