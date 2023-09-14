@@ -83,6 +83,7 @@ module.exports = {
         grayBg: "#6C6C6C",
         black2: "#212121",
         762022: "#762022",
+        b4F4F4F: "#4F4F4F",
       }),
     },
     spacing: {

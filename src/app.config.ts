@@ -48,6 +48,11 @@ export default {
       name: "coupon",
       pages: ["index"],
     },
+    {
+      root: "subPages/nearby-stores",
+      name: "nearby-stores",
+      pages: ["index"],
+    },
   ],
   tabBar: {
     backgroundColor: "#000000",
@@ -69,9 +74,9 @@ export default {
       },
     ],
   },
-  requiredPrivateInfos: ["getFuzzyLocation"],
+  requiredPrivateInfos: ["getLocation"],
   permission: {
-    "scope.userFuzzyLocation": {
+    "scope.userLocation": {
       desc: "你的位置信息将用于定位附近的门店信息",
     },
   },
