@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
 import api from "@/api/index";
+import { P6 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
@@ -25,14 +26,15 @@ const Index = () => {
 
   const { data: project = {} as Api.ArvatoReservation.GetProjects.Item } =
     useRequest(async () => {
+      Taro.showLoading({ title: "加载中", mask: true });
       await app.init();
-      return await api.arvatoReservation
-        .getProjects()
-        .then(
-          (res) =>
-            res.data.find((i) => i.projectCode === router.params.projectCode) ||
-            ({} as Api.ArvatoReservation.GetProjects.Item),
+      return await api.arvatoReservation.getProjects().then((res) => {
+        Taro.hideLoading();
+        return (
+          res.data.find((i) => i.projectCode === router.params.projectCode) ||
+          ({} as Api.ArvatoReservation.GetProjects.Item)
         );
+      });
     });
 
   const { data: counterList = [] } = useRequest(async () => {
@@ -41,21 +43,24 @@ const Index = () => {
       .getCounters(router.params.projectCode!)
       .then((res) => res.data);
   });
+
   /**
    * 可预约时间
    */
   const { data: periods = [], run: getPeriods } = useRequest(
     async (storeId) => {
+      Taro.showLoading({ title: "加载中", mask: true });
       await app.init();
       return await api.arvatoReservation
         .getPeriods(storeId)
         .then((res) => res.data)
-        .then((list) =>
-          list.map((i) => {
+        .then((list) => {
+          Taro.hideLoading();
+          return list.map((i) => {
             i.reserveDate = dayjs(i.reserveDate).format("YYYY-MM-DD");
             return i;
-          }),
-        );
+          });
+        });
     },
     {
       manual: true,
@@ -102,11 +107,16 @@ const Index = () => {
     }
   };
 
+  /**
+   * 服务提交
+   */
   const onSubmit = async () => {
     await checkParams();
+    Taro.showLoading({ title: "加载中", mask: true });
     api.arvatoReservation
       .submit(appointment)
-      .then((res) => {
+      .then((res: any) => {
+        Taro.hideLoading();
         to(`../detail/index?bookId=${res.data.bookId}`, "redirectTo");
       })
       .catch((err) => {
@@ -144,6 +154,7 @@ const Index = () => {
           rangeKey="storeName"
           onChange={(e) => {
             const { value } = e.detail;
+            if (!counterList?.[value]?.storeId) return;
             setAppointment((prev) => ({
               ...prev,
               storeId: counterList[value].storeId,
@@ -158,7 +169,10 @@ const Index = () => {
             style={{ border: "1px solid #FFFFFF" }}
           >
             {!appointment.storeId ? (
-              <View className="ipt-placeholder">选择服务门店 v</View>
+              <View className="ipt-placeholder vhCenter">
+                选择服务门店{" "}
+                <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
+              </View>
             ) : (
               computedStoreName
             )}
@@ -184,7 +198,10 @@ const Index = () => {
             style={{ border: "1px solid #FFFFFF" }}
           >
             {!appointment.reserveDate ? (
-              <View className="ipt-placeholder">选择服务日期 v</View>
+              <View className="ipt-placeholder vhCenter">
+                选择服务日期
+                <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
+              </View>
             ) : (
               appointment.reserveDate
             )}
@@ -209,7 +226,10 @@ const Index = () => {
             style={{ border: "1px solid #FFFFFF" }}
           >
             {!appointment.timePeriod ? (
-              <View className="ipt-placeholder">选择服务时间 v</View>
+              <View className="ipt-placeholder vhCenter">
+                选择服务时间
+                <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
+              </View>
             ) : (
               appointment.timePeriod
             )}

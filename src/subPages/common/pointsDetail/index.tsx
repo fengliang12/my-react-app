@@ -1,4 +1,4 @@
-import { Text, View } from "@tarojs/components";
+import { ScrollView, Text, View } from "@tarojs/components";
 import { useAsyncEffect } from "ahooks";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -21,7 +21,7 @@ const Index = () => {
   }, [mobile]);
 
   return (
-    <View className="redeem-history bg-black min-h-screen text-white">
+    <View className="redeem-history bg-black h-screen text-white flex justify-start items-center flex-col">
       <CHeader
         back
         fill
@@ -29,29 +29,32 @@ const Index = () => {
         titleColor="#ffffff"
         backgroundColor="rgba(0,0,0,1)"
       ></CHeader>
-      <View className="vhCenter w-full h-300 flex-col bg-black2 mb-30">
+      <View className="vhCenter w-full h-300 flex-col bg-black2">
         <Text className="text-100 font-thin">{points}</Text>
         <Text className="text-26">当前积分</Text>
       </View>
-      <View>
-        {list?.length ? (
-          list.map((item, index) => {
+      {list?.length ? (
+        <ScrollView className="flex-1 overflow-hidden py-40" scrollY>
+          {list.map((item, index) => {
             return (
               <View className="px-55 py-30 font-thin" key={index}>
                 <View className="flex justify-between text-35">
                   <Text>{item.description}</Text>
-                  <Text>+{item.point}</Text>
+                  <Text>
+                    {item.changeType === "DEDUCT" ? "-" : "+"}
+                    {item.point}
+                  </Text>
                 </View>
                 <View className="text-26 mt-20">
-                  {formatDateTime(item.changeTime, 3, ".")}
+                  {formatDateTime(item.changeTime, 6, ".")}
                 </View>
               </View>
             );
-          })
-        ) : (
-          <View className="vhCenter mt-100">暂无记录</View>
-        )}
-      </View>
+          })}
+        </ScrollView>
+      ) : (
+        <View className="vhCenter mt-200">暂无记录</View>
+      )}
     </View>
   );
 };

@@ -51,7 +51,10 @@ const Index = () => {
             >
               <CImage
                 className="w-full h-full"
-                src={`${config.imgBaseUrl}/appointment/appointment_icon.jpg`}
+                src={
+                  item.imageUrl ||
+                  `${config.imgBaseUrl}/appointment/appointment_icon.jpg`
+                }
               ></CImage>
               <View
                 className="w-full h-70 absolute top-70 left-0 text-white vhCenter"

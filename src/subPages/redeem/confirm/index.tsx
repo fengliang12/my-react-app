@@ -1,12 +1,14 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { Page, useDidHide, useDidShow, useRouter } from "@tarojs/taro";
+import Taro, { useRouter } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
-import { useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
+import config from "@/src/config";
+import usePayHooks from "@/src/hooks/payHooks";
 import { verifyAddressInfo } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -15,53 +17,33 @@ import ExchangeExpress from "../components/ExchangeExpress";
 import OrderGood from "../components/OrderGood";
 import PostageType from "../components/PostageType";
 
+const app: App.GlobalData = Taro.getApp();
+
 const OrderConfirm = () => {
+  const router = useRouter();
+  const { from = "" } = router.params;
   const dispatch = useDispatch();
-  const exchangeGood = useSelector((state: Store.States) => state.exchangeGood);
-  const applyType = useSelector(
-    (state: Store.States) => state.exchangeGood.applyType,
-  );
-  const counter = useSelector(
-    (state: Store.States) => state.exchangeGood.counter,
+  const { pay } = usePayHooks();
+  const points = useSelector((state: Store.States) => state.user.points);
+  const { applyType, counter, goods } = useSelector(
+    (state: Store.States) => state.exchangeGood,
   );
   const [postageType, setPostageType] = useState<string>("points");
-  const [totalPoint, setTotalPoint] = useState<number>(0);
   const [addressInfo, setAddressInfo] =
     useState<Api.Cart.Public.IDeliverInfo>();
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
 
-  useDidShow(() => {
-    handleTotalPoint();
-  });
-
-  /**
-   * 处理总分
-   */
-  const handleTotalPoint = useMemoizedFn(() => {
-    let total = 0;
-    exchangeGood.goods.forEach((e) => {
-      let quantity = e.quantity ? e.quantity : 1;
-      if (e.point) {
-        total += e?.discountPoint
-          ? quantity * e.point * e.discountPoint
-          : quantity * e.point;
-      }
-    });
-    setTotalPoint(total);
-  });
-
-  /**
-   * 输入地址form
-   */
-  const inputFormFn = useMemoizedFn((form: Api.Cart.Public.IDeliverInfo) => {
-    setAddressInfo(form);
-  });
+  /** 积分 */
+  const totalPoints = useMemo(() => {
+    return goods.reduce((a, b) => a + (b.points || b.point) * b.quantity, 0);
+  }, [goods]);
 
   /**
    * 点击兑换
    */
   const handleReceive = useMemoizedFn(async () => {
     if (applyType === "express") {
+      /** 邮寄到家 */
       if (!addressInfo) return toast("请先填写收获信息");
       verifyAddressInfo(addressInfo)
         .then(async () => {
@@ -70,7 +52,9 @@ const OrderConfirm = () => {
         .catch((err) => {
           toast({ title: err, mask: true });
         });
-    } else {
+    } else if (applyType === "self_pick_up") {
+      /** 门店核销 */
+      if (!counter) return toast("柜台不能为空");
       setTrue();
     }
   });
@@ -79,38 +63,53 @@ const OrderConfirm = () => {
    * 确认兑礼订单
    */
   const confirm = useMemoizedFn(async () => {
+    if (points < totalPoints) {
+      return toast("您的积分不足");
+    }
     Taro.showLoading({ title: "加载中", mask: true });
-    let { status } = await api.cart.submit({
-      channelId: "wm",
-      deliverInfo: addressInfo,
+
+    let params = {
+      channelId: "wa",
+      counterId: applyType === "self_pick_up" ? counter.id : undefined,
+      deliverInfo: applyType === "express" ? addressInfo : undefined,
       integral: true,
       customPointsPayPlan: {
-        notValidateUsablePoints: false,
-        redeemPoints: totalPoint,
+        notValidateUsablePoints: true,
+        redeemPoints:
+          postageType === "points" && applyType === "express"
+            ? totalPoints + config.postagePoints
+            : totalPoints,
         usePoints: true,
       },
-      exchangeSkuList: [
-        {
-          items: exchangeGood.goods.map((item) => ({
-            quantity: item.quantity,
-            skuId: item.skuId,
-          })),
-        },
-      ],
-      useCoupon: false,
-    });
-    Taro.hideLoading();
+    };
 
-    if (status === 200) {
+    let result: any = null;
+    if (from === "cart") {
+      /** 购物车核销 */
+      result = await api.cart.submit(
+        params as Api.Cart.SubmitCart.IRequestBody,
+      );
+    } else {
+      /** 立即兑礼核销 */
+      if (!goods?.length) return toast("商品不能为空");
+      result = await api.buyNow.submit({
+        ...params,
+        skuId: goods?.[0].skuId,
+        quantity: 1,
+      } as Api.BuyNow.Submit.IRequestBody);
+    }
+
+    if (result.status === 200) {
+      if (postageType === "money" && applyType === "express") {
+        /** 邮寄到家&9.9元支付 */
+        await pay(result.data.orderId);
+      } else {
+        // await api.order.paymentUMS({ orderId: result.data.orderId });
+      }
+      await app.init(true);
+      Taro.hideLoading();
       to("/subPages/redeem/success/index", "redirectTo");
     }
-  });
-
-  /**
-   * 取消弹窗
-   */
-  const cancel = useMemoizedFn(() => {
-    setFalse();
   });
 
   /**
@@ -157,7 +156,7 @@ const OrderConfirm = () => {
             </Text>
           </View>
           {applyType === "express" && (
-            <ExchangeExpress inputFormFn={inputFormFn}></ExchangeExpress>
+            <ExchangeExpress inputFormFn={setAddressInfo}></ExchangeExpress>
           )}
         </View>
 
@@ -165,8 +164,8 @@ const OrderConfirm = () => {
         <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
           <View className="box_title mb-50 font-bold">兑换礼品详情</View>
           <View className="module">
-            {exchangeGood?.goods?.length > 0 &&
-              exchangeGood?.goods?.map((item) => {
+            {goods?.length > 0 &&
+              goods?.map((item) => {
                 return <OrderGood good={item} key={item.id}></OrderGood>;
               })}
           </View>
@@ -182,7 +181,12 @@ const OrderConfirm = () => {
           <View className="w-full h-1 bg-black mt-50"></View>
           <View className="text-38 flex justify-between mt-50">
             <View className="">总计消耗</View>
-            <View>{totalPoint}积分</View>
+            <View>
+              {postageType === "points" && applyType === "express"
+                ? totalPoints + config.postagePoints
+                : totalPoints}
+              积分
+            </View>
           </View>
           <View
             className="w-220 h-50 vhCenter bg-black text-white text-26 m-auto mt-100"
@@ -199,7 +203,7 @@ const OrderConfirm = () => {
           className="w-390 bg-white py-40 px-30"
           title="确认兑换"
           dialogText="订单提交后无法修改,请确认是否提交订单"
-          cancel={cancel}
+          cancel={setFalse}
           confirm={confirm}
         ></CDialog>
       )}

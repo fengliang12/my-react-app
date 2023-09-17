@@ -9,9 +9,9 @@ import { useSelector } from "react-redux";
 import { P1, P6 } from "@/assets/image/index";
 import Page from "@/components/Page";
 import api from "@/src/api";
+import CityList from "@/src/components/CityList";
 import Avatar from "@/src/components/Common/Avatar";
 import CPopup from "@/src/components/Common/CPopup";
-import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import { formatDateTime, maskPhone } from "@/src/utils";
 
 const genderArr = ["女", "男"];
@@ -20,7 +20,6 @@ const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const isMember = useSelector((state: Store.States) => state.user.isMember);
   const [popupType, setPopupType] = useState<string>("");
-  const [cityList, setCityList] = useState<any>([]);
   const [counterList, setCounterList] = useState<any>([]);
   const [isGetInfoBySMS, setIsGetInfoBySMS] = useState<boolean>(false);
   const [counterIndex, setCounterIndex] = useState<number>(NaN);
@@ -76,21 +75,7 @@ const Index = () => {
         getCounterByCity(city);
       }
     }
-    getCityList();
   }, [isMember]);
-
-  /**
-   * 获取城市列表
-   */
-  const getCityList = useMemoizedFn(async () => {
-    let res = await api.counter.getCounterList();
-    let list = res?.data.map((item: any) => ({
-      ...item.address,
-      ...item.detailInfo,
-      id: item.id,
-    }));
-    setCityList(list);
-  });
 
   /**
    * 获取门店列表
@@ -275,12 +260,8 @@ const Index = () => {
             <View className="item">
               <View className="text-30">所在城市*</View>
               <View className="right">
-                <MultiplePicker
-                  cascadeCount={2}
-                  isCascadeData={false}
-                  pickerData={cityList}
-                  customKeyList={["province", "city"]}
-                  callback={(item) => {
+                <CityList
+                  onChange={(item) => {
                     getCounterByCity(item.city);
                     setUser({ province: item.province, city: item.city });
                   }}
@@ -292,7 +273,7 @@ const Index = () => {
                     {`${user.province} ${user.city}`}
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
-                </MultiplePicker>
+                </CityList>
               </View>
             </View>
             <View className="text-18 text-center mb-20">

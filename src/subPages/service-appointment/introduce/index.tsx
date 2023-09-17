@@ -6,6 +6,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import { handleTextBr } from "@/src/utils";
 import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
@@ -13,15 +14,18 @@ const Index = () => {
   const router = useRouter();
 
   const { data: project } = useRequest(async () => {
+    Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     return await api.arvatoReservation
       .getProjects()
       .then((res) => res.data)
-      .then(
-        (list) =>
+      .then((list) => {
+        Taro.hideLoading();
+        return (
           list.find((i) => i.projectCode === router.params.projectCode) ||
-          ({} as Api.ArvatoReservation.GetProjects.Item),
-      );
+          ({} as Api.ArvatoReservation.GetProjects.Item)
+        );
+      });
   });
 
   return (
@@ -35,7 +39,7 @@ const Index = () => {
         titleColor="#FFFFFF"
       ></CHeader>
       <Text className="text-76 text-left mt-40 ml-67 font-thin" decode>
-        {project?.introduce}
+        {handleTextBr(project?.introduce)}
       </Text>
       <View className="text-76 text-left ml-67 font-thin">
         {project?.projectName}
@@ -49,12 +53,6 @@ const Index = () => {
       ></CImage>
       <View className="w-610 text-35 text-left font-thin mt-54 ml-70">
         <text>{project?.reason}</text>
-      </View>
-      <View className="w-610 text-35 text-left font-thin ml-70">
-        共创先锋自我妆容,
-      </View>
-      <View className="w-610 text-35 text-left font-thin ml-70">
-        并搭配NARS独有的上妆手法和优秀的 美妆产品，打造独一无二先锋妆容
       </View>
       <View
         className="w-224 text-26 h-50 m-auto text-black vhCenter bg-white my-30"

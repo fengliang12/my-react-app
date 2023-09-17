@@ -1,6 +1,12 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { useRouter, useUnload } from "@tarojs/taro";
-import { useBoolean, useMemoizedFn, useMount, useSetState } from "ahooks";
+import Taro, { useDidShow, useRouter, useUnload } from "@tarojs/taro";
+import {
+  useBoolean,
+  useMemoizedFn,
+  useMount,
+  useSetState,
+  useUpdateEffect,
+} from "ahooks";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -54,7 +60,13 @@ const Index = () => {
     }
   });
 
-  useEffect(() => {
+  useDidShow(() => {
+    if (applyType) {
+      getGoodList();
+    }
+  });
+
+  useUpdateEffect(() => {
     if (applyType) {
       getGoodList();
     }
@@ -89,25 +101,24 @@ const Index = () => {
    */
   const addCart = useMemoizedFn(async (item: any) => {
     Taro.showLoading({ title: "加载中", mask: true });
-    let res = await api.cart.append({
+    let { status } = await api.cart.append({
       integral: true,
       quantity: 1,
       skuId: item.skuId,
-      counterId: counter?.id,
+      counterId: applyType === "self_pick_up" ? counter?.id : undefined,
       customPointsPayPlan: {
-        redeemPoints: item.point,
         notValidateUsablePoints: false,
         usePoints: true,
       },
     });
     Taro.hideLoading();
-    if (res) {
+    if (status === 200) {
       toast("商品添加成功");
     }
   });
 
   return (
-    <View className="min-h-screen bg-black flex flex-col">
+    <View className="h-screen bg-black flex flex-col">
       <CHeader
         back
         fill
@@ -138,7 +149,7 @@ const Index = () => {
       </View>
 
       {/* 产品信息 */}
-      <View className="flex-1 bg-white rounded-t-50">
+      <View className="flex-1 bg-white rounded-t-50 overflow-hidden">
         <MiniGoodClass
           goodClassList={goodList}
           originList={originList}

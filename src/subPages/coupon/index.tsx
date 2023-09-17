@@ -1,11 +1,10 @@
-import "./index.less";
-
 import { ScrollView, View } from "@tarojs/components";
 import Taro, { useDidShow } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useEffect, useRef, useState } from "react";
 
 import api from "@/src/api";
+import { P6 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
@@ -24,7 +23,7 @@ const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const [originList, setOriginList] = useState<any>([]);
   const [couponList, setCouponList] = useState<any>([]);
-  const [indexList, setIndexList] = useState<number[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [couponStatus, setCouponStatus] = useState<string>("10");
 
   useDidShow(async () => {
@@ -100,29 +99,30 @@ const Index = () => {
                         src={item.imageUrl}
                       ></CImage>
                     </View>
-                    <View className="flex-1 px-10 py-20 text-white text-28 vhCenter flex-col">
+                    <View
+                      className="flex-1 px-10 py-20 text-white text-28 vhCenter flex-col"
+                      onClick={() => {
+                        if (selectedIndex === index) {
+                          setSelectedIndex(-1);
+                        } else {
+                          setSelectedIndex(index);
+                        }
+                      }}
+                    >
                       <View className="text-36">{item.ticketName}</View>
                       <View className="text-20 my-10">
                         {formatDateTime(item.useBeginDate, 3, ".")} -{" "}
                         {formatDateTime(item.useEndDate, 3, ".")}
                       </View>
-                      <View
-                        className="text-24 mt-10"
-                        onClick={() => {
-                          let i = indexList.findIndex((item) => item === index);
-                          i === -1
-                            ? indexList.push(index)
-                            : indexList.splice(i, 1);
-                          setIndexList([...indexList]);
-                        }}
-                      >
-                        查看详情 v
+                      <View className="text-24 mt-10 vhCenter">
+                        查看详情
+                        <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
                       </View>
                     </View>
                   </View>
-                  {indexList.includes(index) && (
+                  {selectedIndex === index && (
                     <View
-                      className="w-670 box-border text-26 text-center px-64 py-40"
+                      className="w-670 box-border text-26 text-center px-64 py-40 mt-20"
                       style="background: #6c6c6c"
                     >
                       <View className="text-left">
@@ -134,15 +134,17 @@ const Index = () => {
                       <View className="text-left">
                         3 此卡券逾期失效，不予补发
                       </View>
-                      <View className="inline-block mt-30 bg-white">
-                        <CQRCodeCustom
-                          text={item.ticketSerialNo}
-                          width={250}
-                          height={250}
-                          padding={10}
-                          background="#FFFFFF"
-                        ></CQRCodeCustom>
-                      </View>
+                      {item.status === "10" && (
+                        <View className="inline-block mt-30 bg-white">
+                          <CQRCodeCustom
+                            text={item.ticketSerialNo}
+                            width={250}
+                            height={250}
+                            padding={10}
+                            background="#FFFFFF"
+                          ></CQRCodeCustom>
+                        </View>
+                      )}
                     </View>
                   )}
                 </View>

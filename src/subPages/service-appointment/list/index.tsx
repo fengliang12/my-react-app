@@ -63,7 +63,10 @@ const Index = () => {
         >
           <CImage
             className="w-318 h-259"
-            src={`${config.imgBaseUrl}/appointment/appointment_icon.jpg`}
+            src={
+              item.imageUrl ||
+              `${config.imgBaseUrl}/appointment/appointment_icon.jpg`
+            }
           ></CImage>
           <View className="flex-1 vhCenter flex-col text-center">
             <View className="text-36">{item.projectName}</View>

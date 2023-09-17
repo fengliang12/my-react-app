@@ -35,14 +35,17 @@ const OrderConfirm = () => {
       </View>
 
       <View className="w-690 bg-grayBg px-30 py-40 box-border mt-75 text-white">
-        <View>
-          <View>领取柜台</View>
-          <View className="flex justify-between mt-60">
-            <Text>{counter.province}</Text>
-            <Text>{counter.city}</Text>
-            <Text>{counter.name}</Text>
+        {counter && (
+          <View>
+            <View>领取柜台</View>
+            <View className="flex justify-between mt-60">
+              <Text>{counter.province}</Text>
+              <Text>{counter.city}</Text>
+              <Text>{counter.name}</Text>
+            </View>
           </View>
-        </View>
+        )}
+
         <View className="box_title mt-50 font-bold">兑换礼品详情</View>
         <View className="mt-50">
           {exchangeGood?.goods?.length > 0 &&
@@ -57,12 +60,14 @@ const OrderConfirm = () => {
             <Text>核销码到领取柜</Text>
             <Text>台核销领取礼遇</Text>
           </View>
-          <CQRCodeCustom
-            text="核销码到领取柜"
-            width={210}
-            height={210}
-            foreground="#FFFFFF"
-          ></CQRCodeCustom>
+          {counter && (
+            <CQRCodeCustom
+              text="核销码到领取柜"
+              width={210}
+              height={210}
+              foreground="#FFFFFF"
+            ></CQRCodeCustom>
+          )}
         </View>
       </View>
     </View>

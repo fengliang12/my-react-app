@@ -21,7 +21,20 @@ const config = {
     "@/config": path.resolve(__dirname, "..", "src/config"),
     "@/store": path.resolve(__dirname, "..", "src/store"),
   },
-  plugins: ["taro-plugin-compiler-optimization", "taro-plugin-tailwind"],
+  plugins: [
+    "taro-plugin-compiler-optimization",
+    "taro-plugin-tailwind",
+    [
+      "@tarojs/plugin-inject",
+      {
+        components: {
+          Button: {
+            bindagreeprivacyauthorization: "",
+          },
+        },
+      },
+    ],
+  ],
   defineConstants: {},
   copy: {
     patterns: [],

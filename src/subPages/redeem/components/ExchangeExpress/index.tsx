@@ -3,7 +3,7 @@ import "./index.scss";
 import { Input, Text, Textarea, View, ViewProps } from "@tarojs/components";
 import { useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import OmsAddress from "@/src/components/Common/OmsAddress";
 
@@ -12,14 +12,15 @@ interface T_props extends ViewProps {
 }
 
 const ExchangeExpress: React.FC<T_props> = (props) => {
+  const userInfo = useSelector((state: Store.States) => state.user);
   const dispatch = useDispatch();
   const { inputFormFn } = props;
   const [areaForm, setReceiver] = useState<Api.Cart.Public.IDeliverInfo>({
-    addressee: "",
+    addressee: userInfo?.realName || "",
     city: "",
     detail: "",
     district: "",
-    mobile: "",
+    mobile: userInfo?.mobile || "",
     province: "",
     postcode: "",
   });

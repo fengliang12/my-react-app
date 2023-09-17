@@ -1,8 +1,8 @@
 import { Picker, ScrollView, Text, View } from "@tarojs/components";
 import Taro, { useDidShow } from "@tarojs/taro";
-import { useAsyncEffect, useMemoizedFn } from "ahooks";
+import { useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
@@ -14,10 +14,12 @@ import toast from "@/src/utils/toast";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
-  const [list, setList] = useState<Api.Order.Public.IContent[]>();
+  const [list, setList] = useState<Api.Order.Public.IContent[]>([]);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const endTime = dayjs(Date.now()).format("YYYY-MM");
+  const total = useRef<number>(0);
+  const page = useRef<number>(0);
 
   /**
    * 获取订单列表
@@ -26,17 +28,30 @@ const Index = () => {
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     let res = await api.memberOrder.getOrderByStatus(
-      { size: 0, page: 100 },
+      { page: page.current, size: 10, getAllSkus: true },
       { status: "all" },
     );
+    total.current = res.data.totalElements;
     Taro.hideLoading();
-    setList(res?.data.content);
+    let newList =
+      page.current === 0 ? res?.data?.content : list.concat(res?.data?.content);
+    setList(newList);
+  });
+
+  /**
+   * 滚动到底部
+   */
+  const onScrollEnd = useMemoizedFn(() => {
+    if (list?.length >= total.current) return;
+    page.current += 1;
+    getOrderByStatus();
   });
 
   useEffect(() => {
     if (startDate && endDate) {
       if (getTimeStamp(startDate) > getTimeStamp(endDate))
         return toast("结束时间不能大于开始时间");
+      page.current = 0;
       getOrderByStatus();
     }
   }, [startDate, endDate, getOrderByStatus]);
@@ -45,7 +60,7 @@ const Index = () => {
     getOrderByStatus();
   });
   return (
-    <View className="order-list bg-black flex h-screen flex-col items-center justify-start text-white">
+    <View className="bg-black text-white h-screen flex flex-col items-center">
       <CHeader
         back
         title=""
@@ -53,13 +68,13 @@ const Index = () => {
         fill
         backgroundColor="rgba(0,0,0,1)"
       ></CHeader>
-      <View className="w-full">
+      <View className="w-full h-60">
         <CImage
           className="w-138 h-60 ml-60"
           src={`${config.imgBaseUrl}/icon/title_image.png`}
         ></CImage>
       </View>
-      <View className="w-688 flex justify-around items-center mt-70 mb-60 text-28">
+      <View className="w-688 flex justify-around items-center text-28 pt-40">
         <View
           className="w-228 h-60  vhCenter"
           style={{ border: "1px solid #FFFFFF" }}
@@ -67,7 +82,7 @@ const Index = () => {
           <Picker
             mode="date"
             value={startDate}
-            start="2010-01"
+            start="2000-01"
             end={endDate || endTime}
             fields="month"
             onChange={(e) => {
@@ -76,7 +91,7 @@ const Index = () => {
             }}
           >
             <Text className="w-full h-60 vhCenter">
-              {startDate ? startDate : "请选择日期"}
+              {startDate ? startDate : "开始日期"}
             </Text>
           </Picker>
         </View>
@@ -88,7 +103,7 @@ const Index = () => {
           <Picker
             mode="date"
             value={endDate}
-            start={startDate || "2010-01"}
+            start={startDate || "2000-01"}
             end={endTime}
             fields="month"
             onChange={(e) => {
@@ -97,16 +112,19 @@ const Index = () => {
             }}
           >
             <Text className="w-full h-60 vhCenter">
-              {endDate ? endDate : "请选择日期"}
+              {endDate ? endDate : "结束日期"}
             </Text>
           </Picker>
         </View>
       </View>
 
-      {/* 订单列表 */}
-      <ScrollView className="flex-1" scrollY>
-        {list && list?.length > 0 ? (
-          list?.map((item) => {
+      {list && list?.length > 0 ? (
+        <ScrollView
+          className="flex-1 overflow-hidden py-40"
+          scrollY
+          onScrollToLower={onScrollEnd}
+        >
+          {list?.map((item: any) => {
             return (
               <>
                 <View
@@ -130,18 +148,28 @@ const Index = () => {
                     <Text className="w-150">订单编号：</Text>
                     <Text className="flex-1">{item.id}</Text>
                   </View>
-                  <View className="w-full h-20"></View>
+                  <View className="w-full flex justify-start">
+                    {item.skus &&
+                      item.skus.map((sku, index) => (
+                        <CImage
+                          className="w-200 h-200 mr-20 my-10"
+                          src={sku.mainImage}
+                          key={index}
+                        ></CImage>
+                      ))}
+                  </View>
                 </View>
                 <View className="w-full h-30"></View>
               </>
             );
-          })
-        ) : (
-          <View className="text-center pt-50 box-border text-28">
-            暂无兑礼记录
-          </View>
-        )}
-      </ScrollView>
+          })}
+        </ScrollView>
+      ) : (
+        <View className="text-center mt-200 box-border text-28">
+          暂无兑礼记录
+        </View>
+      )}
+      {/* 订单列表 */}
     </View>
   );
 };

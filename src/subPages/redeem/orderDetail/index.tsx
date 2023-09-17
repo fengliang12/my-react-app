@@ -2,7 +2,6 @@ import { Text, View } from "@tarojs/components";
 import Taro, { useRouter } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";

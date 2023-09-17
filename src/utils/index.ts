@@ -108,3 +108,14 @@ export const maskPhone = (phone: string) => {
   var tel = phone.replace(reg, "$1****$2");
   return tel;
 };
+
+// 文案换行
+export const handleTextBr = (text) => {
+  if (text) {
+    console.log(text);
+    var pattern = "\\\\n";
+    var target = "\n";
+    var reg = RegExp(pattern, "g");
+    return text.replace(reg, target);
+  }
+};

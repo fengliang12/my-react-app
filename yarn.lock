@@ -1821,6 +1821,15 @@
     react "^16.8.0 || ^17.0.0 || ^18.0.0"
     vue ">3.0"
 
+"@tarojs/api@3.6.16":
+  version "3.6.16"
+  resolved "https://registry.npmmirror.com/@tarojs/api/-/api-3.6.16.tgz#4be1851e762c0c1e0baa6fdfd8fd07e02fe0c460"
+  integrity sha512-2vH0iQTnwGOb4UDGs2lKw6zbLXd4BmjvtjEuxLEsXBq/Bk/HY29zPuC0GcCgPPz1U15zoRA1F+mo2giCAr2dmg==
+  dependencies:
+    "@babel/runtime" "^7.14.5"
+    "@tarojs/runtime" "3.6.16"
+    "@tarojs/shared" "3.6.16"
+
 "@tarojs/api@3.6.7":
   version "3.6.7"
   resolved "https://registry.npmmirror.com/@tarojs/api/-/api-3.6.7.tgz#622bf7cb56bf0f56e3739ae2148856815c805e8e"
@@ -1911,6 +1920,39 @@
     resolve-pathname "^3.0.0"
     swiper "6.8.0"
     weui "^1.1.2"
+
+"@tarojs/helper@3.6.16":
+  version "3.6.16"
+  resolved "https://registry.npmmirror.com/@tarojs/helper/-/helper-3.6.16.tgz#5726588b8de5faf8faff499e78c93f355883de70"
+  integrity sha512-1A0zQk7WbVj2Cp36DnTw4GKE8vmhY6EoqP/jJt0/SJZSLfea81brrjLXjDwXBE/5qpNE4MGE7iohB/by2bb9YA==
+  dependencies:
+    "@babel/core" "^7.14.5"
+    "@babel/parser" "^7.14.5"
+    "@babel/plugin-proposal-decorators" "^7.14.5"
+    "@babel/plugin-proposal-object-rest-spread" "^7.14.5"
+    "@babel/plugin-transform-runtime" "^7.14.5"
+    "@babel/preset-env" "^7.14.5"
+    "@babel/preset-typescript" "^7.14.5"
+    "@babel/register" "^7.14.5"
+    "@babel/runtime" "^7.14.5"
+    "@babel/traverse" "^7.14.5"
+    "@swc/core" "1.3.23"
+    "@swc/register" "^0.1.10"
+    ansi-escapes "^4.3.2"
+    chalk "3.0.0"
+    chokidar "^3.3.1"
+    cross-spawn "^7.0.3"
+    debug "4.3.4"
+    dotenv "^16.0.3"
+    dotenv-expand "^9.0.0"
+    esbuild "^0.14.27"
+    find-yarn-workspace-root "2.0.0"
+    fs-extra "^8.0.1"
+    lodash "^4.17.21"
+    require-from-string "^2.0.2"
+    resolve "^1.22.0"
+    supports-hyperlinks "^2.2.0"
+    yauzl "2.10.0"
 
 "@tarojs/helper@3.6.7":
   version "3.6.7"
@@ -2045,6 +2087,14 @@
     acorn-walk "^8.0.0"
     lodash "^4.17.21"
 
+"@tarojs/plugin-inject@^3.6.16":
+  version "3.6.16"
+  resolved "https://registry.npmmirror.com/@tarojs/plugin-inject/-/plugin-inject-3.6.16.tgz#d80ecbbc6ec9759416402186d21e11e29c355b3e"
+  integrity sha512-nFfrLxNmJci+8sCM9+sd+D6rOjLvU571LtI9A3gwWaSy9hzhXcGW/eip9uhuHcREoxdSKs5iWgeq6ieaAISR6Q==
+  dependencies:
+    "@tarojs/service" "3.6.16"
+    "@tarojs/shared" "3.6.16"
+
 "@tarojs/plugin-platform-alipay@3.6.8":
   version "3.6.8"
   resolved "https://registry.npmmirror.com/@tarojs/plugin-platform-alipay/-/plugin-platform-alipay-3.6.8.tgz#772c3a9ef0fcf4987bb64df256d0005b7f73725f"
@@ -2157,6 +2207,14 @@
     "@tarojs/helper" "3.6.8"
     scss-bundle "^3.0.2"
 
+"@tarojs/runtime@3.6.16":
+  version "3.6.16"
+  resolved "https://registry.npmmirror.com/@tarojs/runtime/-/runtime-3.6.16.tgz#e2975516d9eefa543684d3ae2b59ba01841c3b76"
+  integrity sha512-iLH6LTDdf/sGrNf2JeOqJmGgvGCc16EzlTAPkk76MXIiQc+/dSrYtjNwO/6DXGbyUEH8vxz+Azh9IBS3pEvkWQ==
+  dependencies:
+    "@tarojs/shared" "3.6.16"
+    lodash-es "4.17.21"
+
 "@tarojs/runtime@3.6.7":
   version "3.6.7"
   resolved "https://registry.npmmirror.com/@tarojs/runtime/-/runtime-3.6.7.tgz#1291f8712a33db62a0816384414213ff1bd8ca6a"
@@ -2172,6 +2230,21 @@
   dependencies:
     "@tarojs/shared" "3.6.8"
     lodash-es "4.17.21"
+
+"@tarojs/service@3.6.16":
+  version "3.6.16"
+  resolved "https://registry.npmmirror.com/@tarojs/service/-/service-3.6.16.tgz#91458a23a065ce72982f67026c2d5aaa80f04a28"
+  integrity sha512-izBhearJoDztzREQBaK8xS7D8zKvPvt4GmeJfKdhVxV4mAhQHYU61RkbqP0R7VQnZrZia5/80eBYYenkpkUzVw==
+  dependencies:
+    "@tarojs/helper" "3.6.16"
+    "@tarojs/shared" "3.6.16"
+    "@tarojs/taro" "3.6.16"
+    joi "^17.6.0"
+    lodash "^4.17.21"
+    ora "^5.0.0"
+    resolve "^1.22.0"
+    tapable "^1.1.3"
+    webpack-merge "^4.2.2"
 
 "@tarojs/service@3.6.7":
   version "3.6.7"
@@ -2202,6 +2275,11 @@
     resolve "^1.22.0"
     tapable "^1.1.3"
     webpack-merge "^4.2.2"
+
+"@tarojs/shared@3.6.16":
+  version "3.6.16"
+  resolved "https://registry.npmmirror.com/@tarojs/shared/-/shared-3.6.16.tgz#86a8b7ef69ffb62345a5ab214b12fe2cd5cd59f0"
+  integrity sha512-Jlp8qIvbSxR/4CJ8UD0EyZp7eXvkwllOeHNuhkiZNs30mPLFhu77XNGIEkLemITYuRaNAVPFCw9h5rI9EUlYjQ==
 
 "@tarojs/shared@3.6.7":
   version "3.6.7"
@@ -2240,6 +2318,14 @@
     "@tarojs/helper" "3.6.8"
     "@tarojs/taro" "3.6.8"
     loader-utils "^1.2.3"
+
+"@tarojs/taro@3.6.16":
+  version "3.6.16"
+  resolved "https://registry.npmmirror.com/@tarojs/taro/-/taro-3.6.16.tgz#2c48a6df61a80f0393dbfc30e97d67e48f3652cd"
+  integrity sha512-tHRUgi19aPhN0STxTAHk8poEXg/2gvheMDvPnOHCHSAW6/30kp+ejDTIzT/RD+Rht3WfREMLEauavPx6Q42m8A==
+  dependencies:
+    "@tarojs/api" "3.6.16"
+    "@tarojs/runtime" "3.6.16"
 
 "@tarojs/taro@3.6.7":
   version "3.6.7"

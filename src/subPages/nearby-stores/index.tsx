@@ -162,13 +162,13 @@ const NearbyStores = () => {
           className="w-240"
           onChange={onChangeProvince}
         >
-          <View className="border border-solid border-white w-full h-60 flex items-center px-10 justify-between box-border">
+          <View className="border border-solid border-white w-full h-60 flex items-center px-10 justify-center box-border">
             <Text>{getCounterParams.province}</Text>
           </View>
         </Picker>
         <View className="mx-30">-</View>
         <Picker range={cityList} className="w-240" onChange={onChangeCity}>
-          <View className="border border-solid border-white w-full h-60 flex items-center px-10 justify-between box-border">
+          <View className="border border-solid border-white w-full h-60 flex items-center px-10 justify-center box-border">
             <Text>{getCounterParams.city}</Text>
           </View>
         </Picker>

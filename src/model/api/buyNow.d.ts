@@ -2,7 +2,7 @@ declare namespace Api {
   /**
    * 购物车接口类型声明
    */
-  namespace Cart {
+  namespace BuyNow {
     /**
      * 购物车接口公用声明
      */
@@ -231,6 +231,15 @@ declare namespace Api {
         items: GiftRequestItem[];
         /** 活动标识 */
         promotionId?: string;
+      }
+
+      interface PromotionSwapActionSelect {
+        /** 选择的换购商品 */
+        gifts: string[];
+        /** 活动标识 */
+        id?: string;
+        /** 换购门槛 */
+        minAmount?: number;
       }
 
       interface GiftRequestItem {
@@ -471,7 +480,7 @@ declare namespace Api {
      *  @URL {basePathUrl}/api/ec-portal/store/{storeCode}/cart/submit
      *  @Method POST
      */
-    namespace SubmitCart {
+    namespace Submit {
       /** 接口定义 */
       type FuncT = (data: IRequestBody, path?: IRequestPath) => MRP<IResponse>;
       /** 请求参数 Path */
@@ -481,6 +490,10 @@ declare namespace Api {
       }
       /** 请求参数 Body */
       interface IRequestBody {
+        /** skuId */
+        skuId: string;
+        /** 数量 */
+        quantity: number;
         /** 渠道标识(公众号、小程序、PC、线下门店) = ['wm', 'wa', 'pc', 'store'] */
         channelId: ChannelType;
         /** */
@@ -504,7 +517,7 @@ declare namespace Api {
         /** */
         /** 自定义使用积分 */
         customPointsPayPlan?: Public.ICustomPointsPayPlan;
-        exchangeSkuList?: Array<Public.GiftRequest>;
+        exchangeSkuList?: Array<Public.PromotionSwapActionSelect>;
         /** 支付信息 */
         paymentInfo?: Partial<{
           /** 关联消息标识，用于微信或其它渠道发送相关通知信息 */

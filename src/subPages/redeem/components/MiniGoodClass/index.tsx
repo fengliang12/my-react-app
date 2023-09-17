@@ -1,6 +1,6 @@
 import "./index.scss";
 
-import { View } from "@tarojs/components";
+import { ScrollView, View } from "@tarojs/components";
 import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
 
@@ -48,11 +48,11 @@ const GoodClass: React.FC<T_Props> = (props) => {
   });
 
   return (
-    <View className="MiniGoodClass text-black text-center py-40 px-70">
+    <View className="MiniGoodClass h-full text-black text-center py-40 flex flex-col">
       {/* 积分导航 */}
       <View
-        className="w-full text-black text-28 pb-40 mb-40 overflow-x-scroll;borderBottomBlack"
-        style="white-space: nowrap;"
+        className="w-full h-50 text-black text-28 borderBottomBlack px-70 box-border overflow-x-scroll"
+        style="white-space: nowrap;height:100rpx"
       >
         {goodClassList?.length ? (
           goodClassList.map((item: any, index: number) => {
@@ -75,8 +75,8 @@ const GoodClass: React.FC<T_Props> = (props) => {
       </View>
 
       {/* 商品列表 */}
-      <View className="">
-        <View className="w-full flex flex-wrap justify-between">
+      <ScrollView className="flex-1 overflow-hidden" scrollY>
+        <View className="w-full flex flex-wrap justify-between px-70 box-border py-40">
           {selectList?.length ? (
             selectList.map((child: any, index) => {
               return (
@@ -126,7 +126,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
             <View className="w-full text-center mt-400">暂无商品数据</View>
           )}
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

@@ -15,6 +15,9 @@ const queryPointsLog = (data) => http.post(`${commonUrl}/queryPointsLog`, data);
 // 会员信息查询
 const queryMember = () => http.get(`${commonUrl}/queryMember`);
 
+//消费记录
+const orderPage = (data) => http.post(`${commonUrl}/orderPage`, data);
+
 export default {
   /** 距离下一等级金额 */
   nextGradeAmount,
@@ -24,4 +27,5 @@ export default {
   queryPointsLog,
   // 会员信息查询
   queryMember,
+  orderPage,
 };

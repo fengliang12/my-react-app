@@ -1,6 +1,6 @@
 import "./index.less";
 
-import { Image, Input, Picker, View } from "@tarojs/components";
+import { Image, Input, Picker, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
 import dayjs from "dayjs";
@@ -10,13 +10,15 @@ import { useSelector } from "react-redux";
 import { P1, P6 } from "@/assets/image/index";
 import Page from "@/components/Page";
 import api from "@/src/api";
+import CityList from "@/src/components/CityList";
 import Avatar from "@/src/components/Common/Avatar";
 import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
-import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import PrivacyPolicyText from "@/src/components/Common/PrivacyPolicyText";
 import SendVerifyCode from "@/src/components/Common/SendVerifyCode";
 import config from "@/src/config";
+import pageSettingConfig from "@/src/config/pageSettingConfig";
 import { formatDateTime, isPhone } from "@/src/utils";
+import Authorization from "@/src/utils/authorize";
 import { getPages } from "@/src/utils/getPages";
 import subscribeMsg from "@/src/utils/subscribeMsg";
 
@@ -24,9 +26,7 @@ const app: App.GlobalData = Taro.getApp();
 const genderArr = ["女", "男"];
 const Index = () => {
   const isMember = useSelector((state: Store.States) => state.user.isMember);
-  const [selectCounter, setSelectCounter] = useState<any>();
   const [inputMobileType, { setTrue }] = useBoolean(false);
-  const [cityList, setCityList] = useState<any>([]);
   const [agree, setAgree] = useState<boolean>(false);
   const [user, setUser] = useSetState<any>({
     avatarUrl: "",
@@ -34,6 +34,7 @@ const Index = () => {
     mobile: "",
     birthDate: "",
     gender: "",
+    province: "",
     city: "",
     withSmsCode: false,
     shopType: "wa",
@@ -46,8 +47,8 @@ const Index = () => {
   useAsyncEffect(async () => {
     if (isMember) {
       const userInfo = await app.init();
-      const { realName, birthDate, mobile, avatarUrl, gender, city } = userInfo;
-
+      const { realName, birthDate, mobile, avatarUrl, gender, city, province } =
+        userInfo;
       let genderName = user.gender;
       if (gender === 1) {
         genderName = "男";
@@ -62,29 +63,15 @@ const Index = () => {
         gender: genderName,
         avatarUrl,
         city,
+        province,
       });
     }
-    getCityList();
   }, [isMember]);
-
-  /**
-   * 获取城市列表
-   */
-  const getCityList = useMemoizedFn(async () => {
-    let res = await api.counter.getCounterList();
-    let list = res?.data.map((item: any) => ({
-      ...item.address,
-      ...item.detailInfo,
-      id: item.id,
-    }));
-    setCityList(list);
-  });
 
   /**
    * 同意隐私条款，回调订阅消息
    */
   const PrivacyPolicy = useMemoizedFn(async () => {
-    await subscribeMsg(config.subscribeList.register);
     setAgree(true);
   });
 
@@ -92,13 +79,14 @@ const Index = () => {
    * 提交注册
    */
   const submit = useMemoizedFn(async () => {
+    if (isMember) {
+      successRegister("您已是会员");
+      return;
+    }
     const { nickName, birthDate, avatarUrl, mobile, gender, city, smsCode } =
       user;
     if (!avatarUrl) {
       return Taro.showToast({ title: "请先上传头像", icon: "none" });
-    }
-    if (!agree) {
-      return Taro.showToast({ title: "请先同意隐私条款", icon: "none" });
     }
     if (!nickName) {
       return Taro.showToast({ title: "请输入姓名", icon: "none" });
@@ -118,7 +106,10 @@ const Index = () => {
     if (!city) {
       return Taro.showToast({ title: "请选择城市", icon: "none" });
     }
-
+    if (!agree) {
+      return Taro.showToast({ title: "请先同意隐私条款", icon: "none" });
+    }
+    await subscribeMsg(config.subscribeList.register);
     createMember();
   });
 
@@ -138,23 +129,56 @@ const Index = () => {
     Taro.hideLoading();
 
     if (status === 200) {
-      Taro.showToast({
-        title: "注册成功！",
-        mask: true,
-        duration: 3000,
-      });
-      setTimeout(async () => {
-        await app.init(true);
-        let list: any = getPages({ getKey: "route", getCurrentPage: false });
-        if (list.length > 1) {
-          app.to(1);
-        } else {
-          app.to("/pages/index/index", "reLaunch");
-        }
-      }, 2000);
+      successRegister();
     }
   });
 
+  /**
+   * 成功回调
+   */
+  const successRegister = useMemoizedFn((text = "注册成功！") => {
+    Taro.showToast({
+      title: text,
+      mask: true,
+      duration: 3000,
+    });
+    setTimeout(async () => {
+      await app.init(true);
+      let list: any = getPages({ getKey: "route", getCurrentPage: false });
+      if (list.length > 1) {
+        app.to(1);
+      } else {
+        app.to(pageSettingConfig.homePath, "reLaunch");
+      }
+    }, 2000);
+  });
+
+  /**
+   * 点击一键授权地理位置
+   */
+  const authorizeLocation = useMemoizedFn(() => {
+    new Authorization({ method: "getLocation" })
+      .runModal({})
+      .then(async (res) => {
+        const { latitude, longitude } = res;
+        await api.counter
+          .getNearCounterList({
+            lat: latitude,
+            lng: longitude,
+          })
+          .then(({ data }: any) => {
+            console.log("data", data);
+            let item = data[0];
+            setUser({
+              city: item.address.city,
+              province: item.address.province,
+            });
+          });
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  });
   return (
     <>
       <Page
@@ -311,26 +335,31 @@ const Index = () => {
                 </Picker>
               </View>
             </View>
+
             <View className="item">
               <View className="left">所在城市*</View>
-              <View className="right">
-                <MultiplePicker
-                  cascadeCount={2}
-                  isCascadeData={false}
-                  pickerData={cityList}
-                  customKeyList={["province", "city"]}
-                  callback={(counter) => {
-                    setSelectCounter(counter);
-                    setUser({ city: counter.city });
-                  }}
-                >
-                  <View className="flex items-center mr-20 text-right w-full">
-                    <View className="ipt-placeholder w-full">
-                      {selectCounter ? selectCounter.city : "请选择所在城市"}
-                    </View>
-                    <Image src={P6} mode="widthFix" className="w-14 ml-15" />
+              <View className="right justify-end">
+                {!user.city && (
+                  <View className="ipt-placeholder whitespace-nowrap">
+                    <Text onClick={authorizeLocation}>一键授权地理位置</Text>
+                    <Text>或</Text>
                   </View>
-                </MultiplePicker>
+                )}
+                <View className={user.city ? "flex-1" : ""}>
+                  <CityList
+                    onChange={(item) => {
+                      setUser({ province: item.province, city: item.city });
+                    }}
+                  >
+                    <View className="flex items-center justify-end">
+                      {!user.city && (
+                        <View className="ipt-placeholder">选择城市</View>
+                      )}
+                      {`${user.city}`}
+                      <Image src={P6} mode="widthFix" className="w-14 ml-15" />
+                    </View>
+                  </CityList>
+                </View>
               </View>
             </View>
             <PrivacyPolicyText

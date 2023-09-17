@@ -1,6 +1,8 @@
 import { Text, View } from "@tarojs/components";
 import React, { useEffect } from "react";
 
+import config from "@/src/config";
+
 interface PropsType {
   postageType: string;
   setPostageType: (e: string) => void;
@@ -19,7 +21,7 @@ const Index: React.FC<PropsType> = (props) => {
             <View className="w-12 h-12 rounded-12 bg-black"></View>
           )}
         </View>
-        <Text>300积分抵扣邮费</Text>
+        <Text>{config.postagePoints}积分抵扣邮费</Text>
       </View>
       <View
         className="flex items-center"

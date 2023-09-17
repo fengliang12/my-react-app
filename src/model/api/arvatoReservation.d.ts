@@ -71,6 +71,7 @@ declare namespace Api {
       type Item = {
         bookId: number;
         storeId: string;
+        imageUrl: string;
         storeName: string;
         storeAddr: string;
         status: string;

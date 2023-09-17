@@ -17,9 +17,24 @@ const Index = () => {
   const dispatch = useDispatch();
   const [carts, setCarts] = useState<any>([]);
   const [show, { setTrue, setFalse }] = useBoolean(false);
+  const points = useSelector((state: Store.States) => state.user.points);
   const counter = useSelector(
     (state: Store.States) => state.exchangeGood.counter,
   );
+
+  /** 兑换数量 */
+  const totalCounter = useMemo(() => {
+    return carts
+      .filter((item) => item.selected)
+      .reduce((a, b) => a + b.quantity, 0);
+  }, [carts]);
+
+  /** 兑换积分 */
+  const totalPoints = useMemo(() => {
+    return carts
+      .filter((item) => item.selected)
+      .reduce((a, b) => a + b.points * b.quantity, 0);
+  }, [carts]);
 
   useAsyncEffect(async () => {
     if (!show) return;
@@ -27,7 +42,7 @@ const Index = () => {
     await app.init();
     let { data } = await api.cart.locate({
       integral: true,
-      counterId: counter?.id ? counter?.id : undefined,
+      counterId: counter?.id,
       customPointsPayPlan: {
         usePoints: true,
         notValidateUsablePoints: true,
@@ -37,25 +52,18 @@ const Index = () => {
     setCarts(data.goods);
   }, [show]);
 
-  /** 兑换数量 */
-  const totalCounter = useMemo(() => {
-    return carts.reduce((a, b) => a + b.quantity, 0);
-  }, [carts]);
-
-  /** 兑换积分 */
-  const totalPoints = useMemo(() => {
-    return carts.reduce((a, b) => a + b.points * b.quantity, 0);
-  }, [carts]);
-
   /**
    * 删除
    */
   const handleDelete = useMemoizedFn(async (item) => {
     Taro.showLoading({ title: "加载中", mask: true });
-    await api.cart.remove({
+    let { status } = await api.cart.remove({
       cartItemIdList: [item.cartItemId],
+      counterId: counter?.id ? counter?.id : undefined,
     });
-    setCarts(carts.filter((child) => child.cartItemId !== item.cartItemId));
+    if (status === 200) {
+      setCarts(carts.filter((child) => child.cartItemId !== item.cartItemId));
+    }
     Taro.hideLoading();
   });
 
@@ -63,7 +71,7 @@ const Index = () => {
    * 更新购物车
    */
   const updateCart = useMemoizedFn(async (item, type) => {
-    if (item.sellOut) return;
+    if (item.sellOut) return toast("商品已售罄");
     Taro.showLoading({ title: "加载中", mask: true });
     switch (type) {
       case "select":
@@ -83,6 +91,7 @@ const Index = () => {
 
     await api.cart.update({
       cartItemId: item.cartItemId,
+      counterId: counter?.id ? counter?.id : undefined,
       promotionCode: item.cartItemId,
       quantity: item.quantity,
       selected: item.selected,
@@ -100,6 +109,9 @@ const Index = () => {
     if (!goods?.length) {
       return toast("请选择兑礼的商品");
     }
+    if (points < totalPoints) {
+      return toast("您的积分不足");
+    }
     dispatch({
       type: "SET_EXCHANGE_GOOD",
       payload: {
@@ -107,7 +119,7 @@ const Index = () => {
       },
     });
     setFalse();
-    to("/subPages/redeem/confirm/index");
+    to("/subPages/redeem/confirm/index?from=cart");
   });
 
   return (
@@ -161,7 +173,7 @@ const Index = () => {
                             className="w-full h-full absolute top-0 left-0 text-white vhCenter text-28 z-99 rounded-9"
                             style="background-color:rgba(0,0,0,0.5);"
                           >
-                            售罄
+                            售 罄
                           </View>
                         )}
                         <CImage className="w-180 h-180" src={item?.mainImage} />
@@ -171,7 +183,7 @@ const Index = () => {
                     <View className="flex-1 h-180 flex justify-center items-start flex-col ml-40 text-28">
                       <View>
                         <View>{item?.name}</View>
-                        <View className="mt-60">{item?.totalPoints}积分</View>
+                        <View className="mt-60">{item?.points}积分</View>
                       </View>
                     </View>
                     <View className="min-w-100 h-140 flex items-end justify-between flex-col">

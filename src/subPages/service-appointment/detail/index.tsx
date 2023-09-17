@@ -9,6 +9,7 @@ import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
+import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
@@ -29,16 +30,22 @@ const Index = () => {
       );
   });
 
+  /**
+   * 取消服务
+   */
   const onCancel = async () => {
     Taro.showModal({
       title: "确认是否取消服务预约",
       success: async (res) => {
         // 点击确定的时候取消服务预约
+        Taro.showLoading({ title: "加载中", mask: true });
         if (res.confirm) {
           await api.arvatoReservation.modify({
             bookId: data?.bookId!,
             type: -1,
           });
+          Taro.hideLoading();
+          to(1);
         }
       },
     });
@@ -56,23 +63,23 @@ const Index = () => {
       ></CHeader>
       <CImage
         className="w-690 h-517 mt-40 ml-30"
-        src={`${config.imgBaseUrl}/appointment/appointment_detail.jpg`}
+        src={
+          data?.imageUrl ||
+          `${config.imgBaseUrl}/appointment/appointment_detail.jpg`
+        }
       ></CImage>
-      <View className="w-560 text-36 text-left font-thin mt-60 ml-85">
+      <View className="w-560 text-34 text-left font-thin mt-60 ml-85">
         预约服务:{data?.projectName}
       </View>
-      <View className="w-560 text-36 text-left font-thin  mt-20 ml-85">
+      <View className="w-560 text-34 text-left font-thin  mt-20 ml-85">
         预约门店:{data?.storeName}
       </View>
-      <View className="w-560 text-36 text-left font-thin  mt-20 ml-85">
+      <View className="w-560 text-34 text-left font-thin  mt-20 ml-85">
         预约时间: {dayjs(data?.reserveDate).format("YYYY年MM月DD日")}{" "}
         {data?.timePeriod}
       </View>
-      <View className="w-560 text-36 text-left font-thin  mt-20 ml-85">
-        请在预约时间凭此核销码至门店
-      </View>
-      <View className="w-560 text-36 text-left font-thin  mt-20 ml-85">
-        尊享服务
+      <View className="w-560 text-34 text-left font-thin  mt-20 ml-85">
+        请在预约时间凭此核销码至门店尊享服务
       </View>
       <View className="m-auto flex justify-center bg-white mt-45">
         {data?.bookId ? (
