@@ -51,11 +51,11 @@ const Index = () => {
   });
 
   useEffect(() => {
-    if (date) {
+    if (date || orderIndex) {
       page.current = 0;
     }
     getList();
-  }, [date, getList]);
+  }, [date, orderIndex, getList]);
 
   /**
    * 滚动到底部
@@ -110,7 +110,7 @@ const Index = () => {
           </Picker>
         </View>
       </View>
-      {list.length > 0 ? (
+      {list && list?.length > 0 ? (
         <ScrollView
           className="flex-1 overflow-hidden"
           scrollY

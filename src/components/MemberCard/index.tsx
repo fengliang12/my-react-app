@@ -62,28 +62,35 @@ const Index: React.FC<PropsType> = (props) => {
         >
           <View className="w-full flex items-start">
             <View className="flex items-center justify-center relative">
-              <View onClick={() => goNextPage("/pages/update/index")}>
+              <View
+                className="absolute top-10 left-0 z-10"
+                onClick={() => goNextPage("/pages/update/index")}
+              >
                 <CImage
-                  className="w-120 h-120 mr-20 rounded-120"
+                  className="w-130 h-130 mr-20 rounded-130"
                   src={userInfo.avatarUrl || P5}
                 ></CImage>
                 <CImage
-                  className="w-30 h-30 absolute bottom-10 left-80"
+                  className="w-30 h-30 absolute bottom-10 right-20"
                   src={`${config.imgBaseUrl}/index/icon_edit.png`}
                 ></CImage>
               </View>
+              <View className="w-130 h-130 mr-15"></View>
 
               <View>
                 {isMember ? (
                   <>
-                    <View
-                      className="text-32"
-                      style={`background-image:url(${config.imgBaseUrl}/icon/${userInfo.grade}.png);background-size:100% 100%`}
-                    >
-                      {userInfo.gradeName}
-                    </View>
+                    <CImage
+                      className="w-180"
+                      mode="widthFix"
+                      style="transform:translate(-26rpx,6rpx)"
+                      src={`${config.imgBaseUrl}/icon/${userInfo.gradeId}.png`}
+                    ></CImage>
                     <View className="text-38">{userInfo.realName}</View>
-                    <View className="flex items-end text-18" onClick={setTrue}>
+                    <View
+                      className="flex items-center text-18"
+                      onClick={setTrue}
+                    >
                       <CImage
                         className="w-18 h-18 mr-6"
                         src={`${config.imgBaseUrl}/index/icon_qrcode.png`}

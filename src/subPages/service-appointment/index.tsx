@@ -29,19 +29,19 @@ const Index = () => {
         titleCss="height:85rpx"
         titleColor="#FFFFFF"
       ></CHeader>
-      <View className="text-52 text-center mt-100 font-thin">
-        预约门店专属服务
+      <View className="text-52 text-left mt-100 font-thin pl-60">
+        MAKE UP YOUR MIND
       </View>
-      <View className="text-35 text-center mt-50 font-thin">
-        亲爱的NARS唇妆达人
+      <View className="text-35 text-left mt-10 font-thin pl-60">
+        预约门店专属彩妆服务
       </View>
 
-      <ScrollView className="flex-1 mt-100" scrollY>
+      <ScrollView className="flex-1 mt-150" scrollY>
         <View className="h-full flex items-center justify-center flex-wrap">
           {projects.map((item, index) => (
             <View
               key={index}
-              className="w-300 h-244 relative mx-10 mb-30"
+              className="w-300 h-300 relative mx-15 mb-30"
               onClick={() => {
                 to(
                   `/subPages/service-appointment/introduce/index?projectCode=${item.projectCode}&projectName=${item.projectName}`,
@@ -75,7 +75,7 @@ const Index = () => {
           to("/subPages/service-appointment/list/index", "navigateTo");
         }}
       >
-        我的预约记录
+        预约记录
       </View>
     </View>
   );

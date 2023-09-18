@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { Back } from "@/assets/image/index";
+import { SET_COMMON } from "@/src/store/constants";
 
 export type NavType = {
   /** 导航标题 */
@@ -49,7 +50,7 @@ const Nav: React.FC<NavType> = ({
         (menuInfo.top - systemInfo.statusBarHeight) * 2 ?? 88;
     // store.setNavHeight(navHeight)
     dispatch({
-      type: "SET_COMMON",
+      type: SET_COMMON,
       payload: {
         navHeight: navHeight,
       },

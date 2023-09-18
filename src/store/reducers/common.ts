@@ -18,15 +18,6 @@ export default createReducer(
         });
       }
     },
-    CHANGE_EXCHANGE(state, action: { payload: Partial<Store.Common> }) {
-      if (action.payload) {
-        forOwn(action.payload, function (value, key) {
-          if (!isNil(value)) {
-            set(state, key, value);
-          }
-        });
-      }
-    },
   },
   INITIAL_STATE,
 );

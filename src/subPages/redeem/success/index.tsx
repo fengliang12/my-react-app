@@ -9,9 +9,6 @@ import OrderGood from "../components/OrderGood";
 
 const OrderConfirm = () => {
   const exchangeGood = useSelector((state: Store.States) => state.exchangeGood);
-  const applyType = useSelector(
-    (state: Store.States) => state.exchangeGood.applyType,
-  );
   const counter = useSelector(
     (state: Store.States) => state.exchangeGood.counter,
   );

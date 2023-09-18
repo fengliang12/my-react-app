@@ -61,6 +61,7 @@ export const getShuYunMemberInfo = async () => {
   let { data } = await api.shuYunMember.queryMember();
   let userInfo = {
     gradeName: data.gradeName,
+    gradeId: data.gradeId,
     memberId: data.memberId,
     needAmount: data.needAmount,
     nextGradeName: data.nextGradeName,

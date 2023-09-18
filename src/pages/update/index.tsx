@@ -12,6 +12,7 @@ import api from "@/src/api";
 import CityList from "@/src/components/CityList";
 import Avatar from "@/src/components/Common/Avatar";
 import CPopup from "@/src/components/Common/CPopup";
+import PrivacyAuth from "@/src/components/PrivacyAuth";
 import { formatDateTime, maskPhone } from "@/src/utils";
 
 const genderArr = ["女", "男"];
@@ -190,6 +191,7 @@ const Index = () => {
           back: true,
         }}
       >
+        <PrivacyAuth></PrivacyAuth>
         <View className="bind">
           <View className="bind-top">
             <View className="head">

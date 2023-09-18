@@ -23,9 +23,7 @@ const OrderGood: React.FC<T_Props> = ({ good }) => {
             {good?.points || good.point}积分 *{" "}
             {good?.quantity || good?.num || 1}
           </View>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </View>
     </View>
   );

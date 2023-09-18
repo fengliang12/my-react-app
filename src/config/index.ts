@@ -29,6 +29,7 @@ const baseConfig = {
   },
   errCodeList: [],
   postagePoints: 300,
+  postageMoney: 9.9,
 };
 const config = merge(baseConfig, IS_PRO ? prod : dev);
 config.loginUrl = `${config.basePathUrl}/sp-portal/store/${config.storeCode}/wechat/login/`;

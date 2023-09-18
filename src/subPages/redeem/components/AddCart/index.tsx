@@ -1,13 +1,14 @@
 import { ScrollView, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
-import React, { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { cart } from "@/assets/image/index";
 import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -33,11 +34,16 @@ const Index = () => {
   const totalPoints = useMemo(() => {
     return carts
       .filter((item) => item.selected)
-      .reduce((a, b) => a + b.points * b.quantity, 0);
+      .reduce((a, b) => a + (b.points || b.point) * b.quantity, 0);
   }, [carts]);
 
+  /**
+   * 查询购物车
+   */
   useAsyncEffect(async () => {
     if (!show) return;
+    setCarts([]);
+
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     let { data } = await api.cart.locate({
@@ -91,7 +97,7 @@ const Index = () => {
 
     await api.cart.update({
       cartItemId: item.cartItemId,
-      counterId: counter?.id ? counter?.id : undefined,
+      counterId: counter?.id || undefined,
       promotionCode: item.cartItemId,
       quantity: item.quantity,
       selected: item.selected,
@@ -113,7 +119,7 @@ const Index = () => {
       return toast("您的积分不足");
     }
     dispatch({
-      type: "SET_EXCHANGE_GOOD",
+      type: SET_EXCHANGE_GOOD,
       payload: {
         goods: goods,
       },

@@ -1,5 +1,5 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { useDidShow } from "@tarojs/taro";
+import Taro from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import api from "@/src/api";
 import CPopup from "@/src/components/Common/CPopup";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
+import { SET_COMMON, SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import toast from "@/src/utils/toast";
 
 interface PropsType {
@@ -42,20 +43,19 @@ const Index: React.FC<PropsType> = (props) => {
 
   useEffect(() => {
     dispatch({
-      type: "CHANGE_EXCHANGE",
+      type: SET_COMMON,
       payload: {
         changeExchange: true,
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (changeExchange) {
       setShowApply(true);
       getCounterList();
       dispatch({
-        type: "CHANGE_EXCHANGE",
+        type: SET_COMMON,
         payload: {
           changeExchange: false,
         },
@@ -76,7 +76,7 @@ const Index: React.FC<PropsType> = (props) => {
       return;
     }
     dispatch({
-      type: "CHANGE_EXCHANGE_GOOD",
+      type: SET_EXCHANGE_GOOD,
       payload: {
         applyType: applyType,
         counter: selectCounter,

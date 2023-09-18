@@ -1,0 +1,1 @@
+export const SET_EXCHANGE_GOOD = "SET_EXCHANGE_GOOD";

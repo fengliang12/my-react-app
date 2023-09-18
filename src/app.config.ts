@@ -80,4 +80,5 @@ export default {
       desc: "你的位置信息将用于定位附近的门店信息",
     },
   },
+  __usePrivacyCheck__: true,
 };

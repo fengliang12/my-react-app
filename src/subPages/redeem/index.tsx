@@ -1,42 +1,29 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { useDidShow, useRouter, useUnload } from "@tarojs/taro";
-import {
-  useBoolean,
-  useMemoizedFn,
-  useMount,
-  useSetState,
-  useUpdateEffect,
-} from "ahooks";
-import { useEffect, useState } from "react";
+import Taro, { useDidShow, useUnload } from "@tarojs/taro";
+import { useBoolean, useMemoizedFn, useUpdateEffect } from "ahooks";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
+import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import handleGoodClass from "@/src/utils/handleGoodClass";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
-import toast from "@/src/utils/toast";
 
 import AddCart from "./components/AddCart";
 import ApplyType from "./components/ApplyType";
 import MiniGoodClass from "./components/MiniGoodClass";
 
-interface ApplyType {
-  applyType: string;
-  counterId: string;
-}
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: Store.States) => state.user);
   const [show, { setTrue, setFalse }] = useBoolean(false);
-  const applyType = useSelector(
-    (state: Store.States) => state.exchangeGood.applyType,
-  );
-  const counter = useSelector(
-    (state: Store.States) => state.exchangeGood.counter,
+  const { applyType, counter } = useSelector(
+    (state: Store.States) => state.exchangeGood,
   );
 
   /**
@@ -45,13 +32,12 @@ const Index = () => {
   const [originList, setOriginList] = useState<any>([]);
   const [goodList, setGoodList] = useState<any>([]);
   const getGoodList = useMemoizedFn(async () => {
+    if (!applyType) return;
     await app.init();
-    Taro.showLoading({ title: "加载中", mask: true });
     let params = {
       counterId: counter?.id || undefined,
     };
     let res = await api.buyBonusPoint.getBonusPointList(params);
-    Taro.hideLoading();
 
     if (res?.data?.length) {
       setOriginList(res?.data);
@@ -61,60 +47,25 @@ const Index = () => {
   });
 
   useDidShow(() => {
-    if (applyType) {
-      getGoodList();
-    }
+    getGoodList();
   });
 
   useUpdateEffect(() => {
-    if (applyType) {
-      getGoodList();
-    }
+    getGoodList();
   }, [applyType, counter, getGoodList]);
 
+  /**
+   * 页面卸载清除缓存
+   */
   useUnload(() => {
     dispatch({
-      type: "CHANGE_EXCHANGE_GOOD",
+      type: SET_EXCHANGE_GOOD,
       payload: {
         goods: [],
         applyType: "",
         counter: null,
       },
     });
-  });
-
-  /**
-   * 直接购买
-   */
-  const goPage = useMemoizedFn((good) => {
-    dispatch({
-      type: "SET_EXCHANGE_GOOD",
-      payload: {
-        goods: [{ ...good, quantity: 1 }],
-      },
-    });
-    to(`/subPages/redeem/confirm/index`, "navigateTo");
-  });
-
-  /**
-   * 添加购物车
-   */
-  const addCart = useMemoizedFn(async (item: any) => {
-    Taro.showLoading({ title: "加载中", mask: true });
-    let { status } = await api.cart.append({
-      integral: true,
-      quantity: 1,
-      skuId: item.skuId,
-      counterId: applyType === "self_pick_up" ? counter?.id : undefined,
-      customPointsPayPlan: {
-        notValidateUsablePoints: false,
-        usePoints: true,
-      },
-    });
-    Taro.hideLoading();
-    if (status === 200) {
-      toast("商品添加成功");
-    }
   });
 
   return (
@@ -153,8 +104,6 @@ const Index = () => {
         <MiniGoodClass
           goodClassList={goodList}
           originList={originList}
-          addCart={addCart}
-          goPage={goPage}
         ></MiniGoodClass>
       </View>
 

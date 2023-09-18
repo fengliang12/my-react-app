@@ -9,6 +9,7 @@ import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
 import config from "@/src/config";
 import usePayHooks from "@/src/hooks/payHooks";
+import { SET_COMMON } from "@/src/store/constants";
 import { verifyAddressInfo } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -63,11 +64,9 @@ const OrderConfirm = () => {
    * 确认兑礼订单
    */
   const confirm = useMemoizedFn(async () => {
-    if (points < totalPoints) {
-      return toast("您的积分不足");
-    }
-    Taro.showLoading({ title: "加载中", mask: true });
+    if (points < totalPoints) return toast("您的积分不足");
 
+    Taro.showLoading({ title: "加载中", mask: true });
     let params = {
       channelId: "wa",
       counterId: applyType === "self_pick_up" ? counter.id : undefined,
@@ -104,7 +103,7 @@ const OrderConfirm = () => {
         /** 邮寄到家&9.9元支付 */
         await pay(result.data.orderId);
       } else {
-        // await api.order.paymentUMS({ orderId: result.data.orderId });
+        await api.order.paymentUMS({ orderId: result.data.orderId });
       }
       await app.init(true);
       Taro.hideLoading();
@@ -117,7 +116,7 @@ const OrderConfirm = () => {
    */
   const changeExchangeType = useMemoizedFn(() => {
     dispatch({
-      type: "CHANGE_EXCHANGE",
+      type: SET_COMMON,
       payload: {
         changeExchange: true,
       },

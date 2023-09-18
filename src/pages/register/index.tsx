@@ -15,6 +15,7 @@ import Avatar from "@/src/components/Common/Avatar";
 import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
 import PrivacyPolicyText from "@/src/components/Common/PrivacyPolicyText";
 import SendVerifyCode from "@/src/components/Common/SendVerifyCode";
+import PrivacyAuth from "@/src/components/PrivacyAuth";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import { formatDateTime, isPhone } from "@/src/utils";
@@ -181,6 +182,7 @@ const Index = () => {
   });
   return (
     <>
+      <PrivacyAuth></PrivacyAuth>
       <Page
         isNeedBind={false}
         navConfig={{

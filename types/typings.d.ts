@@ -33,6 +33,8 @@ declare namespace Store {
     country: string;
     /**当前等级名称 */
     gradeName: string;
+    /** 等级*/
+    gradeId: number;
     /** 会员id */
     memberId: string;
     /** 下一个等级需要总积分 */

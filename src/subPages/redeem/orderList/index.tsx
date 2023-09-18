@@ -38,6 +38,10 @@ const Index = () => {
     setList(newList);
   });
 
+  useDidShow(() => {
+    getOrderByStatus();
+  });
+
   /**
    * 滚动到底部
    */
@@ -56,9 +60,6 @@ const Index = () => {
     }
   }, [startDate, endDate, getOrderByStatus]);
 
-  useDidShow(() => {
-    getOrderByStatus();
-  });
   return (
     <View className="bg-black text-white h-screen flex flex-col items-center">
       <CHeader

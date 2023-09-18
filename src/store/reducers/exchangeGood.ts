@@ -17,16 +17,6 @@ export default createReducer(
         });
       }
     },
-    CHANGE_EXCHANGE_GOOD(
-      state,
-      action: { payload: Partial<Store.ExchangeGood> },
-    ) {
-      if (action.payload) {
-        forOwn(action.payload, function (value, key) {
-          set(state, key, value);
-        });
-      }
-    },
   },
   INITIAL_STATE,
 );

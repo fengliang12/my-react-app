@@ -1,24 +1,32 @@
 import "./index.scss";
 
 import { ScrollView, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { cart1 } from "@/assets/image/index";
+import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
+import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
+import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
 interface T_Props {
   goodClassList: any;
   originList: any;
-  clickSelectGood?: (e: any) => void;
-  addCart: (e: any) => void;
-  goPage: (e: any) => void;
 }
 
 const GoodClass: React.FC<T_Props> = (props) => {
-  let { goodClassList, originList, clickSelectGood, addCart, goPage } = props;
+  const points = useSelector((state: Store.States) => state.user.points);
+  const dispatch = useDispatch();
+  let { goodClassList, originList } = props;
   const [activeIndex, setActiveIndex] = useState<string>("all");
   const [selectList, setSelectList] = useState([]);
+  const { applyType, counter } = useSelector(
+    (state: Store.States) => state.exchangeGood,
+  );
 
   /**
    * 对应tab下的商品
@@ -47,6 +55,44 @@ const GoodClass: React.FC<T_Props> = (props) => {
     }
   });
 
+  /**
+   * 直接购买
+   */
+  const goPage = useMemoizedFn((good) => {
+    if (points < good.point) return toast("您的积分不足");
+
+    dispatch({
+      type: SET_EXCHANGE_GOOD,
+      payload: {
+        goods: [{ ...good, quantity: 1 }],
+      },
+    });
+    to(`/subPages/redeem/confirm/index`, "navigateTo");
+  });
+
+  /**
+   * 添加购物车
+   */
+  const addCart = useMemoizedFn(async (item: any) => {
+    if (points < item.point) return toast("您的积分不足");
+
+    Taro.showLoading({ title: "加载中", mask: true });
+    let { status } = await api.cart.append({
+      integral: true,
+      quantity: 1,
+      skuId: item.skuId,
+      counterId: applyType === "self_pick_up" ? counter?.id : undefined,
+      customPointsPayPlan: {
+        notValidateUsablePoints: false,
+        usePoints: true,
+      },
+    });
+    Taro.hideLoading();
+    if (status === 200) {
+      toast("商品添加成功");
+    }
+  });
+
   return (
     <View className="MiniGoodClass h-full text-black text-center py-40 flex flex-col">
       {/* 积分导航 */}
@@ -54,8 +100,8 @@ const GoodClass: React.FC<T_Props> = (props) => {
         className="w-full h-50 text-black text-28 borderBottomBlack px-70 box-border overflow-x-scroll"
         style="white-space: nowrap;height:100rpx"
       >
-        {goodClassList?.length ? (
-          goodClassList.map((item: any, index: number) => {
+        {goodClassList?.length > 0 &&
+          goodClassList.map((item, index: number) => {
             return (
               <View
                 className={`h-50 leading-50 mx-20 vhCenter ${
@@ -68,10 +114,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
                 {item.point}分
               </View>
             );
-          })
-        ) : (
-          <View></View>
-        )}
+          })}
       </View>
 
       {/* 商品列表 */}
