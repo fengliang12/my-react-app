@@ -47,7 +47,7 @@ const Index: React.FC<T_Props> = (props) => {
           )}
         </View>
       </View>
-      <View className="text-center">
+      <View className="text-left">
         <View>
           我已阅读并同意
           <Text

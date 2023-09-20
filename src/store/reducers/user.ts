@@ -25,6 +25,7 @@ const INITIAL_STATE: Store.User = {
   nextGradeName: "",
   nextGradeNeedAmount: 0,
   gradeId: 0,
+  cardNo: 0,
 };
 
 export default createReducer(

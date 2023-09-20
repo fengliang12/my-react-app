@@ -45,6 +45,8 @@ declare namespace Store {
     nextGradeNeedAmount: number;
     /** 积分 */
     points: number;
+    /** 卡号 */
+    cardNo: number;
   };
   type Common = {
     /** Nav高度 */

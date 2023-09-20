@@ -60,6 +60,7 @@ export const createInit = () => {
 export const getShuYunMemberInfo = async () => {
   let { data } = await api.shuYunMember.queryMember();
   let userInfo = {
+    cardNo: data.cardNo,
     gradeName: data.gradeName,
     gradeId: data.gradeId,
     memberId: data.memberId,

@@ -1,6 +1,6 @@
 import { Picker, Text, View } from "@tarojs/components";
 import Taro, { useRouter } from "@tarojs/taro";
-import { useRequest } from "ahooks";
+import { useBoolean, useRequest } from "ahooks";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
@@ -9,6 +9,7 @@ import { P6 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import { handleTextBr } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -16,9 +17,10 @@ const app: App.GlobalData = Taro.getApp();
 
 const Index = () => {
   const router = useRouter();
-
+  const [introduce, { setFalse }] = useBoolean(true);
+  let { projectCode } = router.params;
   const [appointment, setAppointment] = useState<any>({
-    projectCode: router.params.projectCode,
+    projectCode: projectCode,
     reserveDate: "",
     storeId: "",
     timePeriod: "",
@@ -31,7 +33,7 @@ const Index = () => {
       return await api.arvatoReservation.getProjects().then((res) => {
         Taro.hideLoading();
         return (
-          res.data.find((i) => i.projectCode === router.params.projectCode) ||
+          res.data.find((i) => i.projectCode === projectCode) ||
           ({} as Api.ArvatoReservation.GetProjects.Item)
         );
       });
@@ -40,7 +42,7 @@ const Index = () => {
   const { data: counterList = [] } = useRequest(async () => {
     await app.init();
     return await api.arvatoReservation
-      .getCounters(router.params.projectCode!)
+      .getCounters(projectCode!)
       .then((res) => res.data);
   });
 
@@ -111,21 +113,29 @@ const Index = () => {
    * 服务提交
    */
   const onSubmit = async () => {
+    if (introduce) {
+      setFalse();
+      return;
+    }
+
     await checkParams();
     Taro.showLoading({ title: "加载中", mask: true });
     api.arvatoReservation
       .submit(appointment)
       .then((res: any) => {
         Taro.hideLoading();
-        to(`../detail/index?bookId=${res.data.bookId}`, "redirectTo");
+        to(
+          `/subPages/service-appointment/detail/index?bookId=${res.data.bookId}`,
+          "redirectTo",
+        );
       })
       .catch((err) => {
-        toast(err);
+        to(`/subPages/service-appointment/list/index`, "redirectTo");
       });
   };
 
   return (
-    <View className="service-introduce min-h-screen bg-black text-white flex flex-col">
+    <View className="service-introduce h-screen bg-black text-white flex flex-col overflow-hidden">
       <CHeader
         back
         titleImage={`${config.imgBaseUrl}/icon/title_image.png`}
@@ -134,113 +144,128 @@ const Index = () => {
         titleCss="height:85rpx"
         titleColor="#FFFFFF"
       ></CHeader>
-      <Text className="text-76 text-left mt-40 ml-67 font-thin" decode>
-        {`AUDACIOUS \n MAKE UP`}
-      </Text>
-      <View className="text-76 text-left ml-67 font-thin">
-        {project.projectName}
-      </View>
       <CImage
-        className="w-690 h-517 mt-70 ml-30 mb-53"
-        src={
-          project.imageUrl ||
-          `${config.imgBaseUrl}/appointment/appointment_detail.jpg`
-        }
+        className="w-750"
+        mode="widthFix"
+        src={`${config.imgBaseUrl}/appointment/detail/${projectCode}.png`}
       ></CImage>
-      <View className="mb-30">
-        <Picker
-          mode="selector"
-          range={counterList}
-          rangeKey="storeName"
-          onChange={(e) => {
-            const { value } = e.detail;
-            if (!counterList?.[value]?.storeId) return;
-            setAppointment((prev) => ({
-              ...prev,
-              storeId: counterList[value].storeId,
-              reserveDate: "",
-              timePeriod: "",
-            }));
-            getPeriods(counterList[value].storeId);
-          }}
+      <View className="fixed top-220 left-50" style="color:#FFFFFF">
+        <Text
+          className="text-70 text-left mt-40 font-thin english_family"
+          style="line-height:50rpx"
+          decode
         >
-          <View
-            className="w-678 h-80 vhCenter ml-36"
-            style={{ border: "1px solid #FFFFFF" }}
-          >
-            {!appointment.storeId ? (
-              <View className="ipt-placeholder vhCenter">
-                选择服务门店{" "}
-                <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
-              </View>
-            ) : (
-              computedStoreName
-            )}
-          </View>
-        </Picker>
+          {handleTextBr(project?.introduce)}
+        </Text>
+        <View className="text-48 text-left font-thin mt-10">
+          {project?.projectName}
+        </View>
       </View>
-      <View className="mb-30">
-        <Picker
-          mode="selector"
-          range={periods}
-          rangeKey="reserveDate"
-          onChange={(e) => {
-            const { value } = e.detail;
-            setAppointment((prev) => ({
-              ...prev,
-              reserveDate: periods[value].reserveDate,
-              timePeriod: "",
-            }));
-          }}
+      <View className="fixed bottom-150 left-0 h-700">
+        {introduce ? (
+          <View className="w-660 text-28 text-left font-thin ml-70">
+            <Text>{project?.reason}</Text>
+          </View>
+        ) : (
+          <View>
+            <View className="mb-30">
+              <Picker
+                mode="selector"
+                range={counterList}
+                rangeKey="storeName"
+                onChange={(e) => {
+                  const { value } = e.detail;
+                  if (!counterList?.[value]?.storeId) return;
+                  setAppointment((prev) => ({
+                    ...prev,
+                    storeId: counterList[value].storeId,
+                    reserveDate: "",
+                    timePeriod: "",
+                  }));
+                  getPeriods(counterList[value].storeId);
+                }}
+              >
+                <View
+                  className="w-660 h-80 vhCenter ml-45"
+                  style={{ border: "1px solid #FFFFFF" }}
+                >
+                  {!appointment.storeId ? (
+                    <View className="ipt-placeholder vhCenter">
+                      选择服务门店{" "}
+                      <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
+                    </View>
+                  ) : (
+                    computedStoreName
+                  )}
+                </View>
+              </Picker>
+            </View>
+            <View className="mb-30">
+              <Picker
+                mode="selector"
+                range={periods}
+                rangeKey="reserveDate"
+                onChange={(e) => {
+                  const { value } = e.detail;
+                  setAppointment((prev) => ({
+                    ...prev,
+                    reserveDate: periods[value].reserveDate,
+                    timePeriod: "",
+                  }));
+                }}
+              >
+                <View
+                  className="w-660 h-80 vhCenter ml-45"
+                  style={{ border: "1px solid #FFFFFF" }}
+                >
+                  {!appointment.reserveDate ? (
+                    <View className="ipt-placeholder vhCenter">
+                      选择服务日期
+                      <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
+                    </View>
+                  ) : (
+                    appointment.reserveDate
+                  )}
+                </View>
+              </Picker>
+            </View>
+            <View className="mb-30">
+              <Picker
+                mode="selector"
+                range={timePeriodViews}
+                rangeKey="timePeriod"
+                onChange={(e) => {
+                  const { value } = e.detail;
+                  setAppointment((prev) => ({
+                    ...prev,
+                    timePeriod: timePeriodViews[value].timePeriod,
+                  }));
+                }}
+              >
+                <View
+                  className="w-660 h-80 vhCenter ml-45"
+                  style={{ border: "1px solid #FFFFFF" }}
+                >
+                  {!appointment.timePeriod ? (
+                    <View className="ipt-placeholder vhCenter">
+                      选择服务时间
+                      <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
+                    </View>
+                  ) : (
+                    appointment.timePeriod
+                  )}
+                </View>
+              </Picker>
+            </View>
+          </View>
+        )}
+
+        <View
+          className="w-600 text-26 h-60 m-auto text-white vhCenter borderWhite mt-100 absolute bottom-0 left-75"
+          onClick={onSubmit}
         >
-          <View
-            className="w-678 h-80 vhCenter ml-36"
-            style={{ border: "1px solid #FFFFFF" }}
-          >
-            {!appointment.reserveDate ? (
-              <View className="ipt-placeholder vhCenter">
-                选择服务日期
-                <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
-              </View>
-            ) : (
-              appointment.reserveDate
-            )}
-          </View>
-        </Picker>
-      </View>
-      <View className="mb-30">
-        <Picker
-          mode="selector"
-          range={timePeriodViews}
-          rangeKey="timePeriod"
-          onChange={(e) => {
-            const { value } = e.detail;
-            setAppointment((prev) => ({
-              ...prev,
-              timePeriod: timePeriodViews[value].timePeriod,
-            }));
-          }}
-        >
-          <View
-            className="w-678 h-80 vhCenter ml-36"
-            style={{ border: "1px solid #FFFFFF" }}
-          >
-            {!appointment.timePeriod ? (
-              <View className="ipt-placeholder vhCenter">
-                选择服务时间
-                <CImage className="w-24 h-20 ml-10" src={P6}></CImage>
-              </View>
-            ) : (
-              appointment.timePeriod
-            )}
-          </View>
-        </Picker>
-      </View>
-      <View
-        className="w-224 text-26 h-50 m-auto text-black vhCenter bg-white mb-40"
-        onClick={onSubmit}
-      >
-        立即预约
+          {introduce ? "即 可 预 约" : "提 交"}
+        </View>
       </View>
     </View>
   );

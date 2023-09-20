@@ -35,6 +35,20 @@ class App extends Component<any> {
     updateManager();
     this.taroGlobalData.globalData.systemInfo = Taro.getSystemInfoSync();
     this.taroGlobalData.init();
+    Taro.loadFontFace({
+      family: "CHINESE_F_Z",
+      global: true,
+      source: `url("${config.imgBaseUrl}/font/FZLTXHJW.TTF")`,
+      success: console.log,
+      fail: console.log,
+    });
+    Taro.loadFontFace({
+      family: "ENGLISH_F_Z",
+      global: true,
+      source: `url("${config.imgBaseUrl}/font/HelveticaNeueLTPro-UltLt.TTF")`,
+      success: console.log,
+      fail: console.log,
+    });
   }
   componentDidShow(options) {
     const { query } = options;

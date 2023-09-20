@@ -99,16 +99,26 @@ const OrderConfirm = () => {
     }
 
     if (result.status === 200) {
-      if (postageType === "money" && applyType === "express") {
-        /** 邮寄到家&9.9元支付 */
-        await pay(result.data.orderId);
-      } else {
-        await api.order.paymentUMS({ orderId: result.data.orderId });
-      }
+      payFunc(result.data.orderId);
+    }
+  });
+
+  /**
+   * 调用支付接口
+   */
+  const payFunc = useMemoizedFn(async (orderId: string) => {
+    if (postageType === "money" && applyType === "express") {
+      /** 邮寄到家&9.9元支付 */
+      await pay(orderId);
+    } else {
+      // await api.order.paymentUMS({ orderId });
+    }
+    Taro.showToast({ title: "兑礼成功", icon: "success" });
+    setTimeout(async () => {
       await app.init(true);
       Taro.hideLoading();
-      to("/subPages/redeem/success/index", "redirectTo");
-    }
+      to(`/subPages/redeem/orderDetail/index?orderId=${orderId}`, "redirectTo");
+    }, 2000);
   });
 
   /**

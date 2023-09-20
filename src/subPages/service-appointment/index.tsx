@@ -1,4 +1,4 @@
-import { ScrollView, View } from "@tarojs/components";
+import { ScrollView, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useRequest } from "ahooks";
 
@@ -29,7 +29,7 @@ const Index = () => {
         titleCss="height:85rpx"
         titleColor="#FFFFFF"
       ></CHeader>
-      <View className="text-52 text-left mt-100 font-thin pl-60">
+      <View className="text-52 text-left mt-100 font-thin pl-60 english_family">
         MAKE UP YOUR MIND
       </View>
       <View className="text-35 text-left mt-10 font-thin pl-60">
@@ -44,7 +44,7 @@ const Index = () => {
               className="w-300 h-300 relative mx-15 mb-30"
               onClick={() => {
                 to(
-                  `/subPages/service-appointment/introduce/index?projectCode=${item.projectCode}&projectName=${item.projectName}`,
+                  `/subPages/service-appointment/appointment/index?projectCode=${item.projectCode}&projectName=${item.projectName}`,
                   "navigateTo",
                 );
               }}
@@ -56,26 +56,18 @@ const Index = () => {
                   `${config.imgBaseUrl}/appointment/appointment_icon.jpg`
                 }
               ></CImage>
-              <View
-                className="w-full h-70 absolute top-70 left-0 text-white vhCenter"
-                style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-              >
-                {item.projectName}
-              </View>
-              <View className="w-122 text-22 h-50 absolute  bottom-30 left-87 text-black vhCenter bg-white rounded-10">
-                立即预约
-              </View>
             </View>
           ))}
         </View>
       </ScrollView>
-      <View
-        className="h-100 text-35 text-center font-thin underline"
-        onClick={() => {
-          to("/subPages/service-appointment/list/index", "navigateTo");
-        }}
-      >
-        预约记录
+      <View className="h-200 text-35 text-center font-thin underline">
+        <Text
+          onClick={() => {
+            to("/subPages/service-appointment/list/index", "navigateTo");
+          }}
+        >
+          预约记录
+        </Text>
       </View>
     </View>
   );

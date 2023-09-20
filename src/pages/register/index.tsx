@@ -1,9 +1,10 @@
 import "./index.less";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useLoad } from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
 import dayjs from "dayjs";
+import { result } from "lodash";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -18,15 +19,20 @@ import SendVerifyCode from "@/src/components/Common/SendVerifyCode";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
+import useSubMsg from "@/src/hooks/useSubMsg";
 import { formatDateTime, isPhone } from "@/src/utils";
 import Authorization from "@/src/utils/authorize";
 import { getPages } from "@/src/utils/getPages";
-import subscribeMsg from "@/src/utils/subscribeMsg";
+
+import QQMapWX from "../../libs/qqmap-wx-jssdk";
 
 const app: App.GlobalData = Taro.getApp();
 const genderArr = ["女", "男"];
+let qqmapsdk: any = null;
+
 const Index = () => {
   const isMember = useSelector((state: Store.States) => state.user.isMember);
+  const subMsg = useSubMsg();
   const [inputMobileType, { setTrue }] = useBoolean(false);
   const [agree, setAgree] = useState<boolean>(false);
   const [user, setUser] = useSetState<any>({
@@ -40,6 +46,10 @@ const Index = () => {
     withSmsCode: false,
     shopType: "wa",
     smsCode: "",
+  });
+
+  useLoad(() => {
+    qqmapsdk = new QQMapWX({ key: config.key });
   });
 
   /**
@@ -104,13 +114,10 @@ const Index = () => {
     if (!gender) {
       return Taro.showToast({ title: "请选择性别", icon: "none" });
     }
-    if (!city) {
-      return Taro.showToast({ title: "请选择城市", icon: "none" });
-    }
     if (!agree) {
       return Taro.showToast({ title: "请先同意隐私条款", icon: "none" });
     }
-    await subscribeMsg(config.subscribeList.register);
+    await subMsg("REGISTER");
     createMember();
   });
 
@@ -162,19 +169,25 @@ const Index = () => {
       .runModal({})
       .then(async (res) => {
         const { latitude, longitude } = res;
-        await api.counter
-          .getNearCounterList({
-            lat: latitude,
-            lng: longitude,
-          })
-          .then(({ data }: any) => {
-            console.log("data", data);
-            let item = data[0];
+        qqmapsdk.reverseGeocoder({
+          location: {
+            latitude,
+            longitude,
+          },
+          success: function (res) {
+            let { province, city } = res.result.ad_info;
             setUser({
-              city: item.address.city,
-              province: item.address.province,
+              province,
+              city,
             });
-          });
+          },
+          fail: function (res) {
+            console.log(res);
+          },
+          complete: function (res) {
+            console.log(res);
+          },
+        });
       })
       .catch((err) => {
         console.log("err", err);
@@ -339,7 +352,7 @@ const Index = () => {
             </View>
 
             <View className="item">
-              <View className="left">所在城市*</View>
+              <View className="left">所在城市</View>
               <View className="right justify-end">
                 {!user.city && (
                   <View className="ipt-placeholder whitespace-nowrap">

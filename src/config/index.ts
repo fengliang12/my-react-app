@@ -11,8 +11,6 @@ const IS_PRO =
 const baseConfig = {
   /** 品牌StoreCode */
   storeCode: "nars",
-  /** 网络图片前缀 */
-  cosImgPrefix: "https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/",
   /** 主题页面Code配置 */
   pageCode: {
     /** 会员中心首页 */
@@ -30,6 +28,7 @@ const baseConfig = {
   errCodeList: [],
   postagePoints: 300,
   postageMoney: 9.9,
+  key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ",
 };
 const config = merge(baseConfig, IS_PRO ? prod : dev);
 config.loginUrl = `${config.basePathUrl}/sp-portal/store/${config.storeCode}/wechat/login/`;

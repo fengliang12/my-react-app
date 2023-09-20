@@ -129,7 +129,7 @@ const Index = () => {
             return (
               <>
                 <View
-                  className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30"
+                  className="w-688 p-40 box-border m-auto bg-grayBg font-thin text-30"
                   onClick={() =>
                     to(`/subPages/redeem/orderDetail/index?orderId=${item.id}`)
                   }
@@ -137,16 +137,16 @@ const Index = () => {
                 >
                   <View className="flex justify-between">
                     <Text className="flex-1">
-                      {formatDateTime(item.createTime)}
+                      {formatDateTime(item.createTime, 6)}
                     </Text>
                     <Text>{item.statusName}</Text>
                   </View>
-                  <View className="flex items-start mt-25">
+                  {/* <View className="flex items-start mt-25">
                     <Text className="w-150">领取柜台：</Text>
                     <Text className="flex-1">NARS上海新天地</Text>
-                  </View>
-                  <View className="flex items-start my-10">
-                    <Text className="w-150">订单编号：</Text>
+                  </View> */}
+                  <View className="flex items-start my-10 text-24">
+                    <Text>订单编号：</Text>
                     <Text className="flex-1">{item.id}</Text>
                   </View>
                   <View className="w-full flex justify-start">

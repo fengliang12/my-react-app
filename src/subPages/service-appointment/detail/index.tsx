@@ -10,6 +10,7 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
 import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
@@ -38,12 +39,16 @@ const Index = () => {
       title: "确认是否取消服务预约",
       success: async (res) => {
         // 点击确定的时候取消服务预约
-        Taro.showLoading({ title: "加载中", mask: true });
         if (res.confirm) {
-          await api.arvatoReservation.modify({
-            bookId: data?.bookId!,
-            type: -1,
-          });
+          Taro.showLoading({ title: "加载中", mask: true });
+          await api.arvatoReservation
+            .modify({
+              bookId: data?.bookId!,
+              type: -1,
+            })
+            .catch((err) => {
+              toast(err);
+            });
           Taro.hideLoading();
           to(1);
         }
@@ -52,7 +57,7 @@ const Index = () => {
   };
 
   return (
-    <View className="service-introduce min-h-screen bg-black text-white flex flex-col">
+    <View className="service-introduce h-screen bg-black text-white flex flex-col overflow-hidden">
       <CHeader
         back
         titleImage={`${config.imgBaseUrl}/icon/title_image.png`}
@@ -62,44 +67,44 @@ const Index = () => {
         titleColor="#FFFFFF"
       ></CHeader>
       <CImage
-        className="w-690 h-517 mt-40 ml-30"
-        src={
-          data?.imageUrl ||
-          `${config.imgBaseUrl}/appointment/appointment_detail.jpg`
-        }
+        className="w-750"
+        mode="widthFix"
+        src={`${config.imgBaseUrl}/appointment/detail/${data?.projectCode}.png`}
       ></CImage>
-      <View className="w-560 text-34 text-left font-thin mt-60 ml-85">
-        预约服务:{data?.projectName}
-      </View>
-      <View className="w-560 text-34 text-left font-thin  mt-20 ml-85">
-        预约门店:{data?.storeName}
-      </View>
-      <View className="w-560 text-34 text-left font-thin  mt-20 ml-85">
-        预约时间: {dayjs(data?.reserveDate).format("YYYY年MM月DD日")}{" "}
-        {data?.timePeriod}
-      </View>
-      <View className="w-560 text-34 text-left font-thin  mt-20 ml-85">
-        请在预约时间凭此核销码至门店尊享服务
-      </View>
-      <View className="m-auto flex justify-center bg-white mt-45">
-        {data?.bookId ? (
-          <CQRCodeCustom
-            text={data?.bookId as unknown as string}
-            width={250}
-            height={250}
-            padding={10}
-            background="#FFFFFF"
-          ></CQRCodeCustom>
+      <View className="fixed w-full px-50 top-200 left-0 vhCenter flex-col box-border">
+        <View className="text-left font-thin mt-60 w-full">
+          预约服务:{data?.projectName}
+        </View>
+        <View className="text-left font-thin  mt-20 w-full">
+          预约门店:{data?.storeName}
+        </View>
+        <View className="text-left font-thin  mt-20 w-full">
+          预约时间: {dayjs(data?.reserveDate).format("YYYY年MM月DD日")}{" "}
+          {data?.timePeriod}
+        </View>
+        <View className="text-left font-thin  mt-20 w-full">
+          请在预约时间凭此核销码至门店尊享服务
+        </View>
+        <View className="inline-block bg-white m-auto mt-300">
+          {data?.bookCode ? (
+            <CQRCodeCustom
+              text={data?.bookCode}
+              width={250}
+              height={250}
+              padding={10}
+              background="#FFFFFF"
+            ></CQRCodeCustom>
+          ) : null}
+        </View>
+        {data?.status === "0" ? (
+          <View
+            className="w-full text-35 text-center font-thin underline mt-50"
+            onClick={onCancel}
+          >
+            取消预约
+          </View>
         ) : null}
       </View>
-      {data?.status === "0" ? (
-        <View
-          className="h-100 text-35 text-center font-thin underline mt-30 mb-60"
-          onClick={onCancel}
-        >
-          取消预约
-        </View>
-      ) : null}
     </View>
   );
 };

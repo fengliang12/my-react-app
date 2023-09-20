@@ -25,7 +25,7 @@ const Avatar: React.FC<propsType> = (props) => {
     });
 
     if (data) {
-      callback(config.cosImgPrefix + data);
+      callback(`${config.imgBaseUrl}/${data}`);
     }
   };
   return (

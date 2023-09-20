@@ -38,14 +38,14 @@ const Index = () => {
         titleCss="height:85rpx"
         titleColor="#FFFFFF"
       ></CHeader>
-      <Text className="text-76 text-left mt-40 ml-67 font-thin" decode>
+      {/* <Text className="text-76 text-left mt-40 ml-67 font-thin" decode>
         {handleTextBr(project?.introduce)}
       </Text>
       <View className="text-76 text-left ml-67 font-thin">
         {project?.projectName}
-      </View>
+      </View> */}
       <CImage
-        className="w-690 h-517 mt-70 ml-30"
+        className="w-690 h-690 mt-70 ml-30"
         src={
           project?.imageUrl ||
           `${config.imgBaseUrl}/appointment/appointment_detail.jpg`
@@ -55,7 +55,7 @@ const Index = () => {
         <text>{project?.reason}</text>
       </View>
       <View
-        className="w-224 text-26 h-50 m-auto text-black vhCenter bg-white my-30"
+        className="w-300 text-26 h-60 m-auto text-black vhCenter bg-white mt-100"
         onClick={() => {
           to(
             `/subPages/service-appointment/appointment/index?projectCode=${router.params.projectCode}`,

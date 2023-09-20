@@ -25,7 +25,7 @@
         },
         {
           "name": "个人中心",
-          "pathName": "pages/tabbar/user/index",
+          "pathName": "pages/user/index",
           "query": "",
           "launchMode": "default",
           "scene": null
@@ -95,7 +95,7 @@
         },
         {
           "name": "首页",
-          "pathName": "pages/tabbar/index/index",
+          "pathName": "pages/member/member",
           "query": "",
           "launchMode": "default",
           "scene": null
@@ -145,6 +145,13 @@
         {
           "name": "卡券中心",
           "pathName": "subPages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "消费记录",
+          "pathName": "subPages/common/consumeRecord/index",
           "query": "",
           "launchMode": "default",
           "scene": null

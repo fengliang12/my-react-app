@@ -28,7 +28,7 @@ const Index = () => {
         .getRecords({
           memberCode: userInfo.marsId,
         })
-        .then((res) => res.data);
+        .then((res) => res.data.filter((item) => item.bookCode));
     },
     {
       manual: true,
@@ -50,42 +50,45 @@ const Index = () => {
         back
         fill
         backgroundColor="rgba(0,0,0,1)"
-        titleCss="height:85rpx"
+        title="预约记录"
         titleColor="#FFFFFF"
       ></CHeader>
-      <View className="text-54 text-center mt-10 font-thin mb-40">
-        预约记录
-      </View>
-      {data?.map((item) => (
-        <View
-          key={item.storeId}
-          className="w-690 h-310 bg-grayBg p-25 flex box-border ml-30 mb-40"
-        >
-          <CImage
-            className="w-318 h-259"
-            src={
-              item.imageUrl ||
-              `${config.imgBaseUrl}/appointment/appointment_icon.jpg`
-            }
-          ></CImage>
-          <View className="flex-1 vhCenter flex-col text-center">
-            <View className="text-36">{item.projectName}</View>
-            <View className="mt-28 text-24">{item.storeName}</View>
-            <View className="text-24">
-              {dayjs(item.reserveDate).format("YYYY年MM月DD日")}
-            </View>
-            <View className="text-24">{item.timePeriod}</View>
+      {data?.length ? (
+        <>
+          {data?.map((item) => (
             <View
-              className={`w-222 text-22 h-50 text-black vhCenter bg-${
-                item.status === "0" ? "white" : "#EFEFEF"
-              } rounded-6 mt-20`}
-              onClick={() => toDetail(item)}
+              key={item.storeId}
+              className="w-690 h-220 bg-grayBg flex ml-30 mb-40 px-20 box-border"
+              style={`background:url(${config.imgBaseUrl}/appointment/list/${item.projectCode}.png);background-size:100% 100%;`}
             >
-              {STATUS_ENUM[item.status]}
+              <View
+                className={`flex-1 flex flex-col justify-center text-left ${
+                  Number(item.projectCode) % 20 === 0
+                    ? "items-start"
+                    : "items-end"
+                }`}
+              >
+                <View className="text-32">{item.projectName}</View>
+                <View className="mt-10 text-24">{item.storeName}</View>
+                <View className="text-24 mt-5">
+                  {dayjs(item.reserveDate).format("YYYY-MM-DD")}{" "}
+                  {item.timePeriod}
+                </View>
+                <View
+                  className={`w-222 text-22 h-50 text-black vhCenter bg-${
+                    item.status === "0" ? "white" : "#EFEFEF"
+                  } rounded-6 mt-20`}
+                  onClick={() => toDetail(item)}
+                >
+                  {STATUS_ENUM[item.status]}
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-      ))}
+          ))}
+        </>
+      ) : (
+        <View className="w-full text-center mt-200">暂无预约记录</View>
+      )}
     </View>
   );
 };

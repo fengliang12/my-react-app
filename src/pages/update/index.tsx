@@ -24,6 +24,9 @@ const Index = () => {
   const [counterList, setCounterList] = useState<any>([]);
   const [isGetInfoBySMS, setIsGetInfoBySMS] = useState<boolean>(false);
   const [counterIndex, setCounterIndex] = useState<number>(NaN);
+  const [counterName, setCounterName] = useState<string>("");
+  const [counterId, setCounterId] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
   const [user, setUser] = useSetState<any>({
     nickName: "",
     birthDate: "",
@@ -33,8 +36,6 @@ const Index = () => {
     shopType: "",
     city: "",
     province: "",
-    country: "",
-    district: "",
   });
 
   /**
@@ -43,10 +44,7 @@ const Index = () => {
   useAsyncEffect(async () => {
     if (isMember) {
       const userInfo = await app.init();
-      let { realName, birthDate, gender, customInfos, city, district } =
-        userInfo;
-
-      console.log("district", district);
+      let { realName, birthDate, gender, customInfos, city } = userInfo;
 
       birthDate = formatDateTime(birthDate);
 
@@ -57,12 +55,14 @@ const Index = () => {
       if (gender === 2) {
         genderName = "女";
       }
+
+      console.log("userInfo", userInfo);
+
       setUser({
         ...userInfo,
         nickName: realName === "微信用户" ? "" : realName,
         gender: genderName,
         birthDate: birthDate,
-        district,
       });
 
       if (Array.isArray(customInfos)) {
@@ -70,6 +70,20 @@ const Index = () => {
           customInfos.find((item) => item.name === "isGetInfoBySMS")?.value ==
             1,
         );
+        customInfos.forEach((item) => {
+          if (item.name === "isGetInfoBySMS") {
+            setIsGetInfoBySMS(item?.value == 1);
+          }
+          if (item.name === "counterName") {
+            setCounterName(item?.value);
+          }
+          if (item.name === "counterId") {
+            setCounterId(item?.value);
+          }
+          if (item.name === "address") {
+            setAddress(item?.value);
+          }
+        });
       }
 
       if (city) {
@@ -119,16 +133,7 @@ const Index = () => {
    * 更新会员
    */
   const appendMember = useMemoizedFn(async () => {
-    let {
-      nickName,
-      gender,
-      mobile,
-      avatarUrl,
-      city,
-      province,
-      district,
-      country,
-    } = user;
+    let { nickName, gender, mobile, avatarUrl, city, province } = user;
     Taro.showLoading({ title: "加载中", mask: true });
     const { status } = await api.user.appendMember({
       avatarUrl: avatarUrl,
@@ -136,13 +141,23 @@ const Index = () => {
       nickName: nickName,
       city,
       province,
-      country,
       mobile,
-      district,
       customInfos: [
         {
           name: "isGetInfoBySMS",
           value: isGetInfoBySMS ? 1 : 2,
+        },
+        {
+          name: "counterName",
+          value: counterName || "",
+        },
+        {
+          name: "counterId",
+          value: counterId || "",
+        },
+        {
+          name: "address",
+          value: address || "",
         },
       ],
     });
@@ -170,7 +185,7 @@ const Index = () => {
       await app.init(true);
       Taro.hideLoading();
       Taro.showToast({
-        title: "解绑成功！",
+        title: "注销成功！",
         mask: true,
       });
       setTimeout(async () => {
@@ -266,6 +281,9 @@ const Index = () => {
                   onChange={(item) => {
                     getCounterByCity(item.city);
                     setUser({ province: item.province, city: item.city });
+                    setCounterIndex(NaN);
+                    setCounterName("");
+                    setCounterId("");
                   }}
                 >
                   <View className="flex items-center justify-end">
@@ -293,14 +311,15 @@ const Index = () => {
                     let { value } = e.detail;
                     let item = counterList[value];
                     setCounterIndex(Number(value));
-                    setUser({ country: item.name });
+                    setCounterName(item.name);
+                    setCounterId(item.id);
                   }}
                 >
                   <View className="flex items-center justify-end">
-                    {!user.country ? (
+                    {!counterName ? (
                       <View className="ipt-placeholder">请选择所属店铺</View>
                     ) : (
-                      <>{user.country}</>
+                      counterName
                     )}
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
@@ -314,11 +333,9 @@ const Index = () => {
                   className="text-right w-full"
                   placeholder="请输入地址信息"
                   placeholderClass="ipt-placeholder"
-                  value={user.district}
+                  value={address}
                   onInput={(e) => {
-                    setUser({
-                      district: e.detail.value,
-                    });
+                    setAddress(e.detail.value);
                   }}
                 />
               </View>

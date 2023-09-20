@@ -24,11 +24,27 @@ const upLoadFile = (data) =>
     filePath: data.filePath,
   });
 
+const multiSubscribeByCode = (param) =>
+  http.post(
+    `/sp-portal/store/${config.storeCode}/subscribeRecord/multi`,
+    param,
+  );
+
+const findSubscribeByCode = (codes) =>
+  http.post(
+    `/sp-portal/store/${config.storeCode}/subscribeTemplate/list`,
+    codes,
+  );
+
 /** 获取中台地址 */
 const getZTArea = () =>
   http.get("https://res-wxec-unipt.lorealchina.com/integral/area.json", {
     noToken: true,
   });
+
+const mapJSON: any = (params) => {
+  return http.get("https://apis.map.qq.com/ws/geocoder/v1", { params });
+};
 
 export default {
   /** 授权获取用户信息和token */
@@ -43,4 +59,7 @@ export default {
   upLoadFile,
   /**获取中台地址 */
   getZTArea,
+  multiSubscribeByCode,
+  findSubscribeByCode,
+  mapJSON,
 };

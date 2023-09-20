@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
+import { formatDateTime } from "@/src/utils";
 
 const orderList = [
   { label: "全部订单", value: "" },
@@ -20,6 +21,15 @@ const orderList = [
   { label: "退款取消", value: "REFUND_CANCEL" },
 ];
 
+enum CHANNEL_TYPE_LIST {
+  "GW" = "官网",
+  "POS" = "POS",
+  "ECMP" = "ECMP",
+  "ECMPcom" = "ECMP",
+  "TAOBAO" = "天猫",
+  "DOUYIN" = "抖音",
+}
+
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const [orderIndex, setOrderIndex] = useState<number>(0);
@@ -28,7 +38,7 @@ const Index = () => {
 
   const [list, setList] = useState<Api.Order.Public.IContent[]>([]);
   const total = useRef<number>(0);
-  const page = useRef<number>(0);
+  const page = useRef<number>(1);
 
   /**
    * 获取记录列表
@@ -46,7 +56,7 @@ const Index = () => {
     total.current = res.data.totalElements;
     Taro.hideLoading();
     let newList =
-      page.current === 0 ? res?.data?.content : list.concat(res?.data?.content);
+      page.current === 0 ? res?.data?.data : list.concat(res?.data?.data);
     setList(newList);
   });
 
@@ -116,28 +126,40 @@ const Index = () => {
           scrollY
           onScrollToLower={onScrollEnd}
         >
-          {list.map((item) => (
+          {list.map((item: any) => (
             <>
               <View className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30">
                 <View className="flex items-start">
                   <Text className="w-150">订单店铺：</Text>
-                  <Text className="flex-1">NARS上海新天地</Text>
+                  <Text className="flex-1">{item.shopName}</Text>
                 </View>
-                <View className="flex items-start my-10">
+                <View className="flex items-start my-16">
+                  <Text className="w-150">订单渠道：</Text>
+                  <Text className="flex-1">
+                    {CHANNEL_TYPE_LIST[item.channelType]}
+                  </Text>
+                </View>
+                <View className="flex items-start my-16">
                   <Text className="w-150">订单日期：</Text>
-                  <Text className="flex-1">2021-06-02 17:50:21</Text>
+                  <Text className="flex-1">
+                    {formatDateTime(item.orderTime, 6)}
+                  </Text>
                 </View>
                 <View className="flex items-start">
                   <Text className="w-150">消费明细：</Text>
+
                   <View className="flex-1">
-                    <View className="flex flex-col">
-                      <Text>NARS腮红 愉悦红粉</Text>
-                      <Text>单价：300 数量：1 N</Text>
-                    </View>
-                    <View className="flex flex-col mt-20">
-                      <Text>NARS腮红 愉悦红粉</Text>
-                      <Text>单价：300 数量：1 N</Text>
-                    </View>
+                    {item?.orderItems?.map((child) => {
+                      return (
+                        <View className="flex flex-col" key={child.productCode}>
+                          <Text>{child.productName}</Text>
+                          <View className="w-full flex my-10">
+                            <Text className="w-220">单价：{child.payment}</Text>
+                            <Text>数量：{child.quantity}</Text>
+                          </View>
+                        </View>
+                      );
+                    })}
                   </View>
                 </View>
               </View>
@@ -146,7 +168,7 @@ const Index = () => {
           ))}
         </ScrollView>
       ) : (
-        <View></View>
+        <View className="vhCenter mt-200">暂无消费记录</View>
       )}
     </View>
   );

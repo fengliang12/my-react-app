@@ -48,6 +48,7 @@ const Index = () => {
    */
   const tabClick = useMemoizedFn((val) => {
     if (couponStatus === val) return;
+    setSelectedIndex(-1);
     setCouponStatus(val);
   });
 
@@ -128,7 +129,10 @@ const Index = () => {
                       <View className="text-left">
                         1 卡券详情：{item.ticketName}
                       </View>
-                      <View className="text-left">
+                      <View
+                        className="text-left my-10"
+                        style="line-height:20px"
+                      >
                         2 凭此卡券在有效期内至NARS线下专柜 即可免费领取礼遇
                       </View>
                       <View className="text-left">

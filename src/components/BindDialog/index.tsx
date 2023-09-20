@@ -33,7 +33,7 @@ const BindDialog: React.FC<PropsType> = (props) => {
               to(pageSettingConfig.registerPath);
             }}
           >
-            立即提交
+            立即注册
           </View>
           <CImage
             className="w-30 h-30 absolute top-30 right-30"

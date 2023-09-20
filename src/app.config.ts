@@ -1,7 +1,7 @@
 export default {
   pages: [
-    "pages/tabbar/index/index",
-    "pages/tabbar/user/index",
+    "pages/member/member",
+    "pages/user/index",
     "pages/activity/index",
     "pages/h5/index",
     "pages/update/index",
@@ -61,13 +61,13 @@ export default {
     selectedColor: "#FFFFFF",
     list: [
       {
-        pagePath: "pages/tabbar/index/index",
+        pagePath: "pages/member/member",
         text: "先锋礼遇",
         iconPath: "assets/image/tabbar/home02.jpg",
         selectedIconPath: "assets/image/tabbar/home.jpg",
       },
       {
-        pagePath: "pages/tabbar/user/index",
+        pagePath: "pages/user/index",
         text: "个人中心",
         iconPath: "assets/image/tabbar/user02.jpg",
         selectedIconPath: "assets/image/tabbar/user.jpg",

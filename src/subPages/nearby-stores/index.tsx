@@ -21,10 +21,11 @@ const NearbyStores = () => {
   /** 获取柜台列表 */
   const { data: counterList = [], run: getNearCounterList } = useRequest(
     async (params) => {
+      Taro.showLoading({ title: "加载中", mask: true });
       await app.init();
       return api.counter.getNearCounterList(params).then((res) => {
+        Taro.hideLoading();
         initProvinceList(res.data);
-        // if (!provinceList.length) return [];
         return res.data;
       });
     },
@@ -33,8 +34,6 @@ const NearbyStores = () => {
 
   /** 更新刷新 */
   useUpdateEffect(() => {
-    console.log(111111111111, getCounterParams);
-
     getNearCounterList(getCounterParams);
   }, [getCounterParams]);
 
@@ -78,12 +77,12 @@ const NearbyStores = () => {
         });
       }
     });
-    getCounterParams?.lat &&
-      setGetCounterParams((prev) => ({
-        ...prev,
-        province: tempProvinceList[0].label,
-        city: tempProvinceList[0].children[0],
-      }));
+    // getCounterParams?.lat &&
+    //   setGetCounterParams((prev) => ({
+    //     ...prev,
+    //     province: tempProvinceList[0].label,
+    //     city: tempProvinceList[0].children[0],
+    //   }));
 
     setProvinceList([...tempProvinceList]);
   });
@@ -127,6 +126,7 @@ const NearbyStores = () => {
       latitude: counter.address.lat,
       longitude: counter.address.lng,
       name: counter.detailInfo.name,
+      address: counter.address.address,
     });
   };
 

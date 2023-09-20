@@ -33,9 +33,10 @@ const Index: React.FC<PropsType> = (props) => {
       !handleDataType(userInfo.needAmount)
     )
       return;
-    let i = (1 - userInfo.nextGradeNeedAmount / userInfo.needAmount) / 100;
+    let i = (1 - userInfo.needAmount / userInfo.nextGradeNeedAmount) * 100;
     setProcess(i);
   }, [userInfo.needAmount, userInfo.nextGradeNeedAmount]);
+
   /**
    * 前往编辑页面
    */
@@ -46,6 +47,7 @@ const Index: React.FC<PropsType> = (props) => {
       showBindPopup();
     }
   });
+
   return (
     <>
       <View
@@ -83,7 +85,7 @@ const Index: React.FC<PropsType> = (props) => {
                     <CImage
                       className="w-180"
                       mode="widthFix"
-                      style="transform:translate(-26rpx,6rpx)"
+                      style="transform:translate(-26rpx,3rpx)"
                       src={`${config.imgBaseUrl}/icon/${userInfo.gradeId}.png`}
                     ></CImage>
                     <View className="text-38">{userInfo.realName}</View>
@@ -124,20 +126,23 @@ const Index: React.FC<PropsType> = (props) => {
           <View className="w-full h-6 mt-64 bg-slate-50 rounded-6 flex justify-start items-center">
             <View
               className="h-full w-0 rounded-6 overflow-hidden bg-762022"
-              style={`width:${process}`}
+              style={`width:${process}%`}
             ></View>
             <View
               className="h-20 w-20 rounded-20"
               style="background-color:#762022;box-shadow:0rpx 0rpx 10rpx #762022"
             ></View>
           </View>
-          <View className="w-full h-6 text-black text-right text-18 mt-30">
-            {userInfo.nextGradeNeedAmount <= 1
-              ? `任意消费`
-              : `再次消费${userInfo.nextGradeNeedAmount}元`}
-            即可升级成为
-            {userInfo.nextGradeName}
-          </View>
+          {userInfo.gradeName !== "玩妆大师" && (
+            <View className="w-full h-6 text-black text-right text-18 mt-30">
+              {userInfo.gradeName === "玩妆入门"
+                ? `任意消费`
+                : `再次消费${userInfo.needAmount}元`}
+              即可升级成为
+              {userInfo.nextGradeName}
+            </View>
+          )}
+
           <View
             className="absolute bottom-20 left-25 text-18 underline"
             onClick={setRuleTrue}
@@ -161,8 +166,10 @@ const Index: React.FC<PropsType> = (props) => {
             <View className="w-full py-80  relative vhCenter flex-col bg-white rounded-10">
               <View className="mb-60 text-36 font-bold">我的二维码</View>
               <View className="w-400 h-400">
-                {userInfo?.marsId && (
-                  <CQRCodeCustom text={userInfo?.marsId}></CQRCodeCustom>
+                {userInfo?.cardNo && (
+                  <CQRCodeCustom
+                    text={userInfo?.cardNo as unknown as string}
+                  ></CQRCodeCustom>
                 )}
               </View>
             </View>

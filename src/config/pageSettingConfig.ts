@@ -1,8 +1,4 @@
 interface pageSettingConfig {
-  //配置页路径
-  pageSettingPath: string;
-  //无状态配置页面路径
-  pageSettingStatelessPath: string;
   //注册页路径
   registerPath: string;
   //首页
@@ -31,10 +27,8 @@ interface pageSettingConfig {
 }
 
 const pageSettingConfig: pageSettingConfig = {
-  pageSettingPath: "/taro-public/pages/page-setting/index", //配置页
-  pageSettingStatelessPath: "/taro-public/pages/page-setting-stateless/index",
   registerPath: "/pages/register/index", //注册页面
-  homePath: "/pages/tabbar/index/index",
+  homePath: "/pages/member/member",
   navigationBar: {
     backgroundColor: "#ffffff",
     titleColor: "#000000",
