@@ -1,8 +1,9 @@
-import Taro, { useDidShow } from "@tarojs/taro";
-import { useBoolean, useMemoizedFn } from "ahooks";
+import Taro, { useLoad } from "@tarojs/taro";
+import { useMemoizedFn } from "ahooks";
+import { useRef } from "react";
 import { useSelector } from "react-redux";
 
-import BindDialog from "@/src/components/BindDialog";
+import BindDialog, { IRefProps } from "@/src/components/BindDialog";
 import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
@@ -11,14 +12,13 @@ import toast from "@/src/utils/toast";
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
-  const [showBind, { setTrue, setFalse }] = useBoolean(false);
-
-  useDidShow(async () => {
+  const bindRef = useRef<IRefProps>(null);
+  useLoad(async () => {
     let user = await app.init();
     if (user && !user?.isMember) {
-      setTrue();
+      bindRef.current && bindRef.current.setTrue();
     } else {
-      setFalse();
+      bindRef.current && bindRef.current.setFalse();
     }
   });
 
@@ -29,7 +29,7 @@ const Index = () => {
   const customAction = useMemoizedFn((params) => {
     let { code } = params;
     if (code === "judgeMember" && !userInfo?.isMember) {
-      setTrue();
+      bindRef.current && bindRef.current.setTrue();
       throw new Error("未注册");
     }
     if (code === "stayTuned") {
@@ -37,6 +37,15 @@ const Index = () => {
       throw new Error("敬请期待");
     }
   });
+
+  /**
+   * 显示绑定
+   */
+  const showBind = () => {
+    if (bindRef.current) {
+      bindRef.current.setTrue();
+    }
+  };
 
   return (
     <Page
@@ -47,8 +56,8 @@ const Index = () => {
         titleColor: "#FFFFFF",
       }}
     >
-      <MemberCard showBindPopup={setTrue}></MemberCard>
-      <BindDialog show={showBind} setFalse={setFalse}></BindDialog>
+      <MemberCard showBindPopup={showBind}></MemberCard>
+      <BindDialog ref={bindRef as any}></BindDialog>
       <Layout
         code="user"
         globalStyle={{ backgroundColor: "#000000" }}

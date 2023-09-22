@@ -79,6 +79,10 @@ export const formTime = (time, type = "YYYY年MM月DD日") => {
 
 /** 验证手机号 */
 export const isPhone = (phone: string) => /^[1][0-9]{10}$/.test(phone);
+/** 姓名是否合法 */
+export const isNickname = (name: string) => {
+  return name.trim().length !== 0;
+};
 
 export const verifyAddressInfo: (e: T_Area_Form) => Promise<string> = (
   addressInfo,

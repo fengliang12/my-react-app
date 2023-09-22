@@ -54,9 +54,14 @@ declare namespace Store {
     /** */
     changeExchange: boolean;
   };
+  type ChannelType = "cart" | "immediately";
+  type PostageType = "money" | "points";
+
   type ExchangeGood = {
     applyType: string;
     goods: Array<any>;
     counter: any;
+    channelType: ChannelType;
+    postageType: PostageType;
   };
 }

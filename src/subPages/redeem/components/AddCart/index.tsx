@@ -1,6 +1,7 @@
 import { ScrollView, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
+import { cloneDeep } from "lodash";
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -79,6 +80,8 @@ const Index = () => {
   const updateCart = useMemoizedFn(async (item, type) => {
     if (item.sellOut) return toast("商品已售罄");
     Taro.showLoading({ title: "加载中", mask: true });
+    let origin = cloneDeep(item);
+
     switch (type) {
       case "select":
         item.selected = !item.selected;
@@ -95,16 +98,24 @@ const Index = () => {
         break;
     }
 
-    await api.cart.update({
-      cartItemId: item.cartItemId,
-      counterId: counter?.id || undefined,
-      promotionCode: item.cartItemId,
-      quantity: item.quantity,
-      selected: item.selected,
-      skuId: item.skuId,
-    });
+    await api.cart
+      .update({
+        cartItemId: item.cartItemId,
+        counterId: counter?.id || undefined,
+        promotionCode: item.cartItemId,
+        quantity: item.quantity,
+        selected: item.selected,
+        skuId: item.skuId,
+      })
+      .then(() => {
+        Taro.hideLoading();
+      })
+      .catch((err) => {
+        item.selected = origin.selected;
+        item.quantity = origin.quantity;
+        toast(err.data.message);
+      });
     setCarts([...carts]);
-    Taro.hideLoading();
   });
 
   /**
@@ -122,6 +133,7 @@ const Index = () => {
       type: SET_EXCHANGE_GOOD,
       payload: {
         goods: goods,
+        channelType: "cart",
       },
     });
     setFalse();

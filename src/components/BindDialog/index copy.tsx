@@ -1,8 +1,7 @@
 import "./index.less";
 
 import { View } from "@tarojs/components";
-import { useBoolean } from "ahooks";
-import React, { useImperativeHandle } from "react";
+import React from "react";
 
 import { CloseB } from "@/src/assets/image";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
@@ -12,21 +11,15 @@ import to from "@/src/utils/to";
 import CImage from "../Common/CImage";
 import CPopup from "../Common/CPopup";
 
-interface PropsType {}
-
-export interface IRefProps {
-  setTrue: () => void;
+interface PropsType {
+  show: boolean;
   setFalse: () => void;
+  setTrue?: () => void;
 }
 
-const BindDialog = React.forwardRef<IRefProps, PropsType>((props, ref) => {
-  const [show, { setTrue, setFalse }] = useBoolean(false);
-  useImperativeHandle(ref, () => {
-    return {
-      setTrue,
-      setFalse,
-    };
-  });
+const BindDialog: React.FC<PropsType> = (props) => {
+  let { show, setFalse } = props;
+
   return (
     <View style={setShow(show)}>
       <CPopup maskClose closePopup={setFalse}>
@@ -51,6 +44,6 @@ const BindDialog = React.forwardRef<IRefProps, PropsType>((props, ref) => {
       </CPopup>
     </View>
   );
-});
+};
 
 export default React.memo(BindDialog);

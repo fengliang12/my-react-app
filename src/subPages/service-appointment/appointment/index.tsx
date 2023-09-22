@@ -2,13 +2,16 @@ import { Picker, Text, View } from "@tarojs/components";
 import Taro, { useRouter } from "@tarojs/taro";
 import { useBoolean, useRequest } from "ahooks";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 import api from "@/api/index";
 import { P6 } from "@/src/assets/image";
+import BindDialog, { IRefProps } from "@/src/components/BindDialog";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import useSubMsg from "@/src/hooks/useSubMsg";
 import { handleTextBr } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -16,7 +19,10 @@ import toast from "@/src/utils/toast";
 const app: App.GlobalData = Taro.getApp();
 
 const Index = () => {
+  const userInfo = useSelector((state: Store.States) => state.user);
+  const bindRef = useRef<IRefProps>(null);
   const router = useRouter();
+  const subMsg = useSubMsg();
   const [introduce, { setFalse }] = useBoolean(true);
   let { projectCode } = router.params;
   const [appointment, setAppointment] = useState<any>({
@@ -113,12 +119,18 @@ const Index = () => {
    * 服务提交
    */
   const onSubmit = async () => {
+    if (!userInfo?.isMember) {
+      bindRef.current && bindRef.current.setTrue();
+      return;
+    }
+
     if (introduce) {
       setFalse();
       return;
     }
 
     await checkParams();
+    await subMsg("SERVICE");
     Taro.showLoading({ title: "加载中", mask: true });
     api.arvatoReservation
       .submit(appointment)
@@ -130,7 +142,11 @@ const Index = () => {
         );
       })
       .catch((err) => {
-        to(`/subPages/service-appointment/list/index`, "redirectTo");
+        if (err?.data?.message.includes("arvato")) {
+          Taro.hideLoading();
+          to(`/subPages/service-appointment/list/index`, "redirectTo");
+          return;
+        }
       });
   };
 
@@ -147,7 +163,10 @@ const Index = () => {
       <CImage
         className="w-750"
         mode="widthFix"
-        src={`${config.imgBaseUrl}/appointment/detail/${projectCode}.png`}
+        src={
+          project?.detailList?.[0] ||
+          `${config.imgBaseUrl}/appointment/detail/${projectCode}.png`
+        }
       ></CImage>
       <View className="fixed top-220 left-50" style="color:#FFFFFF">
         <Text
@@ -267,6 +286,7 @@ const Index = () => {
           {introduce ? "即 可 预 约" : "提 交"}
         </View>
       </View>
+      <BindDialog ref={bindRef as any}></BindDialog>
     </View>
   );
 };

@@ -24,6 +24,7 @@ export default {
         "orderList/index",
         "orderDetail/index",
         "confirm/index",
+        "confirmAddress/index",
         "success/index",
       ],
     },
@@ -74,11 +75,11 @@ export default {
       },
     ],
   },
-  requiredPrivateInfos: ["getLocation"],
+  requiredPrivateInfos: ["getLocation", "chooseAddress"],
   permission: {
     "scope.userLocation": {
       desc: "你的位置信息将用于定位附近的门店信息",
     },
   },
-  __usePrivacyCheck__: true,
+  // __usePrivacyCheck__: true,
 };

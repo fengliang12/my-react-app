@@ -33,6 +33,8 @@ declare namespace Api {
       type IResponse = Item[];
 
       type Item = {
+        imageKVList: Array<string>;
+        detailList: Array<string>;
         projectCode: string;
         projectName: string;
         imageUrl: any;

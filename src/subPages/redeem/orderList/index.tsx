@@ -17,7 +17,7 @@ const Index = () => {
   const [list, setList] = useState<Api.Order.Public.IContent[]>([]);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const endTime = dayjs(Date.now()).format("YYYY-MM");
+  const endTime = dayjs(Date.now()).format("YYYY-MM-DD");
   const total = useRef<number>(0);
   const page = useRef<number>(0);
 
@@ -27,8 +27,16 @@ const Index = () => {
   const getOrderByStatus = useMemoizedFn(async () => {
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
+    let from = dayjs(startDate.replace(/-/g, "/")).format();
+    let to = dayjs(endDate.replace(/-/g, "/")).format();
     let res = await api.memberOrder.getOrderByStatus(
-      { page: page.current, size: 10, getAllSkus: true },
+      {
+        page: page.current,
+        size: 10,
+        getAllSkus: true,
+        from,
+        to,
+      },
       { status: "all" },
     );
     total.current = res.data.totalElements;
@@ -83,9 +91,8 @@ const Index = () => {
           <Picker
             mode="date"
             value={startDate}
-            start="2000-01"
+            start="1970-01-01"
             end={endDate || endTime}
-            fields="month"
             onChange={(e) => {
               let value = e.detail.value;
               setStartDate(value);
@@ -96,7 +103,7 @@ const Index = () => {
             </Text>
           </Picker>
         </View>
-        <View className="w-50 h-2 bg-white"></View>
+        <View className="w-30 h-2 bg-white"></View>
         <View
           className="w-228 h-60 vhCenter"
           style={{ border: "1px solid #FFFFFF" }}
@@ -104,9 +111,8 @@ const Index = () => {
           <Picker
             mode="date"
             value={endDate}
-            start={startDate || "2000-01"}
+            start={startDate || "1970-01-01"}
             end={endTime}
-            fields="month"
             onChange={(e) => {
               let value = e.detail.value;
               setEndDate(value);
@@ -141,10 +147,13 @@ const Index = () => {
                     </Text>
                     <Text>{item.statusName}</Text>
                   </View>
-                  {/* <View className="flex items-start mt-25">
-                    <Text className="w-150">领取柜台：</Text>
-                    <Text className="flex-1">NARS上海新天地</Text>
-                  </View> */}
+                  <View className="flex items-start mt-25 text-24">
+                    <Text className="w-150">领取方式：</Text>
+                    <Text className="flex-1">
+                      {item?.deliverInfo ? "邮寄到家" : "到柜领取"}
+                    </Text>
+                  </View>
+
                   <View className="flex items-start my-10 text-24">
                     <Text>订单编号：</Text>
                     <Text className="flex-1">{item.id}</Text>

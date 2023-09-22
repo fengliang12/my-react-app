@@ -1,53 +1,58 @@
 import { Text, View } from "@tarojs/components";
+import Taro, { useRouter } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 
+import { P3 } from "@/src/assets/image";
 import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
-import config from "@/src/config";
+import CImage from "@/src/components/Common/CImage";
 import useRedeem from "@/src/hooks/useRedeem";
-import { SET_COMMON } from "@/src/store/constants";
-import to from "@/src/utils/to";
+import { verifyAddressInfo } from "@/src/utils";
 import toast from "@/src/utils/toast";
 
 import OrderGood from "../components/OrderGood";
-import PostageType from "../components/PostageType";
 
-const OrderConfirm = () => {
-  const dispatch = useDispatch();
+const ConfirmAddress = () => {
+  const router = useRouter();
+  const { postageType = "" } = router.params;
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
-
-  const { applyType, goods, counter, postageType, totalPoints, confirm } =
-    useRedeem();
-
-  /**
-   * 点击兑换
-   */
-  const handleReceive = useMemoizedFn(async () => {
-    if (applyType === "express") {
-      /** 邮寄到家 */
-      to(
-        `/subPages/redeem/confirmAddress/index?postageType=${postageType}`,
-        "navigateTo",
-      );
-    } else if (applyType === "self_pick_up") {
-      /** 门店核销 */
-      if (!counter) return toast("柜台不能为空");
-      setTrue();
-    }
-  });
+  const { totalPoints, confirm, applyType, goods } = useRedeem();
+  const [addressInfo, setAddressInfo] =
+    useState<Api.Cart.Public.IDeliverInfo | null>(null);
 
   /**
    * 更改领取方式
    */
   const changeExchangeType = useMemoizedFn(() => {
-    dispatch({
-      type: SET_COMMON,
-      payload: {
-        changeExchange: true,
+    Taro.chooseAddress({
+      success: (res) => {
+        setAddressInfo({
+          addressee: res.userName,
+          city: res.cityName,
+          detail: res.detailInfo,
+          district: res.countyName,
+          mobile: res.telNumber,
+          postcode: res.postalCode,
+          province: res.provinceName,
+          type: "express",
+        });
       },
     });
-    to(1);
+  });
+
+  /**
+   * 点击兑换
+   */
+  const handleReceive = useMemoizedFn(async () => {
+    if (!addressInfo) return toast("请先填写收获信息");
+    verifyAddressInfo(addressInfo)
+      .then(async () => {
+        setTrue();
+      })
+      .catch((err) => {
+        toast({ title: err, mask: true });
+      });
   });
 
   return (
@@ -64,21 +69,21 @@ const OrderConfirm = () => {
         ></CHeader>
 
         {/* 领取方式 */}
-        <View className="w-690 text-28 bg-white px-30 py-40 box-border">
-          <View className="text-35 text-left">领取方式</View>
-          <View className="text-24 mb-40  text-left">
-            *切换领取方式后礼品库存可能产生变化
-          </View>
-          <View className=" text-left">
-            {applyType === "express" ? "邮寄到家" : "到柜领取"}
-          </View>
+        <View
+          className="w-690 text-28 bg-white px-30 py-40 box-border text-black"
+          onClick={changeExchangeType}
+        >
           <View className="w-full flex justify-between">
-            <Text>
-              {applyType === "express" ? "客人收件信息" : counter?.name}
-            </Text>
-            <Text className="underline" onClick={changeExchangeType}>
-              切换领取方式
-            </Text>
+            <Text className="text-32 font-bold">收货信息</Text>
+            <CImage className="w-20 h-30" src={P3}></CImage>
+          </View>
+          <View className="mt-20 text-28">
+            <View className="mt-10">{addressInfo?.addressee}</View>
+            <View className="mt-10">{addressInfo?.mobile}</View>
+            <View className="mt-10">
+              {addressInfo?.province} {addressInfo?.city}{" "}
+              {addressInfo?.district} {addressInfo?.detail}
+            </View>
           </View>
         </View>
 
@@ -92,15 +97,12 @@ const OrderConfirm = () => {
               })}
           </View>
 
-          {/* 邮费支付方式 */}
-          {applyType === "express" && <PostageType></PostageType>}
-
           <View className="w-full h-1 bg-black mt-50"></View>
           <View className="text-38 flex justify-between mt-50">
             <View className="">总计消耗</View>
             <View>
               {postageType === "points" && applyType === "express"
-                ? totalPoints + config.postagePoints
+                ? totalPoints
                 : totalPoints}
               积分
             </View>
@@ -121,13 +123,13 @@ const OrderConfirm = () => {
           title="确认兑换"
           dialogText="订单提交后无法修改,请确认是否提交订单"
           cancel={setFalse}
-          confirm={confirm}
+          confirm={() => confirm(addressInfo)}
         ></CDialog>
       )}
     </>
   );
 };
-export default OrderConfirm;
+export default ConfirmAddress;
 definePageConfig({
   navigationStyle: "custom",
 });

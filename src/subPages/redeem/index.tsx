@@ -63,6 +63,8 @@ const Index = () => {
       payload: {
         goods: [],
         applyType: "",
+        channelType: "immediately",
+        postageType: "points",
         counter: null,
       },
     });

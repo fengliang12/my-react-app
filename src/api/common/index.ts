@@ -3,8 +3,8 @@ import http from "../axios";
 
 const { storeCode } = config;
 
-const login = (code) =>
-  http.get(`/sp-portal/store/${storeCode}/wechat/login/${code}`);
+const login = (code, params) =>
+  http.get(`/sp-portal/store/${storeCode}/wechat/login/${code}`, { params });
 
 const loginQY = (code) =>
   http.get(

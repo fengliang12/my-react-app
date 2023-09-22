@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 import { CloseB, P5, P6 } from "@/src/assets/image";
 import config from "@/src/config";
+import pageSettingConfig from "@/src/config/pageSettingConfig";
 import handleDataType from "@/src/utils/handleDataType";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
@@ -88,7 +89,9 @@ const Index: React.FC<PropsType> = (props) => {
                       style="transform:translate(-26rpx,3rpx)"
                       src={`${config.imgBaseUrl}/icon/${userInfo.gradeId}.png`}
                     ></CImage>
-                    <View className="text-38">{userInfo.realName}</View>
+                    <View className="text-38 text-overflow max-h-150">
+                      {userInfo.realName}
+                    </View>
                     <View
                       className="flex items-center text-18"
                       onClick={setTrue}
@@ -104,7 +107,9 @@ const Index: React.FC<PropsType> = (props) => {
                   <View
                     className="text-36 pb-1"
                     style="border-bottom:1px solid #000000"
-                    onClick={showBindPopup}
+                    onClick={() =>
+                      to(pageSettingConfig.registerPath, "navigateTo")
+                    }
                   >
                     立即注册
                   </View>

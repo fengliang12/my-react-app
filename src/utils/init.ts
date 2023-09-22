@@ -14,7 +14,9 @@ export const createInit = () => {
 
       initPromise = loginFn()
         .then(({ code }) =>
-          isQyWx ? api.common.loginQY(code) : api.common.login(code),
+          isQyWx
+            ? api.common.loginQY(code)
+            : api.common.login(code, { checkMember: true }),
         )
         .then(async ({ data }) => {
           if (data.customerBasicInfo.member && shuYunMember) {

@@ -20,7 +20,7 @@ import PrivacyAuth from "@/src/components/PrivacyAuth";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import useSubMsg from "@/src/hooks/useSubMsg";
-import { formatDateTime, isPhone } from "@/src/utils";
+import { formatDateTime, isNickname, isPhone } from "@/src/utils";
 import Authorization from "@/src/utils/authorize";
 import { getPages } from "@/src/utils/getPages";
 
@@ -94,12 +94,11 @@ const Index = () => {
       successRegister("您已是会员");
       return;
     }
-    const { nickName, birthDate, avatarUrl, mobile, gender, city, smsCode } =
-      user;
+    const { nickName, birthDate, avatarUrl, mobile, gender, smsCode } = user;
     if (!avatarUrl) {
       return Taro.showToast({ title: "请先上传头像", icon: "none" });
     }
-    if (!nickName) {
+    if (!isNickname(nickName)) {
       return Taro.showToast({ title: "请输入姓名", icon: "none" });
     }
     if (!mobile || !isPhone(mobile)) {

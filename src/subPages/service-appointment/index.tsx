@@ -1,8 +1,11 @@
 import { ScrollView, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useRequest } from "ahooks";
+import { useBoolean, useRequest } from "ahooks";
+import { useRef } from "react";
+import { useSelector } from "react-redux";
 
 import api from "@/api/index";
+import BindDialog, { IRefProps } from "@/src/components/BindDialog";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
@@ -10,6 +13,8 @@ import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
+  const userInfo = useSelector((state: Store.States) => state.user);
+  const bindRef = useRef<IRefProps>(null);
   const { data: projects = [] } = useRequest(async () => {
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
@@ -63,12 +68,17 @@ const Index = () => {
       <View className="h-200 text-35 text-center font-thin underline">
         <Text
           onClick={() => {
+            if (!userInfo?.isMember) {
+              bindRef.current && bindRef.current.setTrue();
+              return;
+            }
             to("/subPages/service-appointment/list/index", "navigateTo");
           }}
         >
           预约记录
         </Text>
       </View>
+      <BindDialog ref={bindRef as any}></BindDialog>
     </View>
   );
 };

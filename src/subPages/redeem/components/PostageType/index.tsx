@@ -1,15 +1,26 @@
 import { Text, View } from "@tarojs/components";
-import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import config from "@/src/config";
+import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
 
-interface PropsType {
-  postageType: string;
-  setPostageType: (e: string) => void;
-}
-const Index: React.FC<PropsType> = (props) => {
-  let { postageType, setPostageType } = props;
-
+const Index = () => {
+  const dispatch = useDispatch();
+  const { postageType } = useSelector(
+    (state: Store.States) => state.exchangeGood,
+  );
+  /**
+   * 类型
+   * @param type
+   */
+  const setPostageType = (type) => {
+    dispatch({
+      type: SET_EXCHANGE_GOOD,
+      payload: {
+        postageType: type,
+      },
+    });
+  };
   return (
     <View className="text-24 mt-40">
       <View

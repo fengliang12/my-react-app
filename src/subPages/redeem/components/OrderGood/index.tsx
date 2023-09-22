@@ -18,9 +18,9 @@ const OrderGood: React.FC<T_Props> = ({ good }) => {
       </View>
       <View className="h-full flex flex-1 flex-col justify-between box-border py-20">
         <View className="text-24 text-right">{good?.name}</View>
-        {good?.actualPoints || good.point ? (
+        {good?.actualPoints || good?.points || good?.point ? (
           <View className="text-24 text-right">
-            {good?.actualPoints || good.point}积分 *{" "}
+            {good?.actualPoints || good?.points || good?.point}积分 *{" "}
             {good?.quantity || good?.num || 1}
           </View>
         ) : null}

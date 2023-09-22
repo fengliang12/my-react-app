@@ -65,6 +65,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
       type: SET_EXCHANGE_GOOD,
       payload: {
         goods: [{ ...good, quantity: 1 }],
+        channelType: "immediately",
       },
     });
     to(`/subPages/redeem/confirm/index`, "navigateTo");
@@ -83,7 +84,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
       skuId: item.skuId,
       counterId: applyType === "self_pick_up" ? counter?.id : undefined,
       customPointsPayPlan: {
-        notValidateUsablePoints: false,
+        notValidateUsablePoints: true,
         usePoints: true,
       },
     });

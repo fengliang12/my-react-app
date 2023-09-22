@@ -12,8 +12,9 @@ import api from "@/src/api";
 import CityList from "@/src/components/CityList";
 import Avatar from "@/src/components/Common/Avatar";
 import CPopup from "@/src/components/Common/CPopup";
+import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
-import { formatDateTime, maskPhone } from "@/src/utils";
+import { formatDateTime, isNickname, maskPhone } from "@/src/utils";
 
 const genderArr = ["女", "男"];
 const app: App.GlobalData = Taro.getApp();
@@ -23,7 +24,6 @@ const Index = () => {
   const [popupType, setPopupType] = useState<string>("");
   const [counterList, setCounterList] = useState<any>([]);
   const [isGetInfoBySMS, setIsGetInfoBySMS] = useState<boolean>(false);
-  const [counterIndex, setCounterIndex] = useState<number>(NaN);
   const [counterName, setCounterName] = useState<string>("");
   const [counterId, setCounterId] = useState<string>("");
   const [address, setAddress] = useState<string>("");
@@ -43,11 +43,10 @@ const Index = () => {
    */
   useAsyncEffect(async () => {
     if (isMember) {
-      const userInfo = await app.init();
-      let { realName, birthDate, gender, customInfos, city } = userInfo;
+      const userInfo = await app.init(true, false);
+      let { realName, birthDate, gender, customInfos } = userInfo;
 
       birthDate = formatDateTime(birthDate);
-
       let genderName = "";
       if (gender === 1) {
         genderName = "男";
@@ -55,8 +54,6 @@ const Index = () => {
       if (gender === 2) {
         genderName = "女";
       }
-
-      console.log("userInfo", userInfo);
 
       setUser({
         ...userInfo,
@@ -66,13 +63,9 @@ const Index = () => {
       });
 
       if (Array.isArray(customInfos)) {
-        setIsGetInfoBySMS(
-          customInfos.find((item) => item.name === "isGetInfoBySMS")?.value ==
-            1,
-        );
         customInfos.forEach((item) => {
           if (item.name === "isGetInfoBySMS") {
-            setIsGetInfoBySMS(item?.value == 1);
+            setIsGetInfoBySMS(item?.value == 0);
           }
           if (item.name === "counterName") {
             setCounterName(item?.value);
@@ -86,21 +79,20 @@ const Index = () => {
         });
       }
 
-      if (city) {
-        getCounterByCity(city);
-      }
+      getCounterByCity();
     }
   }, [isMember]);
 
   /**
    * 获取门店列表
    */
-  const getCounterByCity = useMemoizedFn(async (city) => {
+  const getCounterByCity = useMemoizedFn(async () => {
     Taro.showLoading({ title: "加载中", mask: true });
-    const res = await api.counter.getCounterByCity({ city: city });
-    let list = res?.data.content.map((item: any) => ({
-      id: item.id,
+    const res = await api.counter.getCounterList();
+    let list = res?.data.map((item: any) => ({
+      ...item.address,
       ...item.detailInfo,
+      id: item.id,
     }));
     setCounterList(list);
     Taro.hideLoading();
@@ -110,11 +102,11 @@ const Index = () => {
    * 提交注册
    */
   const submit = useMemoizedFn(async () => {
-    const { nickName, avatarUrl, mobile, gender, city } = user;
+    const { nickName, avatarUrl, mobile, gender } = user;
     if (!avatarUrl) {
       return Taro.showToast({ title: "请上传用户头像", icon: "none" });
     }
-    if (!nickName) {
+    if (!isNickname(nickName)) {
       return Taro.showToast({ title: "请输入姓名", icon: "none" });
     }
     if (!mobile) {
@@ -122,9 +114,6 @@ const Index = () => {
     }
     if (!gender) {
       return Taro.showToast({ title: "请选择性别", icon: "none" });
-    }
-    if (!city) {
-      return Taro.showToast({ title: "请选择城市", icon: "none" });
     }
     appendMember();
   });
@@ -138,14 +127,14 @@ const Index = () => {
     const { status } = await api.user.appendMember({
       avatarUrl: avatarUrl,
       gender: gender === "男" ? 1 : 2,
-      nickName: nickName,
+      realName: nickName,
       city,
       province,
       mobile,
       customInfos: [
         {
           name: "isGetInfoBySMS",
-          value: isGetInfoBySMS ? 1 : 2,
+          value: isGetInfoBySMS ? 0 : 1,
         },
         {
           name: "counterName",
@@ -179,7 +168,7 @@ const Index = () => {
    * 注销用户信息
    */
   const logOffFn = useMemoizedFn(async () => {
-    const { status } = await api.user.unbinding();
+    const { status } = await api.user.cancellation();
     Taro.showLoading({ title: "加载中", mask: true });
     if (status === 200) {
       await app.init(true);
@@ -230,7 +219,7 @@ const Index = () => {
                 <Input
                   type="nickname"
                   className="text-right"
-                  placeholder="请输入"
+                  placeholder="请输入姓名"
                   placeholderClass="ipt-placeholder"
                   value={user.nickName}
                   onInput={(e) =>
@@ -266,7 +255,7 @@ const Index = () => {
                 >
                   <View className="flex-l flex items-center justify-end">
                     {!user.gender && (
-                      <View className="ipt-placeholder">请选择</View>
+                      <View className="ipt-placeholder">请选择性别</View>
                     )}
                     {user.gender}
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
@@ -275,15 +264,11 @@ const Index = () => {
               </View>
             </View>
             <View className="item">
-              <View className="text-30">所在城市*</View>
+              <View className="text-30">所在城市</View>
               <View className="right">
                 <CityList
                   onChange={(item) => {
-                    getCounterByCity(item.city);
                     setUser({ province: item.province, city: item.city });
-                    setCounterIndex(NaN);
-                    setCounterName("");
-                    setCounterId("");
                   }}
                 >
                   <View className="flex items-center justify-end">
@@ -302,28 +287,23 @@ const Index = () => {
             <View className="item">
               <View className="text-30">所属店铺</View>
               <View className="right">
-                <Picker
-                  mode="selector"
-                  rangeKey="name"
-                  range={counterList}
-                  value={counterIndex}
-                  onChange={(e) => {
-                    let { value } = e.detail;
-                    let item = counterList[value];
-                    setCounterIndex(Number(value));
-                    setCounterName(item.name);
-                    setCounterId(item.id);
+                <MultiplePicker
+                  cascadeCount={3}
+                  isCascadeData={false}
+                  pickerData={counterList}
+                  customKeyList={["province", "city", "name"]}
+                  callback={(counter) => {
+                    setCounterName(counter.name);
+                    setCounterId(counter.id);
                   }}
                 >
                   <View className="flex items-center justify-end">
-                    {!counterName ? (
-                      <View className="ipt-placeholder">请选择所属店铺</View>
-                    ) : (
-                      counterName
-                    )}
+                    <View className="text-28">
+                      {counterName ? counterName : "请选择所属店铺"}
+                    </View>
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
-                </Picker>
+                </MultiplePicker>
               </View>
             </View>
             <View className="item">
@@ -375,27 +355,20 @@ const Index = () => {
       {/* 注销会员弹窗 */}
       {popupType === "logOff" && (
         <CPopup closePopup={() => setPopupType("")}>
-          <View
-            className="w-600 h-620 bg-white flex flex-col justify-center items-center"
-            style={{ color: "#6C5540" }}
-          >
-            <View className="vhCenter flex-col text-center leading-60">
-              <Text>注销会员将清除您的所有个人资料</Text>
-              <Text>积分信息</Text>
-              <Text>解除微信绑定且无法享受会员权益</Text>
-              <Text>您确定要注销吗？</Text>
+          <View className="w-600 h-520 bg-white flex flex-col justify-center items-center">
+            <View className="vhCenter flex-col text-center leading-60 px-50">
+              注销会员将清除您的所有会员里程、且无法再兑换礼品，清除个人资料、解除微信绑定，已申请的礼品也将失效。您确定要注销吗?
             </View>
-            <View className="w-550 flex justify-around mt-100">
+            <View className="w-550 flex justify-around mt-80">
               <View
                 className="w-200 text-30 h-70 vhCenter"
-                style={{ border: "1rpx solid #6C5540" }}
+                style={{ border: "1rpx solid #000000" }}
                 onClick={logOffFn}
               >
                 确 认
               </View>
               <View
-                className="w-200 text-30 h-70 vhCenter text-white"
-                style={{ backgroundColor: "#6C5540" }}
+                className="w-200 text-30 h-70 vhCenter text-white bg-black"
                 onClick={() => setPopupType("")}
               >
                 取 消
@@ -407,10 +380,7 @@ const Index = () => {
 
       {popupType === "contact" && (
         <CPopup closePopup={() => setPopupType("")}>
-          <View
-            className="w-600 h-620 bg-white flex flex-col justify-center items-center"
-            style={{ color: "#6C5540" }}
-          >
+          <View className="w-600 h-620 bg-white flex flex-col justify-center items-center">
             <View className="vhCenter flex-col text-center leading-60">
               <Text>我希望退订通过以下方式</Text>
               <Text>推送给我的营销信息</Text>
@@ -425,8 +395,8 @@ const Index = () => {
               >
                 <View
                   className="w-22 h-22 mr-10"
-                  style={`border: 1rpx solid #6C5540;${
-                    isGetInfoBySMS ? "background-color:#6C5540" : ""
+                  style={`border: 1rpx solid #000000;${
+                    isGetInfoBySMS ? "background-color:#000000" : ""
                   }`}
                 ></View>
                 <Text className="text-24">短信</Text>
@@ -436,16 +406,14 @@ const Index = () => {
             <View className="w-550 flex justify-around mt-100">
               <View
                 className="w-200 text-30 h-70 vhCenter"
-                style={{ border: "1rpx solid #6C5540" }}
+                style={{ border: "1rpx solid #000000" }}
                 onClick={submit}
               >
                 确认退订
               </View>
               <View
-                className="w-200 text-30 h-70 vhCenter text-white"
-                style={{ backgroundColor: "#6C5540" }}
+                className="w-200 text-30 h-70 vhCenter text-white bg-black"
                 onClick={() => {
-                  setIsGetInfoBySMS(false);
                   setPopupType("");
                 }}
               >
