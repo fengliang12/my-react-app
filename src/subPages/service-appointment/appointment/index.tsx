@@ -12,6 +12,9 @@ import config from "@/src/config";
 import { handleTextBr } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
+import subscribeMsg from "@/src/utils/subscribeMsg";
+import SubMsg from "@/src/hooks/useSubMsg";
+import useSubMsg from "@/src/hooks/useSubMsg";
 
 const app: App.GlobalData = Taro.getApp();
 
@@ -108,6 +111,7 @@ const Index = () => {
       return Promise.reject();
     }
   };
+  const subMsg = useSubMsg();
 
   /**
    * 服务提交
@@ -120,7 +124,8 @@ const Index = () => {
 
     await checkParams();
     Taro.showLoading({ title: "加载中", mask: true });
-    api.arvatoReservation
+    await subMsg("RESERVE");
+    await api.arvatoReservation
       .submit(appointment)
       .then((res: any) => {
         Taro.hideLoading();
