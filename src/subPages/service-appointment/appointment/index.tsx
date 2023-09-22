@@ -15,9 +15,6 @@ import useSubMsg from "@/src/hooks/useSubMsg";
 import { handleTextBr } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
-import subscribeMsg from "@/src/utils/subscribeMsg";
-import SubMsg from "@/src/hooks/useSubMsg";
-import useSubMsg from "@/src/hooks/useSubMsg";
 
 const app: App.GlobalData = Taro.getApp();
 
@@ -25,7 +22,6 @@ const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
   const bindRef = useRef<IRefProps>(null);
   const router = useRouter();
-  const subMsg = useSubMsg();
   const [introduce, { setFalse }] = useBoolean(true);
   let { projectCode } = router.params;
   const [appointment, setAppointment] = useState<any>({
@@ -136,7 +132,6 @@ const Index = () => {
     await checkParams();
     await subMsg("SERVICE");
     Taro.showLoading({ title: "加载中", mask: true });
-    await subMsg("RESERVE");
     await api.arvatoReservation
       .submit(appointment)
       .then((res: any) => {
