@@ -10,6 +10,7 @@ import usePayHooks from "./payHooks";
 import useSubMsg from "./useSubMsg";
 
 const app: App.GlobalData = Taro.getApp();
+let confirmStatus: boolean = false;
 
 const useRedeem = () => {
   const subMsg = useSubMsg();
@@ -32,14 +33,41 @@ const useRedeem = () => {
    */
   const confirm = useMemoizedFn(async (addressInfo?: any) => {
     if (points < totalPoints) return toast("您的积分不足");
+    if (confirmStatus) return;
+
+    confirmStatus = true;
     await subMsg("REDEEM");
+
+    setTimeout(() => {
+      confirmStatus = false;
+    }, 2000);
+
     Taro.showLoading({ title: "加载中", mask: true });
+
+    /**
+     * 说明：
+     * 门店核销：counterId必传、deliverInfo不用、usePointsForShipment：false
+     * 邮寄到家：deliverInfo必传、counterId不用
+     *          积分抵扣：usePointsForShipment：true
+     *          9.9邮费：usePointsForShipment：false
+     */
+    if (
+      (applyType === "self_pick_up" && !counter) ||
+      (applyType === "express" && !addressInfo)
+    ) {
+      toast(`${applyType === "self_pick_up" ? "门店" : "地址"}不能为空`);
+      return;
+    }
+
     let params = {
       channelId: "wa",
-      deliverInfo: addressInfo,
+      counterId: applyType === "self_pick_up" ? counter.id : undefined,
+      deliverInfo: applyType === "express" ? addressInfo : undefined,
       integral: true,
       customPointsPayPlan: {
         notValidateUsablePoints: true,
+        usePointsForShipment:
+          applyType === "express" && postageType === "points" ? true : false,
         usePoints: true,
       },
     };
@@ -59,7 +87,6 @@ const useRedeem = () => {
         quantity: 1,
       } as Api.BuyNow.Submit.IRequestBody);
     }
-
     if (result.status === 200) {
       payFunc(result.data.orderId);
     }
@@ -69,7 +96,7 @@ const useRedeem = () => {
    * 调用支付接口
    */
   const payFunc = useMemoizedFn(async (orderId: string) => {
-    if (postageType === "money" && applyType === "express") {
+    if (applyType === "express" && postageType === "money") {
       /** 邮寄到家&9.9元支付 */
       await pay(orderId);
     } else {
@@ -79,7 +106,10 @@ const useRedeem = () => {
     setTimeout(async () => {
       await app.init(true);
       Taro.hideLoading();
-      to(`/subPages/redeem/orderDetail/index?orderId=${orderId}`, "redirectTo");
+      to(
+        `/subPages/redeem/orderDetail/index?orderId=${orderId}&from=confirm`,
+        "reLaunch",
+      );
     }, 2000);
   });
 

@@ -8,15 +8,16 @@ interface T_Props {
 }
 const OrderGood: React.FC<T_Props> = ({ good }) => {
   return (
-    <View className="flex items-center justify-center box-border h-200">
+    <View className="flex items-center justify-center box-border h-220">
       <View className="w-190 h-190 mr-20 rounded-20">
         <CImage
           className="w-190 h-190"
           src={good.mainImage || ""}
           mode="aspectFit"
         ></CImage>
+        <View className="w-full h-1 bg-black opacity-50"></View>
       </View>
-      <View className="h-full flex flex-1 flex-col justify-between box-border py-20">
+      <View className="h-150 flex flex-1 flex-col justify-between box-border">
         <View className="text-24 text-right">{good?.name}</View>
         {good?.actualPoints || good?.points || good?.point ? (
           <View className="text-24 text-right">

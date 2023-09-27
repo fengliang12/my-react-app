@@ -6,7 +6,7 @@ import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
 import config from "@/src/config";
 import useRedeem from "@/src/hooks/useRedeem";
-import { SET_COMMON } from "@/src/store/constants";
+import { SET_COMMON, SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -64,18 +64,21 @@ const OrderConfirm = () => {
         ></CHeader>
 
         {/* 领取方式 */}
-        <View className="w-690 text-28 bg-white px-30 py-40 box-border">
-          <View className="text-35 text-left">领取方式</View>
-          <View className="text-24 mb-40  text-left">
+        <View className="w-690 text-26 bg-white px-30 py-40 box-border text-black">
+          <View className="text-34 text-left font-bold">领取方式</View>
+          <View className="text-24 mb-40  text-left mt-10">
             *切换领取方式后礼品库存可能产生变化
           </View>
-          <View className=" text-left">
-            {applyType === "express" ? "邮寄到家" : "到柜领取"}
-          </View>
-          <View className="w-full flex justify-between">
-            <Text>
-              {applyType === "express" ? "客人收件信息" : counter?.name}
-            </Text>
+
+          <View className="w-full flex justify-between items-end">
+            {applyType === "express" ? (
+              <View>邮寄到家（积分抵邮费）</View>
+            ) : (
+              <View>
+                <View>到柜领取</View>
+                <View className="mt-10">{counter?.name}</View>
+              </View>
+            )}
             <Text className="underline" onClick={changeExchangeType}>
               切换领取方式
             </Text>
@@ -84,7 +87,9 @@ const OrderConfirm = () => {
 
         {/* 兑换礼品详情 */}
         <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
-          <View className="box_title mb-50 font-bold">兑换礼品详情</View>
+          <View className="text-34 box_title mb-50 font-bold">
+            兑换礼品详情
+          </View>
           <View className="module">
             {goods?.length > 0 &&
               goods?.map((item) => {
@@ -121,7 +126,10 @@ const OrderConfirm = () => {
           title="确认兑换"
           dialogText="订单提交后无法修改,请确认是否提交订单"
           cancel={setFalse}
-          confirm={confirm}
+          confirm={() => {
+            setFalse();
+            confirm();
+          }}
         ></CDialog>
       )}
     </>

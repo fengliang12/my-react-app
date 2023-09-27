@@ -2,12 +2,11 @@ import { Picker, Text, View } from "@tarojs/components";
 import Taro, { useRouter } from "@tarojs/taro";
 import { useBoolean, useRequest } from "ahooks";
 import dayjs from "dayjs";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import api from "@/api/index";
 import { P6 } from "@/src/assets/image";
-import BindDialog, { IRefProps } from "@/src/components/BindDialog";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
@@ -20,7 +19,6 @@ const app: App.GlobalData = Taro.getApp();
 
 const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
-  const bindRef = useRef<IRefProps>(null);
   const router = useRouter();
   const [introduce, { setFalse }] = useBoolean(true);
   let { projectCode } = router.params;
@@ -120,7 +118,7 @@ const Index = () => {
    */
   const onSubmit = async () => {
     if (!userInfo?.isMember) {
-      bindRef.current && bindRef.current.setTrue();
+      to("/pages/registerSecond/index");
       return;
     }
 
@@ -286,7 +284,6 @@ const Index = () => {
           {introduce ? "即 可 预 约" : "提 交"}
         </View>
       </View>
-      <BindDialog ref={bindRef as any}></BindDialog>
     </View>
   );
 };

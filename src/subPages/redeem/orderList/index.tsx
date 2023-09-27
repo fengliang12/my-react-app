@@ -27,15 +27,14 @@ const Index = () => {
   const getOrderByStatus = useMemoizedFn(async () => {
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
-    let from = dayjs(startDate.replace(/-/g, "/")).format();
-    let to = dayjs(endDate.replace(/-/g, "/")).format();
+
     let res = await api.memberOrder.getOrderByStatus(
       {
         page: page.current,
         size: 10,
         getAllSkus: true,
-        from,
-        to,
+        from: startDate ? `${startDate} 00:00:00` : undefined,
+        to: endDate ? `${endDate} 23:59:59` : undefined,
       },
       { status: "all" },
     );
@@ -148,24 +147,25 @@ const Index = () => {
                     <Text>{item.statusName}</Text>
                   </View>
                   <View className="flex items-start mt-25 text-24">
-                    <Text className="w-150">领取方式：</Text>
+                    <Text>领取方式：</Text>
                     <Text className="flex-1">
                       {item?.deliverInfo ? "邮寄到家" : "到柜领取"}
                     </Text>
                   </View>
 
-                  <View className="flex items-start my-10 text-24">
+                  <View className="flex items-start my-20 text-24">
                     <Text>订单编号：</Text>
                     <Text className="flex-1">{item.id}</Text>
                   </View>
-                  <View className="w-full flex justify-start">
+                  <View className="w-full flex justify-start overflow-scroll">
                     {item.skus &&
                       item.skus.map((sku, index) => (
-                        <CImage
-                          className="w-200 h-200 mr-20 my-10"
-                          src={sku.mainImage}
-                          key={index}
-                        ></CImage>
+                        <View className="w-160 h-160 mr-20 my-10" key={index}>
+                          <CImage
+                            className="w-160 h-160"
+                            src={sku.mainImage}
+                          ></CImage>
+                        </View>
                       ))}
                   </View>
                 </View>

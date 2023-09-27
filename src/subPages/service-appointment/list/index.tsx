@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
-import CImage from "@/src/components/Common/CImage";
-import config from "@/src/config";
 import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
@@ -38,6 +36,7 @@ const Index = () => {
   useDidShow(() => {
     init();
   });
+
   const toDetail = (item) => {
     if (item.status === "0") {
       to(`/subPages/service-appointment/detail/index?bookId=${item.bookId}`);
@@ -56,34 +55,37 @@ const Index = () => {
       {data?.length ? (
         <>
           {data?.map((item) => (
-            <View
-              key={item.storeId}
-              className="w-690 h-220 bg-grayBg flex ml-30 mb-40 px-20 box-border"
-              style={`background:url(${config.imgBaseUrl}/appointment/list/${item.projectCode}.png);background-size:100% 100%;`}
-            >
+            <>
               <View
-                className={`flex-1 flex flex-col justify-center text-left ${
-                  Number(item.projectCode) % 20 === 0
-                    ? "items-start"
-                    : "items-end"
-                }`}
+                key={item.storeId}
+                className="w-690 h-220 bg-grayBg flex ml-30 mb-40 px-20 box-border"
+                style={`background:url(${item?.imageKVList?.[0]});background-size:100% 100%;`}
               >
-                <View className="text-32">{item.projectName}</View>
-                <View className="mt-10 text-24">{item.storeName}</View>
-                <View className="text-24 mt-5">
-                  {dayjs(item.reserveDate).format("YYYY-MM-DD")}{" "}
-                  {item.timePeriod}
-                </View>
                 <View
-                  className={`w-222 text-22 h-50 text-black vhCenter bg-${
-                    item.status === "0" ? "white" : "#EFEFEF"
-                  } rounded-6 mt-20`}
-                  onClick={() => toDetail(item)}
+                  className={`flex-1 flex flex-col justify-center text-left ${
+                    Number(item.projectCode) % 20 === 0
+                      ? "items-start"
+                      : "items-end"
+                  }`}
                 >
-                  {STATUS_ENUM[item.status]}
+                  <View className="text-32">{item.projectName}</View>
+                  <View className="mt-10 text-24">{item.storeName}</View>
+                  <View className="text-24 mt-5">
+                    {dayjs(item.reserveDate).format("YYYY-MM-DD")}{" "}
+                    {item.timePeriod}
+                  </View>
+                  <View
+                    className={`w-222 text-22 h-50 text-black vhCenter bg-${
+                      item.status === "0" ? "white" : "#EFEFEF"
+                    } rounded-6 mt-20`}
+                    onClick={() => toDetail(item)}
+                  >
+                    {STATUS_ENUM[item.status]}
+                  </View>
                 </View>
               </View>
-            </View>
+              <View className="w-690 h-1 mx-auto bg-white opacity-50 mb-40"></View>
+            </>
           ))}
         </>
       ) : (

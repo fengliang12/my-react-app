@@ -11,7 +11,7 @@ export const createInit = () => {
       const { environment } = Taro.getSystemInfoSync();
       const isQyWx = environment === "wxwork";
       let loginFn: any = isQyWx ? Taro["qy"].login : Taro.login;
-
+      Taro.showLoading({ title: "加载中", mask: true });
       initPromise = loginFn()
         .then(({ code }) =>
           isQyWx
@@ -20,7 +20,7 @@ export const createInit = () => {
         )
         .then(async ({ data }) => {
           if (data.customerBasicInfo.member && shuYunMember) {
-            getShuYunMemberInfo();
+            await getShuYunMemberInfo();
           }
 
           Taro.setStorageSync("token", data.jwtString);
@@ -46,6 +46,7 @@ export const createInit = () => {
             type: SET_USER,
             payload: userInfo,
           });
+          Taro.hideLoading();
           return userInfo;
         })
         .catch(() => {

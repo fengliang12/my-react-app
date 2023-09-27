@@ -8,11 +8,12 @@ import { result } from "lodash";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { P1, P6 } from "@/assets/image/index";
+import { LogoB, P1, P6, P7 } from "@/assets/image/index";
 import Page from "@/components/Page";
 import api from "@/src/api";
 import CityList from "@/src/components/CityList";
 import Avatar from "@/src/components/Common/Avatar";
+import CImage from "@/src/components/Common/CImage";
 import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
 import PrivacyPolicyText from "@/src/components/Common/PrivacyPolicyText";
 import SendVerifyCode from "@/src/components/Common/SendVerifyCode";
@@ -205,16 +206,27 @@ const Index = () => {
           back: true,
         }}
       >
-        <View className="register">
+        <View className="register page_bg1">
           <View className="register-top">
             <View className="text-white text-center text-36 mb-50">
               欢迎加入NARS会员
             </View>
             <View className="head">
-              <Image
-                src={user.avatarUrl || P1}
-                className="w-160 h-160 mb-10 rounded-160"
-              />
+              {user?.avatarUrl ? (
+                <CImage
+                  src={user.avatarUrl}
+                  className="h-130 w-130 mb-10 rounded-130 overflow-hidden"
+                  mode="widthFix"
+                ></CImage>
+              ) : (
+                <View className="h-130 w-130 mb-10 rounded-130 overflow-hidden vhCenter border_999 bg-black">
+                  <CImage
+                    className="w-120"
+                    mode="widthFix"
+                    src={LogoB}
+                  ></CImage>
+                </View>
+              )}
               <Avatar
                 callback={(avatarUrl) =>
                   setUser({
@@ -222,7 +234,10 @@ const Index = () => {
                   })
                 }
               ></Avatar>
-              <View>上传头像</View>
+              <View className="w-full vhCenter">
+                <CImage className="w-30 h-28 ml-10" src={P7}></CImage>
+                上传头像
+              </View>
             </View>
             <View className="item">
               <View className="left">姓名*</View>
@@ -317,10 +332,10 @@ const Index = () => {
                   <View className="flex items-center justify-end mr-20 text-right w-full">
                     {!user.birthDate && (
                       <View
-                        className="text-20 font-thin w-full"
+                        className="ipt-placeholder w-full"
                         style={{ color: "#c1c1c1" }}
                       >
-                        生日信息一经确认，无法修改
+                        注册后不可修改
                       </View>
                     )}
                     {user.birthDate}

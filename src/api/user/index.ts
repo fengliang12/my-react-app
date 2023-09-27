@@ -107,6 +107,19 @@ const loadSYPointDetails = (data) =>
 const getShopId = (id) =>
   http.get(`/sp-portal/store/${config.storeCode}/counter/${id}`);
 
+const updateCustomerPreferredAddress: Api.User.UpdateCustomerPreferredAddress.FuncT =
+  (data) =>
+    http.put(
+      `/ec-portal/store/${config.storeCode}/customer/address/preferred`,
+      data,
+    );
+
+const getCustomerPreferredAddress: Api.User.GetCustomerPreferredAddress.FuncT =
+  () =>
+    http.get<Api.User.GetCustomerPreferredAddress.IResponse>(
+      `/ec-portal/store/${config.storeCode}/customer/address/preferred`,
+    );
+
 export default {
   /** 查询会员用户基本信息 */
   getCustomerBasicInfo,
@@ -149,4 +162,6 @@ export default {
   cancellation,
   sendSmsCode2,
   sendAcxiomSmsCode,
+  updateCustomerPreferredAddress,
+  getCustomerPreferredAddress,
 };

@@ -64,7 +64,7 @@ export const getTimeStamp = (time) => {
   if (time.includes("T")) {
     time = formatDateTime(time, 6);
   }
-  return new Date(time.replace(/-/g, "/"));
+  return new Date(time.replace(/-/g, "/")).getTime();
 };
 
 /**

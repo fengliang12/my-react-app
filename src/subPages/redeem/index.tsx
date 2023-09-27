@@ -33,17 +33,24 @@ const Index = () => {
   const [goodList, setGoodList] = useState<any>([]);
   const getGoodList = useMemoizedFn(async () => {
     if (!applyType) return;
+
     await app.init();
     let params = {
       counterId: counter?.id || undefined,
     };
-    let res = await api.buyBonusPoint.getBonusPointList(params);
-
-    if (res?.data?.length) {
-      setOriginList(res?.data);
-      const list = handleGoodClass(res.data);
-      setGoodList(list);
-    }
+    await api.buyBonusPoint
+      .getBonusPointList(params)
+      .then((res) => {
+        if (res?.data?.length) {
+          setOriginList(res?.data);
+          const list = handleGoodClass(res.data);
+          setGoodList(list);
+        }
+      })
+      .catch(() => {
+        setOriginList([]);
+        setGoodList([]);
+      });
   });
 
   useDidShow(() => {

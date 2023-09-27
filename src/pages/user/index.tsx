@@ -1,39 +1,34 @@
-import Taro, { useLoad } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
-import { useRef } from "react";
 import { useSelector } from "react-redux";
 
-import BindDialog, { IRefProps } from "@/src/components/BindDialog";
 import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
+import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
-const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
-  const bindRef = useRef<IRefProps>(null);
-  useLoad(async () => {
-    let user = await app.init();
-    if (user && !user?.isMember) {
-      bindRef.current && bindRef.current.setTrue();
-    } else {
-      bindRef.current && bindRef.current.setFalse();
-    }
-  });
 
   /**
    * 自定义事件
    * @param params
    */
   const customAction = useMemoizedFn((params) => {
-    let { code } = params;
+    let { code, data } = params;
     if (code === "judgeMember" && !userInfo?.isMember) {
-      bindRef.current && bindRef.current.setTrue();
+      to("/pages/registerSecond/index");
       throw new Error("未注册");
     }
     if (code === "stayTuned") {
       toast("敬请期待");
+      throw new Error("敬请期待");
+    }
+    if (code === "jump_h5") {
+      // let url = `${data}${userInfo.memberId}`;
+      let url = `${data}M4601887550`;
+
+      to(`/pages/h5/index?url=${encodeURIComponent(url)}`);
       throw new Error("敬请期待");
     }
   });
@@ -41,11 +36,9 @@ const Index = () => {
   /**
    * 显示绑定
    */
-  const showBind = () => {
-    if (bindRef.current) {
-      bindRef.current.setTrue();
-    }
-  };
+  const showBind = useMemoizedFn(() => {
+    to("/pages/registerSecond/index");
+  });
 
   return (
     <Page
@@ -57,7 +50,6 @@ const Index = () => {
       }}
     >
       <MemberCard showBindPopup={showBind}></MemberCard>
-      <BindDialog ref={bindRef as any}></BindDialog>
       <Layout
         code="user"
         globalStyle={{ backgroundColor: "#000000" }}

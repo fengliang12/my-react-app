@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import api from "@/src/api";
+import { P2, P6, P9 } from "@/src/assets/image";
+import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import { SET_COMMON, SET_EXCHANGE_GOOD } from "@/src/store/constants";
@@ -38,7 +40,6 @@ const Index: React.FC<PropsType> = (props) => {
       id: item.id,
     }));
     setCounterList(list);
-    console.log(list);
   });
 
   useEffect(() => {
@@ -90,10 +91,10 @@ const Index: React.FC<PropsType> = (props) => {
     <>
       {showApply && (
         <CPopup catchMove>
-          <View className="w-550 h-600 bg-white vhCenter flex-col">
+          <View className="w-600 h-600 bg-white vhCenter flex-col">
             <Text className="font-bold text-38">选择领取方式</Text>
             <View
-              className="flex items-center justify-start w-440 mt-50"
+              className="flex items-center justify-start w-400 mt-50"
               onClick={() => setApplyType("self_pick_up")}
             >
               <View
@@ -109,10 +110,12 @@ const Index: React.FC<PropsType> = (props) => {
               </View>
               <View>
                 <View>免费到柜领取</View>
-                <View className="text-12">*可前往线下门店领取</View>
               </View>
             </View>
-            <View className="w-440 h-55 mt-20 text-26 px-10">
+            <View className="w-300 text-20 mt-10">*可前往线下门店领取</View>
+
+            {/* 省市区 */}
+            <View className="w-500 mt-20 text-26">
               <MultiplePicker
                 isCascadeData={false}
                 cascadeCount={3}
@@ -123,22 +126,31 @@ const Index: React.FC<PropsType> = (props) => {
                   setSelectCounter(counter);
                 }}
               >
-                <View
-                  className="w-full h-full px-10"
-                  style={{ border: "1px solid #959595", lineHeight: "55rpx" }}
-                >
-                  {!selectCounter ? (
-                    <Text>省/市/柜台</Text>
-                  ) : (
-                    <Text>{selectCounter?.name}</Text>
-                  )}
+                <View className="w-full h-full flex justify-between">
+                  <View className="w-130 leading-60 border_999 flex justify-between items-center px-10 box-border">
+                    <Text className="inline-block text-overflow">
+                      {selectCounter?.province ? selectCounter?.province : "省"}
+                    </Text>
+                    <CImage className="w-20 h-16" src={P9}></CImage>
+                  </View>
+                  <View className="w-130 leading-60 border_999 flex justify-between items-center px-10 box-border">
+                    <Text className="inline-block text-overflow">
+                      {selectCounter?.city ? selectCounter?.city : "市"}
+                    </Text>
+                    <CImage className="w-20 h-16" src={P9}></CImage>
+                  </View>
+                  <View className="w-220 leading-60 border_999 flex justify-between items-center px-10 box-border">
+                    <Text className="inline-block text-overflow">
+                      {selectCounter?.name ? selectCounter?.name : "柜台"}
+                    </Text>
+                    <CImage className="w-20 h-16" src={P9}></CImage>
+                  </View>
                 </View>
               </MultiplePicker>
             </View>
-            {/* 省市区 */}
 
             <View
-              className="flex items-center justify-start w-440 mt-30"
+              className="flex items-center justify-start w-400 mt-40"
               onClick={() => {
                 setSelectCounter(null);
                 setApplyType("express");
@@ -156,9 +168,11 @@ const Index: React.FC<PropsType> = (props) => {
                 )}
               </View>
               <View className="flex-1">
-                <Text decode>邮寄到家(付邮/积分抵邮)</Text>
-                <View className="text-16">*可前往官方商城购买后领取随单</View>
+                <Text decode>邮寄到家</Text>
               </View>
+            </View>
+            <View className="text-20 w-300 h-20 mt-10">
+              {applyType === "express" && `*100积分抵扣邮费`}
             </View>
             <View
               className="w-180 h-55 text-28 vhCenter bg-black text-white mt-50"

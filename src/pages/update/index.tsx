@@ -6,11 +6,12 @@ import { useAsyncEffect, useMemoizedFn, useSetState } from "ahooks";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { P1, P6 } from "@/assets/image/index";
+import { LogoB, P1, P6, P7 } from "@/assets/image/index";
 import Page from "@/components/Page";
 import api from "@/src/api";
 import CityList from "@/src/components/CityList";
 import Avatar from "@/src/components/Common/Avatar";
+import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
@@ -196,14 +197,24 @@ const Index = () => {
         }}
       >
         <PrivacyAuth></PrivacyAuth>
-        <View className="bind">
+        <View className="bind page_bg1 pb-100">
           <View className="bind-top">
             <View className="head">
-              <Image
-                src={user.avatarUrl || P1}
-                className="img"
-                mode="widthFix"
-              />
+              {user?.avatarUrl ? (
+                <CImage
+                  src={user.avatarUrl}
+                  className="h-130 w-130 mb-10 rounded-130 overflow-hidden"
+                  mode="widthFix"
+                ></CImage>
+              ) : (
+                <View className="h-130 w-130 mb-10 rounded-130 overflow-hidden vhCenter border_999 bg-black">
+                  <CImage
+                    className="w-120"
+                    mode="widthFix"
+                    src={LogoB}
+                  ></CImage>
+                </View>
+              )}
               <Avatar
                 callback={(avatarUrl) =>
                   setUser({
@@ -211,7 +222,10 @@ const Index = () => {
                   })
                 }
               ></Avatar>
-              <View>上传头像</View>
+              <View className="w-full vhCenter">
+                <CImage className="w-30 h-28 ml-10" src={P7}></CImage>
+                上传头像
+              </View>
             </View>
             <View className="item">
               <View className="text-30">姓名*</View>
@@ -275,14 +289,11 @@ const Index = () => {
                     {!user.city && (
                       <View className="ipt-placeholder">请选择所在城市</View>
                     )}
-                    {`${user.province} ${user.city}`}
+                    {`${user.city}`}
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
                 </CityList>
               </View>
-            </View>
-            <View className="text-18 text-center mb-20">
-              *此柜台将作为会员权益服务柜台，您的礼遇将默认发放至此柜台，请慎重修改
             </View>
             <View className="item">
               <View className="text-30">所属店铺</View>
@@ -298,13 +309,17 @@ const Index = () => {
                   }}
                 >
                   <View className="flex items-center justify-end">
-                    <View className="text-28">
-                      {counterName ? counterName : "请选择所属店铺"}
-                    </View>
+                    {!counterName && (
+                      <View className="ipt-placeholder">请选择所属店铺</View>
+                    )}
+                    {counterName}
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
                 </MultiplePicker>
               </View>
+            </View>
+            <View className="text-18 text-center mb-20">
+              *此柜台将作为会员权益服务柜台，您的礼遇将默认发放至此柜台，请慎重修改
             </View>
             <View className="item">
               <View className="text-30 mr-10">地址信息</View>
@@ -320,33 +335,29 @@ const Index = () => {
                 />
               </View>
             </View>
-            <View className="w-650 mt-10 text-20">
+            <View className="w-540 mt-70 text-26">
               *如果您想更改手机号及生日信息，请致电客服
               中心400-820-2573，生日仅可修改1次
             </View>
-            <View className="w-650 flex justify-around mt-50">
+            <View
+              className="w-540 h-70 vhCenter bg-white mt-50 text-black rounded-10"
+              onClick={submit}
+            >
+              保存修改
+            </View>
+            <View className="w-540 flex justify-between mt-22">
               <View
-                className="w-300 text-30 h-70 vhCenter"
-                style={{ border: "1rpx solid #FFFFFF" }}
+                className="w-260 text-30 h-70 vhCenter bg-white text-black rounded-10"
                 onClick={() => setPopupType("logOff")}
               >
                 注销会员
               </View>
               <View
-                className="w-300 text-30 h-70 vhCenter bg-white text-black"
-                onClick={submit}
+                className="w-260 text-30 h-70 vhCenter bg-white text-black rounded-10"
+                onClick={() => setPopupType("contact")}
               >
-                立即提交
-              </View>
-            </View>
-            <View className="w-600 flex justify-start items-center mt-20">
-              <View
-                className="w-14 h-14 rounded-14 mr-10"
-                style={{ border: "1rpx solid #FFFFFF" }}
-              ></View>
-              <Text className="text-24" onClick={() => setPopupType("contact")}>
                 沟通退订
-              </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -355,20 +366,20 @@ const Index = () => {
       {/* 注销会员弹窗 */}
       {popupType === "logOff" && (
         <CPopup closePopup={() => setPopupType("")}>
-          <View className="w-600 h-520 bg-white flex flex-col justify-center items-center">
-            <View className="vhCenter flex-col text-center leading-60 px-50">
-              注销会员将清除您的所有会员里程、且无法再兑换礼品，清除个人资料、解除微信绑定，已申请的礼品也将失效。您确定要注销吗?
+          <View className="w-600 pt-45 pb-40 bg-white flex flex-col justify-center items-center rounded-20">
+            <View className="text-30 font-bold mb-36">提示</View>
+            <View className="vhCenter flex-col text-center leading-40 px-50 text-28">
+              注销会员将清除您的所有会员里程、清除个人资料、解除微信绑定，且无法再兑换礼品，已申请的礼品也将失效。您确定要注销吗？
             </View>
-            <View className="w-550 flex justify-around mt-80">
+            <View className="w-550 flex justify-center mt-70">
               <View
-                className="w-200 text-30 h-70 vhCenter"
-                style={{ border: "1rpx solid #000000" }}
+                className="w-200 text-30 h-55 vhCenter bg-black text-white"
                 onClick={logOffFn}
               >
                 确 认
               </View>
               <View
-                className="w-200 text-30 h-70 vhCenter text-white bg-black"
+                className="w-200 text-30 h-55 vhCenter text-black ml-30 box-border rotate_360 borderBlack"
                 onClick={() => setPopupType("")}
               >
                 取 消
@@ -378,15 +389,13 @@ const Index = () => {
         </CPopup>
       )}
 
+      {/* 沟通退订 */}
       {popupType === "contact" && (
         <CPopup closePopup={() => setPopupType("")}>
-          <View className="w-600 h-620 bg-white flex flex-col justify-center items-center">
-            <View className="vhCenter flex-col text-center leading-60">
-              <Text>我希望退订通过以下方式</Text>
-              <Text>推送给我的营销信息</Text>
-              <Text className="text-18">
-                （礼品领取提醒，积分过期提醒，新品试用信息，促销信息等）
-              </Text>
+          <View className="w-600 pt-45 pb-40 bg-white flex flex-col justify-center items-center rounded-20">
+            <View className="text-30 font-bold mb-36">提示</View>
+            <View className="vhCenter flex-col text-center leading-40 text-28 px-50">
+              我希望退订通过以下方式推送给我的营销信息（礼品领取提醒，积分过期提醒，新品试用信息，促销信息等）
             </View>
             <View className="w-300 flex justify-between mt-50">
               <View
@@ -403,16 +412,15 @@ const Index = () => {
               </View>
             </View>
 
-            <View className="w-550 flex justify-around mt-100">
+            <View className="w-550 flex justify-center mt-100">
               <View
-                className="w-200 text-30 h-70 vhCenter"
-                style={{ border: "1rpx solid #000000" }}
+                className="w-200 text-30 h-60 vhCenter bg-black text-white"
                 onClick={submit}
               >
-                确认退订
+                同意
               </View>
               <View
-                className="w-200 text-30 h-70 vhCenter text-white bg-black"
+                className="w-200 text-30 h-60 vhCenter text-black ml-30 box-border rotate_360 borderBlack"
                 onClick={() => {
                   setPopupType("");
                 }}

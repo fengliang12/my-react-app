@@ -84,6 +84,8 @@ declare namespace Api {
         bookCode: string;
         signTime: any;
         signMan: any;
+        detailList: Array<string>;
+        imageKVList: Array<string>;
       };
     }
 

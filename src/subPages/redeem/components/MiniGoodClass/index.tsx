@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cart1 } from "@/assets/image/index";
 import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
+import pageSettingConfig from "@/src/config/pageSettingConfig";
 import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -19,7 +20,7 @@ interface T_Props {
 }
 
 const GoodClass: React.FC<T_Props> = (props) => {
-  const points = useSelector((state: Store.States) => state.user.points);
+  const { points, isMember } = useSelector((state: Store.States) => state.user);
   const dispatch = useDispatch();
   let { goodClassList, originList } = props;
   const [activeIndex, setActiveIndex] = useState<string>("all");
@@ -38,8 +39,12 @@ const GoodClass: React.FC<T_Props> = (props) => {
     } else {
       let list = goodClassList.filter(
         (item: any) => item.point === activeIndex,
-      )[0].data;
-      setSelectList(list);
+      )?.[0]?.data;
+      if (!list) {
+        setActiveIndex("all");
+      } else {
+        setSelectList(list);
+      }
     }
   }, [activeIndex, goodClassList, originList]);
 
@@ -59,6 +64,11 @@ const GoodClass: React.FC<T_Props> = (props) => {
    * 直接购买
    */
   const goPage = useMemoizedFn((good) => {
+    if (!isMember) {
+      to(pageSettingConfig.registerPath, "reLaunch");
+      return;
+    }
+
     if (points < good.point) return toast("您的积分不足");
 
     dispatch({
@@ -75,6 +85,11 @@ const GoodClass: React.FC<T_Props> = (props) => {
    * 添加购物车
    */
   const addCart = useMemoizedFn(async (item: any) => {
+    if (!isMember) {
+      to(pageSettingConfig.registerPath, "reLaunch");
+      return;
+    }
+
     if (points < item.point) return toast("您的积分不足");
 
     Taro.showLoading({ title: "加载中", mask: true });

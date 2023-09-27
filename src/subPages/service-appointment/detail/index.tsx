@@ -69,7 +69,7 @@ const Index = () => {
       <CImage
         className="w-750"
         mode="widthFix"
-        src={`${config.imgBaseUrl}/appointment/detail/${data?.projectCode}.png`}
+        src={`${data?.detailList?.[0]}`}
       ></CImage>
       <View className="fixed w-full px-50 top-200 left-0 vhCenter flex-col box-border">
         <View className="text-left font-thin mt-60 w-full">
@@ -89,8 +89,8 @@ const Index = () => {
           {data?.bookCode ? (
             <CQRCodeCustom
               text={data?.bookCode}
-              width={250}
-              height={250}
+              width={280}
+              height={280}
               padding={10}
               background="#FFFFFF"
             ></CQRCodeCustom>

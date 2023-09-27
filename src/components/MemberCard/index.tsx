@@ -3,7 +3,7 @@ import { useBoolean, useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { CloseB, P5, P6 } from "@/src/assets/image";
+import { CloseB, LogoW, P5, P6 } from "@/src/assets/image";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import handleDataType from "@/src/utils/handleDataType";
@@ -66,15 +66,24 @@ const Index: React.FC<PropsType> = (props) => {
           <View className="w-full flex items-start">
             <View className="flex items-center justify-center relative">
               <View
-                className="absolute top-10 left-0 z-10"
+                className="absolute top-0 left-0 z-10 w-130 h-130 rounded-130 bg-white vhCenter mr-20"
                 onClick={() => goNextPage("/pages/update/index")}
               >
+                {userInfo?.avatarUrl ? (
+                  <CImage
+                    className="w-full h-full rounded-130"
+                    src={userInfo.avatarUrl}
+                  ></CImage>
+                ) : (
+                  <CImage
+                    className="w-120"
+                    mode="widthFix"
+                    src={LogoW}
+                  ></CImage>
+                )}
+
                 <CImage
-                  className="w-130 h-130 mr-20 rounded-130"
-                  src={userInfo.avatarUrl || P5}
-                ></CImage>
-                <CImage
-                  className="w-30 h-30 absolute bottom-10 right-20"
+                  className="w-30 h-30 absolute bottom-0 right-0 z-10"
                   src={`${config.imgBaseUrl}/index/icon_edit.png`}
                 ></CImage>
               </View>
@@ -89,12 +98,12 @@ const Index: React.FC<PropsType> = (props) => {
                       style="transform:translate(-26rpx,3rpx)"
                       src={`${config.imgBaseUrl}/icon/${userInfo.gradeId}.png`}
                     ></CImage>
-                    <View className="text-38 text-overflow max-h-150">
+                    <View className="text-38 text-overflow max-w-250">
                       {userInfo.realName}
                     </View>
                     <View
                       className="flex items-center text-18"
-                      onClick={setTrue}
+                      onClick={() => to("/subPages/common/myQRCode/index")}
                     >
                       <CImage
                         className="w-18 h-18 mr-6"
@@ -138,14 +147,21 @@ const Index: React.FC<PropsType> = (props) => {
               style="background-color:#762022;box-shadow:0rpx 0rpx 10rpx #762022"
             ></View>
           </View>
-          {userInfo.gradeName !== "玩妆大师" && (
+          {/* 下一等级描述 */}
+          {!userInfo?.isMember || userInfo.gradeName === "玩妆入门" ? (
             <View className="w-full h-6 text-black text-right text-18 mt-30">
-              {userInfo.gradeName === "玩妆入门"
-                ? `任意消费`
-                : `再次消费${userInfo.needAmount}元`}
-              即可升级成为
-              {userInfo.nextGradeName}
+              任意消费即可升级成为玩妆达人
             </View>
+          ) : (
+            <>
+              {userInfo.gradeName !== "玩妆大师" && (
+                <View className="w-full h-6 text-black text-right text-18 mt-30">
+                  {`再次消费${userInfo.needAmount}元`}
+                  即可升级成为
+                  {userInfo.nextGradeName}
+                </View>
+              )}
+            </>
           )}
 
           <View

@@ -65,7 +65,7 @@ const Index: React.FC<T_Props> = (props) => {
           >
             小程序用户协议
           </Text>
-          且同意
+          ，且同意
         </View>
         <View className="mt-10">接收来自品牌的营销信息</View>
       </View>

@@ -9,6 +9,7 @@ import { cart } from "@/assets/image/index";
 import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import pageSettingConfig from "@/src/config/pageSettingConfig";
 import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
@@ -19,9 +20,9 @@ const Index = () => {
   const dispatch = useDispatch();
   const [carts, setCarts] = useState<any>([]);
   const [show, { setTrue, setFalse }] = useBoolean(false);
-  const points = useSelector((state: Store.States) => state.user.points);
-  const counter = useSelector(
-    (state: Store.States) => state.exchangeGood.counter,
+  const { points, isMember } = useSelector((state: Store.States) => state.user);
+  const { applyType, counter } = useSelector(
+    (state: Store.States) => state.exchangeGood,
   );
 
   /** 兑换数量 */
@@ -43,13 +44,17 @@ const Index = () => {
    */
   useAsyncEffect(async () => {
     if (!show) return;
-    setCarts([]);
+    if (applyType === "self_pick_up" && !counter) {
+      toast("门店不能为空");
+      return;
+    }
 
+    setCarts([]);
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     let { data } = await api.cart.locate({
       integral: true,
-      counterId: counter?.id,
+      counterId: applyType === "self_pick_up" ? counter?.id : undefined,
       customPointsPayPlan: {
         usePoints: true,
         notValidateUsablePoints: true,
@@ -63,10 +68,15 @@ const Index = () => {
    * 删除
    */
   const handleDelete = useMemoizedFn(async (item) => {
+    if (applyType === "self_pick_up" && !counter) {
+      toast("门店不能为空");
+      return;
+    }
+
     Taro.showLoading({ title: "加载中", mask: true });
     let { status } = await api.cart.remove({
       cartItemIdList: [item.cartItemId],
-      counterId: counter?.id ? counter?.id : undefined,
+      counterId: applyType === "self_pick_up" ? counter?.id : undefined,
     });
     if (status === 200) {
       setCarts(carts.filter((child) => child.cartItemId !== item.cartItemId));
@@ -78,7 +88,13 @@ const Index = () => {
    * 更新购物车
    */
   const updateCart = useMemoizedFn(async (item, type) => {
+    if (applyType === "self_pick_up" && !counter) {
+      toast("门店不能为空");
+      return;
+    }
+
     if (item.sellOut) return toast("商品已售罄");
+
     Taro.showLoading({ title: "加载中", mask: true });
     let origin = cloneDeep(item);
 
@@ -101,7 +117,7 @@ const Index = () => {
     await api.cart
       .update({
         cartItemId: item.cartItemId,
-        counterId: counter?.id || undefined,
+        counterId: applyType === "self_pick_up" ? counter?.id : undefined,
         promotionCode: item.cartItemId,
         quantity: item.quantity,
         selected: item.selected,
@@ -143,9 +159,15 @@ const Index = () => {
   return (
     <View className="index">
       <CImage
-        className="fixed top-800 right-0 w-80 h-80"
+        className="fixed top-800 right-0 z-100 w-102 h-104"
         src={cart}
-        onClick={setTrue}
+        onClick={() => {
+          if (!isMember) {
+            to(pageSettingConfig.registerPath, "reLaunch");
+            return;
+          }
+          setTrue();
+        }}
       ></CImage>
 
       <View

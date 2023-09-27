@@ -34,7 +34,7 @@ const Index = () => {
         </View>
         <Text>{config.postagePoints}积分抵扣邮费</Text>
       </View>
-      <View
+      {/* <View
         className="flex items-center"
         onClick={() => setPostageType("money")}
       >
@@ -44,7 +44,7 @@ const Index = () => {
           )}
         </View>
         <Text>{config.postageMoney}元付邮到家</Text>
-      </View>
+      </View> */}
     </View>
   );
 };

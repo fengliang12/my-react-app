@@ -1,12 +1,14 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { useRouter } from "@tarojs/taro";
+import Taro, { useLoad, useRouter } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
 import { useState } from "react";
 
+import api from "@/src/api";
 import { P3 } from "@/src/assets/image";
 import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
 import useRedeem from "@/src/hooks/useRedeem";
 import { verifyAddressInfo } from "@/src/utils";
 import toast from "@/src/utils/toast";
@@ -21,13 +23,21 @@ const ConfirmAddress = () => {
   const [addressInfo, setAddressInfo] =
     useState<Api.Cart.Public.IDeliverInfo | null>(null);
 
+  useLoad(async () => {
+    let res = await api.user.getCustomerPreferredAddress();
+    console.log("res", res);
+    if (res?.data) {
+      setAddressInfo(res?.data);
+    }
+  });
+
   /**
    * 更改领取方式
    */
   const changeExchangeType = useMemoizedFn(() => {
     Taro.chooseAddress({
-      success: (res) => {
-        setAddressInfo({
+      success: async (res) => {
+        let data = {
           addressee: res.userName,
           city: res.cityName,
           detail: res.detailInfo,
@@ -35,6 +45,13 @@ const ConfirmAddress = () => {
           mobile: res.telNumber,
           postcode: res.postalCode,
           province: res.provinceName,
+        };
+        await api.user.updateCustomerPreferredAddress({
+          ...data,
+          preferred: true,
+        });
+        setAddressInfo({
+          ...data,
           type: "express",
         });
       },
@@ -74,10 +91,10 @@ const ConfirmAddress = () => {
           onClick={changeExchangeType}
         >
           <View className="w-full flex justify-between">
-            <Text className="text-32 font-bold">收货信息</Text>
+            <Text className="text-34 font-bold">收货信息</Text>
             <CImage className="w-20 h-30" src={P3}></CImage>
           </View>
-          <View className="mt-20 text-28">
+          <View className="pt-30 text-28">
             <View className="mt-10">{addressInfo?.addressee}</View>
             <View className="mt-10">{addressInfo?.mobile}</View>
             <View className="mt-10">
@@ -89,26 +106,31 @@ const ConfirmAddress = () => {
 
         {/* 兑换礼品详情 */}
         <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
-          <View className="box_title mb-50 font-bold">兑换礼品详情</View>
+          <View className="text-34 mb-50 font-bold">兑换礼品详情</View>
           <View className="module">
             {goods?.length > 0 &&
               goods?.map((item) => {
                 return <OrderGood good={item} key={item.id}></OrderGood>;
               })}
           </View>
+          <View className="w-full text-right text-24 mt-30">
+            {postageType === "points"
+              ? `${config.postagePoints}积分抵扣邮费`
+              : `${config.postageMoney}元付邮到家`}
+          </View>
 
-          <View className="w-full h-1 bg-black mt-50"></View>
+          <View className="w-full h-1 bg-black mt-30"></View>
           <View className="text-38 flex justify-between mt-50">
             <View className="">总计消耗</View>
             <View>
               {postageType === "points" && applyType === "express"
-                ? totalPoints
+                ? totalPoints + config.postagePoints
                 : totalPoints}
               积分
             </View>
           </View>
           <View
-            className="w-220 h-50 vhCenter bg-black text-white text-26 m-auto mt-100"
+            className="w-220 h-60 vhCenter bg-black text-white text-26 m-auto mt-100"
             onClick={handleReceive}
           >
             确定提交
@@ -123,7 +145,10 @@ const ConfirmAddress = () => {
           title="确认兑换"
           dialogText="订单提交后无法修改,请确认是否提交订单"
           cancel={setFalse}
-          confirm={() => confirm(addressInfo)}
+          confirm={() => {
+            setFalse();
+            confirm(addressInfo);
+          }}
         ></CDialog>
       )}
     </>

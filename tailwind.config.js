@@ -95,6 +95,9 @@ module.exports = {
     translate: () => {
       return {
         ...(theme) => theme("spacing"),
+        p30: "30%",
+        p40: "40%",
+        p45: "45%",
         p50: "50%",
         n50: "-50%",
       };
@@ -103,6 +106,9 @@ module.exports = {
       return {
         ...theme("spacing"),
         ...setPx(),
+        p30: "30%",
+        p40: "40%",
+        p45: "45%",
         p50: "50%",
       };
     },

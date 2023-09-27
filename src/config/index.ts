@@ -26,7 +26,7 @@ const baseConfig = {
     queryName: "url",
   },
   errCodeList: [],
-  postagePoints: 300,
+  postagePoints: 100,
   postageMoney: 9.9,
   key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ",
 };

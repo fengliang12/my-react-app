@@ -799,10 +799,16 @@ declare namespace Api {
         totalBenefitAmount: number;
         /** 积分抵扣金额 */
         totalPointsToAmount: number;
+        totalRealPayPoints: number;
         /** 订单发票进度 */
         orderInvoiceView: {
           invoiceStatus: string;
           invoiceStatusName: string;
+        };
+        simpleCounter?: {
+          detailInfo: {
+            name: string;
+          };
         };
       }
     }
@@ -976,8 +982,8 @@ declare namespace Api {
         /** 订单类型：线上online，线下offline */
         counterAttribute?: string;
         getAllSkus?: boolean;
-        from: string;
-        to: string;
+        from?: string;
+        to?: string;
       }
       /** 返回参数 */
       interface IResponse {

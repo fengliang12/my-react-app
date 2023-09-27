@@ -6,6 +6,7 @@ export default {
     "pages/h5/index",
     "pages/update/index",
     "pages/register/index",
+    "pages/registerSecond/index",
   ],
   window: {
     backgroundTextStyle: "light",
@@ -31,7 +32,7 @@ export default {
     {
       root: "subPages/common",
       name: "common",
-      pages: ["pointsDetail/index", "consumeRecord/index"],
+      pages: ["pointsDetail/index", "consumeRecord/index", "myQRCode/index"],
     },
     {
       root: "subPages/service-appointment",
