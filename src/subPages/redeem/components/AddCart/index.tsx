@@ -73,15 +73,25 @@ const Index = () => {
       return;
     }
 
-    Taro.showLoading({ title: "加载中", mask: true });
-    let { status } = await api.cart.remove({
-      cartItemIdList: [item.cartItemId],
-      counterId: applyType === "self_pick_up" ? counter?.id : undefined,
+    Taro.showModal({
+      title: "提示",
+      content: `是否删除${item.name}`,
+      success: async (res) => {
+        if (res.confirm) {
+          Taro.showLoading({ title: "加载中", mask: true });
+          let { status } = await api.cart.remove({
+            cartItemIdList: [item.cartItemId],
+            counterId: applyType === "self_pick_up" ? counter?.id : undefined,
+          });
+          if (status === 200) {
+            setCarts(
+              carts.filter((child) => child.cartItemId !== item.cartItemId),
+            );
+          }
+        }
+        Taro.hideLoading();
+      },
     });
-    if (status === 200) {
-      setCarts(carts.filter((child) => child.cartItemId !== item.cartItemId));
-    }
-    Taro.hideLoading();
   });
 
   /**
@@ -95,7 +105,6 @@ const Index = () => {
 
     if (item.sellOut) return toast("商品已售罄");
 
-    Taro.showLoading({ title: "加载中", mask: true });
     let origin = cloneDeep(item);
 
     switch (type) {
@@ -114,6 +123,7 @@ const Index = () => {
         break;
     }
 
+    Taro.showLoading({ title: "加载中", mask: true });
     await api.cart
       .update({
         cartItemId: item.cartItemId,

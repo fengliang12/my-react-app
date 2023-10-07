@@ -53,7 +53,7 @@ const Index = () => {
       orderBeginTime: date ? `${date} 00:00:00` : undefined,
       orderEndTime: date ? `${date} 23:59:59` : undefined,
     });
-    total.current = res.data.totalElements;
+    total.current = res.data.totalCount;
     Taro.hideLoading();
     let newList =
       page.current === 0 ? res?.data?.data : list.concat(res?.data?.data);
@@ -71,6 +71,8 @@ const Index = () => {
    * 滚动到底部
    */
   const onScrollEnd = useMemoizedFn(() => {
+    console.log(list.length, total.current);
+
     if (list?.length >= total.current) return;
     page.current += 1;
     getList();

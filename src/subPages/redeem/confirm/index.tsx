@@ -6,7 +6,7 @@ import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
 import config from "@/src/config";
 import useRedeem from "@/src/hooks/useRedeem";
-import { SET_COMMON, SET_EXCHANGE_GOOD } from "@/src/store/constants";
+import { SET_COMMON } from "@/src/store/constants";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -17,8 +17,7 @@ const OrderConfirm = () => {
   const dispatch = useDispatch();
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
 
-  const { applyType, goods, counter, postageType, totalPoints, confirm } =
-    useRedeem();
+  const { applyType, goods, counter, totalPoints, confirm } = useRedeem();
 
   /**
    * 点击兑换
@@ -26,10 +25,7 @@ const OrderConfirm = () => {
   const handleReceive = useMemoizedFn(async () => {
     if (applyType === "express") {
       /** 邮寄到家 */
-      to(
-        `/subPages/redeem/confirmAddress/index?postageType=${postageType}`,
-        "navigateTo",
-      );
+      to(`/subPages/redeem/confirmAddress/index`, "navigateTo");
     } else if (applyType === "self_pick_up") {
       /** 门店核销 */
       if (!counter) return toast("柜台不能为空");
@@ -72,7 +68,7 @@ const OrderConfirm = () => {
 
           <View className="w-full flex justify-between items-end">
             {applyType === "express" ? (
-              <View>邮寄到家（积分抵邮费）</View>
+              <View>邮寄到家</View>
             ) : (
               <View>
                 <View>到柜领取</View>
@@ -102,12 +98,11 @@ const OrderConfirm = () => {
 
           <View className="w-full h-1 bg-black mt-50"></View>
           <View className="text-38 flex justify-between mt-50">
-            <View className="">总计消耗</View>
+            <View className="font-bold">总计消耗</View>
             <View>
-              {postageType === "points" && applyType === "express"
+              {applyType === "express"
                 ? totalPoints + config.postagePoints
                 : totalPoints}
-              积分
             </View>
           </View>
           <View

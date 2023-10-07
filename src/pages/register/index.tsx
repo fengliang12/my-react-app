@@ -40,7 +40,7 @@ const Index = () => {
     avatarUrl: "",
     nickName: "",
     mobile: "",
-    birthDate: "",
+    birthDate: "2000-01-01",
     gender: "",
     province: "",
     city: "",
@@ -95,10 +95,8 @@ const Index = () => {
       successRegister("您已是会员");
       return;
     }
-    const { nickName, birthDate, avatarUrl, mobile, gender, smsCode } = user;
-    if (!avatarUrl) {
-      return Taro.showToast({ title: "请先上传头像", icon: "none" });
-    }
+    const { nickName, birthDate, mobile, gender, smsCode } = user;
+
     if (!isNickname(nickName)) {
       return Taro.showToast({ title: "请输入姓名", icon: "none" });
     }
@@ -327,7 +325,8 @@ const Index = () => {
                   disabled={!(!isMember || !user.birthDate)}
                   value={user.birthDate}
                   onChange={(e) => setUser({ birthDate: e.detail.value })}
-                  end={dayjs().subtract(0, "year").format("YYYY-MM-DD")}
+                  start="1900-01-01"
+                  end={dayjs().subtract(14, "year").format("YYYY-MM-DD")}
                 >
                   <View className="flex items-center justify-end mr-20 text-right w-full">
                     {!user.birthDate && (

@@ -88,11 +88,12 @@ const Index = () => {
       ></CHeader>
 
       <View className="h-240 vhCenter text-white text-26">
-        <View className="flex-1 vhCenter flex-col">
+        <View
+          className="flex-1 vhCenter flex-col"
+          onClick={() => to("/subPages/common/pointsDetail/index")}
+        >
           <Text className="text-80">{userInfo.points}</Text>
-          <Text
-            onClick={() => to("/subPages/common/pointsDetail/index")}
-          >{`积分明细 >`}</Text>
+          <Text>{`积分明细 >`}</Text>
         </View>
         <View className="w-1 h-100 bg-white"></View>
         <View className="flex-1 vhCenter flex-col">

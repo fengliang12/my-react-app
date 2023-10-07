@@ -17,14 +17,14 @@
   }
   .active {
     position: relative;
-    color: #e70031;
+    color: #ffffff;
   }
   .active::after {
     position: absolute;
     content: "";
-    background: #e70031;
+    background: #ffffff;
     left: 50%;
-    top: 70%;
+    bottom: 30%;
     transform: translateX(-50%);
     height: 1px;
     width: 78px;

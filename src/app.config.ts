@@ -70,7 +70,7 @@ export default {
       },
       {
         pagePath: "pages/user/index",
-        text: "个人中心",
+        text: "MY NARS",
         iconPath: "assets/image/tabbar/user02.jpg",
         selectedIconPath: "assets/image/tabbar/user.jpg",
       },

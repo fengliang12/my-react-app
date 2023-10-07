@@ -9,12 +9,13 @@ interface T_tabItem {
 }
 interface T_props extends ViewProps {
   tabList: T_tabItem[];
+  tabItemStyle: string;
   value: any;
   tabClick: (index: number) => void;
 }
 
 const HeaderTabbar: React.FC<Partial<T_props>> = (props) => {
-  let { tabList, value, tabClick } = props;
+  let { tabList, tabItemStyle, value, tabClick } = props;
   return (
     <View className={`header_tab ${props.className}`} style={props.style}>
       {tabList?.length &&
@@ -25,6 +26,7 @@ const HeaderTabbar: React.FC<Partial<T_props>> = (props) => {
                 item?.value === value ? "tab-item  active" : "tab-item "
               }
               onClick={() => tabClick?.(item?.value)}
+              style={tabItemStyle}
               key={item.title}
             >
               {item.title}

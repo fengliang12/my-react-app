@@ -62,6 +62,5 @@ declare namespace Store {
     goods: Array<any>;
     counter: any;
     channelType: ChannelType;
-    postageType: PostageType;
   };
 }

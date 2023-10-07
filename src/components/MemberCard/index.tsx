@@ -3,17 +3,17 @@ import { useBoolean, useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { CloseB, LogoW, P5, P6 } from "@/src/assets/image";
+import { CloseB, LogoW } from "@/src/assets/image";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import handleDataType from "@/src/utils/handleDataType";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
-import toast from "@/src/utils/toast";
 
 import CImage from "../Common/CImage";
 import CPopup from "../Common/CPopup";
 import CQRCodeCustom from "../Common/CQRCodeCustom";
+import MemberTab from "../MemberTab";
 
 interface PropsType {
   showBindPopup: () => void;
@@ -23,20 +23,28 @@ const Index: React.FC<PropsType> = (props) => {
   let { showBindPopup } = props;
   const userInfo = useSelector((state: Store.States) => state.user);
   const isMember = useSelector((state: Store.States) => state.user.isMember);
-  const [qrShow, { setTrue, setFalse }] = useBoolean(false);
+  const [qrShow, { setFalse }] = useBoolean(false);
   const [process, setProcess] = useState<number>(0);
   const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
     useBoolean(false);
 
   useEffect(() => {
+    if (!userInfo) return;
+
+    if (["玩妆达人", "玩妆大师"].includes(userInfo.gradeName)) {
+      setProcess(100);
+      return;
+    }
+
     if (
       !handleDataType(userInfo.nextGradeNeedAmount) ||
       !handleDataType(userInfo.needAmount)
     )
       return;
+
     let i = (1 - userInfo.needAmount / userInfo.nextGradeNeedAmount) * 100;
     setProcess(i);
-  }, [userInfo.needAmount, userInfo.nextGradeNeedAmount]);
+  }, [userInfo]);
 
   /**
    * 前往编辑页面
@@ -58,7 +66,7 @@ const Index: React.FC<PropsType> = (props) => {
         }}
       >
         <View
-          className="w-690 h-368 m-auto mt-150 bg-cover py-24 px-27 box-border relative"
+          className="w-690 h-368 m-auto mt-140 bg-cover py-24 px-27 box-border relative"
           style={{
             backgroundImage: `url(${config.imgBaseUrl}/index/card_bg.png)`,
           }}
@@ -171,14 +179,10 @@ const Index: React.FC<PropsType> = (props) => {
             会员规则
           </View>
         </View>
-        <View
-          className="text-white text-18 text-center mt-50 vhCenter"
-          onClick={() => toast("敬请期待")}
-        >
-          查看我的徽章
-          <CImage className="w-18 h-12 ml-10" src={P6}></CImage>
-        </View>
       </View>
+
+      {/* 查看会员权益 */}
+      <MemberTab></MemberTab>
 
       {/* 二维码弹窗 */}
       <View style={setShow(qrShow)}>

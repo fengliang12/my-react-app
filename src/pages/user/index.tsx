@@ -52,7 +52,7 @@ const Index = () => {
       <MemberCard showBindPopup={showBind}></MemberCard>
       <Layout
         code="user"
-        globalStyle={{ backgroundColor: "#000000" }}
+        globalStyle={{ backgroundColor: "#151515" }}
         onCustomAction={customAction}
       />
     </Page>

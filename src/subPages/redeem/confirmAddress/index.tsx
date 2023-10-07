@@ -14,10 +14,9 @@ import { verifyAddressInfo } from "@/src/utils";
 import toast from "@/src/utils/toast";
 
 import OrderGood from "../components/OrderGood";
+import PostageType from "../components/PostageType";
 
 const ConfirmAddress = () => {
-  const router = useRouter();
-  const { postageType = "" } = router.params;
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
   const { totalPoints, confirm, applyType, goods } = useRedeem();
   const [addressInfo, setAddressInfo] =
@@ -113,20 +112,17 @@ const ConfirmAddress = () => {
                 return <OrderGood good={item} key={item.id}></OrderGood>;
               })}
           </View>
-          <View className="w-full text-right text-24 mt-30">
-            {postageType === "points"
-              ? `${config.postagePoints}积分抵扣邮费`
-              : `${config.postageMoney}元付邮到家`}
-          </View>
+
+          {/* 邮费支付方式 */}
+          {applyType === "express" && <PostageType></PostageType>}
 
           <View className="w-full h-1 bg-black mt-30"></View>
           <View className="text-38 flex justify-between mt-50">
-            <View className="">总计消耗</View>
+            <View className="font-bold">总计消耗</View>
             <View>
-              {postageType === "points" && applyType === "express"
+              {applyType === "express"
                 ? totalPoints + config.postagePoints
                 : totalPoints}
-              积分
             </View>
           </View>
           <View

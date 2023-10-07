@@ -77,12 +77,12 @@ const NearbyStores = () => {
         });
       }
     });
-    // getCounterParams?.lat &&
-    //   setGetCounterParams((prev) => ({
-    //     ...prev,
-    //     province: tempProvinceList[0].label,
-    //     city: tempProvinceList[0].children[0],
-    //   }));
+    getCounterParams?.lat &&
+      setGetCounterParams((prev) => ({
+        ...prev,
+        province: tempProvinceList[0].label,
+        city: tempProvinceList[0].children[0],
+      }));
 
     setProvinceList([...tempProvinceList]);
   });
@@ -133,8 +133,16 @@ const NearbyStores = () => {
   /** 拉起电话 */
   const onMakePhoneCall = (phoneNumber) => {
     if (!phoneNumber) return toast("当前门店暂时无法联系");
-    Taro.makePhoneCall({
-      phoneNumber,
+    Taro.showModal({
+      title: "提示",
+      content: `是否拨打${phoneNumber}`,
+      success: function (res) {
+        if (res.confirm) {
+          Taro.makePhoneCall({
+            phoneNumber,
+          });
+        }
+      },
     });
   };
 

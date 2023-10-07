@@ -6,7 +6,6 @@ const INITIAL_STATE: Store.ExchangeGood = {
   goods: [],
   applyType: "",
   channelType: "immediately",
-  postageType: "points",
   counter: null,
 };
 

@@ -10,6 +10,7 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 
 import OrderGood from "../components/OrderGood";
+import PostageType from "../components/PostageType";
 
 const app: App.GlobalData = Taro.getApp();
 const OrderConfirm = () => {
@@ -82,7 +83,7 @@ const OrderConfirm = () => {
           <View>状 态：{detail?.statusName}</View>
           <View className="mt-10">
             领取方式：
-            {detail?.deliverInfo ? "邮寄到家（积分抵邮）" : "到柜领取"}
+            {detail?.deliverInfo ? "邮寄到家" : "到柜领取"}
           </View>
           {!detail?.deliverInfo && (
             <View className="mt-10">
@@ -99,8 +100,15 @@ const OrderConfirm = () => {
                 return <OrderGood good={item} key={item.id}></OrderGood>;
               })}
           </View>
+
+          {detail?.deliverInfo && (
+            <View className="font-thin">
+              <PostageType></PostageType>
+              <View className="w-full h-1 bg-black mt-40"></View>
+            </View>
+          )}
           <View className="flex justify-between items-center text-40 mt-40">
-            <Text>总消耗积分</Text>
+            <Text>消耗积分</Text>
             <Text>{detail?.totalRealPayPoints}</Text>
           </View>
         </View>

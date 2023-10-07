@@ -59,6 +59,9 @@ image {
 .borderWhite{
   border:1px solid #FFFFFF
 }
+.borderBottomWhite{
+  border-bottom:1px solid #FFFFFF
+}
 
 .border_999{
   border:1px solid #999999
@@ -68,6 +71,20 @@ image {
   transform: rotate(360deg);
 }
 
+.home_tab_active {
+  position: relative;
+  color: #ffffff;
+}
+.home_tab_active::after {
+  position: absolute;
+  content: "";
+  background: #ffffff;
+  left: 50%;
+  bottom: 0%;
+  transform: translateX(-50%);
+  height: 1px;
+  width: 100px;
+}
 
 picker{
   width: 100%;

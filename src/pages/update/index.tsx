@@ -246,12 +246,14 @@ const Index = () => {
             </View>
             <View className="item">
               <View className="text-30">手机号*</View>
-              <View className="right">{maskPhone(user.mobile)}</View>
+              <View className="right" style="color:#999999">
+                {maskPhone(user.mobile)}
+              </View>
             </View>
             <View className="item">
               <View className="text-30">生日*</View>
-              <View className="right">
-                <View className="flex items-center pr-20">
+              <View className="right" style="color:#999999">
+                <View className="flex items-center">
                   {user.birthDate}
                   <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                 </View>

@@ -1,4 +1,4 @@
-import Taro, { useRouter } from "@tarojs/taro";
+import Taro from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import api from "../api";
 import to from "../utils/to";
 import toast from "../utils/toast";
-import usePayHooks from "./payHooks";
 import useSubMsg from "./useSubMsg";
 
 const app: App.GlobalData = Taro.getApp();
@@ -14,10 +13,7 @@ let confirmStatus: boolean = false;
 
 const useRedeem = () => {
   const subMsg = useSubMsg();
-  const { postageType } = useSelector(
-    (state: Store.States) => state.exchangeGood,
-  );
-  const { pay } = usePayHooks();
+
   const points = useSelector((state: Store.States) => state.user.points);
   const { applyType, counter, goods, channelType } = useSelector(
     (state: Store.States) => state.exchangeGood,
@@ -34,7 +30,6 @@ const useRedeem = () => {
   const confirm = useMemoizedFn(async (addressInfo?: any) => {
     if (points < totalPoints) return toast("您的积分不足");
     if (confirmStatus) return;
-
     confirmStatus = true;
     await subMsg("REDEEM");
 
@@ -66,8 +61,7 @@ const useRedeem = () => {
       integral: true,
       customPointsPayPlan: {
         notValidateUsablePoints: true,
-        usePointsForShipment:
-          applyType === "express" && postageType === "points" ? true : false,
+        usePointsForShipment: applyType === "express" ? true : false,
         usePoints: true,
       },
     };
@@ -96,12 +90,8 @@ const useRedeem = () => {
    * 调用支付接口
    */
   const payFunc = useMemoizedFn(async (orderId: string) => {
-    if (applyType === "express" && postageType === "money") {
-      /** 邮寄到家&9.9元支付 */
-      await pay(orderId);
-    } else {
-      await api.order.paymentUMS({ orderId });
-    }
+    await api.order.paymentUMS({ orderId });
+
     Taro.showToast({ title: "兑礼成功", icon: "success" });
     setTimeout(async () => {
       await app.init(true);
@@ -117,7 +107,6 @@ const useRedeem = () => {
     applyType,
     goods,
     counter,
-    postageType,
     totalPoints,
     confirm,
     payFunc,

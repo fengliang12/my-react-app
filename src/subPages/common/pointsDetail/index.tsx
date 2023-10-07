@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
+import config from "@/src/config";
 import { formatDateTime } from "@/src/utils";
 
 const Index = () => {
@@ -29,7 +30,10 @@ const Index = () => {
         titleColor="#ffffff"
         backgroundColor="rgba(0,0,0,1)"
       ></CHeader>
-      <View className="vhCenter w-full h-300 flex-col bg-black2">
+      <View
+        className="vhCenter w-full h-300 flex-col bg-black2"
+        style={`background:url(${config.imgBaseUrl}/pointsDetail/bg.jpg);background-size:100% 100%`}
+      >
         <Text className="text-100 font-thin">{points}</Text>
         <Text className="text-26">当前积分</Text>
       </View>
