@@ -82,6 +82,12 @@ const useRedeem = () => {
       } as Api.BuyNow.Submit.IRequestBody);
     }
     if (result.status === 200) {
+      let data =
+        applyType === "self_pick_up"
+          ? { type: applyType, counterId: counter.id }
+          : { type: applyType, ...addressInfo };
+      await api.order.deliver(result.data.orderId, data);
+
       payFunc(result.data.orderId);
     }
   });

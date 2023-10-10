@@ -9,6 +9,7 @@ export const P6 = require("./p6.png");
 export const P7 = require("./p7.png");
 export const P8 = require("./p8.png");
 export const P9 = require("./p9.png");
+export const P10 = require("./p10.png");
 
 export const cart = require("./cart.png");
 export const cart1 = require("./cart1.png");

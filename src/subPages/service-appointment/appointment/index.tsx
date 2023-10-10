@@ -9,6 +9,7 @@ import api from "@/api/index";
 import { P6 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import config from "@/src/config";
 import useSubMsg from "@/src/hooks/useSubMsg";
 import { handleTextBr } from "@/src/utils";
@@ -135,15 +136,15 @@ const Index = () => {
       .then((res: any) => {
         Taro.hideLoading();
         to(
-          `/subPages/service-appointment/detail/index?bookId=${res.data.bookId}`,
+          `/subPages/service-appointment/success/index?bookId=${res.data.bookId}`,
           "redirectTo",
         );
       })
       .catch((err) => {
         if (err?.data?.message.includes("arvato")) {
-          Taro.hideLoading();
-          to(`/subPages/service-appointment/list/index`, "redirectTo");
-          return;
+          setTimeout(() => {
+            to(`/subPages/service-appointment/list/index`, "redirectTo");
+          }, 2000);
         }
       });
   };
@@ -186,20 +187,21 @@ const Index = () => {
         ) : (
           <View>
             <View className="mb-30">
-              <Picker
-                mode="selector"
-                range={counterList}
-                rangeKey="storeName"
-                onChange={(e) => {
-                  const { value } = e.detail;
-                  if (!counterList?.[value]?.storeId) return;
+              <MultiplePicker
+                isCascadeData={false}
+                cascadeCount={3}
+                pickerData={counterList}
+                customKeyList={["sideName", "areaName", "storeName"]}
+                callback={(e: any) => {
+                  console.log(e);
+                  if (!e.storeId) return;
                   setAppointment((prev) => ({
                     ...prev,
-                    storeId: counterList[value].storeId,
+                    storeId: e.storeId,
                     reserveDate: "",
                     timePeriod: "",
                   }));
-                  getPeriods(counterList[value].storeId);
+                  getPeriods(e.storeId);
                 }}
               >
                 <View
@@ -215,7 +217,7 @@ const Index = () => {
                     computedStoreName
                   )}
                 </View>
-              </Picker>
+              </MultiplePicker>
             </View>
             <View className="mb-30">
               <Picker
@@ -281,7 +283,7 @@ const Index = () => {
           className="w-600 text-26 h-60 m-auto text-white vhCenter borderWhite mt-100 absolute bottom-0 left-75"
           onClick={onSubmit}
         >
-          {introduce ? "即 可 预 约" : "提 交"}
+          {introduce ? "即 刻 预 约" : "确 认"}
         </View>
       </View>
     </View>

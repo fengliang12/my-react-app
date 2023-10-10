@@ -1,25 +1,12 @@
 import { Picker, ScrollView, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useAsyncEffect, useMemoizedFn, useUpdateEffect } from "ahooks";
+import { useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import { formatDateTime } from "@/src/utils";
-
-const orderList = [
-  { label: "全部订单", value: "" },
-  { label: "创建订单", value: "CREATED" },
-  { label: "交易取消", value: "CANCELLED" },
-  { label: "待确认订单", value: "CONFIRMED" },
-  { label: "交易成功", value: "FINISHED" },
-  { label: "待收货", value: "DELIVERED" },
-  { label: "退款开始", value: "REFUND_START" },
-  { label: "退款中", value: "REFUNDING" },
-  { label: "退款完成", value: "REFUND_FINISHED" },
-  { label: "退款取消", value: "REFUND_CANCEL" },
-];
 
 enum CHANNEL_TYPE_LIST {
   "GW" = "官网",
@@ -32,7 +19,6 @@ enum CHANNEL_TYPE_LIST {
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
-  const [orderIndex, setOrderIndex] = useState<number>(0);
   const [date, setDate] = useState<string>("");
   const endTime = dayjs(Date.now()).format("YYYY-MM-DD");
 
@@ -49,11 +35,11 @@ const Index = () => {
     let res = await api.shuYunMember.orderPage({
       currentPage: page.current,
       pageSize: 10,
-      status: orderList?.[orderIndex]?.value || undefined,
       orderBeginTime: date ? `${date} 00:00:00` : undefined,
       orderEndTime: date ? `${date} 23:59:59` : undefined,
     });
     total.current = res.data.totalCount;
+
     Taro.hideLoading();
     let newList =
       page.current === 0 ? res?.data?.data : list.concat(res?.data?.data);
@@ -61,18 +47,14 @@ const Index = () => {
   });
 
   useEffect(() => {
-    if (date || orderIndex) {
-      page.current = 0;
-    }
+    page.current = 0;
     getList();
-  }, [date, orderIndex, getList]);
+  }, [date, getList]);
 
   /**
    * 滚动到底部
    */
   const onScrollEnd = useMemoizedFn(() => {
-    console.log(list.length, total.current);
-
     if (list?.length >= total.current) return;
     page.current += 1;
     getList();
@@ -88,21 +70,13 @@ const Index = () => {
         backgroundColor="rgba(0,0,0,1)"
       ></CHeader>
       <View className="w-688 flex justify-between mt-70 mb-30">
-        <View className="w-268 h-97 bg-grayBg vhCenter">
-          <Picker
-            mode="selector"
-            range={orderList}
-            rangeKey="label"
-            value={orderIndex}
-            onChange={(e) => {
-              let index = Number(e.detail.value);
-              setOrderIndex(index);
-            }}
-          >
-            <Text className="w-full h-97 vhCenter ">
-              {orderIndex === -1 ? "请选择" : orderList[orderIndex].label}
-            </Text>
-          </Picker>
+        <View
+          className="w-268 h-97 bg-grayBg vhCenter"
+          onClick={() => {
+            setDate("");
+          }}
+        >
+          全部订单
         </View>
         <View className="w-400 h-97 bg-grayBg vhCenter">
           <Picker
@@ -135,12 +109,12 @@ const Index = () => {
                   <Text className="w-150">订单店铺：</Text>
                   <Text className="flex-1">{item.shopName}</Text>
                 </View>
-                <View className="flex items-start my-16">
+                {/* <View className="flex items-start my-16">
                   <Text className="w-150">订单渠道：</Text>
                   <Text className="flex-1">
                     {CHANNEL_TYPE_LIST[item.channelType]}
                   </Text>
-                </View>
+                </View> */}
                 <View className="flex items-start my-16">
                   <Text className="w-150">订单日期：</Text>
                   <Text className="flex-1">

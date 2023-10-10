@@ -127,10 +127,10 @@ const Index = () => {
       <View style={setShow(show)}>
         <CPopup maskClose closePopup={setFalse}>
           <View className="w-690 h-1008 bg-white rounded-20">
-            <CImage
+            {/* <CImage
               className="w-full h-full"
               src="https://can-uat-prod-baum-oss.oss-cn-shanghai.aliyuncs.com/coupon/rule.png"
-            ></CImage>
+            ></CImage> */}
             <View
               className="absolute w-80 h-80 top-20 right-10 vhCenter"
               onClick={setFalse}

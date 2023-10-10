@@ -12,6 +12,10 @@ import to from "@/src/utils/to";
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
+
+  /**
+   * 获取projects
+   */
   const { data: projects = [] } = useRequest(async () => {
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
@@ -31,10 +35,10 @@ const Index = () => {
         titleCss="height:85rpx"
         titleColor="#FFFFFF"
       ></CHeader>
-      <View className="text-52 text-left mt-100 font-thin pl-60 english_family">
+      <View className="text-52 text-left mt-100 font-thin pl-60 english_family opacity-80">
         MAKE UP YOUR MIND
       </View>
-      <View className="text-35 text-left mt-10 font-thin pl-60">
+      <View className="text-35 text-left mt-10 font-thin pl-60 opacity-80">
         预约门店专属彩妆服务
       </View>
 
@@ -62,8 +66,9 @@ const Index = () => {
           ))}
         </View>
       </ScrollView>
-      <View className="h-200 text-35 text-center font-thin underline">
+      <View className="h-200 text-35 text-center font-thin ">
         <Text
+          className="inline-block h-50 borderBottomWhite"
           onClick={() => {
             if (!userInfo?.isMember) {
               to("/pages/registerSecond/index");

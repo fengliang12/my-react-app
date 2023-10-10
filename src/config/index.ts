@@ -5,8 +5,10 @@ import dev from "./dev";
 import prod from "./prod";
 
 // 配置生产项目APPID
+// 测试：wxbd3891c0f73d0592
+// 生产：wx7d12b21af0a8bed3
 const IS_PRO =
-  Taro.getAccountInfoSync()?.miniProgram?.appId === "wx5db42fa407c94947";
+  Taro.getAccountInfoSync()?.miniProgram?.appId === "wx7d12b21af0a8bed3";
 
 const baseConfig = {
   /** 品牌StoreCode */

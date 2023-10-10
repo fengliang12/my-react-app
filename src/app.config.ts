@@ -32,14 +32,19 @@ export default {
     {
       root: "subPages/common",
       name: "common",
-      pages: ["pointsDetail/index", "consumeRecord/index", "myQRCode/index"],
+      pages: [
+        "pointsDetail/index",
+        "consumeRecord/index",
+        "myQRCode/index",
+        "privacy/index",
+      ],
     },
     {
       root: "subPages/service-appointment",
       name: "serviceAppointment",
       pages: [
         "index",
-        "introduce/index",
+        "success/index",
         "appointment/index",
         "detail/index",
         "list/index",

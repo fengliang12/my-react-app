@@ -2,7 +2,6 @@ import { View } from "@tarojs/components";
 import Taro, { useRouter } from "@tarojs/taro";
 import { useRequest } from "ahooks";
 import dayjs from "dayjs";
-import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
@@ -10,25 +9,26 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
 import to from "@/src/utils/to";
-import toast from "@/src/utils/toast";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const router = useRouter();
-  const userInfo = useSelector((state: Store.States) => state.user);
 
   const { data } = useRequest(async () => {
-    await app.init();
+    const userInfo = await app.init();
+    Taro.showLoading({ title: "加载中", mask: true });
     return await api.arvatoReservation
       .getRecords({
         memberCode: userInfo.marsId,
       })
-      .then(
-        (res) =>
+      .then((res) => {
+        Taro.hideLoading();
+        return (
           res.data.find(
             (i) => i.bookId === Number(router.params.bookId || 0),
-          ) || ({} as Api.ArvatoReservation.GetRecords.Item),
-      );
+          ) || ({} as Api.ArvatoReservation.GetRecords.Item)
+        );
+      });
   });
 
   /**
@@ -36,7 +36,10 @@ const Index = () => {
    */
   const onCancel = async () => {
     Taro.showModal({
-      title: "确认是否取消服务预约",
+      title: "温馨提示",
+      content: `亲爱的NARS会员\r\n您确认取消以下服务吗?\r\n${data?.projectName}\r\n${data?.storeName}\r\n${dayjs(
+        data?.reserveDate,
+      ).format("YYYY-MM-DD")} ${data?.timePeriod}`,
       success: async (res) => {
         // 点击确定的时候取消服务预约
         if (res.confirm) {
@@ -46,11 +49,17 @@ const Index = () => {
               bookId: data?.bookId!,
               type: -1,
             })
+            .then(() => {
+              Taro.hideLoading();
+              to(1);
+            })
             .catch((err) => {
-              toast(err);
+              if (err?.data?.message.includes("arvato")) {
+                setTimeout(() => {
+                  to(1);
+                }, 2000);
+              }
             });
-          Taro.hideLoading();
-          to(1);
         }
       },
     });
@@ -89,8 +98,8 @@ const Index = () => {
           {data?.bookCode ? (
             <CQRCodeCustom
               text={data?.bookCode}
-              width={280}
-              height={280}
+              width={300}
+              height={300}
               padding={10}
               background="#FFFFFF"
             ></CQRCodeCustom>
@@ -98,7 +107,7 @@ const Index = () => {
         </View>
         {data?.status === "0" ? (
           <View
-            className="w-full text-35 text-center font-thin underline mt-50"
+            className="text-35 h-50 text-center font-thin mt-100 borderBottomWhite"
             onClick={onCancel}
           >
             取消预约

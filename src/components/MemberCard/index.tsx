@@ -3,7 +3,7 @@ import { useBoolean, useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { CloseB, LogoW } from "@/src/assets/image";
+import { CloseB, LogoW, P10 } from "@/src/assets/image";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import handleDataType from "@/src/utils/handleDataType";
@@ -31,7 +31,7 @@ const Index: React.FC<PropsType> = (props) => {
   useEffect(() => {
     if (!userInfo) return;
 
-    if (["玩妆达人", "玩妆大师"].includes(userInfo.gradeName)) {
+    if (["玩妆入门", "玩妆大师"].includes(userInfo.gradeName)) {
       setProcess(100);
       return;
     }
@@ -138,10 +138,13 @@ const Index: React.FC<PropsType> = (props) => {
               onClick={() => goNextPage("/subPages/common/pointsDetail/index")}
             >
               <View className="text-46">{userInfo.points}</View>
-              <CImage
-                className="w-116 h-24"
-                src={`${config.imgBaseUrl}/index/icon_redeem.png`}
-              ></CImage>
+              <View className="vhCenter">
+                <CImage className="w-35 h-31 mr-6" src={P10}></CImage>
+                <CImage
+                  className="w-116 h-24"
+                  src={`${config.imgBaseUrl}/index/icon_redeem.png`}
+                ></CImage>
+              </View>
             </View>
           </View>
           {/* 进度条 */}
@@ -172,12 +175,12 @@ const Index: React.FC<PropsType> = (props) => {
             </>
           )}
 
-          <View
+          {/* <View
             className="absolute bottom-20 left-25 text-18 underline"
             onClick={setRuleTrue}
           >
             会员规则
-          </View>
+          </View> */}
         </View>
       </View>
 

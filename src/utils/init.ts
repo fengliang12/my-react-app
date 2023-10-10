@@ -47,7 +47,7 @@ export const createInit = () => {
             payload: userInfo,
           });
           Taro.hideLoading();
-          return userInfo;
+          return store.getState().user;
         })
         .catch(() => {
           initPromise = null;

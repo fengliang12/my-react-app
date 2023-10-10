@@ -26,10 +26,11 @@ const Index = () => {
             text={userInfo?.cardNo as unknown as string}
             width={360}
             height={360}
+            correctLevel={3}
             image={{
               imageResource: userInfo?.avatarUrl || "",
-              width: 30,
-              height: 30,
+              width: 50,
+              height: 50,
               round: true,
             }}
           ></CQRCodeCustom>

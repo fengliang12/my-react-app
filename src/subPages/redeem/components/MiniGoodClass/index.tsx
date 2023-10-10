@@ -157,7 +157,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
                       className="w-full h-full absolute top-0 left-0 text-white vhCenter text-38 z-99 rounded-9"
                       style="background-color:rgba(0,0,0,0.5);"
                     >
-                      售 罄
+                      已 兑 完
                     </View>
                   )}
                   <View

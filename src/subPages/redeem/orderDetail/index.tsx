@@ -54,11 +54,11 @@ const OrderConfirm = () => {
         )}
 
         <View className="text-28 mt-30">
-          {detail?.deliverInfo
+          {detail?.deliverInfo?.type === "express"
             ? "* 礼品将于10个工作日内发货"
-            : "* 礼品将于10个工作日内到达领取柜台"}
+            : "* 礼品将于3个工作日内到达领取柜台"}
         </View>
-        {detail?.deliverInfo && (
+        {detail?.deliverInfo?.type === "express" && (
           <View className="mt-30 text-28">
             <View className="mt-15">
               <Text>收件人：</Text>
@@ -80,12 +80,15 @@ const OrderConfirm = () => {
 
       <View className="w-690 pb-200 bg-white px-30 py-40 box-border mt-75 text-black font-bold">
         <View className="text-28">
-          <View>状 态：{detail?.statusName}</View>
+          <View>
+            状 态：
+            {detail?.statusName === "待评价" ? "已完成" : detail?.statusName}
+          </View>
           <View className="mt-10">
             领取方式：
-            {detail?.deliverInfo ? "邮寄到家" : "到柜领取"}
+            {detail?.deliverInfo?.type === "express" ? "邮寄到家" : "到柜领取"}
           </View>
-          {!detail?.deliverInfo && (
+          {detail?.deliverInfo?.type === "self_pick_up" && (
             <View className="mt-10">
               领取柜台: {detail?.simpleCounter?.detailInfo?.name}
             </View>
@@ -101,7 +104,7 @@ const OrderConfirm = () => {
               })}
           </View>
 
-          {detail?.deliverInfo && (
+          {detail?.deliverInfo?.type === "express" && (
             <View className="font-thin">
               <PostageType></PostageType>
               <View className="w-full h-1 bg-black mt-40"></View>
@@ -114,8 +117,8 @@ const OrderConfirm = () => {
         </View>
 
         {detail?.status &&
-          ["wait_pay", "wait_shipment"].includes(detail?.status) &&
-          !detail?.deliverInfo && (
+          ["wait_shipment", "wait_receive"].includes(detail?.status) &&
+          detail?.deliverInfo?.type === "self_pick_up" && (
             <View
               className="text-55 flex justify-center items-center mt-50 pt-50"
               style="border-top:1px solid #000"

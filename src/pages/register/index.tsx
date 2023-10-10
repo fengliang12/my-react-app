@@ -167,6 +167,7 @@ const Index = () => {
       .runModal({})
       .then(async (res) => {
         const { latitude, longitude } = res;
+        Taro.showLoading({ title: "加载中", mask: true });
         qqmapsdk.reverseGeocoder({
           location: {
             latitude,
@@ -184,6 +185,7 @@ const Index = () => {
           },
           complete: function (res) {
             console.log(res);
+            Taro.hideLoading();
           },
         });
       })

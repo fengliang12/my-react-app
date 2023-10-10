@@ -30,10 +30,7 @@ const Index: React.FC<T_Props> = (props) => {
    */
   const goPrivacyPolicy = (e) => {
     let { type } = e.currentTarget.dataset;
-    to(
-      `/subPages/common-pages/privacy-policy/index?type=${type}`,
-      "navigateTo",
-    );
+    to(`/subPages/common/privacy/index?type=${type}`, "navigateTo");
   };
   return (
     <View className="tips_text" {...props}>

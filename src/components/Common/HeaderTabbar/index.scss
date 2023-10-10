@@ -1,12 +1,12 @@
 .header_tab {
   display: flex;
   width: 100%;
+  font-size: 32px;
   .tab-item {
     flex: 1;
     text-align: center;
     height: 120px;
     line-height: 120px;
-    font-size: 25px;
     font-weight: 300;
     color: #dddddd;
     border-bottom: 1px solid rgba(158, 158, 158, 0.12);
@@ -27,6 +27,6 @@
     bottom: 30%;
     transform: translateX(-50%);
     height: 1px;
-    width: 78px;
+    width: 100px;
   }
 }

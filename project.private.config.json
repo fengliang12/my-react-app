@@ -59,9 +59,9 @@
           "scene": null
         },
         {
-          "name": "预约介绍",
-          "pathName": "subPages/service-appointment/introduce/index",
-          "query": "",
+          "name": "预约成功",
+          "pathName": "subPages/service-appointment/success/index",
+          "query": "bookId=53",
           "launchMode": "default",
           "scene": null
         },
@@ -159,6 +159,13 @@
         {
           "name": "我的二维码",
           "pathName": "subPages/common/myQRCode/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "潮装",
+          "pathName": "pages/activity/index",
           "query": "",
           "launchMode": "default",
           "scene": null

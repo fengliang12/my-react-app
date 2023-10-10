@@ -144,12 +144,18 @@ const Index = () => {
                     <Text className="flex-1">
                       {formatDateTime(item.createTime, 6)}
                     </Text>
-                    <Text>{item.statusName}</Text>
+                    <Text>
+                      {item.statusName === "待评价"
+                        ? "已完成"
+                        : item.statusName}
+                    </Text>
                   </View>
                   <View className="flex items-start mt-25 text-24">
                     <Text>领取方式：</Text>
                     <Text className="flex-1">
-                      {item?.deliverInfo ? "邮寄到家" : "到柜领取"}
+                      {item?.deliverInfo?.type === "express"
+                        ? "邮寄到家"
+                        : "到柜领取"}
                     </Text>
                   </View>
 

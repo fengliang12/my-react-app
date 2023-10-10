@@ -25,8 +25,7 @@ const Index = () => {
       throw new Error("敬请期待");
     }
     if (code === "jump_h5") {
-      // let url = `${data}${userInfo.memberId}`;
-      let url = `${data}M4601887550`;
+      let url = `${data}${userInfo.memberId}`;
 
       to(`/pages/h5/index?url=${encodeURIComponent(url)}`);
       throw new Error("敬请期待");

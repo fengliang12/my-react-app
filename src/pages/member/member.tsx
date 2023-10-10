@@ -1,6 +1,7 @@
 import { useMemoizedFn } from "ahooks";
 import { useSelector } from "react-redux";
 
+import CouponPopup from "@/src/components/CouponPopup";
 import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
@@ -42,6 +43,7 @@ const Index = () => {
         globalStyle={{ backgroundColor: "#000000" }}
         onCustomAction={customAction}
       />
+      <CouponPopup type="HOME"></CouponPopup>
     </Page>
   );
 };

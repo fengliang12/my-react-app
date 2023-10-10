@@ -16,7 +16,9 @@ const app: App.GlobalData = Taro.getApp();
 const NearbyStores = () => {
   /** 请求参数 */
   const [getCounterParams, setGetCounterParams] =
-    useState<Api.Counter.GetCounterNearList.IRequest>({});
+    useState<Api.Counter.GetCounterNearList.IRequest>({
+      type: "DIRECT_SALE",
+    });
 
   /** 获取柜台列表 */
   const { data: counterList = [], run: getNearCounterList } = useRequest(

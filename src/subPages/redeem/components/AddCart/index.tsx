@@ -103,7 +103,7 @@ const Index = () => {
       return;
     }
 
-    if (item.sellOut) return toast("商品已售罄");
+    if (item.sellOut) return toast("商品已兑完");
 
     let origin = cloneDeep(item);
 
@@ -169,7 +169,7 @@ const Index = () => {
   return (
     <View className="index">
       <CImage
-        className="fixed top-800 right-0 z-100 w-102 h-104"
+        className="fixed top-800 right-0 z-100 w-82 h-84"
         src={cart}
         onClick={() => {
           if (!isMember) {
@@ -223,7 +223,7 @@ const Index = () => {
                             className="w-full h-full absolute top-0 left-0 text-white vhCenter text-28 z-99 rounded-9"
                             style="background-color:rgba(0,0,0,0.5);"
                           >
-                            售 罄
+                            已 兑 完
                           </View>
                         )}
                         <CImage className="w-180 h-180" src={item?.mainImage} />

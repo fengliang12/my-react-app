@@ -1,7 +1,7 @@
 import { ScrollView, Text, View } from "@tarojs/components";
 import Taro, { useDidShow } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 import api from "@/src/api";
 import { P9 } from "@/src/assets/image";
@@ -18,11 +18,10 @@ const tabList: Array<tabType> = [
   { title: "已使用", value: "20" },
   { title: "已过期", value: "90" },
 ];
-const app: App.GlobalData = Taro.getApp();
 
+const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const [originList, setOriginList] = useState<any>([]);
-  const [couponList, setCouponList] = useState<any>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [couponStatus, setCouponStatus] = useState<string>("10");
 
@@ -35,15 +34,6 @@ const Index = () => {
   });
 
   /**
-   * 根据状态获取卡券列表
-   */
-  const getMyCouponStatus = useMemoizedFn(() => {
-    if (originList?.length && couponStatus) {
-      setCouponList(originList.filter((item) => item.status === couponStatus));
-    }
-  });
-
-  /**
    * 点击菜单栏切换
    */
   const tabClick = useMemoizedFn((val) => {
@@ -52,11 +42,15 @@ const Index = () => {
     setCouponStatus(val);
   });
 
-  useEffect(() => {
-    if (couponStatus) {
-      getMyCouponStatus();
+  /**
+   * 根据状态获取卡券列表
+   */
+  const couponList = useMemo(() => {
+    if (originList?.length > 0 && couponStatus) {
+      return originList.filter((item) => item.status === couponStatus);
     }
-  }, [couponStatus, originList, getMyCouponStatus]);
+    return [];
+  }, [couponStatus, originList]);
 
   return (
     <View

@@ -37,6 +37,7 @@ export interface QRCode {
   padding?: number;
   paddingColor?: string;
   image?: QRImage;
+  correctLevel?: number;
 }
 const Component: React.FC<QRCode> = (props) => {
   const {
@@ -50,6 +51,7 @@ const Component: React.FC<QRCode> = (props) => {
     paddingColor = "rgba(0, 0, 0, 0)",
     image = { imageResource: "", width: 80, height: 80, round: !0 },
     onMyEvent,
+    correctLevel = 1,
   } = props;
   const canvasRef = useRef({ uid: "" });
   //立刻执行
@@ -112,7 +114,7 @@ const Component: React.FC<QRCode> = (props) => {
           foreground,
           paddingColor,
           image: {},
-          correctLevel: 1,
+          correctLevel: correctLevel,
         };
         if (image.imageResource) {
           const img = canvas.createImage();

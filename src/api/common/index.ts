@@ -46,6 +46,13 @@ const mapJSON: any = (params) => {
   return http.get("https://apis.map.qq.com/ws/geocoder/v1", { params });
 };
 
+/** 根据类型查询活动弹窗popUp配置 */
+const findPopupListByType: Api.Common.FindPopupList.FuncT = (typeList) =>
+  http.post(
+    `/sp-portal/store/${config.storeCode}/activity/findPopupList`,
+    typeList,
+  );
+
 export default {
   /** 授权获取用户信息和token */
   login,
@@ -62,4 +69,6 @@ export default {
   multiSubscribeByCode,
   findSubscribeByCode,
   mapJSON,
+  // 根据类型查询活动弹窗popUp配置
+  findPopupListByType,
 };
