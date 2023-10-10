@@ -34,7 +34,13 @@ class App extends Component<any> {
   async onLaunch() {
     updateManager();
     this.taroGlobalData.globalData.systemInfo = Taro.getSystemInfoSync();
-    this.taroGlobalData.init();
+    let userInfo = await this.taroGlobalData.init();
+
+    /** 注销用户再次注册需刷新token */
+    if (!userInfo.isMember && userInfo.channelName) {
+      await this.taroGlobalData.init(true);
+    }
+
     Taro.loadFontFace({
       family: "CHINESE_F_Z",
       global: true,
@@ -45,7 +51,7 @@ class App extends Component<any> {
     Taro.loadFontFace({
       family: "ENGLISH_F_Z",
       global: true,
-      source: `url("${config.imgBaseUrl}/font/HelveticaNeueLTPro-UltLt.TTF")`,
+      source: `url("${config.imgBaseUrl}/font/HelveticaNeueLTPro-UltLt.otf")`,
       success: console.log,
       fail: console.log,
     });

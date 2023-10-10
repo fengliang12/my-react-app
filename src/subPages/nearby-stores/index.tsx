@@ -217,7 +217,7 @@ const NearbyStores = () => {
         {counterList.map((counter) => (
           <View key={counter.id} className="text-black p-30 borderBottomBlack">
             <View
-              className="text-36  underline"
+              className="text-36 inline-block borderBottomBlack2"
               onClick={() => onOpenLocation(counter)}
             >
               {counter.detailInfo.name}

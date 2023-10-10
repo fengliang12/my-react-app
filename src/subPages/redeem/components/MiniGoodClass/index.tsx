@@ -105,7 +105,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
     });
     Taro.hideLoading();
     if (status === 200) {
-      toast("商品添加成功");
+      toast("已成功添加购物");
     }
   });
 

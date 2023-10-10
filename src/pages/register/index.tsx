@@ -260,9 +260,13 @@ const Index = () => {
               <View className="left">手机号*</View>
               <View className="right">
                 {!user.mobile && !inputMobileType ? (
-                  <View className="w-full flex items-center justify-end text-28 ipt-placeholder">
+                  <View className="w-full flex items-center justify-end text-26 ipt-placeholder">
+                    <View className="underline" onClick={setTrue}>
+                      点击输入手机号
+                    </View>
+                    或
                     <View className="underline relative">
-                      一键获取
+                      一键授权微信手机号
                       <GetPhoneNumber
                         callback={(mobile) =>
                           setUser({
@@ -270,10 +274,6 @@ const Index = () => {
                           })
                         }
                       ></GetPhoneNumber>
-                    </View>
-                    或
-                    <View className="underline" onClick={setTrue}>
-                      点击输入手机号
                     </View>
                   </View>
                 ) : (
@@ -395,8 +395,12 @@ const Index = () => {
             <PrivacyPolicyText
               callback={PrivacyPolicy}
               checkColor="#ffffff"
-              style="color:#ffffff;font-size:22rpx;margin-top:150rpx"
+              style="color:#ffffff;font-size:22rpx;margin-top:120rpx"
             ></PrivacyPolicyText>
+            <View className="text-16 leading-26 box-border px-60 mt-30 text-center">
+              “您在资生堂集团高端化妆品(资生堂、肌肤之钥、IPSA、NARS)的生日信息都将以此为准
+              请谨慎填写，一经提交，无法修改。
+            </View>
             <View
               className="mt-85 w-540 h-70 bg-white rounded-10 text-black text-34 vhCenter"
               onClick={submit}

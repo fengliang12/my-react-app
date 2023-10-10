@@ -52,7 +52,6 @@ instance.interceptors.response.use(
     }
     // 服务器自定义报错
     if (err.status >= 400 && err.status < 500) {
-      console.log("服务器自定义错误");
       if (config.errCodeList?.includes(err.data.code)) {
         return Promise.resolve(err);
       }

@@ -95,8 +95,8 @@ const Index = () => {
       let address = item.address
         ? item.address
         : {
-            city: "其他",
-            province: "其他",
+            city: "线上渠道",
+            province: "线上渠道",
           };
       return {
         ...address,

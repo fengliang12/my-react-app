@@ -1,4 +1,4 @@
-import { ScrollView, Swiper, SwiperItem, View } from "@tarojs/components";
+import { Swiper, SwiperItem, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
@@ -12,17 +12,17 @@ const list = [
   {
     id: "first",
     poster: "/activity/01.png",
-    videoUrl: "/activity/01.mp4",
+    videoUrl: "/activity/first.mp4",
   },
   {
     id: "second",
     poster: "/activity/02.png",
-    videoUrl: "/activity/02.mp4",
+    videoUrl: "/activity/second.mp4",
   },
   {
     id: "third",
     poster: "/activity/03.png",
-    videoUrl: "/activity/03.mp4",
+    videoUrl: "/activity/third.mp4",
   },
 ];
 
@@ -30,6 +30,7 @@ const zoomOut = 0.7;
 const Index = () => {
   useEffect(() => {});
   const [current, setCurrent] = useState<number>(1);
+  const [margin, setMargin] = useState<number>(80);
 
   /**
    * 轮播变化时调用
@@ -45,51 +46,54 @@ const Index = () => {
 
   return (
     <View>
-      {/* <CHeader
+      <CHeader
         back
         fill={false}
         title=""
         titleColor="#ffffff"
         backgroundColor="rgba(0,0,0,0)"
-      ></CHeader> */}
+      ></CHeader>
       <CImage
         className="w-full"
         mode="widthFix"
         src={`${config.imgBaseUrl}/activity/header.png`}
       ></CImage>
-      <ScrollView className="w-full h-full">
-        <Swiper
-          className="w-full h-700"
-          previousMargin="80px"
-          nextMargin="80px"
-          current={current}
-          onChange={handleSwiperChange}
-        >
-          {list.map((item, index) => {
-            return (
-              <SwiperItem className="w-full h-full" key={index}>
-                <View className="w-full h-full relative">
-                  <ScrollView className="w-full h-full">
-                    <CVideo
-                      id={item.id}
-                      style={`${
-                        index !== current ? `transform: scale(${zoomOut});` : ""
-                      };transition: all 1s`}
-                      className="w-full h-full"
-                      poster={`${config.imgBaseUrl}${item.poster}`}
-                      src={`${config.imgBaseUrl}${item.videoUrl}`}
-                      onPlay={() => {
-                        Taro.createVideoContext("NARS").pause();
-                      }}
-                    ></CVideo>
-                  </ScrollView>
-                </View>
-              </SwiperItem>
-            );
-          })}
-        </Swiper>
-      </ScrollView>
-
+      <Swiper
+        className="w-full h-790"
+        previousMargin={`${margin}px`}
+        nextMargin={`${margin}px`}
+        current={current}
+        onChange={handleSwiperChange}
+      >
+        {list.map((item, index) => {
+          return (
+            <SwiperItem className="w-full h-full" key={index}>
+              <CVideo
+                id={item.id}
+                style={`${
+                  index !== current ? `transform: scale(${zoomOut});` : ""
+                };transition: all 1s`}
+                objectFit="contain"
+                className="w-full h-full"
+                controls
+                loop
+                poster={`${config.imgBaseUrl}${item.poster}`}
+                src={`${config.imgBaseUrl}${item.videoUrl}`}
+                onPlay={() => {
+                  Taro.createVideoContext("NARS").pause();
+                }}
+                onFullScreenChange={(e) => {
+                  if (e.detail.fullScreen) {
+                    setMargin(0);
+                  } else {
+                    setMargin(80);
+                  }
+                }}
+              ></CVideo>
+            </SwiperItem>
+          );
+        })}
+      </Swiper>
       <View className="vhCenter text-white mt-50">
         <View
           style={`${
@@ -129,7 +133,9 @@ const Index = () => {
       <View className="vhCenter">
         <CVideo
           id="NARS"
+          objectFit="contain"
           controls
+          loop
           className="w-400 h-730"
           poster={`${config.imgBaseUrl}/activity/nars_bg.png`}
           src={`${config.imgBaseUrl}/activity/NARS.mp4`}

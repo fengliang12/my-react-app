@@ -40,6 +40,7 @@ export const createInit = () => {
             country: data.customerBasicInfo?.country || "",
             marsId: data.customerBasicInfo?.marsId || "",
             id: data.customerBasicInfo?.id || "",
+            channelName: data.customerBasicInfo?.channelName || "",
           };
           // 视图数据放Store
           store.dispatch({

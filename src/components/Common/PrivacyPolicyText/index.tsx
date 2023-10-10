@@ -52,19 +52,11 @@ const Index: React.FC<T_Props> = (props) => {
             data-type="privacypolicy"
             onClick={goPrivacyPolicy}
           >
-            隐私政策与网站
+            隐私政策及与网站/小程序用户协议
           </Text>
-          及
-          <Text
-            className="underline"
-            data-type="privacypolicy"
-            onClick={goPrivacyPolicy}
-          >
-            小程序用户协议
-          </Text>
-          ，且同意
+          ，并同意
         </View>
-        <View className="mt-10">接收来自品牌的营销信息</View>
+        <View className="mt-10 text-center">接收来自品牌的营销信息</View>
       </View>
     </View>
   );
