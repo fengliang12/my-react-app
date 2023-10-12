@@ -115,6 +115,9 @@ declare namespace Api {
 
       type IRequest = {
         bookId: number;
+        projectCode: string;
+        storeId: string;
+        reserveDate: string;
         type: 0 | 1 | -1;
       };
       type IResponse = Item[];

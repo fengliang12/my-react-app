@@ -29,7 +29,7 @@ const CPopup: React.FC<Popup> = (props) => {
       ></View>
       <View
         catchMove={catchMove}
-        className="transform fixed left-p50 top-p50 z-12000 translate-y-n50 translate-x-n50"
+        className="transform fixed left-p50 top-p55 z-12000 translate-y-n50 translate-x-n50"
       >
         <View
           className={`relative animate__animated ${

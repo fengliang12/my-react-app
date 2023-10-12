@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from "@tarojs/components";
-import Taro, { useDidShow } from "@tarojs/taro";
+import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
 import { useRequest, useUpdateEffect } from "ahooks";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
@@ -8,6 +8,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -93,6 +94,9 @@ const Index = () => {
           await api.arvatoReservation
             .modify({
               bookId: data?.bookId!,
+              projectCode: data?.projectCode!,
+              storeId: data?.storeId!,
+              reserveDate: dayjs(data?.reserveDate).format("YYYY-MM-DD"),
               type: -1,
             })
             .catch((err) => {
@@ -104,6 +108,10 @@ const Index = () => {
       },
     });
   };
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
 
   return (
     <View className="service-list bg-black text-white w-screen h-screen flex flex-col font-thin box-border">
@@ -210,3 +218,7 @@ const Index = () => {
   );
 };
 export default Index;
+definePageConfig({
+  navigationStyle: "custom",
+  enableShareAppMessage: true,
+});

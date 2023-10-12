@@ -1,5 +1,5 @@
 import { View } from "@tarojs/components";
-import Taro, { useRouter } from "@tarojs/taro";
+import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useRequest } from "ahooks";
 import dayjs from "dayjs";
 
@@ -8,6 +8,7 @@ import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
+import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
@@ -47,6 +48,9 @@ const Index = () => {
           await api.arvatoReservation
             .modify({
               bookId: data?.bookId!,
+              projectCode: data?.projectCode!,
+              storeId: data?.storeId!,
+              reserveDate: dayjs(data?.reserveDate).format("YYYY-MM-DD"),
               type: -1,
             })
             .then(() => {
@@ -64,6 +68,10 @@ const Index = () => {
       },
     });
   };
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
 
   return (
     <View className="service-introduce h-screen bg-black text-white flex flex-col overflow-hidden">
@@ -118,3 +126,7 @@ const Index = () => {
   );
 };
 export default Index;
+definePageConfig({
+  navigationStyle: "custom",
+  enableShareAppMessage: true,
+});

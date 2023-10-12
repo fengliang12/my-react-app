@@ -1,7 +1,7 @@
 import "./index.less";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { useAsyncEffect, useMemoizedFn, useSetState } from "ahooks";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -15,11 +15,13 @@ import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
+import usePrivacyAuth from "@/src/components/PrivacyAuth/hooks/usePrivacyAuth";
 import {
   formatDateTime,
   handleTextBr,
   isNickname,
   maskPhone,
+  setShareParams,
 } from "@/src/utils";
 
 const genderArr = ["女", "男"];
@@ -49,6 +51,7 @@ const Index = () => {
   useAsyncEffect(async () => {
     if (isMember) {
       const userInfo = await app.init(true, false);
+      let list = await getCounterByCity();
       let { realName, birthDate, gender, customInfos } = userInfo;
 
       birthDate = formatDateTime(birthDate);
@@ -69,8 +72,11 @@ const Index = () => {
 
       if (Array.isArray(customInfos)) {
         customInfos.forEach((item) => {
-          if (item.name === "counterName") {
-            setCounterName(item?.value);
+          if (item.name === "counterId") {
+            let counter = list.find((child) => {
+              return child.id === item.value;
+            });
+            setCounterName(counter?.name);
           }
           if (item.name === "counterId") {
             setCounterId(item?.value);
@@ -80,8 +86,6 @@ const Index = () => {
           }
         });
       }
-
-      getCounterByCity();
     }
   }, [isMember]);
 
@@ -104,20 +108,18 @@ const Index = () => {
         id: item.id,
       };
     });
-    console.log("list", list);
 
     setCounterList(list);
     Taro.hideLoading();
+
+    return list;
   });
 
   /**
    * 提交注册
    */
   const submit = useMemoizedFn(async () => {
-    const { nickName, avatarUrl, mobile, gender } = user;
-    if (!avatarUrl) {
-      return Taro.showToast({ title: "请上传用户头像", icon: "none" });
-    }
+    const { nickName, mobile, gender } = user;
     if (!isNickname(nickName)) {
       return Taro.showToast({ title: "请输入姓名", icon: "none" });
     }
@@ -172,6 +174,17 @@ const Index = () => {
     }
   });
 
+  const { requirePrivacyAuth } = usePrivacyAuth();
+  const [focus, setFocus] = useState(false);
+  const handleTouchInput = useMemoizedFn(async () => {
+    await requirePrivacyAuth();
+    setFocus(true);
+  });
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
+
   return (
     <>
       <Page
@@ -215,7 +228,7 @@ const Index = () => {
                 修改头像
               </View>
             </View>
-            <View className="item">
+            <View className="item" onTouchStart={handleTouchInput}>
               <View className="text-30">姓名*</View>
               <View className="right">
                 <Input
@@ -224,11 +237,14 @@ const Index = () => {
                   placeholder="请输入姓名"
                   placeholderClass="ipt-placeholder"
                   value={user.nickName}
+                  onBlur={() => setFocus(false)}
                   onInput={(e) =>
                     setUser({
                       nickName: e.detail.value,
                     })
                   }
+                  focus={focus}
+                  disabled={!focus}
                 />
               </View>
             </View>

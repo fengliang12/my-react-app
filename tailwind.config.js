@@ -100,6 +100,7 @@ module.exports = {
         p40: "40%",
         p45: "45%",
         p50: "50%",
+        p55: "55%",
         n50: "-50%",
       };
     },
@@ -111,6 +112,7 @@ module.exports = {
         p40: "40%",
         p45: "45%",
         p50: "50%",
+        p55: "55%",
       };
     },
     borderRadius: (theme) => theme("spacing"),

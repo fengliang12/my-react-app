@@ -44,7 +44,7 @@ const Popup = ({ pageId }) => {
             position: "fixed",
             left: 0,
             top: 0,
-            zIndex: 99999999999999,
+            zIndex: 9999,
             backgroundColor: popup.mask ? "rgba(0,0,0,.5)" : "transparent"
           }}
           catchMove

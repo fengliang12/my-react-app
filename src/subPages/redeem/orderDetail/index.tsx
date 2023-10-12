@@ -1,5 +1,5 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { useRouter } from "@tarojs/taro";
+import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
 
@@ -8,6 +8,7 @@ import { P8 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import { setShareParams } from "@/src/utils";
 
 import OrderGood from "../components/OrderGood";
 import PostageType from "../components/PostageType";
@@ -33,6 +34,10 @@ const OrderConfirm = () => {
     getOrderDetail();
   }, [getOrderDetail, orderId]);
 
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
+
   return (
     <View className="w-screen min-h-screen bg-black flex flex-col justify-start items-center text-white">
       <CHeader
@@ -53,7 +58,7 @@ const OrderConfirm = () => {
           <View className="text-28 ENGLISH_FAMILY">订单编号：{detail?.id}</View>
         )}
 
-        <View className="text-28 mt-30">
+        <View className="text-28 mt-40">
           {detail?.deliverInfo?.type === "express"
             ? "* 礼品将于10个工作日内发货"
             : "* 礼品将于3个工作日内到达领取柜台"}
@@ -78,23 +83,23 @@ const OrderConfirm = () => {
         )}
       </View>
 
-      <View className="w-690 pb-200 bg-white px-30 py-40 box-border mt-75 text-black font-bold">
-        <View className="text-28">
+      <View className="w-690 pb-200 bg-white px-48 py-62 box-border mt-108 text-black font-bold">
+        <View className="text-35">
           <View>
-            状 态：
+            状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
             {detail?.statusName === "待评价" ? "已完成" : detail?.statusName}
           </View>
-          <View className="mt-10">
+          <View className="mt-14">
             领取方式：
             {detail?.deliverInfo?.type === "express" ? "邮寄到家" : "到柜领取"}
           </View>
           {detail?.deliverInfo?.type === "self_pick_up" && (
-            <View className="mt-10">
+            <View className="mt-14">
               领取柜台: {detail?.simpleCounter?.detailInfo?.name}
             </View>
           )}
         </View>
-        <View className="mt-70 text-32">兑换礼品详情</View>
+        <View className="mt-62 text-35">兑换礼品详情</View>
         <View className="mt-20">
           <View className="font-thin">
             {detail?.goods &&
@@ -113,7 +118,7 @@ const OrderConfirm = () => {
           <View className="flex justify-between items-center text-55 mt-50 font-normal">
             <Text>消耗积分</Text>
             <Text className="ENGLISH_FAMILY text-73">
-              {detail?.totalRealPayPoints} 积分
+              {detail?.totalRealPayPoints}
             </Text>
           </View>
         </View>
@@ -125,14 +130,14 @@ const OrderConfirm = () => {
               className="text-55 flex justify-center items-center mt-50 pt-50"
               style="border-top:1px solid #000"
             >
-              <View className="text-32 flex flex-col mr-120">
+              <View className="text-28 flex flex-col mr-120">
                 <Text>礼品到柜后凭此</Text>
-                <Text className="my-10">核销码到领取柜</Text>
+                <Text className="my-20">核销码到领取柜</Text>
                 <Text>台核销领取礼遇</Text>
               </View>
-              {detail?.id && (
+              {detail?.extendInfos?.length > 0 && (
                 <CQRCodeCustom
-                  text={detail.id}
+                  text={detail?.extendInfos?.[0]?.value}
                   width={210}
                   height={210}
                   foreground="#000000"
@@ -147,4 +152,5 @@ const OrderConfirm = () => {
 export default OrderConfirm;
 definePageConfig({
   navigationStyle: "custom",
+  enableShareAppMessage: true,
 });

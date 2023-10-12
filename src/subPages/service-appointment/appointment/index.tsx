@@ -1,5 +1,5 @@
 import { Picker, Text, View } from "@tarojs/components";
-import Taro, { useRouter } from "@tarojs/taro";
+import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useBoolean, useRequest } from "ahooks";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
@@ -12,7 +12,7 @@ import CImage from "@/src/components/Common/CImage";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import config from "@/src/config";
 import useSubMsg from "@/src/hooks/useSubMsg";
-import { handleTextBr } from "@/src/utils";
+import { handleTextBr, setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -136,7 +136,7 @@ const Index = () => {
       .then((res: any) => {
         Taro.hideLoading();
         to(
-          `/subPages/service-appointment/success/index?bookId=${res.data.bookId}`,
+          `/subPages/service-appointment/success/index?bookId=${res.data?.[0]?.bookId}`,
           "redirectTo",
         );
       })
@@ -148,6 +148,10 @@ const Index = () => {
         }
       });
   };
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
 
   return (
     <View className="service-introduce h-screen bg-black text-white flex flex-col overflow-hidden">
@@ -169,19 +173,21 @@ const Index = () => {
       ></CImage>
       <View className="fixed top-220 left-50" style="color:#FFFFFF">
         <Text
-          className="text-70 text-left mt-40 font-thin ENGLISH_FAMILY"
-          style="line-height:50rpx"
+          className="text-70 leading-60 text-left mt-40 font-thin FZLTCXHJT"
           decode
         >
           {handleTextBr(project?.introduce)}
         </Text>
-        <View className="text-48 text-left font-thin mt-10">
+        <View className="text-42 text-left font-thin mt-25">
           {project?.projectName}
         </View>
       </View>
-      <View className="fixed bottom-150 left-0 h-700">
+      <View className="fixed bottom-200 left-0 h-700">
         {introduce ? (
-          <View className="w-660 text-28 text-left font-thin ml-70">
+          <View
+            className="w-660 text-26 leading-50 text-left font-thin ml-50"
+            style="letter-spacing:2px"
+          >
             <Text>{project?.reason}</Text>
           </View>
         ) : (
@@ -290,3 +296,7 @@ const Index = () => {
   );
 };
 export default Index;
+definePageConfig({
+  navigationStyle: "custom",
+  enableShareAppMessage: true,
+});

@@ -1,6 +1,6 @@
 import "./index.scss";
 
-import { ScrollView, View } from "@tarojs/components";
+import { ScrollView, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
@@ -162,7 +162,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
                   >
                     <CImage className="w-230 h-230" src={child.mainImage} />
                     <View className="w-full h-1 bg-black opacity-50"></View>
-                    <View className="text-22 leading-30 mt-18 w-full text-left ENGLISH_FAMILY text-overflow-more">
+                    <View className="text-22 h-60 leading-30 mt-18 w-full text-left ENGLISH_FAMILY text-overflow-more">
                       {child.name}
                     </View>
                     <View className="text-22 mt-12 mb-25 w-full text-left ENGLISH_FAMILY">
@@ -209,23 +209,35 @@ const GoodClass: React.FC<T_Props> = (props) => {
       </ScrollView>
       {/* 商品详情 */}
       <View style={setShow(show)}>
-        <CPopup maskClose closePopup={setFalse}>
-          <View className="w-647 pb-50 bg-white rounded-20 overflow-hidden flex flex-col justify-center items-center">
+        <CPopup
+          maskClose
+          closePopup={() => {
+            setClickGood(null);
+            setFalse();
+          }}
+        >
+          <View className="w-647 pt-30 pb-50 bg-white rounded-20 overflow-hidden flex flex-col justify-center items-center">
             <CImage
               className="absolute w-34 h-34 top-53 right-40"
-              onClick={setFalse}
+              onClick={() => {
+                setClickGood(null);
+                setFalse();
+              }}
               src={Close}
             ></CImage>
-            <CImage className="w-360 h-360" src={clickGood?.mainImage}></CImage>
-            <View className="w-450 text-27 text-left ENGLISH_FAMILY">
-              {clickGood?.name}
-            </View>
+            <CImage className="w-400 h-400" src={clickGood?.mainImage}></CImage>
+            <Text decode className="w-450 text-27 text-center ENGLISH_FAMILY">
+              {clickGood?.description}
+            </Text>
             <View className="w-450 mt-41 mb-56 text-38 ENGLISH_FAMILY">
               {clickGood?.point}积分
             </View>
             <View
               className="w-410 h-67 text-26 rounded-4 bg-black vhCenter text-white"
-              onClick={setFalse}
+              onClick={() => {
+                setClickGood(null);
+                setFalse();
+              }}
             >
               我知道了
             </View>

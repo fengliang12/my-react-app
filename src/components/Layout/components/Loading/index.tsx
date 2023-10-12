@@ -75,7 +75,7 @@ const Loading: React.FC<LoadingType> = ({ ids, config }) => {
             width: "100vw",
             height: "100vh",
             background: config?.bgColor || "#fff",
-            zIndex: 999999999999999
+            zIndex: 9999
           }}
         >
           <ImagePR

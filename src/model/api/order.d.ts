@@ -800,6 +800,7 @@ declare namespace Api {
         /** 积分抵扣金额 */
         totalPointsToAmount: number;
         totalRealPayPoints: number;
+        extendInfos: Array<any>;
         /** 订单发票进度 */
         orderInvoiceView: {
           invoiceStatus: string;

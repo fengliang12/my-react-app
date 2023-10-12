@@ -1,12 +1,15 @@
 import { WebView } from "@tarojs/components";
-import { useRouter } from "@tarojs/taro";
+import { useRouter, useShareAppMessage } from "@tarojs/taro";
 
 import Page from "@/components/Page";
+import { setShareParams } from "@/src/utils";
 
 const H5 = () => {
   const router = useRouter();
-  console.log("router?.params?.url", router?.params?.url);
 
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
   return (
     <Page>
       <WebView src={decodeURIComponent(router?.params?.url as string) || ""} />

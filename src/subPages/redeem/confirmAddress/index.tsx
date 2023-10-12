@@ -1,5 +1,5 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { useLoad, useRouter } from "@tarojs/taro";
+import Taro, { useLoad, useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
 import { useState } from "react";
 
@@ -8,9 +8,10 @@ import { P3 } from "@/src/assets/image";
 import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import PrivacyAuth from "@/src/components/PrivacyAuth";
 import config from "@/src/config";
 import useRedeem from "@/src/hooks/useRedeem";
-import { verifyAddressInfo } from "@/src/utils";
+import { setShareParams, verifyAddressInfo } from "@/src/utils";
 import toast from "@/src/utils/toast";
 
 import OrderGood from "../components/OrderGood";
@@ -71,8 +72,13 @@ const ConfirmAddress = () => {
       });
   });
 
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
+
   return (
     <>
+      <PrivacyAuth></PrivacyAuth>
       <View
         className="w-screen min-h-screen bg-black flex flex-col items-center box-border pb-100"
         style={{ color: "#6c6c6c" }}
@@ -154,4 +160,5 @@ const ConfirmAddress = () => {
 export default ConfirmAddress;
 definePageConfig({
   navigationStyle: "custom",
+  enableShareAppMessage: true,
 });

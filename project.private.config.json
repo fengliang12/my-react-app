@@ -3,7 +3,7 @@
   "projectname": "mini-nars",
   "setting": {
     "compileHotReLoad": false,
-    "urlCheck": false,
+    "urlCheck": true,
     "bigPackageSizeSupport": true
   },
   "condition": {

@@ -1,5 +1,5 @@
 import { View } from "@tarojs/components";
-import Taro, { useRouter } from "@tarojs/taro";
+import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useRequest } from "ahooks";
 import dayjs from "dayjs";
 
@@ -7,6 +7,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
@@ -28,6 +29,10 @@ const Index = () => {
           ) || ({} as Api.ArvatoReservation.GetRecords.Item)
         );
       });
+  });
+
+  useShareAppMessage(() => {
+    return setShareParams();
   });
 
   return (
@@ -60,7 +65,7 @@ const Index = () => {
           服务开始前24小时不可取消哦!
         </View>
         <View
-          className="h-50 text-center mt-200 borderBottomWhite"
+          className="h-40 text-center mt-200 borderBottomWhite"
           onClick={() =>
             to("/subPages/service-appointment/list/index", "navigateTo")
           }
@@ -72,3 +77,8 @@ const Index = () => {
   );
 };
 export default Index;
+
+definePageConfig({
+  navigationStyle: "custom",
+  enableShareAppMessage: true,
+});

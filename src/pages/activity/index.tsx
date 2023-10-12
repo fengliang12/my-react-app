@@ -1,5 +1,5 @@
 import { Swiper, SwiperItem, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
 
@@ -7,6 +7,7 @@ import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CVideo from "@/src/components/Common/CVideo";
 import config from "@/src/config";
+import { setShareParams } from "@/src/utils";
 
 const list = [
   {
@@ -42,6 +43,10 @@ const Index = () => {
     list.forEach((item) => {
       Taro.createVideoContext(item.id).pause();
     });
+  });
+
+  useShareAppMessage(() => {
+    return setShareParams();
   });
 
   return (

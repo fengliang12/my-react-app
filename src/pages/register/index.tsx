@@ -1,7 +1,7 @@
 import "./index.less";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import Taro, { useLoad } from "@tarojs/taro";
+import Taro, { useLoad, useShareAppMessage } from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
 import dayjs from "dayjs";
 import { result } from "lodash";
@@ -18,10 +18,16 @@ import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
 import PrivacyPolicyText from "@/src/components/Common/PrivacyPolicyText";
 import SendVerifyCode from "@/src/components/Common/SendVerifyCode";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
+import usePrivacyAuth from "@/src/components/PrivacyAuth/hooks/usePrivacyAuth";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import useSubMsg from "@/src/hooks/useSubMsg";
-import { formatDateTime, isNickname, isPhone } from "@/src/utils";
+import {
+  formatDateTime,
+  isNickname,
+  isPhone,
+  setShareParams,
+} from "@/src/utils";
 import Authorization from "@/src/utils/authorize";
 import { getPages } from "@/src/utils/getPages";
 
@@ -193,6 +199,18 @@ const Index = () => {
         console.log("err", err);
       });
   });
+
+  const { requirePrivacyAuth } = usePrivacyAuth();
+  const [focus, setFocus] = useState(false);
+  const handleTouchInput = useMemoizedFn(async () => {
+    await requirePrivacyAuth();
+    setFocus(true);
+  });
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
+
   return (
     <>
       <PrivacyAuth></PrivacyAuth>
@@ -239,7 +257,7 @@ const Index = () => {
                 上传头像
               </View>
             </View>
-            <View className="item">
+            <View className="item" onTouchStart={handleTouchInput}>
               <View className="left">姓名*</View>
               <View className="right">
                 <Input
@@ -248,6 +266,9 @@ const Index = () => {
                   placeholder="请输入姓名"
                   placeholderClass="ipt-placeholder"
                   value={user.nickName}
+                  focus={focus}
+                  disabled={!focus}
+                  onBlur={()=>setFocus(false)}
                   onInput={(e) =>
                     setUser({
                       nickName: e.detail.value,

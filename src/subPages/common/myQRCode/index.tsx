@@ -1,13 +1,19 @@
 import { View } from "@tarojs/components";
+import { useShareAppMessage } from "@tarojs/taro";
 import { useSelector } from "react-redux";
 
-import { LogoB, P6 } from "@/src/assets/image";
+import { LogoB } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import { setShareParams } from "@/src/utils";
 
 const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
 
   return (
     <View className="h-screen w-screen bg-black">
@@ -22,18 +28,22 @@ const Index = () => {
       <View className="w-full vhCenter flex-col fixed top-p45 transform translate-y-n50">
         <CImage className="w-360" mode="widthFix" src={LogoB}></CImage>
         <View className="bg-white inline-block p-10 mt-100">
-          <CQRCodeCustom
-            text={userInfo?.cardNo as unknown as string}
-            width={360}
-            height={360}
-            correctLevel={3}
-            image={{
-              imageResource: userInfo?.avatarUrl || "",
-              width: 50,
-              height: 50,
-              round: true,
-            }}
-          ></CQRCodeCustom>
+          {userInfo?.cardNo && (
+            <CQRCodeCustom
+              text={userInfo?.cardNo as unknown as string}
+              width={360}
+              height={360}
+              correctLevel={3}
+              image={{
+                imageResource:
+                  userInfo?.avatarUrl ||
+                  `https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/icon/logo.png`,
+                width: 50,
+                height: 50,
+                round: true,
+              }}
+            ></CQRCodeCustom>
+          )}
         </View>
         <View className="mt-50 text-28 text-center text-white">
           您的专属会员码

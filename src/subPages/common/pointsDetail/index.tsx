@@ -1,4 +1,5 @@
 import { ScrollView, Text, View } from "@tarojs/components";
+import { useShareAppMessage } from "@tarojs/taro";
 import { useAsyncEffect } from "ahooks";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -6,7 +7,7 @@ import { useSelector } from "react-redux";
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import config from "@/src/config";
-import { formatDateTime } from "@/src/utils";
+import { formatDateTime, setShareParams } from "@/src/utils";
 
 const Index = () => {
   const [list, setList] = useState<any>([]);
@@ -20,6 +21,10 @@ const Index = () => {
     });
     setList(data);
   }, [mobile]);
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
 
   return (
     <View className="redeem-history bg-black h-screen text-white flex justify-start items-center flex-col">

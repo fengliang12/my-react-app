@@ -325,7 +325,7 @@ const Index = () => {
           </View>
           <View className="w-600 text-53 flex items-center justify-between mt-20">
             <Text>总计消耗</Text>
-            <Text className="ENGLISH_FAMILY">{totalPoints}积分</Text>
+            <Text className="ENGLISH_FAMILY">{totalPoints} 积分</Text>
           </View>
           <View
             className="w-280 h-60 mt-40 mb-60 vhCenter"

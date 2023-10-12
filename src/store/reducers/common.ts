@@ -5,6 +5,7 @@ import { createReducer } from "../help";
 const INITIAL_STATE = {
   navHeight: 0,
   changeExchange: true,
+  showDialog: false,
 };
 
 export default createReducer(

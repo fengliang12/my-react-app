@@ -53,6 +53,8 @@ declare namespace Store {
     navHeight: number;
     /** */
     changeExchange: boolean;
+    /**系统维护弹窗 */
+    showDialog: boolean;
   };
   type ChannelType = "cart" | "immediately";
   type PostageType = "money" | "points";

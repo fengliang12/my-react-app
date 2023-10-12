@@ -1,3 +1,4 @@
+import { useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useSelector } from "react-redux";
 
@@ -5,6 +6,7 @@ import CouponPopup from "@/src/components/CouponPopup";
 import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
+import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 
 const Index = () => {
@@ -26,6 +28,10 @@ const Index = () => {
    */
   const showBind = useMemoizedFn(() => {
     to("/pages/registerSecond/index");
+  });
+
+  useShareAppMessage(() => {
+    return setShareParams();
   });
 
   return (

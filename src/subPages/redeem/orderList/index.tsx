@@ -1,5 +1,5 @@
 import { Picker, ScrollView, Text, View } from "@tarojs/components";
-import Taro, { useDidShow } from "@tarojs/taro";
+import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import { P6, P9 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
-import { formatDateTime, getTimeStamp } from "@/src/utils";
+import { formatDateTime, getTimeStamp, setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -67,6 +67,10 @@ const Index = () => {
       getOrderByStatus();
     }
   }, [startDate, endDate, getOrderByStatus]);
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
 
   return (
     <View className="bg-black text-white h-screen flex flex-col items-center">
@@ -207,3 +211,7 @@ const Index = () => {
   );
 };
 export default Index;
+definePageConfig({
+  navigationStyle: "custom",
+  enableShareAppMessage: true,
+});

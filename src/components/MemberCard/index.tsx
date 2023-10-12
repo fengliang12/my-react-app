@@ -1,11 +1,12 @@
 import { Text, View } from "@tarojs/components";
 import { useBoolean, useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { CloseB, LogoW, P10 } from "@/src/assets/image";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
+import { SET_COMMON } from "@/src/store/constants";
 import handleDataType from "@/src/utils/handleDataType";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
@@ -25,6 +26,7 @@ const Index: React.FC<PropsType> = (props) => {
   const [process, setProcess] = useState<number>(0);
   const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
     useBoolean(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!userInfo) return;
@@ -127,7 +129,10 @@ const Index: React.FC<PropsType> = (props) => {
             </View>
             <View
               className="flex-1 h-full flex items-end flex-col"
-              onClick={() => goNextPage("/subPages/common/pointsDetail/index")}
+              onClick={() => {
+                // goNextPage("/subPages/common/pointsDetail/index");
+                setRuleTrue();
+              }}
             >
               <View className="text-42 ENGLISH_FAMILY">{userInfo.points}</View>
               <View className="vhCenter text-24 mt-11">当前积分</View>
@@ -153,7 +158,7 @@ const Index: React.FC<PropsType> = (props) => {
             <>
               {userInfo.gradeName !== "玩妆大师" && (
                 <View className="w-full h-6 text-black text-right text-18 mt-30">
-                  {`再次消费${userInfo.needAmount}元`}
+                  {`再消费${userInfo.needAmount}元`}
                   即可升级成为
                   {userInfo.nextGradeName}
                 </View>
@@ -168,17 +173,17 @@ const Index: React.FC<PropsType> = (props) => {
 
       {/* 规则弹窗 */}
       <View style={setShow(ruleShow)}>
-        <CPopup maskClose closePopup={setRuleFalse}>
-          <View className="w-600 flex flex-col items-center justify-center relative">
-            <View className="w-full py-80 relative vhCenter flex-col bg-white rounded-10">
-              <View className="mb-60 text-36 font-bold">会员规则</View>
-              <View className="w-400 h-400"></View>
-            </View>
+        <CPopup maskClose closePopup={() => setRuleFalse()}>
+          <View className="w-524 relative flex flex-col justify-center items-center">
             <CImage
-              className="w-30 h-30 absolute top-30 right-30"
-              onClick={setRuleFalse}
-              src={CloseB}
+              className="w-full"
+              mode="widthFix"
+              src={`${config.imgBaseUrl}/index/maintenance.jpg`}
             ></CImage>
+            <View
+              className="w-100 h-100 absolute top-30 right-30"
+              onClick={() => setRuleFalse()}
+            ></View>
           </View>
         </CPopup>
       </View>

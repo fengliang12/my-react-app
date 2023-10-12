@@ -1,5 +1,5 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { useDidShow, useUnload } from "@tarojs/taro";
+import Taro, { useDidShow, useShareAppMessage, useUnload } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn, useUpdateEffect } from "ahooks";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import config from "@/src/config";
 import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
+import { setShareParams } from "@/src/utils";
 import handleGoodClass from "@/src/utils/handleGoodClass";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
@@ -79,6 +80,10 @@ const Index = () => {
     });
   });
 
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
+
   return (
     <View className="h-screen bg-black flex flex-col">
       <CHeader
@@ -131,7 +136,7 @@ const Index = () => {
           <View className="w-647 h-841 bg-white rounded-20 overflow-hidden">
             <CImage
               className="w-full h-full"
-              src={`${config.imgBaseUrl}/redeem/rule_03.png`}
+              src={`${config.imgBaseUrl}/redeem/rule_01.png`}
             ></CImage>
             <View
               className="absolute w-80 h-80 top-20 right-10 vhCenter"
@@ -144,3 +149,8 @@ const Index = () => {
   );
 };
 export default Index;
+
+definePageConfig({
+  navigationStyle: "custom",
+  enableShareAppMessage: true,
+});

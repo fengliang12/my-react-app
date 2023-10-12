@@ -1,9 +1,11 @@
 import { Text, View } from "@tarojs/components";
+import { useShareAppMessage } from "@tarojs/taro";
 import { useSelector } from "react-redux";
 
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import { setShareParams } from "@/src/utils";
 
 import OrderGood from "../components/OrderGood";
 
@@ -12,6 +14,10 @@ const OrderConfirm = () => {
   const counter = useSelector(
     (state: Store.States) => state.exchangeGood.counter,
   );
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
 
   return (
     <View className="w-screen min-h-screen bg-black flex flex-col justify-start items-center text-white">
@@ -73,4 +79,5 @@ const OrderConfirm = () => {
 export default OrderConfirm;
 definePageConfig({
   navigationStyle: "custom",
+  enableShareAppMessage: true,
 });

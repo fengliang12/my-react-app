@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 
+import config from "../config";
+
 /** 时间格式化-带时区 */
 export const formatDateTime = (
   date: string,
@@ -122,4 +124,12 @@ export const handleTextBr = (text) => {
     var reg = RegExp(pattern, "g");
     return text.replace(reg, target);
   }
+};
+
+export const setShareParams = () => {
+  return {
+    title: "全新升级，沉浸玩妆",
+    path: "/pages/member/member",
+    imageUrl: `https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/share/share.png`,
+  };
 };

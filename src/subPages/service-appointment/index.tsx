@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { useRequest } from "ahooks";
 import { useSelector } from "react-redux";
 
@@ -7,6 +7,7 @@ import api from "@/api/index";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
@@ -25,6 +26,10 @@ const Index = () => {
     });
   });
 
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
+
   return (
     <View className="min-h-screen bg-black text-white flex flex-col">
       <CHeader
@@ -35,19 +40,19 @@ const Index = () => {
         titleCss="height:85rpx"
         titleColor="#FFFFFF"
       ></CHeader>
-      <View className="text-52 text-left mt-100 font-thin pl-60 ENGLISH_FAMILY opacity-80">
+      <View className="text-52 text-left mt-100 font-thin pl-60 FZLTCXHJT opacity-80">
         MAKE UP YOUR MIND
       </View>
-      <View className="text-35 text-left mt-10 font-thin pl-60 opacity-80">
+      <View className="text-29 text-left mt-23 font-thin pl-60 opacity-80">
         预约门店专属彩妆服务
       </View>
 
-      <ScrollView className="flex-1 mt-150" scrollY>
+      <ScrollView className="flex-1 mt-154" scrollY>
         <View className="h-full flex items-center justify-center flex-wrap">
           {projects.map((item, index) => (
             <View
               key={index}
-              className="w-300 h-300 relative mx-15 mb-30"
+              className="w-320 h-320 relative mx-12 mb-20"
               onClick={() => {
                 to(
                   `/subPages/service-appointment/appointment/index?projectCode=${item.projectCode}&projectName=${item.projectName}`,
@@ -66,9 +71,9 @@ const Index = () => {
           ))}
         </View>
       </ScrollView>
-      <View className="h-200 text-35 text-center font-thin ">
+      <View className="h-200 text-30 text-center font-thin ">
         <Text
-          className="inline-block h-50 borderBottomWhite"
+          className="inline-block h-40 borderBottomWhite"
           onClick={() => {
             if (!userInfo?.isMember) {
               to("/pages/registerSecond/index");
@@ -84,3 +89,8 @@ const Index = () => {
   );
 };
 export default Index;
+
+definePageConfig({
+  navigationStyle: "custom",
+  enableShareAppMessage: true,
+});

@@ -1,4 +1,5 @@
 import { Text, View } from "@tarojs/components";
+import { useShareAppMessage } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
 import { useDispatch } from "react-redux";
 
@@ -7,6 +8,7 @@ import CHeader from "@/src/components/Common/CHeader";
 import config from "@/src/config";
 import useRedeem from "@/src/hooks/useRedeem";
 import { SET_COMMON } from "@/src/store/constants";
+import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -44,6 +46,10 @@ const OrderConfirm = () => {
       },
     });
     to(1);
+  });
+
+  useShareAppMessage(() => {
+    return setShareParams();
   });
 
   return (
@@ -134,4 +140,5 @@ const OrderConfirm = () => {
 export default OrderConfirm;
 definePageConfig({
   navigationStyle: "custom",
+  enableShareAppMessage: true,
 });

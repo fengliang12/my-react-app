@@ -1,5 +1,5 @@
 import { Picker, ScrollView, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn, useMount, useRequest, useUpdateEffect } from "ahooks";
 import { useMemo, useState } from "react";
 
@@ -17,6 +17,7 @@ import {
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
+import { setShareParams } from "@/src/utils";
 import authorize from "@/src/utils/authorize";
 import toast from "@/src/utils/toast";
 
@@ -144,16 +145,8 @@ const NearbyStores = () => {
   /** 拉起电话 */
   const onMakePhoneCall = (phoneNumber) => {
     if (!phoneNumber) return toast("当前门店暂时无法联系");
-    Taro.showModal({
-      title: "提示",
-      content: `是否拨打${phoneNumber}`,
-      success: function (res) {
-        if (res.confirm) {
-          Taro.makePhoneCall({
-            phoneNumber,
-          });
-        }
-      },
+    Taro.makePhoneCall({
+      phoneNumber,
     });
   };
 
@@ -175,6 +168,10 @@ const NearbyStores = () => {
       city: cityList[index],
     }));
   };
+
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
 
   return (
     <View className="h-screen flex flex-col justify-start items-center bg-white">
@@ -211,7 +208,7 @@ const NearbyStores = () => {
                 : "请选择省份"}
             </Text>
             <CImage
-              className="w-25 h-13 absolute top-26 right-20"
+              className="w-25 h-14 absolute top-26 right-20"
               src={P11}
             ></CImage>
           </View>
@@ -225,7 +222,7 @@ const NearbyStores = () => {
               {getCounterParams.city ? getCounterParams.city : "请选择城市"}
             </Text>
             <CImage
-              className="w-25 h-13 absolute top-26 right-20"
+              className="w-25 h-14 absolute top-26 right-20"
               src={P11}
             ></CImage>
           </View>
@@ -241,8 +238,12 @@ const NearbyStores = () => {
             key={counter.id}
             className="text-black py-30 borderBottomBlack flex"
           >
-            <CImage className="w-25 mr-15" mode="widthFix" src={P13}></CImage>
-            <View>
+            <CImage
+              className="w-25 mr-13 mt-4"
+              mode="widthFix"
+              src={P13}
+            ></CImage>
+            <View className="flex-1">
               <View
                 className="text-29 inline-block font-bold ENGLISH_FAMILY"
                 onClick={() => onOpenLocation(counter)}

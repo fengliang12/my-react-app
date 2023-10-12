@@ -1,14 +1,19 @@
 import { View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useShareAppMessage } from "@tarojs/taro";
 
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
+import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
+
   return (
     <View className="h-screen w-screen bg-black">
       <CHeader

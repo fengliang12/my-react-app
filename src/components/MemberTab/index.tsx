@@ -8,10 +8,10 @@ import CImage from "../Common/CImage";
 
 const Index = () => {
   const [tabList] = useState([
-    { title: "玩妆入门", value: "primary" },
-    { title: "玩妆达人", value: "intermediate" },
-    { title: "玩妆先锋", value: "pioneer" },
-    { title: "玩妆大师", value: "master" },
+    { title: "玩妆入门", value: "primary02" },
+    { title: "玩妆达人", value: "intermediate02" },
+    { title: "玩妆先锋", value: "pioneer02" },
+    { title: "玩妆大师", value: "master02" },
   ]);
   const [tabShow, setTabShow] = useState<boolean>(false);
   const [tabIndex, setTabIndex] = useState<number>(0);

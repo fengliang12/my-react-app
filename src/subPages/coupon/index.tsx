@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from "@tarojs/components";
-import Taro, { useDidShow } from "@tarojs/taro";
+import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useMemo, useState } from "react";
 
@@ -10,7 +10,7 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import HeaderTabbar from "@/src/components/Common/HeaderTabbar";
 import config from "@/src/config";
-import { formatDateTime } from "@/src/utils";
+import { formatDateTime, setShareParams } from "@/src/utils";
 
 type tabType = { title: string; value: CouponStatusType };
 const tabList: Array<tabType> = [
@@ -52,6 +52,10 @@ const Index = () => {
     return [];
   }, [couponStatus, originList]);
 
+  useShareAppMessage(() => {
+    return setShareParams();
+  });
+
   return (
     <View
       className="text-white w-screen h-screen flex flex-col items-center justify-start box-border"
@@ -71,7 +75,7 @@ const Index = () => {
           src={`${config.imgBaseUrl}/icon/title_image.png`}
         ></CImage>
       </View>
-      <View className="w-full text-52 text-left px-40 mt-20 box-border">
+      <View className="w-full text-53 text-left px-40 mt-20 box-border">
         卡券中心
       </View>
 

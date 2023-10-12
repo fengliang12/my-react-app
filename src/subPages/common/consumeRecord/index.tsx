@@ -1,5 +1,5 @@
 import { Picker, ScrollView, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import { P6 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
-import { formatDateTime } from "@/src/utils";
+import { formatDateTime, setShareParams } from "@/src/utils";
 
 enum CHANNEL_TYPE_LIST {
   "GW" = "官网",
@@ -61,6 +61,10 @@ const Index = () => {
     if (list?.length >= total.current) return;
     page.current += 1;
     getList();
+  });
+
+  useShareAppMessage(() => {
+    return setShareParams();
   });
 
   return (
