@@ -4,6 +4,7 @@ import { createReducer } from "../help";
 
 const INITIAL_STATE: Store.ExchangeGood = {
   goods: [],
+  showRedDot: false,
   applyType: "",
   channelType: "immediately",
   counter: null,
@@ -16,6 +17,13 @@ export default createReducer(
         forOwn(action.payload, function (value, key) {
           set(state, key, value);
         });
+      }
+    },
+    SET_RED_DOT(state, action: { payload: Partial<Store.ExchangeGood> }) {
+      if (action.payload.goods && action.payload.goods?.length > 0) {
+        set(state, "showRedDot", true);
+      } else {
+        set(state, "showRedDot", false);
       }
     },
   },

@@ -2,15 +2,17 @@ import "./index.scss";
 
 import { ScrollView, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
+import { useBoolean, useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { cart1 } from "@/assets/image/index";
+import { cart1, Close } from "@/assets/image/index";
 import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
+import CPopup from "@/src/components/Common/CPopup";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
-import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
+import { SET_EXCHANGE_GOOD, SET_RED_DOT } from "@/src/store/constants";
+import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -23,6 +25,8 @@ const GoodClass: React.FC<T_Props> = (props) => {
   const { points, isMember } = useSelector((state: Store.States) => state.user);
   const dispatch = useDispatch();
   let { goodClassList, originList } = props;
+  const [show, { setTrue, setFalse }] = useBoolean(false);
+  const [clickGood, setClickGood] = useState<any>(null);
   const [activeIndex, setActiveIndex] = useState<string>("all");
   const [selectList, setSelectList] = useState([]);
   const { applyType, counter } = useSelector(
@@ -93,7 +97,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
     if (points < item.point) return toast("您的积分不足");
 
     Taro.showLoading({ title: "加载中", mask: true });
-    let { status } = await api.cart.append({
+    let { status, data } = await api.cart.append({
       integral: true,
       quantity: 1,
       skuId: item.skuId,
@@ -105,7 +109,13 @@ const GoodClass: React.FC<T_Props> = (props) => {
     });
     Taro.hideLoading();
     if (status === 200) {
-      toast("已成功添加购物");
+      toast("已成功添加购物车");
+      dispatch({
+        type: SET_RED_DOT,
+        payload: {
+          goods: data.goods,
+        },
+      });
     }
   });
 
@@ -113,7 +123,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
     <View className="MiniGoodClass h-full text-black text-center py-40 flex flex-col">
       {/* 积分导航 */}
       <View
-        className="w-full h-50 text-black text-28 borderBottomBlack px-70 box-border overflow-x-scroll"
+        className="w-600 mx-75 h-50 text-black text-28 borderBottomBlack box-border overflow-x-scroll"
         style="white-space: nowrap;height:100rpx"
       >
         {goodClassList?.length > 0 &&
@@ -143,21 +153,32 @@ const GoodClass: React.FC<T_Props> = (props) => {
                   className="GoodItem w-290 px-30 py-20 shadow-custom flex flex-col items-center mb-40 relative box-border"
                   key={index}
                 >
-                  <View className="w-full relative">
+                  <View
+                    className="w-full relative"
+                    onClick={() => {
+                      setClickGood(child);
+                      setTrue();
+                    }}
+                  >
                     <CImage className="w-230 h-230" src={child.mainImage} />
-                    <View className="text-22 h-60 my-10 w-full text-left">
+                    <View className="w-full h-1 bg-black opacity-50"></View>
+                    <View className="text-22 leading-30 mt-18 w-full text-left ENGLISH_FAMILY text-overflow-more">
                       {child.name}
                     </View>
-                    <View className="text-22 my-10 w-full text-left">
-                      {child.point}分
+                    <View className="text-22 mt-12 mb-25 w-full text-left ENGLISH_FAMILY">
+                      {child.point}积分
                     </View>
                   </View>
                   {child?.sellOut && (
                     <View
-                      className="w-full h-full absolute top-0 left-0 text-white vhCenter text-38 z-99 rounded-9"
-                      style="background-color:rgba(0,0,0,0.5);"
+                      className="w-full h-full font-thin absolute top-0 left-0 text-white vhCenter text-53 z-99 rounded-9"
+                      style="background-color:rgba(0,0,0,0.5);letter-spacing: 2px;"
+                      onClick={() => {
+                        setClickGood(child);
+                        setTrue();
+                      }}
                     >
-                      已 兑 完
+                      已兑完
                     </View>
                   )}
                   <View
@@ -186,6 +207,31 @@ const GoodClass: React.FC<T_Props> = (props) => {
           )}
         </View>
       </ScrollView>
+      {/* 商品详情 */}
+      <View style={setShow(show)}>
+        <CPopup maskClose closePopup={setFalse}>
+          <View className="w-647 pb-50 bg-white rounded-20 overflow-hidden flex flex-col justify-center items-center">
+            <CImage
+              className="absolute w-34 h-34 top-53 right-40"
+              onClick={setFalse}
+              src={Close}
+            ></CImage>
+            <CImage className="w-360 h-360" src={clickGood?.mainImage}></CImage>
+            <View className="w-450 text-27 text-left ENGLISH_FAMILY">
+              {clickGood?.name}
+            </View>
+            <View className="w-450 mt-41 mb-56 text-38 ENGLISH_FAMILY">
+              {clickGood?.point}积分
+            </View>
+            <View
+              className="w-410 h-67 text-26 rounded-4 bg-black vhCenter text-white"
+              onClick={setFalse}
+            >
+              我知道了
+            </View>
+          </View>
+        </CPopup>
+      </View>
     </View>
   );
 };

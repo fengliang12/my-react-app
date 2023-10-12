@@ -1,4 +1,10 @@
-import { ScrollView, Text, View } from "@tarojs/components";
+import {
+  MovableArea,
+  MovableView,
+  ScrollView,
+  Text,
+  View,
+} from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
 import { cloneDeep } from "lodash";
@@ -10,18 +16,20 @@ import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
-import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
+import { SET_EXCHANGE_GOOD, SET_RED_DOT } from "@/src/store/constants";
+import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
 const app = Taro.getApp();
 const Index = () => {
+  const rectInfo = getHeaderHeight();
   const dispatch = useDispatch();
   const [carts, setCarts] = useState<any>([]);
   const [show, { setTrue, setFalse }] = useBoolean(false);
   const { points, isMember } = useSelector((state: Store.States) => state.user);
-  const { applyType, counter } = useSelector(
+  const { applyType, counter, showRedDot } = useSelector(
     (state: Store.States) => state.exchangeGood,
   );
 
@@ -43,7 +51,7 @@ const Index = () => {
    * 查询购物车
    */
   useAsyncEffect(async () => {
-    if (!show) return;
+    // if (!show) return;
     if (applyType === "self_pick_up" && !counter) {
       toast("门店不能为空");
       return;
@@ -62,6 +70,12 @@ const Index = () => {
     });
     Taro.hideLoading();
     setCarts(data.goods);
+    dispatch({
+      type: SET_RED_DOT,
+      payload: {
+        goods: data.goods,
+      },
+    });
   }, [show]);
 
   /**
@@ -79,7 +93,7 @@ const Index = () => {
       success: async (res) => {
         if (res.confirm) {
           Taro.showLoading({ title: "加载中", mask: true });
-          let { status } = await api.cart.remove({
+          let { status, data } = await api.cart.remove({
             cartItemIdList: [item.cartItemId],
             counterId: applyType === "self_pick_up" ? counter?.id : undefined,
           });
@@ -87,6 +101,12 @@ const Index = () => {
             setCarts(
               carts.filter((child) => child.cartItemId !== item.cartItemId),
             );
+            dispatch({
+              type: SET_RED_DOT,
+              payload: {
+                goods: data.goods,
+              },
+            });
           }
         }
         Taro.hideLoading();
@@ -168,17 +188,51 @@ const Index = () => {
 
   return (
     <View className="index">
-      <CImage
-        className="fixed top-800 right-0 z-100 w-82 h-84"
-        src={cart}
-        onClick={() => {
-          if (!isMember) {
-            to(pageSettingConfig.registerPath, "reLaunch");
-            return;
-          }
-          setTrue();
+      <MovableArea
+        style={{
+          position: "fixed",
+          top: `${rectInfo.headerHeight}px`,
+          width: "100vw",
+          height: `calc(100vh - ${rectInfo.headerHeight}px)`,
+          left: 0,
+          zIndex: 5000,
+          pointerEvents: "none",
+          background: "rgba(0,0,0,0)",
         }}
-      ></CImage>
+      >
+        <MovableView
+          direction="all"
+          x={330}
+          y={620}
+          className="vhCenter"
+          style={{
+            width: "100rpx",
+            height: "100rpx",
+            pointerEvents: "auto",
+          }}
+        >
+          <View className="w-84 h-84 bg-black rounded-84 vhCenter relative">
+            {showRedDot && (
+              <View
+                className="w-18 h-18 vhCenter rounded-18 absolute top-17 right-17"
+                style={{ background: "#CE2828" }}
+              ></View>
+            )}
+
+            <CImage
+              className="w-38 h-37"
+              src={cart}
+              onClick={() => {
+                if (!isMember) {
+                  to(pageSettingConfig.registerPath, "reLaunch");
+                  return;
+                }
+                setTrue();
+              }}
+            ></CImage>
+          </View>
+        </MovableView>
+      </MovableArea>
 
       <View
         className="w-screen h-screen fixed left-0 top-0 z-10000"
@@ -197,7 +251,7 @@ const Index = () => {
           catchMove
           className="fixed left-0 bottom-0 z-12000  w-750 h-1100 bg-white flex items-center flex-col rounded-t-40"
         >
-          <Text className="w-650 font-bold mt-68">兑换礼品详情</Text>
+          <Text className="w-650 font-bold mt-68 text-35">兑换礼品详情</Text>
           <ScrollView className="w-full h-650 mt-40" scrollY>
             {carts?.length > 0 &&
               carts.map((item) => {
@@ -227,16 +281,17 @@ const Index = () => {
                           </View>
                         )}
                         <CImage className="w-180 h-180" src={item?.mainImage} />
+                        <View className="w-full h-1 bg-black opacity-50"></View>
                       </View>
                     </View>
 
-                    <View className="flex-1 h-180 flex justify-center items-start flex-col ml-40 text-28">
-                      <View>
-                        <View>{item?.name}</View>
-                        <View className="mt-60">{item?.points}积分</View>
+                    <View className="flex-1 h-180 flex justify-between items-start flex-col ml-40 text-27">
+                      <View className="text-overflow-more ENGLISH_FAMILY">
+                        {item?.name}
                       </View>
+                      <View className="ENGLISH_FAMILY">{item?.points}积分</View>
                     </View>
-                    <View className="min-w-100 h-140 flex items-end justify-between flex-col">
+                    <View className="min-w-100 h-180 flex items-end justify-between flex-col">
                       <CImage
                         className="w-28 h-32"
                         src={`${config.imgBaseUrl}/redeem/icon-delete.png`}
@@ -248,7 +303,9 @@ const Index = () => {
                           src={`${config.imgBaseUrl}/redeem/reduce.png`}
                           onClick={() => updateCart(item, "reduce")}
                         />
-                        <View className="mx-10">{item.quantity}</View>
+                        <View className="mx-10 ENGLISH_FAMILY">
+                          {item.quantity}
+                        </View>
                         <CImage
                           className="w-28 h-28"
                           src={`${config.imgBaseUrl}/redeem/add.png`}
@@ -262,16 +319,16 @@ const Index = () => {
           </ScrollView>
 
           <View className="w-600 h-2 bg-black font-bold"></View>
-          <View className="w-600 text-36 flex items-center justify-between mt-30">
+          <View className="w-600 text-53 flex items-center justify-between mt-30">
             <Text>总计兑换</Text>
-            <Text>{totalCounter}件</Text>
+            <Text className="ENGLISH_FAMILY">{totalCounter}件</Text>
           </View>
-          <View className="w-600 text-36 flex items-center justify-between mt-20">
+          <View className="w-600 text-53 flex items-center justify-between mt-20">
             <Text>总计消耗</Text>
-            <Text>{totalPoints}分</Text>
+            <Text className="ENGLISH_FAMILY">{totalPoints}积分</Text>
           </View>
           <View
-            className="w-280 h-60 mt-40 vhCenter"
+            className="w-280 h-60 mt-40 mb-60 vhCenter"
             style={{ backgroundColor: "#EFEFEF" }}
             onClick={sureSubmit}
           >

@@ -27,7 +27,7 @@ const Index = () => {
             className="text-white text-18 text-center p-20 vhCenter"
             onClick={() => setTabShow(true)}
           >
-            查看会员权益
+            会员权益
             <CImage className="w-18 h-12 ml-10" src={P6}></CImage>
           </View>
         ) : (
@@ -50,10 +50,10 @@ const Index = () => {
         )}
 
         {tabShow && (
-          <View>
+          <View className="relative">
             <Swiper
               current={tabIndex}
-              className="w-full h-1064"
+              className="w-full h-876"
               onChange={(e) => setTabIndex(e.detail.current)}
             >
               {tabList?.length &&
@@ -69,10 +69,10 @@ const Index = () => {
                 })}
             </Swiper>
             <View
-              className="text-white text-18 text-center py-20 vhCenter"
+              className="text-white w-full text-20 text-center py-20 vhCenter absolute bottom-30 opacity-60"
               onClick={() => setTabShow(false)}
             >
-              收起会员权益
+              点击收起会员权益
               <CImage
                 className="w-18 h-12 ml-10 transform rotate-180"
                 src={P6}

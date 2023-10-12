@@ -63,6 +63,8 @@ export const createInit = () => {
  */
 export const getShuYunMemberInfo = async () => {
   let { data } = await api.shuYunMember.queryMember();
+  console.log("获取数云接口", data);
+
   let userInfo = {
     cardNo: data.cardNo,
     gradeName: data.gradeName,

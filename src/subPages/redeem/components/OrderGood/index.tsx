@@ -18,12 +18,16 @@ const OrderGood: React.FC<T_Props> = ({ good }) => {
         <View className="w-full h-1 bg-black opacity-50"></View>
       </View>
       <View className="h-150 flex flex-1 flex-col justify-between box-border">
-        <View className="text-28 text-right">
-          <View>{good?.name}</View>
+        <View className="text-27 text-right ENGLISH_FAMILY">
+          <View className="ENGLISH_FAMILY">{good?.name}</View>
           {good?.actualPoints ? (
-            <View>{good?.actualPoints / good?.quantity}</View>
+            <View className="ENGLISH_FAMILY">
+              {good?.actualPoints / good?.quantity} 积分
+            </View>
           ) : (
-            <View>{good?.points || good?.point}</View>
+            <View className="ENGLISH_FAMILY">
+              {good?.points || good?.point} 积分
+            </View>
           )}
         </View>
         {good?.actualPoints || good?.points || good?.point ? (

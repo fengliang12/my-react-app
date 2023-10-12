@@ -55,26 +55,34 @@ const Index = () => {
   return (
     <View
       className="text-white w-screen h-screen flex flex-col items-center justify-start box-border"
-      style="background-color: #181818;"
+      style="background-color: #000000;"
     >
       <CHeader
         back
         titleColor="#ffffff"
-        fill={false}
+        fill
         backgroundColor="rgba(0,0,0,0)"
       ></CHeader>
 
-      <CImage
-        className="w-full"
-        mode="widthFix"
-        src={`${config.imgBaseUrl}/coupon/header.jpg`}
-      ></CImage>
+      <View className="w-full h-60 mt-20">
+        <CImage
+          className="w-138 ml-40"
+          mode="widthFix"
+          src={`${config.imgBaseUrl}/icon/title_image.png`}
+        ></CImage>
+      </View>
+      <View className="w-full text-52 text-left px-40 mt-20 box-border">
+        卡券中心
+      </View>
 
-      <HeaderTabbar
-        tabList={tabList}
-        value={couponStatus}
-        tabClick={tabClick}
-      ></HeaderTabbar>
+      <View className="w-600 mt-20">
+        <HeaderTabbar
+          tabList={tabList}
+          value={couponStatus}
+          tabClick={tabClick}
+          style="font-size:42rpx"
+        ></HeaderTabbar>
+      </View>
 
       <ScrollView className="flex-1 overflow-hidden" scrollY>
         {couponList?.length > 0 ? (
@@ -132,10 +140,11 @@ const Index = () => {
                         className="text-left my-10"
                         style="line-height:20px"
                       >
-                        2 凭此卡券在有效期内至NARS线下专柜 即可免费领取礼遇
+                        2
+                        请在确认领取到相关礼品后，向专柜彩妆师出示此二维码进行核销
                       </View>
                       <View className="text-left">
-                        3 此卡券逾期失效，不予补发
+                        3 礼品仅限会员本人莅临所选专柜领取。礼品一经兑换不退不换
                       </View>
                       {item.status === "10" && (
                         <View className="inline-block mt-30 bg-white">

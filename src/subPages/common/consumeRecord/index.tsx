@@ -5,7 +5,10 @@ import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 
 import api from "@/src/api";
+import { P6 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
+import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
 import { formatDateTime } from "@/src/utils";
 
 enum CHANNEL_TYPE_LIST {
@@ -64,21 +67,31 @@ const Index = () => {
     <View className="order-list bg-black flex h-screen flex-col items-center justify-start text-white">
       <CHeader
         back
-        title="消费记录"
+        title=""
         titleColor="#ffffff"
         fill
         backgroundColor="rgba(0,0,0,1)"
       ></CHeader>
-      <View className="w-688 flex justify-between mt-70 mb-30">
+      <View className="w-full h-60 mt-20">
+        <CImage
+          className="w-138 ml-40"
+          mode="widthFix"
+          src={`${config.imgBaseUrl}/icon/title_image.png`}
+        ></CImage>
+      </View>
+      <View className="w-full text-52 text-left px-40 mt-20 box-border">
+        消费记录
+      </View>
+      <View className="w-688 flex justify-between mt-35 mb-22 text-30">
         <View
-          className="w-268 h-97 bg-grayBg vhCenter"
+          className="w-268 h-97 bg-373737 vhCenter"
           onClick={() => {
             setDate("");
           }}
         >
           全部订单
         </View>
-        <View className="w-400 h-97 bg-grayBg vhCenter">
+        <View className="w-400 h-97 bg-373737 vhCenter">
           <Picker
             mode="date"
             value={date}
@@ -90,9 +103,12 @@ const Index = () => {
               setDate(value);
             }}
           >
-            <Text className="w-full h-97 vhCenter">
-              {date ? date : "请选择日期"}
-            </Text>
+            <View className="w-full h-97 vhCenter relative px-16 box-border">
+              <Text className="h-97 flex items-center">
+                {date ? date : "请选择日期"}
+              </Text>
+              <CImage className="w-24 h-20 ml-20" src={P6}></CImage>
+            </View>
           </Picker>
         </View>
       </View>
@@ -104,17 +120,11 @@ const Index = () => {
         >
           {list.map((item: any) => (
             <>
-              <View className="w-688 px-60 py-30 box-border m-auto bg-grayBg font-thin text-30">
+              <View className="w-688 px-60 py-42 box-border m-auto bg-373737 font-thin text-27">
                 <View className="flex items-start">
                   <Text className="w-150">订单店铺：</Text>
                   <Text className="flex-1">{item.shopName}</Text>
                 </View>
-                {/* <View className="flex items-start my-16">
-                  <Text className="w-150">订单渠道：</Text>
-                  <Text className="flex-1">
-                    {CHANNEL_TYPE_LIST[item.channelType]}
-                  </Text>
-                </View> */}
                 <View className="flex items-start my-16">
                   <Text className="w-150">订单日期：</Text>
                   <Text className="flex-1">
@@ -139,7 +149,7 @@ const Index = () => {
                   </View>
                 </View>
               </View>
-              <View className="w-full h-20"></View>
+              <View className="w-full h-30"></View>
             </>
           ))}
         </ScrollView>

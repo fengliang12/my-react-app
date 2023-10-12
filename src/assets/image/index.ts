@@ -10,6 +10,8 @@ export const P7 = require("./p7.png");
 export const P8 = require("./p8.png");
 export const P9 = require("./p9.png");
 export const P10 = require("./p10.png");
+export const P11 = require("./p11.png");
+export const P13 = require("./p13.png");
 
 export const cart = require("./cart.png");
 export const cart1 = require("./cart1.png");
@@ -21,6 +23,7 @@ export const Ck2 = require("./Ck2.png");
 
 export const CloseB = require("./close_b.png");
 export const CloseW = require("./close_w.png");
+export const Close = require("./close.png");
 
 export const Down = `${config.imgBaseUrl}/icon/down.png`;
 export const Address = `${config.imgBaseUrl}/icon/address.png`;

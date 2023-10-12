@@ -8,7 +8,7 @@ const commonUrl = `/sp-portal/store/${storeCode}/counter`;
 
 /** 获取柜台 */
 const getCounterList: Api.Counter.GetCounterList.FuncT = () => {
-  return http.get(`${commonUrl}/list`);
+  return http.get(`${commonUrl}/list?sort=order%2Cdesc`);
 };
 
 /** 获取柜台列表 */

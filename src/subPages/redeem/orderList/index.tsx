@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 
 import api from "@/src/api";
+import { P6, P9 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
@@ -76,13 +77,17 @@ const Index = () => {
         fill
         backgroundColor="rgba(0,0,0,1)"
       ></CHeader>
-      <View className="w-full h-60">
+      <View className="w-full h-60 mt-20">
         <CImage
-          className="w-138 h-60 ml-60"
+          className="w-138 ml-40"
+          mode="widthFix"
           src={`${config.imgBaseUrl}/icon/title_image.png`}
         ></CImage>
       </View>
-      <View className="w-688 flex justify-around items-center text-28 pt-40">
+      <View className="w-full text-52 text-left px-40 mt-20 box-border">
+        兑礼记录
+      </View>
+      <View className="w-600 flex justify-around items-center text-28 pt-40">
         <View
           className="w-228 h-60  vhCenter"
           style={{ border: "1px solid #FFFFFF" }}
@@ -97,12 +102,18 @@ const Index = () => {
               setStartDate(value);
             }}
           >
-            <Text className="w-full h-60 vhCenter">
-              {startDate ? startDate : "开始日期"}
-            </Text>
+            <View className="w-full h-full vhCenter relative px-16 box-border">
+              <Text className="flex-1 h-60 flex items-center">
+                {startDate ? startDate : "开始日期"}
+              </Text>
+              <CImage
+                className="w-20 h-16 absolute right-16 top-20"
+                src={P6}
+              ></CImage>
+            </View>
           </Picker>
         </View>
-        <View className="w-30 h-2 bg-white"></View>
+        <View className="w-16 h-2 bg-grayBg"></View>
         <View
           className="w-228 h-60 vhCenter"
           style={{ border: "1px solid #FFFFFF" }}
@@ -117,16 +128,22 @@ const Index = () => {
               setEndDate(value);
             }}
           >
-            <Text className="w-full h-60 vhCenter">
-              {endDate ? endDate : "结束日期"}
-            </Text>
+            <View className="w-full h-full vhCenter relative px-16 box-border">
+              <Text className="flex-1 h-60 flex items-center">
+                {endDate ? endDate : "结束日期"}
+              </Text>
+              <CImage
+                className="w-20 h-16 absolute right-16 top-20"
+                src={P6}
+              ></CImage>
+            </View>
           </Picker>
         </View>
       </View>
 
       {list && list?.length > 0 ? (
         <ScrollView
-          className="flex-1 overflow-hidden py-40"
+          className="flex-1 overflow-hidden py-50 text-black"
           scrollY
           onScrollToLower={onScrollEnd}
         >
@@ -134,14 +151,14 @@ const Index = () => {
             return (
               <>
                 <View
-                  className="w-688 p-40 box-border m-auto bg-grayBg font-thin text-30"
+                  className="w-680 py-30 px-60 box-border m-auto bg-white font-thin text-26"
                   onClick={() =>
                     to(`/subPages/redeem/orderDetail/index?orderId=${item.id}`)
                   }
                   key={item.id}
                 >
                   <View className="flex justify-between">
-                    <Text className="flex-1">
+                    <Text className="flex-1 ENGLISH_FAMILY">
                       {formatDateTime(item.createTime, 6)}
                     </Text>
                     <Text>
@@ -150,7 +167,7 @@ const Index = () => {
                         : item.statusName}
                     </Text>
                   </View>
-                  <View className="flex items-start mt-25 text-24">
+                  <View className="flex items-start mt-20 text-24">
                     <Text>领取方式：</Text>
                     <Text className="flex-1">
                       {item?.deliverInfo?.type === "express"
@@ -161,21 +178,21 @@ const Index = () => {
 
                   <View className="flex items-start my-20 text-24">
                     <Text>订单编号：</Text>
-                    <Text className="flex-1">{item.id}</Text>
+                    <Text className="flex-1 ENGLISH_FAMILY">{item.id}</Text>
                   </View>
                   <View className="w-full flex justify-start overflow-scroll">
                     {item.skus &&
                       item.skus.map((sku, index) => (
-                        <View className="w-160 h-160 mr-20 my-10" key={index}>
+                        <View className="w-120 h-120 mr-20 my-10" key={index}>
                           <CImage
-                            className="w-160 h-160"
+                            className="w-full h-full"
                             src={sku.mainImage}
                           ></CImage>
                         </View>
                       ))}
                   </View>
                 </View>
-                <View className="w-full h-30"></View>
+                <View className="w-full h-40"></View>
               </>
             );
           })}

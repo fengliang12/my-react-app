@@ -33,7 +33,7 @@ const Index: React.FC<PropsType> = (props) => {
    */
   const getCounterList = useMemoizedFn(async () => {
     await app.init();
-    let res = await api.counter.getCounterList();
+    let res = await api.counter.getNearCounterList({ type: "DIRECT_SALE" });
     let list = res?.data.map((item: any) => ({
       ...item.address,
       ...item.detailInfo,
@@ -92,7 +92,7 @@ const Index: React.FC<PropsType> = (props) => {
       {showApply && (
         <CPopup catchMove>
           <View className="w-600 h-600 bg-white vhCenter flex-col">
-            <Text className="font-bold text-38">选择领取方式</Text>
+            <Text className="text-36 font-bold">选择领取方式</Text>
             <View
               className="flex items-center justify-start w-400 mt-50"
               onClick={() => setApplyType("self_pick_up")}

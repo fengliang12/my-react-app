@@ -50,7 +50,7 @@ const OrderConfirm = () => {
             <Text>兑换成功</Text>
           </View>
         ) : (
-          <View className="text-28">订单编号：{detail?.id}</View>
+          <View className="text-28 ENGLISH_FAMILY">订单编号：{detail?.id}</View>
         )}
 
         <View className="text-28 mt-30">
@@ -110,9 +110,11 @@ const OrderConfirm = () => {
               <View className="w-full h-1 bg-black mt-40"></View>
             </View>
           )}
-          <View className="flex justify-between items-center text-40 mt-40">
+          <View className="flex justify-between items-center text-55 mt-50 font-normal">
             <Text>消耗积分</Text>
-            <Text>{detail?.totalRealPayPoints}</Text>
+            <Text className="ENGLISH_FAMILY text-73">
+              {detail?.totalRealPayPoints} 积分
+            </Text>
           </View>
         </View>
 

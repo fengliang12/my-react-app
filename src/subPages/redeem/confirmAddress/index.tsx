@@ -90,7 +90,7 @@ const ConfirmAddress = () => {
           onClick={changeExchangeType}
         >
           <View className="w-full flex justify-between">
-            <Text className="text-34 font-bold">收货信息</Text>
+            <Text className="text-35 font-bold">收货信息</Text>
             <CImage className="w-20 h-30" src={P3}></CImage>
           </View>
           <View className="pt-30 text-28">
@@ -105,7 +105,7 @@ const ConfirmAddress = () => {
 
         {/* 兑换礼品详情 */}
         <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
-          <View className="text-34 mb-50 font-bold">兑换礼品详情</View>
+          <View className="text-35 mb-50 font-bold">兑换礼品详情</View>
           <View className="module">
             {goods?.length > 0 &&
               goods?.map((item) => {
@@ -117,16 +117,17 @@ const ConfirmAddress = () => {
           {applyType === "express" && <PostageType></PostageType>}
 
           <View className="w-full h-1 bg-black mt-30"></View>
-          <View className="text-38 flex justify-between mt-50">
-            <View className="font-bold">总计消耗</View>
-            <View>
+          <View className="text-55 flex justify-between mt-50">
+            <View className="">总计消耗</View>
+            <View className="ENGLISH_FAMILY">
               {applyType === "express"
                 ? totalPoints + config.postagePoints
-                : totalPoints}
+                : totalPoints}{" "}
+              积分
             </View>
           </View>
           <View
-            className="w-220 h-60 vhCenter bg-black text-white text-26 m-auto mt-100"
+            className="w-225 h-55 vhCenter bg-black text-white text-28 m-auto mt-180"
             onClick={handleReceive}
           >
             确定提交

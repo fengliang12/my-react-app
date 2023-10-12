@@ -12,7 +12,6 @@ import to from "@/src/utils/to";
 
 import CImage from "../Common/CImage";
 import CPopup from "../Common/CPopup";
-import CQRCodeCustom from "../Common/CQRCodeCustom";
 import MemberTab from "../MemberTab";
 
 interface PropsType {
@@ -23,7 +22,6 @@ const Index: React.FC<PropsType> = (props) => {
   let { showBindPopup } = props;
   const userInfo = useSelector((state: Store.States) => state.user);
   const isMember = useSelector((state: Store.States) => state.user.isMember);
-  const [qrShow, { setFalse }] = useBoolean(false);
   const [process, setProcess] = useState<number>(0);
   const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
     useBoolean(false);
@@ -71,7 +69,7 @@ const Index: React.FC<PropsType> = (props) => {
             backgroundImage: `url(${config.imgBaseUrl}/index/card_bg.png)`,
           }}
         >
-          <View className="w-full flex items-start">
+          <View className="w-full flex items-center">
             <View className="flex items-center justify-center relative">
               <View
                 className="absolute top-0 left-0 z-10 w-130 h-130 rounded-130 bg-white vhCenter mr-20"
@@ -100,24 +98,18 @@ const Index: React.FC<PropsType> = (props) => {
               <View>
                 {isMember ? (
                   <>
-                    <CImage
-                      className="w-180"
-                      mode="widthFix"
-                      style="transform:translate(-26rpx,3rpx)"
-                      src={`${config.imgBaseUrl}/icon/${userInfo.gradeId}.png`}
-                    ></CImage>
-                    <View className="text-38 text-overflow max-w-250">
-                      {userInfo.realName}
-                    </View>
-                    <View
-                      className="flex items-center text-18"
-                      onClick={() => to("/subPages/common/myQRCode/index")}
-                    >
+                    <View className="text-42 vhCenter">
+                      <View className="text-overflow max-w-250">
+                        {userInfo.realName}
+                      </View>
                       <CImage
-                        className="w-18 h-18 mr-6"
+                        className="w-34 h-34 ml-20"
                         src={`${config.imgBaseUrl}/index/icon_qrcode.png`}
+                        onClick={() => to("/subPages/common/myQRCode/index")}
                       ></CImage>
-                      <Text>我的二维码</Text>
+                    </View>
+                    <View className="flex items-center text-24 mt-11">
+                      <Text>{userInfo.gradeName}</Text>
                     </View>
                   </>
                 ) : (
@@ -137,14 +129,8 @@ const Index: React.FC<PropsType> = (props) => {
               className="flex-1 h-full flex items-end flex-col"
               onClick={() => goNextPage("/subPages/common/pointsDetail/index")}
             >
-              <View className="text-46">{userInfo.points}</View>
-              <View className="vhCenter">
-                <CImage className="w-35 h-31 mr-6" src={P10}></CImage>
-                <CImage
-                  className="w-116 h-24"
-                  src={`${config.imgBaseUrl}/index/icon_redeem.png`}
-                ></CImage>
-              </View>
+              <View className="text-42 ENGLISH_FAMILY">{userInfo.points}</View>
+              <View className="vhCenter text-24 mt-11">当前积分</View>
             </View>
           </View>
           {/* 进度条 */}
@@ -174,41 +160,11 @@ const Index: React.FC<PropsType> = (props) => {
               )}
             </>
           )}
-
-          {/* <View
-            className="absolute bottom-20 left-25 text-18 underline"
-            onClick={setRuleTrue}
-          >
-            会员规则
-          </View> */}
         </View>
       </View>
 
       {/* 查看会员权益 */}
       <MemberTab></MemberTab>
-
-      {/* 二维码弹窗 */}
-      <View style={setShow(qrShow)}>
-        <CPopup maskClose closePopup={setFalse}>
-          <View className="w-600 flex flex-col items-center justify-center relative">
-            <View className="w-full py-80  relative vhCenter flex-col bg-white rounded-10">
-              <View className="mb-60 text-36 font-bold">我的二维码</View>
-              <View className="w-400 h-400">
-                {userInfo?.cardNo && (
-                  <CQRCodeCustom
-                    text={userInfo?.cardNo as unknown as string}
-                  ></CQRCodeCustom>
-                )}
-              </View>
-            </View>
-            <CImage
-              className="w-30 h-30 absolute top-30 right-30"
-              onClick={setFalse}
-              src={CloseB}
-            ></CImage>
-          </View>
-        </CPopup>
-      </View>
 
       {/* 规则弹窗 */}
       <View style={setShow(ruleShow)}>

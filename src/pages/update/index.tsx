@@ -104,6 +104,8 @@ const Index = () => {
         id: item.id,
       };
     });
+    console.log("list", list);
+
     setCounterList(list);
     Taro.hideLoading();
   });

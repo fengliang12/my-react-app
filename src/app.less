@@ -1,15 +1,48 @@
+
+// 方正兰亭超细黑简体
+@font-face {
+  font-family: "FZLTCXHJT";
+  // src: url("https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/font/FZLTCXHJT.TTF");
+  src:url("https://biomember.blob.core.chinacloudapi.cn/ateliercologne/front/FZLTCXHJT.TTF");
+}
+
+
+// 方正兰亭纤黑简体
+@font-face {
+  font-family: "FZLTQHJT";
+  // src: url("https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/font/FZLTQHJT.TTF");
+  src:url("https://biomember.blob.core.chinacloudapi.cn/ateliercologne/front/FZLTQHJT.TTF");
+}
+
+
+@font-face {
+  font-family: "ENGLISH_F_Z";
+  // src: url("https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/font/HelveticaNeueLTStd-Lt.otf");
+  src: url("https://biomember.blob.core.chinacloudapi.cn/ateliercologne/front/HelveticaNeueLTStd-Lt.otf")
+}
+
+.FZLTCXHJT{
+  font-family: "FZLTCXHJT" !important;
+  font-weight: 700;
+}
+
+.ENGLISH_FAMILY{
+  font-family: "ENGLISH_F_Z" !important;
+}
+
 page{
   background-color: #000000;
-  font-family: "CHINESE_F_Z";
+  font-family: "FZLTQHJT";
 }
+
+view,text,input,picker{
+  font-family: "FZLTQHJT";
+}
+
 
 .page_bg1{
   background:url(https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/index/bg.png);
   background-size:100% 100%;
-}
-
-.english_family{
-  font-family: "ENGLISH_F_Z";
 }
 
 .btn-no {
@@ -38,6 +71,13 @@ page{
 	text-overflow: ellipsis;
 }
 
+.text-overflow-more {
+  overflow: hidden;/*超出文本隐藏*/
+  text-overflow:ellipsis; /*超出部分省略号显示 */
+  display: -webkit-box;/*弹性盒模型*/
+  -webkit-box-orient: vertical;/*上下垂直*/
+  -webkit-line-clamp: 2;/*自定义行数*/
+}
 .text-underline {
   text-decoration: underline;
   padding-bottom: 2px; /* 设置下划线与文本底部的间距 */
@@ -84,6 +124,7 @@ image {
 .home_tab_active {
   position: relative;
   color: #ffffff;
+  text-shadow: 0px 0px 8px #ffffff;
 }
 .home_tab_active::after {
   position: absolute;

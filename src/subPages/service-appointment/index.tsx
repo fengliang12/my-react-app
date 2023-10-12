@@ -35,7 +35,7 @@ const Index = () => {
         titleCss="height:85rpx"
         titleColor="#FFFFFF"
       ></CHeader>
-      <View className="text-52 text-left mt-100 font-thin pl-60 english_family opacity-80">
+      <View className="text-52 text-left mt-100 font-thin pl-60 ENGLISH_FAMILY opacity-80">
         MAKE UP YOUR MIND
       </View>
       <View className="text-35 text-left mt-10 font-thin pl-60 opacity-80">

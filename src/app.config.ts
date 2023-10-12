@@ -7,6 +7,7 @@ export default {
     "pages/update/index",
     "pages/register/index",
     "pages/registerSecond/index",
+    "pages/test/index",
   ],
   window: {
     backgroundTextStyle: "light",
@@ -14,7 +15,9 @@ export default {
     navigationBarTitleText: "NARS会员中心",
     navigationBarTextStyle: "black",
     navigationStyle: "custom",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#000000",
+    backgroundColorTop: "#000000",
+    backgroundColorBottom: "#000000",
   },
   subpackages: [
     {

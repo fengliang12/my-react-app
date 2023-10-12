@@ -59,6 +59,7 @@ declare namespace Store {
 
   type ExchangeGood = {
     applyType: string;
+    showRedDot: boolean;
     goods: Array<any>;
     counter: any;
     channelType: ChannelType;

@@ -49,7 +49,7 @@ const OrderConfirm = () => {
   return (
     <>
       <View
-        className="w-screen min-h-screen bg-black flex flex-col items-center box-border pb-100"
+        className="w-screen min-h-screen bg-black flex flex-col items-center box-border pb-106"
         style={{ color: "#6c6c6c" }}
       >
         <CHeader
@@ -61,8 +61,8 @@ const OrderConfirm = () => {
 
         {/* 领取方式 */}
         <View className="w-690 text-26 bg-white px-30 py-40 box-border text-black">
-          <View className="text-34 text-left font-bold">领取方式</View>
-          <View className="text-24 mb-40  text-left mt-10">
+          <View className="text-35 text-left font-bold">领取方式</View>
+          <View className="text-24 mb-40  text-left mt-20">
             *切换领取方式后礼品库存可能产生变化
           </View>
 
@@ -75,7 +75,7 @@ const OrderConfirm = () => {
                 <View className="mt-10">{counter?.name}</View>
               </View>
             )}
-            <Text className="underline" onClick={changeExchangeType}>
+            <Text className="underline font-bold" onClick={changeExchangeType}>
               切换领取方式
             </Text>
           </View>
@@ -83,7 +83,7 @@ const OrderConfirm = () => {
 
         {/* 兑换礼品详情 */}
         <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
-          <View className="text-34 box_title mb-50 font-bold">
+          <View className="text-35 box_title mb-50 font-bold">
             兑换礼品详情
           </View>
           <View className="module">
@@ -97,16 +97,17 @@ const OrderConfirm = () => {
           {applyType === "express" && <PostageType></PostageType>}
 
           <View className="w-full h-1 bg-black mt-50"></View>
-          <View className="text-38 flex justify-between mt-50">
-            <View className="font-bold">总计消耗</View>
-            <View>
+          <View className="text-55 flex justify-between mt-50">
+            <View className="">总计消耗</View>
+            <View className="ENGLISH_FAMILY">
               {applyType === "express"
                 ? totalPoints + config.postagePoints
-                : totalPoints}
+                : totalPoints}{" "}
+              积分
             </View>
           </View>
           <View
-            className="w-220 h-50 vhCenter bg-black text-white text-26 m-auto mt-100"
+            className="w-225 h-55 vhCenter bg-black text-white text-28 m-auto mt-180"
             onClick={handleReceive}
           >
             确定提交

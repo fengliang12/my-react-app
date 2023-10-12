@@ -169,7 +169,7 @@ const Index = () => {
       ></CImage>
       <View className="fixed top-220 left-50" style="color:#FFFFFF">
         <Text
-          className="text-70 text-left mt-40 font-thin english_family"
+          className="text-70 text-left mt-40 font-thin ENGLISH_FAMILY"
           style="line-height:50rpx"
           decode
         >

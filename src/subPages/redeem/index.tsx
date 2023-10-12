@@ -8,6 +8,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
+import config from "@/src/config";
 import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import handleGoodClass from "@/src/utils/handleGoodClass";
 import setShow from "@/src/utils/setShow";
@@ -73,6 +74,7 @@ const Index = () => {
         channelType: "immediately",
         postageType: "points",
         counter: null,
+        showRedDot: false,
       },
     });
   });
@@ -92,18 +94,18 @@ const Index = () => {
           className="flex-1 vhCenter flex-col"
           onClick={() => to("/subPages/common/pointsDetail/index")}
         >
-          <Text className="text-80">{userInfo.points}</Text>
+          <Text className="text-80 ENGLISH_FAMILY">{userInfo.points}</Text>
           <Text>{`积分明细 >`}</Text>
         </View>
-        <View className="w-1 h-100 bg-white"></View>
-        <View className="flex-1 vhCenter flex-col">
+        <View className="w-1 h-100 bg-white opacity-60"></View>
+        <View className="flex-1 vhCenter flex-col text-26">
           <Text
-            className="underline"
+            className="borderBottomWhite"
             onClick={() => to("/subPages/redeem/orderList/index")}
           >
             兑礼记录
           </Text>
-          <Text className="underline mt-30" onClick={setTrue}>
+          <Text className="borderBottomWhite mt-30 text-26" onClick={setTrue}>
             兑换规则
           </Text>
         </View>
@@ -121,16 +123,16 @@ const Index = () => {
       <ApplyType></ApplyType>
 
       {/* 购物车 */}
-      <AddCart></AddCart>
+      {applyType && <AddCart></AddCart>}
 
       {/* 活动规则 */}
       <View style={setShow(show)}>
         <CPopup maskClose closePopup={setFalse}>
-          <View className="w-690 h-1008 bg-white rounded-20">
-            {/* <CImage
+          <View className="w-647 h-841 bg-white rounded-20 overflow-hidden">
+            <CImage
               className="w-full h-full"
-              src="https://can-uat-prod-baum-oss.oss-cn-shanghai.aliyuncs.com/coupon/rule.png"
-            ></CImage> */}
+              src={`${config.imgBaseUrl}/redeem/rule_03.png`}
+            ></CImage>
             <View
               className="absolute w-80 h-80 top-20 right-10 vhCenter"
               onClick={setFalse}

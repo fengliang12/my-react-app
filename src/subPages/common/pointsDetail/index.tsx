@@ -34,7 +34,7 @@ const Index = () => {
         className="vhCenter w-full h-300 flex-col bg-black2"
         style={`background:url(${config.imgBaseUrl}/pointsDetail/bg.jpg);background-size:100% 100%`}
       >
-        <Text className="text-100 font-thin">{points}</Text>
+        <Text className="text-100 ENGLISH_FAMILY">{points}</Text>
         <Text className="text-26">当前积分</Text>
       </View>
       {list?.length ? (
@@ -44,12 +44,12 @@ const Index = () => {
               <View className="px-55 py-30 font-thin" key={index}>
                 <View className="flex justify-between text-35">
                   <Text>{item.description}</Text>
-                  <Text>
+                  <Text className="ENGLISH_FAMILY">
                     {item.changeType === "DEDUCT" ? "-" : "+"}
                     {item.point}
                   </Text>
                 </View>
-                <View className="text-26 mt-20">
+                <View className="text-26 mt-20 ENGLISH_FAMILY">
                   {formatDateTime(item.changeTime, 6, ".")}
                 </View>
               </View>

@@ -4,7 +4,16 @@ import { useMemoizedFn, useMount, useRequest, useUpdateEffect } from "ahooks";
 import { useMemo, useState } from "react";
 
 import api from "@/src/api";
-import { Address, Down, Tel } from "@/src/assets/image";
+import {
+  Address,
+  Down,
+  LogoB,
+  LogoW,
+  P6,
+  P11,
+  P13,
+  Tel,
+} from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
@@ -177,64 +186,85 @@ const NearbyStores = () => {
         backgroundColor="rgba(0,0,0,1)"
         titleColor="#FFFFFF"
       ></CHeader>
+      <View className="w-full">
+        <CImage
+          className="w-200 ml-30 mt-41"
+          mode="widthFix"
+          src={LogoW}
+        ></CImage>
+      </View>
 
-      <View className="w-full flex justify-between items-center text-black mt-30 text-30 px-30 box-border">
+      <View className="w-full flex justify-between items-center text-black mt-45 text-29 px-30 box-border">
         <Picker
           range={provinceList}
           rangeKey="label"
           className="w-320"
           onChange={onChangeProvince}
         >
-          <View className="border border-solid border-black w-full h-70 flex items-center px-20 justify-start box-border relative">
+          <View
+            className="border border-solid border-black w-full h-70 flex items-center px-20 justify-start box-border relative"
+            style={{ background: "#F7F7F7" }}
+          >
             <Text>
               {getCounterParams.province
                 ? getCounterParams.province
                 : "请选择省份"}
             </Text>
             <CImage
-              className="w-25 h-24 absolute top-20 right-20"
-              src={Down}
+              className="w-25 h-13 absolute top-26 right-20"
+              src={P11}
             ></CImage>
           </View>
         </Picker>
         <Picker range={cityList} className="w-320" onChange={onChangeCity}>
-          <View className="border border-solid border-black w-full h-70 flex items-center px-20 justify-start box-border relative">
+          <View
+            className="border border-solid border-black w-full h-70 flex items-center px-20 justify-start box-border relative"
+            style={{ background: "#F7F7F7" }}
+          >
             <Text>
               {getCounterParams.city ? getCounterParams.city : "请选择城市"}
             </Text>
             <CImage
-              className="w-25 h-24 absolute top-20 right-20"
-              src={Down}
+              className="w-25 h-13 absolute top-26 right-20"
+              src={P11}
             ></CImage>
           </View>
         </Picker>
       </View>
-      <View className="w-690 h-2 bg-black mt-40"></View>
+      <View className="w-690 h-2 bg-black mt-50"></View>
       <ScrollView
         className="w-full box-border px-30 pb-40 flex-1 overflow-hidden"
         scrollY
       >
         {counterList.map((counter) => (
-          <View key={counter.id} className="text-black p-30 borderBottomBlack">
-            <View
-              className="text-36 inline-block borderBottomBlack2"
-              onClick={() => onOpenLocation(counter)}
-            >
-              {counter.detailInfo.name}
-            </View>
-            <View
-              className="text-32 flex items-center text-black text-opacity-70 mt-30 mb-10"
-              onClick={() => onOpenLocation(counter)}
-            >
-              <CImage className="w-24 h-36 mr-14" src={Address}></CImage>
-              <View className="flex-1">{counter.address.address}</View>
-            </View>
-            <View
-              className="text-32 flex items-center text-black text-opacity-70"
-              onClick={() => onMakePhoneCall(counter.detailInfo.telephone)}
-            >
-              <CImage className="w-22 h-29 mr-14" src={Tel}></CImage>
-              <View className="flex-1">{counter.detailInfo.telephone}</View>
+          <View
+            key={counter.id}
+            className="text-black py-30 borderBottomBlack flex"
+          >
+            <CImage className="w-25 mr-15" mode="widthFix" src={P13}></CImage>
+            <View>
+              <View
+                className="text-29 inline-block font-bold ENGLISH_FAMILY"
+                onClick={() => onOpenLocation(counter)}
+              >
+                {counter.detailInfo.name}
+              </View>
+              <View
+                className="text-25 flex items-center text-black mt-23 mb-22"
+                onClick={() => onOpenLocation(counter)}
+              >
+                <View className="flex-1 ENGLISH_FAMILY">
+                  {counter.address.address}
+                </View>
+              </View>
+              <View
+                className="text-25 flex items-center text-black"
+                onClick={() => onMakePhoneCall(counter.detailInfo.telephone)}
+              >
+                <View className="flex-1 ENGLISH_FAMILY underline">
+                  {counter.detailInfo.telephone}
+                </View>
+              </View>
             </View>
           </View>
         ))}

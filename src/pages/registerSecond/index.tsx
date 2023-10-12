@@ -24,7 +24,7 @@ const Index = () => {
         src={`${config.imgBaseUrl}/register/nars_icon.jpg`}
         onClick={async () => {
           let userInfo = await app.init();
-          if (userInfo.isMember) {
+          if (userInfo?.isMember) {
             to(pageSettingConfig.homePath, "reLaunch");
           } else {
             to(pageSettingConfig.registerPath, "redirectTo");
