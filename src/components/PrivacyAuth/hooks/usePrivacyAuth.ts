@@ -14,6 +14,8 @@ export default function usePrivacyAuth() {
     });
   });
   const requirePrivacyAuth = useMemoizedFn(async () => {
+    if (!wx?.requirePrivacyAuthorize) return Promise.resolve(true);
+
     return new Promise((resolve, reject) => {
       wx.requirePrivacyAuthorize({
         success() {

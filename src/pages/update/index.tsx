@@ -1,7 +1,7 @@
 import "./index.less";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import Taro, { useShareAppMessage } from "@tarojs/taro";
+import Taro, { useLoad, useShareAppMessage } from "@tarojs/taro";
 import { useAsyncEffect, useMemoizedFn, useSetState } from "ahooks";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { LogoB, P1, P6, P7 } from "@/assets/image/index";
 import Page from "@/components/Page";
 import api from "@/src/api";
-import CityList from "@/src/components/CityList";
 import Avatar from "@/src/components/Common/Avatar";
 import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
@@ -29,6 +28,7 @@ const app: App.GlobalData = Taro.getApp();
 
 const Index = () => {
   const isMember = useSelector((state: Store.States) => state.user.isMember);
+  const [cityList, setCityList] = useState<any>();
   const [popupType, setPopupType] = useState<string>("");
   const [counterList, setCounterList] = useState<any>([]);
   const [counterName, setCounterName] = useState<string>("");
@@ -43,6 +43,11 @@ const Index = () => {
     shopType: "",
     city: "",
     province: "",
+  });
+
+  useLoad(async () => {
+    const { data }: any = await api.common.addressTree();
+    setCityList(data);
   });
 
   /**
@@ -286,9 +291,19 @@ const Index = () => {
             <View className="item">
               <View className="text-30">所在城市</View>
               <View className="right">
-                <CityList
-                  onChange={(item) => {
-                    setUser({ province: item.province, city: item.city });
+                <MultiplePicker
+                  isCascadeData
+                  cascadeCount={2}
+                  pickerData={cityList}
+                  cascadeProps={{
+                    label: "name",
+                    value: "name",
+                    children: "children",
+                  }}
+                  resultProps={["parentId", "name"]}
+                  callback={(e) => {
+                    let province = cityList.find((a) => a.id === e.parentId);
+                    setUser({ province: province.name, city: e.name });
                   }}
                 >
                   <View className="flex items-center justify-end">
@@ -298,7 +313,7 @@ const Index = () => {
                     {`${user.city}`}
                     <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                   </View>
-                </CityList>
+                </MultiplePicker>
               </View>
             </View>
             <View className="item">

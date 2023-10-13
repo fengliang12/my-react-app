@@ -4,17 +4,16 @@ import { Image, Input, Picker, Text, View } from "@tarojs/components";
 import Taro, { useLoad, useShareAppMessage } from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
 import dayjs from "dayjs";
-import { result } from "lodash";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { LogoB, P1, P6, P7 } from "@/assets/image/index";
+import { LogoB, P6, P7 } from "@/assets/image/index";
 import Page from "@/components/Page";
 import api from "@/src/api";
-import CityList from "@/src/components/CityList";
 import Avatar from "@/src/components/Common/Avatar";
 import CImage from "@/src/components/Common/CImage";
 import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
+import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import PrivacyPolicyText from "@/src/components/Common/PrivacyPolicyText";
 import SendVerifyCode from "@/src/components/Common/SendVerifyCode";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
@@ -55,8 +54,12 @@ const Index = () => {
     smsCode: "",
   });
 
-  useLoad(() => {
+  const [cityList, setCityList] = useState<any>();
+
+  useLoad(async () => {
     qqmapsdk = new QQMapWX({ key: config.key });
+    const { data }: any = await api.common.addressTree();
+    setCityList(data);
   });
 
   /**
@@ -268,7 +271,7 @@ const Index = () => {
                   value={user.nickName}
                   focus={focus}
                   disabled={!focus}
-                  onBlur={()=>setFocus(false)}
+                  onBlur={() => setFocus(false)}
                   onInput={(e) =>
                     setUser({
                       nickName: e.detail.value,
@@ -397,9 +400,19 @@ const Index = () => {
                   </View>
                 )}
                 <View className={user.city ? "flex-1" : ""}>
-                  <CityList
-                    onChange={(item) => {
-                      setUser({ province: item.province, city: item.city });
+                  <MultiplePicker
+                    isCascadeData
+                    cascadeCount={2}
+                    pickerData={cityList}
+                    cascadeProps={{
+                      label: "name",
+                      value: "name",
+                      children: "children",
+                    }}
+                    resultProps={["parentId", "name"]}
+                    callback={(e) => {
+                      let province = cityList.find((a) => a.id === e.parentId);
+                      setUser({ province: province.name, city: e.name });
                     }}
                   >
                     <View className="flex items-center justify-end">
@@ -409,7 +422,7 @@ const Index = () => {
                       {`${user.city}`}
                       <Image src={P6} mode="widthFix" className="w-14 ml-15" />
                     </View>
-                  </CityList>
+                  </MultiplePicker>
                 </View>
               </View>
             </View>

@@ -42,6 +42,12 @@ const getZTArea = () =>
     noToken: true,
   });
 
+//获取省市区
+const addressTree = () => http.get(`/sp-portal/store/address/mini/tree`);
+
+//获取省市区
+const address = () => http.get(`/sp-portal/store/address/mini/null`);
+
 const mapJSON: any = (params) => {
   return http.get("https://apis.map.qq.com/ws/geocoder/v1", { params });
 };
@@ -71,4 +77,6 @@ export default {
   mapJSON,
   // 根据类型查询活动弹窗popUp配置
   findPopupListByType,
+  addressTree,
+  address,
 };

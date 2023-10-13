@@ -105,7 +105,7 @@ const Index: React.FC<PropsType> = (props) => {
                         {userInfo.realName}
                       </View>
                       <CImage
-                        className="w-34 h-34 ml-20"
+                        className="w-34 h-34 px-20"
                         src={`${config.imgBaseUrl}/index/icon_qrcode.png`}
                         onClick={() => to("/subPages/common/myQRCode/index")}
                       ></CImage>
@@ -127,15 +127,25 @@ const Index: React.FC<PropsType> = (props) => {
                 )}
               </View>
             </View>
-            <View
-              className="flex-1 h-full flex items-end flex-col"
-              onClick={() => {
-                // goNextPage("/subPages/common/pointsDetail/index");
-                setRuleTrue();
-              }}
-            >
-              <View className="text-42 ENGLISH_FAMILY">{userInfo.points}</View>
-              <View className="vhCenter text-24 mt-11">当前积分</View>
+            <View className="flex-1 h-full flex items-end flex-col">
+              <View
+                className="text-42 ENGLISH_FAMILY"
+                onClick={() => {
+                  // goNextPage("/subPages/common/pointsDetail/index");
+                  setRuleTrue();
+                }}
+              >
+                {userInfo.points}
+              </View>
+              <View
+                className="vhCenter text-24 mt-11"
+                onClick={() => {
+                  // goNextPage("/subPages/common/pointsDetail/index");
+                  setRuleTrue();
+                }}
+              >
+                当前积分
+              </View>
             </View>
           </View>
           {/* 进度条 */}
@@ -178,7 +188,7 @@ const Index: React.FC<PropsType> = (props) => {
             <CImage
               className="w-full"
               mode="widthFix"
-              src={`${config.imgBaseUrl}/index/maintenance.jpg`}
+              src={`${config.imgBaseUrl}/index/maintenance01.jpg`}
             ></CImage>
             <View
               className="w-100 h-100 absolute top-30 right-30"
