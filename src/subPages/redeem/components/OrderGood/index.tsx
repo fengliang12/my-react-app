@@ -1,4 +1,4 @@
-import { View } from "@tarojs/components";
+import { Text, View } from "@tarojs/components";
 import React from "react";
 
 import CImage from "@/src/components/Common/CImage";
@@ -19,19 +19,21 @@ const OrderGood: React.FC<T_Props> = ({ good }) => {
       </View>
       <View className="h-150 flex flex-1 flex-col justify-between box-border">
         <View className="text-27 text-right ENGLISH_FAMILY">
-          <View className="ENGLISH_FAMILY">{good?.name}</View>
+          <View className="ENGLISH_FAMILY text-23">{good?.name}</View>
           {good?.actualPoints ? (
-            <View className="ENGLISH_FAMILY">
-              {good?.actualPoints / good?.quantity} 积分
+            <View className="ENGLISH_FAMILY text-29 mt-10">
+              {good?.actualPoints / good?.quantity}
+              <Text className="text-18 relative -top-1"> 积分</Text>
             </View>
           ) : (
-            <View className="ENGLISH_FAMILY">
-              {good?.points || good?.point} 积分
+            <View className="ENGLISH_FAMILY text-29 mt-10">
+              {good?.points || good?.point}
+              <Text className="text-18 relative -top-1"> 积分</Text>
             </View>
           )}
         </View>
         {good?.actualPoints || good?.points || good?.point ? (
-          <View className="text-28 text-right">
+          <View className="text-24 text-right">
             x {good?.quantity || good?.num || 1}
           </View>
         ) : null}

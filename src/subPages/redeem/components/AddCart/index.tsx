@@ -51,7 +51,6 @@ const Index = () => {
    * 查询购物车
    */
   useAsyncEffect(async () => {
-    // if (!show) return;
     if (applyType === "self_pick_up" && !counter) {
       toast("门店不能为空");
       return;
@@ -249,15 +248,15 @@ const Index = () => {
         {/* 购物车弹窗 */}
         <View
           catchMove
-          className="fixed left-0 bottom-0 z-12000  w-750 h-1100 bg-white flex items-center flex-col rounded-t-40"
+          className="fixed left-0 bottom-0 z-12000  w-750 bg-white flex items-center flex-col rounded-t-60"
         >
-          <Text className="w-650 font-bold mt-68 text-35">兑换礼品详情</Text>
+          <Text className="w-650 mt-68 text-29 font-bold">兑换礼品详情</Text>
           <ScrollView className="w-full h-650 mt-40" scrollY>
             {carts?.length > 0 &&
               carts.map((item) => {
                 return (
                   <View
-                    className="w-full px-50 box-border flex items-center justify-start pb-50"
+                    className="w-full px-33 box-border flex items-center justify-start pb-80"
                     key={item.id}
                   >
                     <View
@@ -265,13 +264,13 @@ const Index = () => {
                       onClick={() => updateCart(item, "select")}
                     >
                       <View
-                        className={`w-24 h-24 borderBlack rounded-24 flex items-center justify-center `}
+                        className={`w-34 h-34 borderBlack rounded-34 flex items-center justify-center `}
                       >
                         {item.selected && (
-                          <View className="w-20 h-20 rounded-20 bg-black"></View>
+                          <View className="w-30 h-30 rounded-30 bg-black"></View>
                         )}
                       </View>
-                      <View className="relative ml-20">
+                      <View className="relative ml-33">
                         {item.sellOut && (
                           <View
                             className="w-full h-full absolute top-0 left-0 text-white vhCenter text-28 z-99 rounded-9"
@@ -286,10 +285,13 @@ const Index = () => {
                     </View>
 
                     <View className="flex-1 h-180 flex justify-between items-start flex-col ml-40 text-27">
-                      <View className="text-overflow-more ENGLISH_FAMILY">
+                      <View className="text-overflow-more text-24 ENGLISH_FAMILY">
                         {item?.name}
                       </View>
-                      <View className="ENGLISH_FAMILY">{item?.points}积分</View>
+                      <View className="ENGLISH_FAMILY text-29">
+                        {item?.points}
+                        <Text className="text-20"> 积分</Text>
+                      </View>
                     </View>
                     <View className="min-w-100 h-180 flex items-end justify-between flex-col">
                       <CImage
@@ -318,18 +320,23 @@ const Index = () => {
               })}
           </ScrollView>
 
-          <View className="w-600 h-2 bg-black font-bold"></View>
-          <View className="w-600 text-53 flex items-center justify-between mt-30">
+          <View className="w-684 h-2 bg-black font-bold"></View>
+          <View className="w-684 text-29 flex items-center justify-between mt-20">
             <Text>总计兑换</Text>
-            <Text className="ENGLISH_FAMILY">{totalCounter}件</Text>
+            <Text className="ENGLISH_FAMILY text-38">
+              {totalCounter}
+              <Text className="text-20 relative -top-4"> 件</Text>
+            </Text>
           </View>
-          <View className="w-600 text-53 flex items-center justify-between mt-20">
+          <View className="w-684 text-29 flex items-center justify-between">
             <Text>总计消耗</Text>
-            <Text className="ENGLISH_FAMILY">{totalPoints} 积分</Text>
+            <Text className="ENGLISH_FAMILY text-38">
+              {totalPoints}
+              <Text className="text-20 relative -top-4"> 积分</Text>
+            </Text>
           </View>
           <View
-            className="w-280 h-60 mt-40 mb-60 vhCenter"
-            style={{ backgroundColor: "#EFEFEF" }}
+            className="w-423 h-78 mt-86 mb-62 vhCenter text-29 bg-black text-white"
             onClick={sureSubmit}
           >
             确认兑换

@@ -39,14 +39,14 @@ const OrderConfirm = () => {
   });
 
   return (
-    <View className="w-screen min-h-screen bg-black flex flex-col justify-start items-center text-white">
+    <View className="w-screen min-h-screen bg-black pb-100 box-border flex flex-col justify-start items-center text-white">
       <CHeader
         title="兑礼结算"
         titleColor="#ffffff"
         backgroundColor="#000000"
         fill
       ></CHeader>
-      <View className="w-600 text-28 box-border mt-60">
+      <View className="w-685 text-28 box-border mt-44">
         {from === "confirm" ? (
           <View className="text-48 text-center vhCenter mb-50">
             <View className="w-50 h-50 rounded-50 bg-white vhCenter mr-20">
@@ -55,13 +55,16 @@ const OrderConfirm = () => {
             <Text>兑换成功</Text>
           </View>
         ) : (
-          <View className="text-28 ENGLISH_FAMILY">订单编号：{detail?.id}</View>
+          <View className="text-27 ENGLISH_FAMILY">订单编号：{detail?.id}</View>
         )}
 
-        <View className="text-28 mt-40">
+        <View
+          className="text-27 mt-25"
+          style={{ textAlign: from === "confirm" ? "center" : "left" }}
+        >
           {detail?.deliverInfo?.type === "express"
             ? "* 礼品将于10个工作日内发货"
-            : "* 礼品将于3个工作日内到达领取柜台"}
+            : "* 礼品请于30天内至所选柜台领取"}
         </View>
         {detail?.deliverInfo?.type === "express" && (
           <View className="mt-30 text-28">
@@ -83,25 +86,28 @@ const OrderConfirm = () => {
         )}
       </View>
 
-      <View className="w-690 pb-200 bg-white px-48 py-62 box-border mt-108 text-black font-bold">
-        <View className="text-35">
+      <View
+        className="w-690 pb-53 bg-white px-24 py-45 box-border mt-55 text-black"
+        style={{ minHeight: "1000rpx" }}
+      >
+        <View className="text-29">
           <View>
             状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
             {detail?.statusName === "待评价" ? "已完成" : detail?.statusName}
           </View>
-          <View className="mt-14">
+          <View className="mt-16">
             领取方式：
             {detail?.deliverInfo?.type === "express" ? "邮寄到家" : "到柜领取"}
           </View>
           {detail?.deliverInfo?.type === "self_pick_up" && (
-            <View className="mt-14">
+            <View className="mt-16">
               领取柜台: {detail?.simpleCounter?.detailInfo?.name}
             </View>
           )}
         </View>
-        <View className="mt-62 text-35">兑换礼品详情</View>
+        <View className="mt-59 text-29 font-bold">兑换礼品详情</View>
         <View className="mt-20">
-          <View className="font-thin">
+          <View className="px-16">
             {detail?.goods &&
               detail.goods.length > 0 &&
               detail.goods.map((item) => {
@@ -115,10 +121,11 @@ const OrderConfirm = () => {
               <View className="w-full h-1 bg-black mt-40"></View>
             </View>
           )}
-          <View className="flex justify-between items-center text-55 mt-50 font-normal">
+          <View className="flex justify-between items-center text-29 mt-40 font-normal">
             <Text>消耗积分</Text>
-            <Text className="ENGLISH_FAMILY text-73">
+            <Text className="ENGLISH_FAMILY text-47">
               {detail?.totalRealPayPoints}
+              <Text className="text-18 relative -top-1"> 积分</Text>
             </Text>
           </View>
         </View>
@@ -127,22 +134,21 @@ const OrderConfirm = () => {
           ["wait_shipment", "wait_receive"].includes(detail?.status) &&
           detail?.deliverInfo?.type === "self_pick_up" && (
             <View
-              className="text-55 flex justify-center items-center mt-50 pt-50"
+              className="text-55 flex flex-col justify-center items-center mt-46 pt-50"
               style="border-top:1px solid #000"
             >
-              <View className="text-28 flex flex-col mr-120">
-                <Text>礼品到柜后凭此</Text>
-                <Text className="my-20">核销码到领取柜</Text>
-                <Text>台核销领取礼遇</Text>
-              </View>
               {detail?.extendInfos?.length > 0 && (
                 <CQRCodeCustom
                   text={detail?.extendInfos?.[0]?.value}
-                  width={210}
-                  height={210}
+                  width={214}
+                  height={214}
                   foreground="#000000"
                 ></CQRCodeCustom>
               )}
+              <View className="text-23 flex flex-col text-center mt-39">
+                <Text>到柜后凭此核销码</Text>
+                <Text className="mt-10">到领取柜台核销领取礼遇</Text>
+              </View>
             </View>
           )}
       </View>
