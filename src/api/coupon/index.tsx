@@ -8,4 +8,8 @@ const posCoupon = () => {
   return http.get(`/nars-portal/store/${storeCode}/posCoupon/list`);
 };
 
-export default { posCoupon };
+const posCouponDetail = (data) => {
+  return http.post(`/nars-portal/store/${storeCode}/posCoupon/detail`, data);
+};
+
+export default { posCoupon, posCouponDetail };

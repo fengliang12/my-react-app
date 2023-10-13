@@ -1,6 +1,7 @@
 import { ScrollView, Text, View } from "@tarojs/components";
 import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
+import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
 import api from "@/src/api";
@@ -12,23 +13,23 @@ import HeaderTabbar from "@/src/components/Common/HeaderTabbar";
 import config from "@/src/config";
 import { formatDateTime, setShareParams } from "@/src/utils";
 
-type tabType = { title: string; value: CouponStatusType };
-const tabList: Array<tabType> = [
-  { title: "待使用", value: "10" },
-  { title: "已使用", value: "20" },
-  { title: "已过期", value: "90" },
+const tabList: Array<any> = [
+  { title: "待使用", value: "wait" },
+  { title: "已使用", value: "used" },
+  { title: "已过期", value: "expired" },
 ];
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const [originList, setOriginList] = useState<any>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-  const [couponStatus, setCouponStatus] = useState<string>("10");
+  const [couponStatus, setCouponStatus] = useState<string>("wait");
 
   useDidShow(async () => {
     await app.init();
     Taro.showLoading({ title: "加载中", mask: true });
-    const { data } = await api.coupon.posCoupon();
+    const { data } = await api.coupon.posCouponDetail({});
+
     setOriginList(data);
     Taro.hideLoading();
   });
@@ -46,11 +47,44 @@ const Index = () => {
    * 根据状态获取卡券列表
    */
   const couponList = useMemo(() => {
+    console.log("originList", originList, couponStatus);
+
     if (originList?.length > 0 && couponStatus) {
-      return originList.filter((item) => item.status === couponStatus);
+      if (couponStatus === "wait") {
+        return originList.filter((item) => {
+          if (
+            (item.pAType != 30 && item.goodsStatus == 20) ||
+            (item.pAType == 30 && item.ticketStatus == 10)
+          ) {
+            console.log(item);
+
+            return item;
+          }
+        });
+      } else if (couponStatus === "used") {
+        return originList.filter((item) => {
+          if (
+            (item.pAType != 30 && item.goodsStatus == 30) ||
+            (item.pAType == 30 && item.ticketStatus == 20)
+          ) {
+            return item;
+          }
+        });
+      } else if (couponStatus === "expired") {
+        return originList.filter((item) => {
+          if (
+            (item.pAType != 30 && item.goodsStatus == 85) ||
+            (item.pAType == 30 && item.ticketStatus == 30)
+          ) {
+            return item;
+          }
+        });
+      }
     }
     return [];
   }, [couponStatus, originList]);
+
+  console.log("couponList", couponList);
 
   useShareAppMessage(() => {
     return setShareParams();
@@ -91,7 +125,7 @@ const Index = () => {
       <ScrollView className="flex-1 overflow-hidden" scrollY>
         {couponList?.length > 0 ? (
           <View className="px-30 py-18">
-            {couponList?.map((item, index) => {
+            {couponList?.map((item: any, index) => {
               return (
                 <View className="w-670 p-22" key={item.id}>
                   <View
@@ -108,13 +142,21 @@ const Index = () => {
                         }
                       }}
                     >
-                      <View className="text-28">{item.ticketName}</View>
-                      <View className="text-20 mt-5">愉悦生日礼</View>
+                      <View className="text-28">生日礼遇</View>
+                      <View className="text-20 mt-5">{item.pAName}</View>
                       <View className="w-full text-20 mt-20 flex items-center justify-between">
-                        <Text>
-                          {formatDateTime(item.useBeginDate, 3, ".")} -{" "}
-                          {formatDateTime(item.useEndDate, 3, ".")}
-                        </Text>
+                        {item?.exchangeBeginDate && (
+                          <Text>
+                            {dayjs(
+                              item?.exchangeBeginDate?.replaceAll("-", "/"),
+                            ).format("YYYY.MM.DD")}{" "}
+                            -{" "}
+                            {dayjs(
+                              item?.exchangeEndDate?.replaceAll("-", "/"),
+                            ).format("YYYY.MM.DD")}
+                          </Text>
+                        )}
+
                         <View className="text-18 vhCenter">
                           查看详情
                           {selectedIndex === index ? (
@@ -134,26 +176,33 @@ const Index = () => {
                   </View>
                   {selectedIndex === index && (
                     <View
-                      className="w-670 box-border text-26 text-center px-64 py-40 mt-0"
+                      className="w-670 box-border text-26 text-center px-43 py-40 mt-0"
                       style={`background: url(${config.imgBaseUrl}/coupon/detail_bg.png);background-size:100% 100%`}
                     >
-                      <View className="text-left">
-                        1 卡券详情：{item.description}
+                      <View className="text-left flex">
+                        <View>1、</View>
+                        <View>卡券详情：{item.goodsName}</View>
                       </View>
                       <View
-                        className="text-left my-10"
+                        className="text-left my-10 flex"
                         style="line-height:20px"
                       >
-                        2
-                        请在确认领取到相关礼品后，向专柜彩妆师出示此二维码进行核销
+                        <View>2、</View>
+                        <View>
+                          请在确认领取到相关礼品后，向专柜彩妆师出示此二维码进行核销
+                        </View>
                       </View>
-                      <View className="text-left">
-                        3 礼品仅限会员本人莅临所选专柜领取。礼品一经兑换不退不换
+                      <View className="text-left flex">
+                        <View>3、</View>
+                        <View>
+                          礼品仅限会员本人莅临所选专柜领取。礼品一经兑换不退不换
+                        </View>
                       </View>
-                      {item.status === "10" && (
+                      {((item.pAType != 30 && item.goodsStatus == 20) ||
+                        (item.pAType == 30 && item.ticketStatus == 10)) && (
                         <View className="inline-block mt-30 bg-white">
                           <CQRCodeCustom
-                            text={item.ticketSerialNo}
+                            text={item.applyId}
                             width={250}
                             height={250}
                             padding={10}
