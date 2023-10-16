@@ -90,13 +90,17 @@ const ConfirmAddress = () => {
           fill
         ></CHeader>
 
-        {/* 领取方式 */}
+        {/* 收货信息 */}
         <View
           className="w-690 text-28 bg-white px-30 py-40 box-border text-black"
           onClick={changeExchangeType}
         >
           <View className="w-full flex justify-between">
-            <Text className="text-29 font-bold">收货信息</Text>
+            <CImage
+              className="w-126"
+              mode="widthFix"
+              src={`${config.imgBaseUrl}/redeem/deliver.jpg`}
+            ></CImage>
             <CImage className="w-20 h-30" src={P3}></CImage>
           </View>
           <View className="pt-30 text-28">
@@ -111,7 +115,14 @@ const ConfirmAddress = () => {
 
         {/* 兑换礼品详情 */}
         <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
-          <View className="text-29 mb-50 font-bold">兑换礼品详情</View>
+          <View className="mb-50">
+            <CImage
+              className="w-180"
+              mode="widthFix"
+              src={`${config.imgBaseUrl}/redeem/goods_detail.jpg`}
+            ></CImage>
+          </View>
+
           <View className="module">
             {goods?.length > 0 &&
               goods?.map((item) => {
@@ -146,7 +157,7 @@ const ConfirmAddress = () => {
         <CDialog
           className="w-390 bg-white py-40 px-30"
           title="确认兑换"
-          dialogText="订单提交后无法修改,请确认是否提交订单"
+          dialogText="兑换后相应的积分将会扣减，订单无法取消哦"
           cancel={setFalse}
           confirm={() => {
             setFalse();

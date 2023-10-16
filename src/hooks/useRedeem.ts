@@ -60,7 +60,7 @@ const useRedeem = () => {
       deliverInfo: applyType === "express" ? addressInfo : undefined,
       integral: true,
       customPointsPayPlan: {
-        notValidateUsablePoints: true,
+        notValidateUsablePoints: false,
         usePointsForShipment: applyType === "express" ? true : false,
         usePoints: true,
       },

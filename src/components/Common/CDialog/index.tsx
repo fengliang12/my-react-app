@@ -32,10 +32,10 @@ const CDialog: React.FC<T_Props> = (props) => {
       }}
     >
       <View className={props?.className}>
-        <View className="w-full text-center mt-40 font-bold">
-          <Text>{title}</Text>
+        <View className="w-full text-center mt-40">
+          <Text className="text-32">{title}</Text>
         </View>
-        <View className="mt-70 text-center">
+        <View className="mt-70 text-center text-28">
           <Text>{dialogText}</Text>
         </View>
         <View className="w-full flex justify-around mt-80">
@@ -44,7 +44,7 @@ const CDialog: React.FC<T_Props> = (props) => {
               onClick={() => {
                 cancel?.();
               }}
-              className="w-155 h-55 vhCenter text-black box-border"
+              className="w-155 h-55 vhCenter text-black box-border text-28 rotate_360"
               style={{ border: "1px solid #000000" }}
             >
               {hideBtnText}
@@ -53,7 +53,7 @@ const CDialog: React.FC<T_Props> = (props) => {
           {showBtn && (
             <View
               onClick={() => confirm?.()}
-              className="w-155 h-55 vhCenter text-white bg-black"
+              className="w-155 h-55 vhCenter text-white bg-black text-28"
             >
               {btnText}
             </View>

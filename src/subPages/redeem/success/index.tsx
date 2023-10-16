@@ -2,9 +2,11 @@ import { Text, View } from "@tarojs/components";
 import { useShareAppMessage } from "@tarojs/taro";
 import { useSelector } from "react-redux";
 
+import { P8 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import config from "@/src/config";
 import { setShareParams } from "@/src/utils";
 
 import OrderGood from "../components/OrderGood";
@@ -28,8 +30,10 @@ const OrderConfirm = () => {
         fill
       ></CHeader>
       <View className="w-690 text-28 box-border mt-90">
-        <View className="text-54 text-center">
-          <CImage src=""></CImage>
+        <View className="text-48 text-center vhCenter mb-50">
+          <View className="w-56 h-56 rounded-56 bg-white vhCenter mr-20">
+            <CImage className="w-32 h-28" src={P8}></CImage>
+          </View>
           <Text>兑换成功</Text>
         </View>
         <View className="text-24 mt-50 text-center">
@@ -49,7 +53,14 @@ const OrderConfirm = () => {
           </View>
         )}
 
-        <View className="box_title mt-50 font-bold">兑换礼品详情</View>
+        <View className="mt-50">
+          <CImage
+            className="w-180"
+            mode="widthFix"
+            src={`${config.imgBaseUrl}/redeem/goods_detail.jpg`}
+          ></CImage>
+        </View>
+
         <View className="mt-50">
           {exchangeGood?.goods?.length > 0 &&
             exchangeGood?.goods?.map((item) => {

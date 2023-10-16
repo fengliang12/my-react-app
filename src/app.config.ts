@@ -13,7 +13,7 @@ export default {
     backgroundTextStyle: "light",
     navigationBarBackgroundColor: "#fff",
     navigationBarTitleText: "NARS会员中心",
-    navigationBarTextStyle: "black",
+    navigationBarTextStyle: "white",
     navigationStyle: "custom",
     backgroundColor: "#000000",
     backgroundColorTop: "#000000",
@@ -41,6 +41,11 @@ export default {
         "myQRCode/index",
         "privacy/index",
       ],
+    },
+    {
+      root: "subPages/activity",
+      name: "activity",
+      pages: ["TRENDS/index", "TECHINIQUES/index"],
     },
     {
       root: "subPages/service-appointment",

@@ -103,7 +103,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
       skuId: item.skuId,
       counterId: applyType === "self_pick_up" ? counter?.id : undefined,
       customPointsPayPlan: {
-        notValidateUsablePoints: true,
+        notValidateUsablePoints: false,
         usePoints: true,
       },
     });

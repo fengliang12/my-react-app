@@ -210,7 +210,16 @@ const Index = () => {
             pointerEvents: "auto",
           }}
         >
-          <View className="w-84 h-84 bg-black rounded-84 vhCenter relative">
+          <View
+            className="w-84 h-84 bg-black rounded-84 vhCenter relative"
+            onClick={() => {
+              if (!isMember) {
+                to(pageSettingConfig.registerPath, "reLaunch");
+                return;
+              }
+              setTrue();
+            }}
+          >
             {showRedDot && (
               <View
                 className="w-18 h-18 vhCenter rounded-18 absolute top-17 right-17"
@@ -218,17 +227,7 @@ const Index = () => {
               ></View>
             )}
 
-            <CImage
-              className="w-38 h-37"
-              src={cart}
-              onClick={() => {
-                if (!isMember) {
-                  to(pageSettingConfig.registerPath, "reLaunch");
-                  return;
-                }
-                setTrue();
-              }}
-            ></CImage>
+            <CImage className="w-38 h-37" src={cart}></CImage>
           </View>
         </MovableView>
       </MovableArea>
@@ -250,7 +249,14 @@ const Index = () => {
           catchMove
           className="fixed left-0 bottom-0 z-12000  w-750 bg-white flex items-center flex-col rounded-t-60"
         >
-          <Text className="w-650 mt-68 text-29 font-bold">兑换礼品详情</Text>
+          <View className="w-650 mt-68">
+            <CImage
+              className="w-180"
+              mode="widthFix"
+              src={`${config.imgBaseUrl}/redeem/goods_detail.jpg`}
+            ></CImage>
+          </View>
+
           <ScrollView className="w-full h-650 mt-40" scrollY>
             {carts?.length > 0 &&
               carts.map((item) => {
@@ -318,7 +324,7 @@ const Index = () => {
               })}
           </ScrollView>
 
-          <View className="w-684 h-2 bg-black font-bold"></View>
+          <View className="w-684 h-2 bg-black"></View>
           <View className="w-684 text-29 flex items-center justify-between mt-20">
             <Text>总计兑换</Text>
             <Text className="ENGLISH_FAMILY text-38">

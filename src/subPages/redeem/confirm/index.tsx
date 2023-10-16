@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 
 import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
+import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 import useRedeem from "@/src/hooks/useRedeem";
 import { SET_COMMON } from "@/src/store/constants";
@@ -18,7 +19,6 @@ import PostageType from "../components/PostageType";
 const OrderConfirm = () => {
   const dispatch = useDispatch();
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
-
   const { applyType, goods, counter, totalPoints, confirm } = useRedeem();
 
   /**
@@ -67,7 +67,11 @@ const OrderConfirm = () => {
 
         {/* 领取方式 */}
         <View className="w-690 text-26 bg-white px-30 py-40 box-border text-black">
-          <View className="text-29 text-left font-bold">领取方式</View>
+          <CImage
+            className="w-126"
+            mode="widthFix"
+            src={`${config.imgBaseUrl}/redeem/apply_type.jpg`}
+          ></CImage>
           <View className="text-23 mb-40  text-left mt-22">
             *切换领取方式后礼品库存可能产生变化
           </View>
@@ -78,20 +82,28 @@ const OrderConfirm = () => {
             ) : (
               <View>
                 <View>到柜领取</View>
-                <View className="mt-10">{counter?.name}</View>
+                <View className="mt-10 ENGLISH_FAMILY">{counter?.name}</View>
               </View>
             )}
-            <Text className="underline font-bold" onClick={changeExchangeType}>
-              切换领取方式
-            </Text>
+            <CImage
+              className="w-160"
+              mode="widthFix"
+              onClick={changeExchangeType}
+              src={`${config.imgBaseUrl}/redeem/change_apply_type.jpg`}
+            ></CImage>
           </View>
         </View>
 
         {/* 兑换礼品详情 */}
         <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
-          <View className="text-29 box_title mb-50 font-bold">
-            兑换礼品详情
+          <View className="mb-50">
+            <CImage
+              className="w-180"
+              mode="widthFix"
+              src={`${config.imgBaseUrl}/redeem/goods_detail.jpg`}
+            ></CImage>
           </View>
+
           <View className="module">
             {goods?.length > 0 &&
               goods?.map((item) => {
@@ -126,7 +138,7 @@ const OrderConfirm = () => {
         <CDialog
           className="w-390 bg-white py-40 px-30"
           title="确认兑换"
-          dialogText="订单提交后无法修改,请确认是否提交订单"
+          dialogText="兑换后相应的积分将会扣减，订单无法取消哦"
           cancel={setFalse}
           confirm={() => {
             setFalse();

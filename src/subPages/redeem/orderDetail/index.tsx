@@ -8,6 +8,7 @@ import { P8 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import config from "@/src/config";
 import { setShareParams } from "@/src/utils";
 
 import OrderGood from "../components/OrderGood";
@@ -49,8 +50,8 @@ const OrderConfirm = () => {
       <View className="w-685 text-28 box-border mt-44">
         {from === "confirm" ? (
           <View className="text-48 text-center vhCenter mb-50">
-            <View className="w-50 h-50 rounded-50 bg-white vhCenter mr-20">
-              <CImage className="w-46 h-40" src={P8}></CImage>
+            <View className="w-56 h-56 rounded-56 bg-white vhCenter mr-20">
+              <CImage className="w-32 h-28" src={P8}></CImage>
             </View>
             <Text>兑换成功</Text>
           </View>
@@ -105,7 +106,13 @@ const OrderConfirm = () => {
             </View>
           )}
         </View>
-        <View className="mt-59 text-29 font-bold">兑换礼品详情</View>
+        <View className="mt-59">
+          <CImage
+            className="w-180"
+            mode="widthFix"
+            src={`${config.imgBaseUrl}/redeem/goods_detail.jpg`}
+          ></CImage>
+        </View>
         <View className="mt-20">
           <View className="px-16">
             {detail?.goods &&

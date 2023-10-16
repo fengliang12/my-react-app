@@ -188,7 +188,7 @@ const Index: React.FC<PropsType> = (props) => {
             <CImage
               className="w-full"
               mode="widthFix"
-              src={`${config.imgBaseUrl}/index/maintenance01.jpg`}
+              src={`${config.imgBaseUrl}/index/maintenance02.jpg`}
             ></CImage>
             <View
               className="w-100 h-100 absolute top-30 right-30"
