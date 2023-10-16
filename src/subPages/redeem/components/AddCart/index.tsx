@@ -11,7 +11,7 @@ import { cloneDeep } from "lodash";
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { cart } from "@/assets/image/index";
+import { cart, Delete } from "@/assets/image/index";
 import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
@@ -295,21 +295,19 @@ const Index = () => {
                     </View>
                     <View className="min-w-100 h-180 flex items-end justify-between flex-col">
                       <CImage
-                        className="w-28 h-32"
-                        src={`${config.imgBaseUrl}/redeem/icon-delete.png`}
+                        className="w-29 h-33 pb-20 pl-20"
+                        src={Delete}
                         onClick={() => handleDelete(item)}
                       />
                       <View className="w-full flex items-center justify-between">
                         <CImage
-                          className="w-24 h-22"
+                          className="w-24 h-22 px-10"
                           src={`${config.imgBaseUrl}/redeem/reduce.png`}
                           onClick={() => updateCart(item, "reduce")}
                         />
-                        <View className="mx-10 ENGLISH_FAMILY">
-                          {item.quantity}
-                        </View>
+                        <View className="ENGLISH_FAMILY">{item.quantity}</View>
                         <CImage
-                          className="w-28 h-28"
+                          className="w-28 h-28 px-10"
                           src={`${config.imgBaseUrl}/redeem/add.png`}
                           onClick={() => updateCart(item, "add")}
                         />

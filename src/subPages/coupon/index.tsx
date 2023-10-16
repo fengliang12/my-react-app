@@ -142,9 +142,8 @@ const Index = () => {
                         }
                       }}
                     >
-                      <View className="text-28">生日礼遇</View>
-                      <View className="text-20 mt-5">{item.pAName}</View>
-                      <View className="w-full text-20 mt-20 flex items-center justify-between">
+                      <View className="text-28">{item.pAName}</View>
+                      <View className="w-full text-20 mt-50 flex items-center justify-between">
                         {item?.exchangeBeginDate && (
                           <Text>
                             {dayjs(

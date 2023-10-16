@@ -92,7 +92,7 @@ const OrderConfirm = () => {
       >
         <View className="text-29">
           <View>
-            状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：
+            状态：
             {detail?.statusName === "待评价" ? "已完成" : detail?.statusName}
           </View>
           <View className="mt-16">
