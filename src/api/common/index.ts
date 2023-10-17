@@ -36,6 +36,12 @@ const findSubscribeByCode = (codes) =>
     codes,
   );
 
+//更新用户的所属门店
+const update = (data) =>
+  http.post(
+    `/nars-portal/store/${config.storeCode}/shuYunMember/update?counterId=${data.counterId}`,
+  );
+
 /** 获取中台地址 */
 const getZTArea = () =>
   http.get("https://res-wxec-unipt.lorealchina.com/integral/area.json", {
@@ -79,4 +85,5 @@ export default {
   findPopupListByType,
   addressTree,
   address,
+  update,
 };

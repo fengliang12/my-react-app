@@ -131,8 +131,8 @@ const Index: React.FC<PropsType> = (props) => {
               <View
                 className="text-42 ENGLISH_FAMILY"
                 onClick={() => {
-                  // goNextPage("/subPages/common/pointsDetail/index");
-                  setRuleTrue();
+                  goNextPage("/subPages/common/pointsDetail/index");
+                  // setRuleTrue();
                 }}
               >
                 {userInfo.points}
@@ -140,8 +140,8 @@ const Index: React.FC<PropsType> = (props) => {
               <View
                 className="vhCenter text-24 mt-11"
                 onClick={() => {
-                  // goNextPage("/subPages/common/pointsDetail/index");
-                  setRuleTrue();
+                  goNextPage("/subPages/common/pointsDetail/index");
+                  // setRuleTrue();
                 }}
               >
                 当前积分

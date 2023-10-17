@@ -10,6 +10,7 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
 import { setShareParams } from "@/src/utils";
+import to from "@/src/utils/to";
 
 import OrderGood from "../components/OrderGood";
 import PostageType from "../components/PostageType";
@@ -92,18 +93,41 @@ const OrderConfirm = () => {
         style={{ minHeight: "1000rpx" }}
       >
         <View className="text-29">
-          <View>
-            状态：
+          <View className="flex">
+            <View className="w-150 flex justify-between items-center">
+              <Text>状</Text>
+              <Text>态：</Text>
+            </View>
             {detail?.statusName === "待评价" ? "已完成" : detail?.statusName}
           </View>
-          <View className="mt-16">
-            领取方式：
+          <View className="mt-16 flex">
+            <View className="w-150 flex justify-between items-center">
+              <Text>领</Text>
+              <Text>取</Text>
+              <Text>方</Text>
+              <Text>式：</Text>
+            </View>
             {detail?.deliverInfo?.type === "express" ? "邮寄到家" : "到柜领取"}
           </View>
           {detail?.deliverInfo?.type === "self_pick_up" && (
-            <View className="mt-16">
-              领取柜台: {detail?.simpleCounter?.detailInfo?.name}
-            </View>
+            <>
+              <View className="mt-16 flex">
+                <View className="w-150 flex justify-between items-center">
+                  <Text>领</Text>
+                  <Text>取</Text>
+                  <Text>柜</Text>
+                  <Text>台：</Text>
+                </View>
+                {detail?.simpleCounter?.detailInfo?.name}
+              </View>
+              <View
+                className="mt-18 text-19"
+                onClick={() => to("/pages/update/index")}
+              >
+                *如所选领取柜台与所属柜台不一致，请在核销前
+                <Text className="underline">点击此处</Text>修改所属柜台。
+              </View>
+            </>
           )}
         </View>
         <View className="mt-59">

@@ -44,8 +44,16 @@ const Index = () => {
       .getBonusPointList(params)
       .then((res) => {
         if (res?.data?.length) {
-          setOriginList(res?.data);
-          const list = handleGoodClass(res.data);
+          let tempList: any = [];
+          res?.data.forEach((item: any) => {
+            if (item.sellOut) {
+              tempList.push(item);
+            } else {
+              tempList.unshift(item);
+            }
+          });
+          setOriginList(tempList);
+          const list = handleGoodClass(tempList);
           setGoodList(list);
         }
       })

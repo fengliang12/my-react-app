@@ -29,6 +29,9 @@ type InitArgument = {
   liveStagePrefix?: string
   /** 直播插件的引用名称 */
   livePluginName?: string
+  /** 窗口层移动区域开启100vh高度设置 */
+  openMovableAreaHeight100VH?: boolean
+
 }
 
 type LayoutType = {
@@ -50,7 +53,8 @@ export const layout: LayoutType = {
     version: '1.2.44',
     scrollText: '<&>',
     liveStagePrefix: 'liveView_',
-    livePluginName: 'livePlayerPlugin'
+    livePluginName: 'livePlayerPlugin',
+    openMovableAreaHeight100VH: false
   },
   init(data: InitArgument) {
     this.config = { ...this.config, ...data }

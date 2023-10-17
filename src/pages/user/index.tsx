@@ -4,11 +4,13 @@ import { useSelector } from "react-redux";
 import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
+import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
 const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
+  const { headerHeight } = getHeaderHeight();
 
   /**
    * 自定义事件
@@ -51,8 +53,10 @@ const Index = () => {
       <MemberCard showBindPopup={showBind}></MemberCard>
       <Layout
         code="user"
+        navHeight={String(headerHeight)}
         globalStyle={{ backgroundColor: "#151515" }}
         onCustomAction={customAction}
+        openMovableAreaHeight100VH
       />
     </Page>
   );

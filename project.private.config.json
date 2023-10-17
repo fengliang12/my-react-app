@@ -124,7 +124,7 @@
         {
           "name": "订单详情",
           "pathName": "subPages/redeem/orderDetail/index",
-          "query": "from=confirm",
+          "query": "orderId=nars2310120000018013",
           "launchMode": "default",
           "scene": null
         },

@@ -54,6 +54,12 @@ const useRedeem = () => {
       return;
     }
 
+    if (applyType === "self_pick_up") {
+      await api.common.update({
+        counterId: counter.id,
+      });
+    }
+
     let params = {
       channelId: "wa",
       counterId: applyType === "self_pick_up" ? counter.id : undefined,

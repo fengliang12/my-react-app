@@ -8,10 +8,11 @@ type MovableProps = {
   comId?: string
   movable?: Edit.IMovable;
   comStyle?: CSSProperties;
+  openMovableAreaHeight100VH?: boolean
   children: any
 };
 
-const Movable: React.FC<MovableProps> = ({ movable = null, comId = "", comStyle = {}, children }) => {
+const Movable: React.FC<MovableProps> = ({ movable = null, comId = "", comStyle = {},openMovableAreaHeight100VH, children }) => {
   const { updateStyle } = useStore({ id: comId })
   const movableStyle: CSSProperties = useMemo(() => {
     let result: CSSProperties = {}
@@ -43,7 +44,7 @@ const Movable: React.FC<MovableProps> = ({ movable = null, comId = "", comStyle 
   }, [movable, comStyle])
   return (
     <>
-      {movable && <MovableView y={'1000rpx'} style={{ ...movableStyle, ...(updateStyle || {}) }} {...movable}>
+      {movable && <MovableView y={openMovableAreaHeight100VH ? '0rpx' : '1000rpx'} style={{ ...movableStyle, ...(updateStyle ?? {}) }} {...movable}>
         {children}
       </MovableView>}
       {!movable && children}

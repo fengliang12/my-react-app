@@ -9,6 +9,7 @@ import { P2, P6, P9 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
+import config from "@/src/config";
 import { SET_COMMON, SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import toast from "@/src/utils/toast";
 
@@ -91,8 +92,14 @@ const Index: React.FC<PropsType> = (props) => {
     <>
       {showApply && (
         <CPopup catchMove>
-          <View className="w-600 h-600 bg-white vhCenter flex-col">
-            <Text className="text-36 FONT_BOLD">选择领取方式</Text>
+          <View className="w-600 h-650 bg-white vhCenter flex-col">
+            <View>
+              <CImage
+                className="w-220"
+                mode="widthFix"
+                src={`${config.imgBaseUrl}/redeem/apply_type_popup.png`}
+              ></CImage>
+            </View>
             <View
               className="flex items-center justify-start w-400 mt-50"
               onClick={() => setApplyType("self_pick_up")}
@@ -108,14 +115,14 @@ const Index: React.FC<PropsType> = (props) => {
                   ></View>
                 )}
               </View>
-              <View>
-                <View>免费到柜领取</View>
-              </View>
+              <View className="text-30">免费到柜领取</View>
             </View>
-            <View className="w-300 text-20 mt-10">*可前往线下门店领取</View>
+            <View className="w-300 text-16 mt-10" style="white-space: nowrap">
+              *选择领取门店后，您的所属门店将默认调整为所选门店
+            </View>
 
             {/* 省市区 */}
-            <View className="w-500 mt-20 text-26">
+            <View className="w-500 mt-30 text-26">
               <MultiplePicker
                 isCascadeData={false}
                 cascadeCount={3}
@@ -167,15 +174,15 @@ const Index: React.FC<PropsType> = (props) => {
                   ></View>
                 )}
               </View>
-              <View className="flex-1">
+              <View className="flex-1 text-30">
                 <Text decode>邮寄到家</Text>
               </View>
             </View>
-            <View className="text-20 w-300 h-20 mt-10">
+            <View className="text-16 w-300 h-20 mt-10">
               {applyType === "express" && `*100积分抵扣邮费`}
             </View>
             <View
-              className="w-180 h-55 text-28 vhCenter bg-black text-white mt-50"
+              className="w-180 h-60 text-28 vhCenter bg-black text-white mt-50"
               onClick={confirm}
             >
               确定

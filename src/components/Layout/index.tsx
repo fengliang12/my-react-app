@@ -228,6 +228,8 @@ type LayoutProps = {
       getElement?: (data: any, currentIndex: number) => React.ReactElement;
     }[]
   }[]
+  /** 开启MovableArea高度限制100vh */
+  openMovableAreaHeight100VH?: boolean
   /** Layout组件外层Style */
   globalStyle?: CSSProperties;
   /** 平面层外层Style */
@@ -441,6 +443,7 @@ const Layout: React.FC<LayoutProps> = ({
   countdownInject,
   styleInject,
   swiperContext,
+  openMovableAreaHeight100VH = layout.config.openMovableAreaHeight100VH,
   switchTab,
   beforeSwitchTab,
   eventCallBack,
@@ -1742,9 +1745,9 @@ const Layout: React.FC<LayoutProps> = ({
             windowData?.length > 0 && <MovableArea
               style={{
                 position: "fixed",
-                top: `calc(${navHeightPxNum || 0}px - 1000rpx)`,
+                top: `calc(${navHeightPxNum || 0}px - ${openMovableAreaHeight100VH ? '0px' : '1000rpx'})`,
                 width: "100vw",
-                height: "3000rpx",
+                height: openMovableAreaHeight100VH ? `calc(100vh - ${navHeightPxNum || 0}px)` : "3000rpx",
                 left: 0,
                 zIndex: 5000,
                 pointerEvents: "none",
@@ -1773,6 +1776,7 @@ const Layout: React.FC<LayoutProps> = ({
                       comId={item.id}
                       comStyle={item.style}
                       movable={item.movable}
+                      openMovableAreaHeight100VH={openMovableAreaHeight100VH}
                     >
                       {slots?.map((s, i) => (
                         <View

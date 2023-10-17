@@ -7,10 +7,12 @@ import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
 import { setShareParams } from "@/src/utils";
+import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
 import to from "@/src/utils/to";
 
 const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
+  const { headerHeight } = getHeaderHeight();
   /**
    * 自定义事件
    * @param params
@@ -46,8 +48,10 @@ const Index = () => {
       <MemberCard showBindPopup={showBind}></MemberCard>
       <Layout
         code="index"
+        navHeight={String(headerHeight)}
         globalStyle={{ backgroundColor: "#000000" }}
         onCustomAction={customAction}
+        openMovableAreaHeight100VH
       />
       <CouponPopup type="HOME"></CouponPopup>
     </Page>
