@@ -44,6 +44,11 @@ const Index = () => {
       .getBonusPointList(params)
       .then((res) => {
         if (res?.data?.length) {
+          // 根据积分排序
+          res?.data.sort((a, b) => {
+            return b.point - a.point;
+          });
+
           let tempList: any = [];
           res?.data.forEach((item: any) => {
             if (item.sellOut) {

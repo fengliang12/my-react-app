@@ -112,7 +112,7 @@ const OrderConfirm = () => {
           {detail?.deliverInfo?.type === "self_pick_up" && (
             <>
               <View className="mt-16 flex">
-                <View className="w-150 flex justify-between items-center">
+                <View className="w-150 flex justify-between items-center ENGLISH_FAMILY">
                   <Text>领</Text>
                   <Text>取</Text>
                   <Text>柜</Text>

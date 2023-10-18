@@ -47,6 +47,8 @@ const Index = () => {
   });
 
   useDidShow(() => {
+    page.current = 0;
+    setList([]);
     getOrderByStatus();
   });
 
