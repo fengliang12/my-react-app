@@ -43,6 +43,11 @@ export default {
       ],
     },
     {
+      root: "subPages/applyCoupon",
+      name: "applyCoupon",
+      pages: ["index"],
+    },
+    {
       root: "subPages/activity",
       name: "activity",
       pages: ["TRENDS/index", "TECHINIQUES/index"],

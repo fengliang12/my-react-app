@@ -197,6 +197,13 @@
           "query": "orderId=nars2310120000018013",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "生日礼申领",
+          "pathName": "pages/member/member",
+          "query": "type=birthday_gift",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
