@@ -15,7 +15,7 @@ const OrderGood: React.FC<T_Props> = ({ good }) => {
           src={good.mainImage || ""}
           mode="aspectFit"
         ></CImage>
-        <View className="w-full h-1 bg-black opacity-50"></View>
+        <View className="w-full h-1 bg-black opacity-0"></View>
       </View>
       <View className="h-150 flex flex-1 flex-col justify-between box-border">
         <View className="text-27 text-right ENGLISH_FAMILY">
