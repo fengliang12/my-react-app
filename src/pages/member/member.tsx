@@ -21,7 +21,7 @@ const Index = () => {
   const router = useRouter();
   const { type = "" } = router.params;
   const { headerHeight } = getHeaderHeight();
-  const [giftPop, setGiftPop] = useState<string>("gift");
+  const [giftPop, setGiftPop] = useState<string>("");
 
   /**
    * 自定义事件

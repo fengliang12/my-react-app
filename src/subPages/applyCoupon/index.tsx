@@ -1,6 +1,6 @@
 import { View } from "@tarojs/components";
-import Taro, { useLoad, useShareAppMessage } from "@tarojs/taro";
-import { useBoolean, useMemoizedFn } from "ahooks";
+import Taro, { useLoad, useRouter, useShareAppMessage } from "@tarojs/taro";
+import { useAsyncEffect, useBoolean, useMemoizedFn } from "ahooks";
 import { useState } from "react";
 
 import api from "@/src/api";
@@ -15,6 +15,8 @@ import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
 const ApplyCoupon = () => {
+  const router = useRouter();
+  const { couponId = "COP00171" } = router.params;
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
   const [addressInfo, setAddressInfo] =
     useState<Api.Cart.Public.IDeliverInfo | null>(null);
@@ -26,6 +28,11 @@ const ApplyCoupon = () => {
       setAddressInfo(res?.data);
     }
   });
+
+  useAsyncEffect(async () => {
+    let res = await api.birthdayGift.locate({ couponId });
+    console.log("res", res);
+  }, []);
 
   /**
    * 更改地址信息
@@ -71,7 +78,10 @@ const ApplyCoupon = () => {
   /**
    * 提交
    */
-  const confirm = () => {
+  const confirm = async () => {
+    let res = await api.birthdayGift.submit({
+      couponId: "",
+    });
     to("/subPages/coupon/index", "reLaunch");
   };
 

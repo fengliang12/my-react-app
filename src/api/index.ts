@@ -1,4 +1,5 @@
 import arvatoReservation from "./arvatoReservation/index";
+import birthdayGift from "./birthdayGift";
 import buyBonusPoint from "./buyBonusPoint/index";
 import buyNow from "./buyNow";
 import cart from "./cart/index";
@@ -29,4 +30,5 @@ export default {
   memberOrder,
   buyNow,
   order,
+  birthdayGift,
 };

@@ -1,8 +1,8 @@
 import { ScrollView, Text, View } from "@tarojs/components";
 import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
+import { useMemoizedFn, useUpdateEffect } from "ahooks";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import api from "@/src/api";
 import { P9 } from "@/src/assets/image";
@@ -25,14 +25,28 @@ const Index = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [couponStatus, setCouponStatus] = useState<string>("wait");
 
-  useDidShow(async () => {
+  const getList = useMemoizedFn(async () => {
     await app.init();
     Taro.showLoading({ title: "加载中", mask: true });
-    const { data } = await api.coupon.posCouponDetail({});
-
-    setOriginList(data);
+    let res: any = null;
+    if (couponStatus === "wait") {
+      res = await api.coupon.usable({ needSendCoupon: true });
+    } else if (couponStatus === "used") {
+      res = await api.coupon.redeem({ needSendCoupon: true });
+    } else if (couponStatus === "expired") {
+      res = await api.coupon.expire();
+    }
+    setOriginList(res?.data);
     Taro.hideLoading();
   });
+
+  useDidShow(async () => {
+    getList();
+  });
+
+  useUpdateEffect(() => {
+    getList();
+  }, [couponStatus, getList]);
 
   /**
    * 点击菜单栏切换
