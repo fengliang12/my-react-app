@@ -16,7 +16,7 @@ import toast from "@/src/utils/toast";
 
 const ApplyCoupon = () => {
   const router = useRouter();
-  const { couponId = "COP00171" } = router.params;
+  const { couponId = "TpCkAjNqyAJP9LRi18XcYp" } = router.params;
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
   const [addressInfo, setAddressInfo] =
     useState<Api.Cart.Public.IDeliverInfo | null>(null);
@@ -126,21 +126,20 @@ const ApplyCoupon = () => {
           </View>
         </View>
 
-        {/* 兑换礼品详情 */}
-        <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
+        {/* 礼品详情 */}
+        <View className="w-690 h-980 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black relative">
           <View className="mb-50">
             <CImage
-              className="w-180"
+              className="w-128"
               mode="widthFix"
-              src={`${config.imgBaseUrl}/redeem/goods_detail.jpg`}
+              src={`${config.imgBaseUrl}/apply/apply_gift.jpg`}
             ></CImage>
           </View>
 
           <View className="module"></View>
 
-          <View className="w-full h-1 bg-black mt-30"></View>
           <View
-            className="w-423 h-78 vhCenter bg-black text-white text-29 m-auto mt-157"
+            className="absolute bottom-118 left-150 w-423 h-78 vhCenter bg-black text-white text-29"
             onClick={handleReceive}
           >
             确定提交
@@ -152,8 +151,8 @@ const ApplyCoupon = () => {
       {showDialog && (
         <CDialog
           className="w-390 bg-white py-40 px-30"
-          title="确认兑换"
-          dialogText="兑换后相应的积分将会扣减，订单无法取消哦"
+          title="确认领取"
+          dialogText="是否确认提交订单"
           cancel={setFalse}
           confirm={() => {
             setFalse();
