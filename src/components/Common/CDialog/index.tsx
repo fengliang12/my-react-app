@@ -36,7 +36,7 @@ const CDialog: React.FC<T_Props> = (props) => {
           <Text className="text-32">{title}</Text>
         </View>
         <View className="mt-70 text-center text-28">
-          <Text>{dialogText}</Text>
+          <Text style="line-height:40rpx">{dialogText}</Text>
         </View>
         <View className="w-full flex justify-around mt-80">
           {showHideBtn && (

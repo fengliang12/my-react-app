@@ -197,6 +197,13 @@
           "query": "orderId=nars2310120000018013",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "彩妆秀活动",
+          "pathName": "pages/register/index",
+          "query": "applyId=Mz8FQiKwWgtfsVdeguiqqy",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

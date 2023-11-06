@@ -1,16 +1,17 @@
 import "./index.less";
 
 import { Image, Input, Picker, Text, View } from "@tarojs/components";
-import Taro, { useLoad, useShareAppMessage } from "@tarojs/taro";
+import Taro, { useLoad, useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { LogoB, P6, P7 } from "@/assets/image/index";
 import Page from "@/components/Page";
 import api from "@/src/api";
 import Avatar from "@/src/components/Common/Avatar";
+import CDialog from "@/src/components/Common/CDialog";
 import CImage from "@/src/components/Common/CImage";
 import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
@@ -29,6 +30,8 @@ import {
 } from "@/src/utils";
 import Authorization from "@/src/utils/authorize";
 import { getPages } from "@/src/utils/getPages";
+import handleRoute from "@/src/utils/handleRoute";
+import to from "@/src/utils/to";
 
 import QQMapWX from "../../libs/qqmap-wx-jssdk";
 
@@ -37,7 +40,11 @@ const genderArr = ["女", "男"];
 let qqmapsdk: any = null;
 
 const Index = () => {
+  const router = useRouter();
+  const { applyId = "" } = router.params;
   const isMember = useSelector((state: Store.States) => state.user.isMember);
+  const [showDialog, { setTrue: setDialogTrue, setFalse }] = useBoolean(false);
+  const [applyInfo, setApplyInfo] = useState<any>(null);
   const subMsg = useSubMsg();
   const [inputMobileType, { setTrue }] = useBoolean(false);
   const [agree, setAgree] = useState<boolean>(false);
@@ -63,31 +70,20 @@ const Index = () => {
   });
 
   /**
-   * 用户信息反显
+   * 是会员直接跳到首页
    */
   useAsyncEffect(async () => {
-    if (isMember) {
-      const userInfo = await app.init();
-      const { realName, birthDate, mobile, avatarUrl, gender, city, province } =
-        userInfo;
-      let genderName = user.gender;
-      if (gender === 1) {
-        genderName = "男";
-      }
-      if (gender === 2) {
-        genderName = "女";
-      }
-      setUser({
-        nickName: realName === "微信用户" ? "" : realName,
-        birthDate: formatDateTime(birthDate, 3),
-        mobile,
-        gender: genderName,
-        avatarUrl,
-        city,
-        province,
-      });
+    let userInfo = await app.init();
+    if (userInfo.isMember) {
+      let path = handleRoute(pageSettingConfig.homePath, router.params);
+      to(path, "reLaunch");
+      return;
     }
-  }, [isMember]);
+    if (applyId) {
+      let res = await api.apply.activityDetail(applyId);
+      setApplyInfo(res.data);
+    }
+  }, [applyId]);
 
   /**
    * 同意隐私条款，回调订阅消息
@@ -133,17 +129,34 @@ const Index = () => {
    */
   const createMember = useMemoizedFn(async () => {
     Taro.showLoading({ title: "加载中", mask: true });
-    const { status } = await api.user.createMember({
+    const res = await api.user.createMember({
       ...user,
       avatarUrl: user.avatarUrl,
       gender: user.gender === "男" ? 1 : 2,
       realName: user.nickName,
       registerChannel: user.shopType,
       withSmsCode: inputMobileType,
+      customInfos:
+        applyInfo?.counterList?.length > 0
+          ? [
+              {
+                name: "shopCode",
+                value: applyInfo?.counterList?.[0]?.code || "",
+              },
+              {
+                name: "registerSource",
+                value: applyInfo?.shortTitle || "",
+              },
+            ]
+          : undefined,
     });
     Taro.hideLoading();
 
-    if (status === 200) {
+    if (res?.data?.code === "MobileHasRegistered") {
+      setDialogTrue();
+      return;
+    }
+    if (res.status === 200) {
       successRegister();
     }
   });
@@ -163,7 +176,8 @@ const Index = () => {
       if (list.length > 1) {
         app.to(1);
       } else {
-        app.to(pageSettingConfig.homePath, "reLaunch");
+        let path = handleRoute(pageSettingConfig.homePath, router.params);
+        app.to(path, "reLaunch");
       }
     }, 2000);
   });
@@ -444,6 +458,21 @@ const Index = () => {
           </View>
         </View>
       </Page>
+
+      {/* 弹窗 */}
+      {showDialog && (
+        <CDialog
+          className="w-390 bg-white py-40 px-30"
+          title=""
+          dialogText="手机号已绑定其他微信号，请联系客服400-820-2573解绑后重新注册"
+          cancel={setFalse}
+          showHideBtn={false}
+          btnText="确认"
+          confirm={() => {
+            setFalse();
+          }}
+        ></CDialog>
+      )}
     </>
   );
 };

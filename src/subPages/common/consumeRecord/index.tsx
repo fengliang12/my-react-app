@@ -38,8 +38,8 @@ const Index = () => {
     let res = await api.shuYunMember.orderPage({
       currentPage: page.current,
       pageSize: 10,
-      orderBeginTime: date ? `${date} 00:00:00` : undefined,
-      orderEndTime: date ? `${date} 23:59:59` : undefined,
+      orderBeginTime: date ? `${date}-01 00:00:00` : undefined,
+      orderEndTime: date ? `${date}-31 23:59:59` : undefined,
     });
     total.current = res.data.totalCount;
 
@@ -99,9 +99,9 @@ const Index = () => {
           <Picker
             mode="date"
             value={date}
-            start="2000-01-01"
+            start="2000-01"
             end={endTime}
-            fields="day"
+            fields="month"
             onChange={(e) => {
               let value = e.detail.value;
               setDate(value);

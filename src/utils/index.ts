@@ -86,6 +86,18 @@ export const isNickname = (name: string) => {
   return name.trim().length !== 0;
 };
 
+/**
+ * 判断活动是否在有效时间内
+ * @param date
+ * @param startHour
+ * @param endHour
+ * @returns
+ */
+export const isBetween = (start: string = "", end: string = ""): boolean => {
+  const now = new Date();
+  return now >= new Date(start) && now <= new Date(end);
+};
+
 export const verifyAddressInfo: (e: T_Area_Form) => Promise<string> = (
   addressInfo,
 ) => {

@@ -1,3 +1,4 @@
+import apply from "./apply/index";
 import arvatoReservation from "./arvatoReservation/index";
 import buyBonusPoint from "./buyBonusPoint/index";
 import buyNow from "./buyNow";
@@ -29,4 +30,5 @@ export default {
   memberOrder,
   buyNow,
   order,
+  apply,
 };
