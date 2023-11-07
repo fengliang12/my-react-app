@@ -14,7 +14,12 @@ const activityDetail: Api.Apply.GetActivityDetail.FuncT = (id) =>
 const reserve: Api.Apply.SubmitCounterActivity.FuncT = (data) =>
   http.post(`${commonUrl}/activity/reserve`, data);
 
+/** ocpa腾讯 */
+const addUserActionsNew: Api.Apply.AddUserActionsNew.FuncT = (data) =>
+  http.post(`/sp-portal/store/${storeCode}/ocpa/addUserActionsNew`, data);
+
 export default {
   activityDetail,
   reserve,
+  addUserActionsNew,
 };

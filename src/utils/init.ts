@@ -41,6 +41,7 @@ export const createInit = () => {
             marsId: data.customerBasicInfo?.marsId || "",
             id: data.customerBasicInfo?.id || "",
             channelName: data.customerBasicInfo?.channelName || "",
+            openId: data.customerBasicInfo?.openId || "",
           };
           // 视图数据放Store
           store.dispatch({

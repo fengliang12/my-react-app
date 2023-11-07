@@ -56,7 +56,7 @@ const Index: React.FC<T_Props> = (props) => {
           </Text>
           ，并同意
         </View>
-        <View className="mt-10 text-center">接收来自品牌的营销信息</View>
+        <View className="mt-10 text-left">接收来自品牌的营销信息</View>
       </View>
     </View>
   );

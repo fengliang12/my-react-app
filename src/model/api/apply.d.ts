@@ -54,6 +54,14 @@ declare namespace Api {
     namespace SubmitCounterActivity {
       type FuncT = (IRequestBody) => MRP<any>;
     }
+
+    /**
+     * ocpa腾讯
+     */
+    namespace AddUserActionsNew {
+      type FuncT = (IRequestBody) => MRP<any>;
+    }
+
     /** 获取试用机会
      *  @URL {basePathUrl}/api/sp-portal/store/${config.storeCode}/opportunities/number/type
      *  @Method POST

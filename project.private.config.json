@@ -201,7 +201,14 @@
         {
           "name": "彩妆秀活动",
           "pathName": "pages/register/index",
-          "query": "scene=82eEeYhJhCiURRtTGrLwVU",
+          "query": "scene=ANwTJJa8xPBjACLPtpqHuz",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "朋友圈",
+          "pathName": "pages/friends/index",
+          "query": "activityId=3isAkgo1EWCRiT23PhnZAv&gdt_vid=wx0ewinbalytptma",
           "launchMode": "default",
           "scene": null
         }
