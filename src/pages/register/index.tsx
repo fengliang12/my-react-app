@@ -41,7 +41,7 @@ let qqmapsdk: any = null;
 
 const Index = () => {
   const router = useRouter();
-  const { applyId = "" } = router.params;
+  const { scene = "" } = router.params;
   const isMember = useSelector((state: Store.States) => state.user.isMember);
   const [showDialog, { setTrue: setDialogTrue, setFalse }] = useBoolean(false);
   const [applyInfo, setApplyInfo] = useState<any>(null);
@@ -79,11 +79,11 @@ const Index = () => {
       to(path, "reLaunch");
       return;
     }
-    if (applyId) {
-      let res = await api.apply.activityDetail(applyId);
+    if (scene) {
+      let res = await api.apply.activityDetail(scene);
       setApplyInfo(res.data);
     }
-  }, [applyId]);
+  }, [scene]);
 
   /**
    * 同意隐私条款，回调订阅消息

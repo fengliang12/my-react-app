@@ -18,20 +18,20 @@ const Index = () => {
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
   const [dialogText, setDialogText] = useState<string>("参与成功");
   const router = useRouter();
-  const { applyId = "" } = router.params;
+  const { scene = "" } = router.params;
   const userInfo = useSelector((state: Store.States) => state.user);
   const { headerHeight } = getHeaderHeight();
   const loading = useRef<boolean>(false);
 
   useAsyncEffect(async () => {
-    if (!applyId || loading.current) return;
+    if (!scene || loading.current) return;
     loading.current = true;
 
     let info = await app.init();
     if (!info?.isMember) return;
 
     /** 获取活动信息 */
-    let activityInfo = await api.apply.activityDetail(applyId);
+    let activityInfo = await api.apply.activityDetail(scene);
     if (
       !activityInfo ||
       !isBetween(activityInfo.data.from, activityInfo.data.to)
@@ -46,7 +46,7 @@ const Index = () => {
     let res = await api.apply.reserve({
       arrivalDate: new Date(),
       counterCode: activityInfo?.data?.counterList?.[0]?.code,
-      id: applyId,
+      id: scene,
       mobile: info.mobile,
     });
     Taro.hideLoading();
