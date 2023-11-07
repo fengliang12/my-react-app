@@ -1,3 +1,4 @@
+import apply from "./apply/index";
 import arvatoReservation from "./arvatoReservation/index";
 import birthdayGift from "./birthdayGift";
 import buyBonusPoint from "./buyBonusPoint/index";
@@ -31,4 +32,5 @@ export default {
   buyNow,
   order,
   birthdayGift,
+  apply,
 };

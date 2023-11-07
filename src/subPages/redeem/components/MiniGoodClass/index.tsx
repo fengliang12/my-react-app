@@ -161,7 +161,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
                     }}
                   >
                     <CImage className="w-230 h-230" src={child.mainImage} />
-                    <View className="w-full h-1 bg-black opacity-50"></View>
+                    <View className="w-full h-1 bg-black opacity-0"></View>
                     <View className="text-22 h-60 leading-30 mt-18 w-full text-left ENGLISH_FAMILY text-overflow-more">
                       {child.name}
                     </View>

@@ -38,6 +38,15 @@ declare namespace Api {
     namespace GetCounterActivityList {
       type FuncT = () => MRP<any[]>;
     }
+
+    /** 小样申领查询详情
+     *  @URL {basePathUrl}/api/sp-portal/store/${config.storeCode}/sample/apply/activity/item/{id}
+     *  @Method GET
+     */
+    namespace GetActivityDetail {
+      type FuncT = (id: string) => MRP<any>;
+    }
+
     /** 小样申领提交
      *  @URL {basePathUrl}/api/sp-portal/store/${config.storeCode}/sample/apply/activity/reserve
      *  @Method POST

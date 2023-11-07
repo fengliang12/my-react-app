@@ -286,7 +286,7 @@ const Index = () => {
                           </View>
                         )}
                         <CImage className="w-180 h-180" src={item?.mainImage} />
-                        <View className="w-full h-1 bg-black opacity-50"></View>
+                        <View className="w-full h-1 bg-black opacity-0"></View>
                       </View>
                     </View>
 

@@ -31,9 +31,10 @@ instance.interceptors.response.use(
     console.log(err);
     Taro.hideLoading();
     // token失效
-    if (err.status === 400 && err.data.code === "401") {
+    if (err.status === 400 && config.refreshCodeList?.includes(err.data.code)) {
       return refreshToken(err.config);
     }
+
     // 网络异常
     if (err.status === -1) {
       if (isTokenApi(err.config)) {

@@ -78,10 +78,7 @@ const ApplyCoupon = () => {
   /**
    * 提交
    */
-  const confirm = async () => {
-    let res = await api.birthdayGift.submit({
-      couponId: "",
-    });
+  const confirm = () => {
     to("/subPages/coupon/index", "reLaunch");
   };
 
