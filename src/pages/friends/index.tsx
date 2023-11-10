@@ -6,9 +6,10 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import api from "@/src/api";
-import { P14, P15 } from "@/src/assets/image";
+import { Close, P14, P15 } from "@/src/assets/image";
 import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
+import CImage from "@/src/components/Common/CImage";
 import GetPhoneNumber from "@/src/components/Common/GetPhoneNumber";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import PrivacyPolicyText from "@/src/components/Common/PrivacyPolicyText";
@@ -23,6 +24,7 @@ import {
   isPhone,
   setShareParams,
 } from "@/src/utils";
+import AddBehavior from "@/src/utils/addBehavior";
 import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -41,6 +43,11 @@ const Index = () => {
     showRegisterDialog,
     { setTrue: setRegisterDialogTrue, setFalse: setRegisterDialogFalse },
   ] = useBoolean(false);
+  const [
+    showReserveDialog,
+    { setTrue: setReserveDialogTrue, setFalse: setReserveDialogFalse },
+  ] = useBoolean(false);
+
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
   const [dialogText, setDialogText] = useState<string>("预约成功");
   const [agree, setAgree] = useState<boolean>(false);
@@ -64,10 +71,14 @@ const Index = () => {
     if (!activityId) return toast("活动ID未配置");
     let { code } = params;
     if (code === "applyGift") {
-      addUserActionsNew("RESERVATION");
+      addUserActions("RESERVATION");
+      AddBehavior({
+        activityId: activityId,
+        type: "APPLY_CLICK_NUM",
+      });
       let userInfo = await app.init();
       if (userInfo?.isMember) {
-        reserveGift();
+        setReserveDialogTrue();
       } else {
         setRegisterDialogTrue();
       }
@@ -77,12 +88,11 @@ const Index = () => {
   /**
    * 添加用户埋点
    */
-  const addUserActionsNew = useMemoizedFn(async (type) => {
+  const addUserActions = useMemoizedFn(async (type) => {
     if (!gdt_vid) return toast("路径中缺少gdt_vid");
     let userInfo = await app.init();
-    console.log(userInfo);
 
-    await api.apply.addUserActionsNew({
+    await api.apply.addUserActions({
       actionType: type,
       openId: userInfo?.openId,
       clickId: gdt_vid, // 落地页URL中的click_id，对于微信流量为URL中的gdt_vid，格式为『wx0ewinbalytptma00』或『wx0ewinbalytptma』 ,
@@ -95,7 +105,16 @@ const Index = () => {
    * 获取城市列表
    */
   useLoad(async () => {
-    addUserActionsNew("VIEW_CONTENT");
+    await app.init();
+    addUserActions("VIEW_CONTENT");
+    AddBehavior({
+      activityId: activityId,
+      type: "APPLY_PV",
+    });
+    AddBehavior({
+      activityId: activityId,
+      type: "APPLY_UV",
+    });
     const { data }: any = await api.common.addressTree();
     setCityList(data);
   });
@@ -106,28 +125,16 @@ const Index = () => {
   useAsyncEffect(async () => {
     if (!activityId) return toast("活动ID未配置");
     let userInfo = await app.init();
-    let counterList = await getActivityDetail();
+    await getActivityDetail();
 
     if (userInfo?.isMember) {
-      let { realName, birthDate, customInfos } = userInfo;
+      let { realName, birthDate } = userInfo;
 
       setUser({
         ...userInfo,
         nickName: realName === "微信用户" ? "" : realName,
         birthDate: formatDateTime(birthDate),
       });
-
-      if (Array.isArray(customInfos)) {
-        customInfos.forEach((item) => {
-          if (item.name === "counterId") {
-            let counter = counterList.find((child) => {
-              return child.code === item.value;
-            });
-            setCounterId(item?.value);
-            setCounterName(counter?.name);
-          }
-        });
-      }
     }
   }, []);
 
@@ -186,6 +193,7 @@ const Index = () => {
     if (!agree) {
       return Taro.showToast({ title: "请先同意隐私条款", icon: "none" });
     }
+    setRegisterDialogFalse();
     createMember();
   });
 
@@ -203,8 +211,14 @@ const Index = () => {
     Taro.hideLoading();
 
     if (res.status === 200) {
+      await app.init(true);
       reserveGift();
-      addUserActionsNew("REGISTER");
+      addUserActions("REGISTER");
+      AddBehavior({
+        activityId: activityId,
+        type: "APPLY_REGISTER_NUM",
+        counterId,
+      });
     }
   });
 
@@ -212,9 +226,11 @@ const Index = () => {
    * 领取礼物
    */
   const reserveGift = async () => {
+    let userInfo = await app.init();
     if (!counterId) {
       return Taro.showToast({ title: "请选择柜台", icon: "none" });
     }
+    setReserveDialogFalse();
 
     Taro.showLoading({ title: "加载中", mask: true });
     let res = await api.apply.reserve({
@@ -228,7 +244,15 @@ const Index = () => {
     if (res.data.code === "10000") {
       setDialogText(`您已参与过此活动,\n敬请期待下次惊喜`);
     } else {
-      addUserActionsNew("CONFIRM_EFFECTIVE_LEADS");
+      await api.apply.takeTag({
+        customerId: userInfo?.id || "",
+      });
+      addUserActions("CONFIRM_EFFECTIVE_LEADS");
+      AddBehavior({
+        activityId: activityId,
+        type: "APPLY_SUCCESS_NUM",
+        counterId,
+      });
       setDialogText("预约成功");
     }
     setTrue();
@@ -245,15 +269,8 @@ const Index = () => {
     return setShareParams();
   });
 
-  const cancellation = async () => {
-    await api.user.cancellation();
-    toast("解绑成功");
-  };
   return (
     <View>
-      <View className="fixed top-200 left-10 z-999" onClick={cancellation}>
-        注销按钮
-      </View>
       <PrivacyAuth></PrivacyAuth>
       <CHeader
         back
@@ -439,6 +456,56 @@ const Index = () => {
               onClick={submit}
             >
               注册
+            </View>
+          </View>
+        </View>
+      )}
+
+      {/* 会员直接领取弹窗 */}
+      {showReserveDialog && (
+        <View className="w-screen h-screen fixed left-0 top-0 z-10000">
+          <View
+            onClick={setReserveDialogFalse}
+            className="w-screen h-screen fixed left-0 top-0"
+            style={{ backgroundColor: "rgba(0,0,0,.5)" }}
+          ></View>
+          <View className="w-640 fixed top-500 left-62 z-999 flex flex-col justify-start items-center text_808080 pb-102 bg-white">
+            <CImage
+              src={Close}
+              className="w-20 h-20 absolute top-21 right-20"
+              onClick={setReserveDialogFalse}
+            ></CImage>
+            <View className="text-36 text-center mt-73 text-black">
+              领取门店
+            </View>
+            <View className="mt-47 h-80 vhCenter">
+              <View className="w-500 h-80 leading-80 borderBlack rotate_360 text-24 px-40 box-border relative">
+                <MultiplePicker
+                  cascadeCount={1}
+                  isCascadeData={false}
+                  pickerData={counterList}
+                  customKeyList={["name"]}
+                  callback={(counter) => {
+                    setCounterName(counter.name);
+                    setCounterId(counter.code);
+                  }}
+                >
+                  <View className="flex items-center justify-start">
+                    {!counterName ? "选择门店" : counterName}
+                    <Image
+                      src={P15}
+                      mode="widthFix"
+                      className="absolute right-33 top-30 w-23"
+                    />
+                  </View>
+                </MultiplePicker>
+              </View>
+            </View>
+            <View
+              className="mt-74 w-277 h-80 bg-black text-white text-30 vhCenter"
+              onClick={reserveGift}
+            >
+              确认预约
             </View>
           </View>
         </View>

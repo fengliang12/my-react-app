@@ -65,6 +65,10 @@ const findPopupListByType: Api.Common.FindPopupList.FuncT = (typeList) =>
     typeList,
   );
 
+/** 本地埋点 */
+const addBehavior: Api.Common.AddBehavior.FuncT = (data) =>
+  http.post(`/sp-portal/store/${storeCode}/memberTrackBehavior/behavior`, data);
+
 export default {
   /** 授权获取用户信息和token */
   login,
@@ -86,4 +90,5 @@ export default {
   addressTree,
   address,
   update,
+  addBehavior,
 };

@@ -1,14 +1,17 @@
 declare namespace App {
   type GlobalData = {
     /** 接口初始化方法 */
-    init: (refresh?: boolean, shuYunMember?: boolean) => Promise<any> | null;
+    init: (
+      refresh?: boolean,
+      shuYunMember?: boolean,
+    ) => Promise<Store.User> | null;
     /** 路由跳转 */
     to: toType;
     /** 所有scope授权封装 */
     auth: toAuth;
     /**全局数据 */
     globalData: {
-      userInfo: any;
+      userInfo: Store.User;
       systemInfo: any;
       memberInfo: any;
     };

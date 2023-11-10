@@ -54,6 +54,9 @@ const Index = () => {
     if (res.data.code === "10000") {
       setDialogText(`您已参与过此活动,\n敬请期待下次惊喜`);
     } else {
+      await api.apply.takeTag({
+        customerId: info?.id || "",
+      });
       setDialogText("参与成功");
     }
     setTrue();

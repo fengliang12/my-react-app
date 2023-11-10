@@ -78,6 +78,19 @@ declare namespace Api {
         hotZonePosition?: [] | undefined;
       };
     }
+
+    /**
+     * 埋点
+     */
+    namespace AddBehavior {
+      type FuncT = (data: RequestBody) => MRP<any>;
+      interface RequestBody {
+        activityId: string;
+        type: string;
+        counterId?: string;
+      }
+    }
+
     /** 授权获取用户信息和token
      *  @URL {basePathUrl}/api/sp-portal/wechat/{storeCode}/login/{code}
      *  @Method GET

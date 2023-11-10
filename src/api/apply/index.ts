@@ -15,11 +15,20 @@ const reserve: Api.Apply.SubmitCounterActivity.FuncT = (data) =>
   http.post(`${commonUrl}/activity/reserve`, data);
 
 /** ocpa腾讯 */
-const addUserActionsNew: Api.Apply.AddUserActionsNew.FuncT = (data) =>
-  http.post(`/sp-portal/store/${storeCode}/ocpa/addUserActionsNew`, data);
+const addUserActions: Api.Apply.AddUserActionsNew.FuncT = (data) =>
+  http.post(`/sp-portal/store/${storeCode}/ocpa/addUserActions`, data);
+
+/**
+ * 申领结束后进行打标签
+ * @param params
+ */
+const takeTag: Api.Apply.TakeTag.FuncT = (params) => {
+  return http.get(`/sp-portal/store/${storeCode}/util/test`, { params });
+};
 
 export default {
   activityDetail,
   reserve,
-  addUserActionsNew,
+  addUserActions,
+  takeTag,
 };
