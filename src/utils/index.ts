@@ -94,8 +94,8 @@ export const isNickname = (name: string) => {
  * @returns
  */
 export const isBetween = (start: string = "", end: string = ""): boolean => {
-  const now = new Date();
-  return now >= new Date(start) && now <= new Date(end);
+  const now = Date.now();
+  return now >= getTimeStamp(start) && now <= getTimeStamp(end);
 };
 
 export const verifyAddressInfo: (e: T_Area_Form) => Promise<string> = (
