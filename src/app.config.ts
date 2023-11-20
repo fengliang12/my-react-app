@@ -8,6 +8,7 @@ export default {
     "pages/register/index",
     "pages/registerSecond/index",
     "pages/test/index",
+    "pages/friends/index",
   ],
   window: {
     backgroundTextStyle: "light",

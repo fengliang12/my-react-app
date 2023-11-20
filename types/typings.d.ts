@@ -47,6 +47,8 @@ declare namespace Store {
     points: number;
     /** 卡号 */
     cardNo: number;
+    /** openId */
+    openId: string;
   };
   type Common = {
     /** Nav高度 */

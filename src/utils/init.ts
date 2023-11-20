@@ -6,7 +6,7 @@ import { SET_USER } from "../store/constants";
 
 export const createInit = () => {
   let initPromise: Promise<Store.User> | null = null;
-  return (refresh, shuYunMember = true) => {
+  return (refresh, shuYunMember = true): Promise<Store.User> | null => {
     if (initPromise === null || refresh) {
       const { environment } = Taro.getSystemInfoSync();
       const isQyWx = environment === "wxwork";
@@ -41,6 +41,7 @@ export const createInit = () => {
             marsId: data.customerBasicInfo?.marsId || "",
             id: data.customerBasicInfo?.id || "",
             channelName: data.customerBasicInfo?.channelName || "",
+            openId: data.customerBasicInfo?.openId || "",
           };
           // 视图数据放Store
           store.dispatch({

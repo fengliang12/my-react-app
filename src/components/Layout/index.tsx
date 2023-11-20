@@ -293,6 +293,7 @@ type LayoutProps = {
 
 type LayoutContextType = {
   pageId?: string;
+  navHeight?:string;
   tabHeight?: string;
   isCustomShare?: boolean;
   videoHeights?: {
@@ -424,7 +425,7 @@ export const SwiperTemplateContext = React.createContext<SwiperTemplateContextTy
 const Layout: React.FC<LayoutProps> = ({
   code,
   loadPageConfig,
-  navHeight = "0",
+  navHeight,
   tabHeight,
   loading,
   defaultShareConfig,
@@ -489,7 +490,7 @@ const Layout: React.FC<LayoutProps> = ({
 
   const navHeightPxNum = useMemo(() => {
     log(navHeight);
-    if (navHeight.indexOf("rpx") !== -1) {
+    if (navHeight?.indexOf("rpx") !== -1) {
       return rpxTopx(parseInt(navHeight || "0"), deviceWidth);
     }
     return parseInt(navHeight || "0");
@@ -1593,7 +1594,9 @@ const Layout: React.FC<LayoutProps> = ({
           swiperRelation: pageInfo?.swiperRelation,
           closeAction,
           routerParams,
-          computedStatusData
+          computedStatusData,
+          navHeight,
+          tabHeight
         }}
       >
         <View

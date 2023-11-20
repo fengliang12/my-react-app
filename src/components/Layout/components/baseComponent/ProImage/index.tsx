@@ -8,10 +8,12 @@ import { LayoutContext, TemplateContext } from '../../../index'
 import useHanlder from "../../../hooks/useHanlder"
 import useStore from "../../../hooks/useStore"
 import useStyle from "../../../hooks/useStyle"
+import useFullScreen from "../../../hooks/useFullScreen"
 import { store } from "../../../store"
 import useCountDown from "../../../hooks/useCountDown"
 import useImage from "../../../hooks/useImage"
 import ButtonAuth from "../../ButtonAuth"
+
 
 type ProImageProps = {
   comInfo: Edit.IComponents
@@ -26,6 +28,7 @@ const ProImage: React.FC<ProImageProps> = ({ comInfo, comIndex, parentIndex }) =
   const { updateSrc } = useStore(comInfo)
   const { baseStyle } = useStyle(comInfo)
   const { swiperCurrentStyle, swiperNavImg, swiperNavImgs, slot, isIconExtend, isOpenEvent } = useImage({ comInfo, comIndex, parentIndex })
+  const { fullScreenStyle } = useFullScreen(comInfo)
   const iconExtendRef = useRef<boolean>(true)
   const { hanlderEvent } = useHanlder(comInfo)
   const { countDownValue, isShowCountDown } = useCountDown(comInfo)
@@ -36,6 +39,9 @@ const ProImage: React.FC<ProImageProps> = ({ comInfo, comIndex, parentIndex }) =
 
   const imageStyle = useMemo(() => {
     let result: CSSProperties = cloneDeep(baseStyle)
+    if (fullScreenStyle) {
+      assign(result, fullScreenStyle)
+    }
     if (swiperCurrentStyle) {
       assign(result, swiperCurrentStyle)
     }
@@ -46,9 +52,7 @@ const ProImage: React.FC<ProImageProps> = ({ comInfo, comIndex, parentIndex }) =
       assign(result, { opacity: '0', pointerEvent: 'none' })
     }
     return result ?? {}
-  }, [comInfo, baseStyle, isShowCountDown, swiperCurrentStyle, swiperNavImgs, swiperNavImg])
-
-  // useWhyDidYouUpdate('Image渲染', { baseStyle, comInfo, pageId, countDownValue, isShowCountDown })
+  }, [comInfo, baseStyle, isShowCountDown, swiperCurrentStyle, swiperNavImgs, swiperNavImg, fullScreenStyle])
 
   return <>
     {

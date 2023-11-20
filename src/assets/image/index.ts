@@ -12,6 +12,8 @@ export const P9 = require("./p9.png");
 export const P10 = require("./p10.png");
 export const P11 = require("./p11.png");
 export const P13 = require("./p13.png");
+export const P14 = require("./p14.png");
+export const P15 = require("./p15.png");
 
 export const cart = require("./cart.png");
 export const cart1 = require("./cart1.png");

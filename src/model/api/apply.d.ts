@@ -10,6 +10,13 @@ declare namespace Api {
     namespace GetProvinceAndCity {
       type FuncT = () => MRP<any[]>;
     }
+
+    namespace TakeTag {
+      type FuncT = (params: RequestBody) => MRP<any>;
+      interface RequestBody {
+        customerId: string;
+      }
+    }
     /** 获取柜台
      *  @URL {basePathUrl}/api/sp-portal/store/${config.storeCode}/counter/city/list
      *  @Method GET
@@ -54,6 +61,14 @@ declare namespace Api {
     namespace SubmitCounterActivity {
       type FuncT = (IRequestBody) => MRP<any>;
     }
+
+    /**
+     * ocpa腾讯
+     */
+    namespace AddUserActionsNew {
+      type FuncT = (IRequestBody) => MRP<any>;
+    }
+
     /** 获取试用机会
      *  @URL {basePathUrl}/api/sp-portal/store/${config.storeCode}/opportunities/number/type
      *  @Method POST
