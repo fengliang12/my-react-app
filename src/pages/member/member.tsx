@@ -97,8 +97,11 @@ const Index = () => {
     // 不在名单
 
     //不是会员
-    if (type === "birthday_gift" && !userInfo?.isMember) {
-      setGiftPop("gift");
+    if (!userInfo?.isMember) {
+      if (type === "birthday_gift") {
+        setGiftPop("gift");
+        return;
+      }
       return;
     }
 
