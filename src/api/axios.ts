@@ -6,6 +6,11 @@ import axios, {
   AxiosResponse,
 } from "@/src/plugins/cg-axios/index";
 
+interface CustomConfig {
+  /**是否toast报错 */
+  showError?: boolean;
+}
+
 const isH5 = process.env.TARO_ENV === "h5";
 // 创建axios实例
 const instance = axios.create({
@@ -56,7 +61,9 @@ instance.interceptors.response.use(
       if (config.errCodeList?.includes(err.data.code)) {
         return Promise.resolve(err);
       }
-      Taro.showToast({ title: err.data?.message, icon: "none" });
+      if (err?.config?.showError !== false) {
+        Taro.showToast({ title: err.data?.message, icon: "none" });
+      }
     }
 
     return Promise.reject(err);

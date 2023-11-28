@@ -11,8 +11,10 @@ const activityDetail: Api.Apply.GetActivityDetail.FuncT = (id) =>
   http.get(`${commonUrl}/activity/item/${id}`);
 
 /** 查看购物车 */
-const reserve: Api.Apply.SubmitCounterActivity.FuncT = (data) =>
-  http.post(`${commonUrl}/activity/reserve`, data);
+const reserve: Api.Apply.SubmitCounterActivity.FuncT = (
+  data,
+  showError = true,
+) => http.post(`${commonUrl}/activity/reserve`, data, { showError });
 
 /** ocpa腾讯 */
 const addUserActions: Api.Apply.AddUserActionsNew.FuncT = (data) =>
