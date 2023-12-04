@@ -98,7 +98,8 @@ const Index = () => {
 
   useAsyncEffect(async () => {
     // 不在名单
-
+    if(!customData) return 
+    
     //不是会员
     if (type === "birthday_gift" && !userInfo?.isMember) {
       setGiftPop("gift");

@@ -1,6 +1,6 @@
 import { View } from "@tarojs/components";
 import { useShareAppMessage } from "@tarojs/taro";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
@@ -8,7 +8,7 @@ import config from "@/src/config";
 import { setShareParams } from "@/src/utils";
 
 const Index = () => {
-  useEffect(() => {});
+  const [list] = useState(new Array(12).fill(0));
 
   useShareAppMessage(() => {
     return setShareParams();
@@ -18,16 +18,19 @@ const Index = () => {
     <View className="index">
       <CHeader
         back
-        title="隐私政策"
+        title=""
         titleColor="#ffffff"
-        fill
-        backgroundColor="rgba(0,0,0,1)"
+        fill={false}
+        backgroundColor="rgba(0,0,0,0)"
       ></CHeader>
-      <CImage
-        className="w-full"
-        mode="widthFix"
-        src={`${config.imgBaseUrl}/register/privacy.png`}
-      ></CImage>
+      {list.map((item, index) => (
+        <CImage
+          key={index}
+          className="w-full"
+          mode="widthFix"
+          src={`${config.imgBaseUrl}/privacy/${index + 1}.jpg`}
+        ></CImage>
+      ))}
     </View>
   );
 };

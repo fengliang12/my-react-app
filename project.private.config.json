@@ -211,6 +211,13 @@
           "query": "activityId=NrSAiZkkU34t1xHCYSF6Ed&gdt_vid=wx0ewinbalytptma",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "隐私协议",
+          "pathName": "subPages/common/privacy/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
