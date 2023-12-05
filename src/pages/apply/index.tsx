@@ -339,8 +339,10 @@ const Index = () => {
           type: "APPLY_SUCCESS_NUM",
           counterId,
         });
-        setDialogText(MESSAGE.SUCCESS);
-        setTrue();
+        // setDialogText(MESSAGE.SUCCESS);
+        // setTrue();
+
+        toast(MESSAGE.SUCCESS);
 
         setTimeout(() => {
           to("/subPages/coupon/index", "reLaunch");
