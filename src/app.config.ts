@@ -9,6 +9,7 @@ export default {
     "pages/registerSecond/index",
     "pages/test/index",
     "pages/friends/index",
+    "pages/apply/index",
   ],
   window: {
     backgroundTextStyle: "light",

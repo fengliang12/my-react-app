@@ -59,7 +59,7 @@ declare namespace Api {
      *  @Method POST
      */
     namespace SubmitCounterActivity {
-      type FuncT = (IRequestBody) => MRP<any>;
+      type FuncT = (IRequestBody, showError?: boolean) => MRP<any>;
     }
 
     /**
