@@ -18,10 +18,10 @@ const Index = () => {
     <View className="index">
       <CHeader
         back
-        title="隐私政策"
+        title=""
         titleColor="#ffffff"
-        fill
-        backgroundColor="rgba(0,0,0,1)"
+        fill={false}
+        backgroundColor="rgba(0,0,0,0)"
       ></CHeader>
       {list.map((item, index) => (
         <CImage

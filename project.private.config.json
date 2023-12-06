@@ -213,7 +213,11 @@
           "scene": null
         },
         {
+<<<<<<< HEAD
           "name": "",
+=======
+          "name": "隐私协议",
+>>>>>>> pro
           "pathName": "subPages/common/privacy/index",
           "query": "",
           "launchMode": "default",
