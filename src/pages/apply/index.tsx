@@ -1,6 +1,12 @@
-import { Image, Input, Picker, Text, View } from "@tarojs/components";
+import { Block, Image, Input, Picker, Text, View } from "@tarojs/components";
 import Taro, { useLoad, useRouter } from "@tarojs/taro";
-import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
+import {
+  useAsyncEffect,
+  useBoolean,
+  useLockFn,
+  useMemoizedFn,
+  useSetState,
+} from "ahooks";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -76,7 +82,7 @@ const Index = () => {
    * 自定义事件
    * @param params
    */
-  const customAction = useMemoizedFn(async (params) => {
+  const customAction = useLockFn(async (params) => {
     if (!activityId) return toast("活动ID未配置");
     let { code } = params;
     if (code === "applyGift") {
@@ -87,7 +93,7 @@ const Index = () => {
       let userInfo = await app.init();
       if (userInfo?.isMember) {
         //如果是会员
-        if (counterId) {
+        if (counterList?.length === 1) {
           //如果只有一家柜台，直接申领
           reserveGift();
         } else {
@@ -105,7 +111,9 @@ const Index = () => {
    * 获取城市列表
    */
   useLoad(async () => {
-    await app.init();
+    if (!activityId) return toast("活动ID未配置");
+    const userInfo = await app.init();
+    Taro.showLoading({ title: "加载中", mask: true });
     AddBehavior({
       activityId: activityId,
       type: "APPLY_PV",
@@ -114,19 +122,10 @@ const Index = () => {
       activityId: activityId,
       type: "APPLY_UV",
     });
-    const { data }: any = await api.common.addressTree();
-    setCityList(data);
-  });
-
-  /**
-   * 用户信息反显
-   */
-  useAsyncEffect(async () => {
-    if (!activityId) return toast("活动ID未配置");
-    let userInfo = await app.init();
-    await getActivityDetail();
-
-    if (userInfo?.isMember) {
+    if (!userInfo?.isMember) {
+      const { data }: any = await api.common.addressTree();
+      setCityList(data);
+    } else {
       let { realName, birthDate } = userInfo;
 
       setUser({
@@ -135,7 +134,8 @@ const Index = () => {
         birthDate: formatDateTime(birthDate),
       });
     }
-  }, []);
+    await getActivityDetail();
+  });
 
   /**
    * 获取活动详情
@@ -170,7 +170,7 @@ const Index = () => {
   /**
    * 提交注册
    */
-  const submit = useMemoizedFn(async () => {
+  const submit = useLockFn(async () => {
     const { nickName, birthDate, mobile, city, smsCode } = user;
     if (isMember) {
       reserveGift();
@@ -276,7 +276,7 @@ const Index = () => {
   /**
    * 领取礼物
    */
-  const reserveGift = async () => {
+  const reserveGift = useLockFn(async () => {
     let userInfo = await app.init();
     if (!counterId) {
       return Taro.showToast({ title: "请选择柜台", icon: "none" });
@@ -349,7 +349,7 @@ const Index = () => {
         }, 2000);
         break;
     }
-  };
+  });
 
   /**
    * 同意隐私条款，回调订阅消息
@@ -513,31 +513,37 @@ const Index = () => {
                 </View>
               </View>
             )}
-
-            <View className="mt-45 h-80 vhCenter">
-              <Text className="w-120 text-30">柜台*</Text>
-              <View className="w-448 h-80 leading-80 borderBlack rotate_360 text-24 px-40 box-border relative">
-                <MultiplePicker
-                  cascadeCount={1}
-                  isCascadeData={false}
-                  pickerData={counterList}
-                  customKeyList={["name"]}
-                  callback={(counter) => {
-                    setCounterName(counter.name);
-                    setCounterId(counter.code);
-                  }}
-                >
-                  <View className="flex items-center justify-start">
-                    {!counterName ? "选择您的领取柜台" : counterName}
-                    <Image
-                      src={P15}
-                      mode="widthFix"
-                      className="absolute right-33 top-30 w-23"
-                    />
+            <Block>
+              {counterList?.length > 1 ? (
+                <View className="mt-45 h-80 vhCenter">
+                  <Text className="w-120 text-30">柜台*</Text>
+                  <View className="w-448 h-80 leading-80 borderBlack rotate_360 text-24 px-40 box-border relative">
+                    <MultiplePicker
+                      cascadeCount={1}
+                      isCascadeData={false}
+                      pickerData={counterList}
+                      customKeyList={["name"]}
+                      callback={(counter) => {
+                        setCounterName(counter.name);
+                        setCounterId(counter.code);
+                      }}
+                      disabled={counterList?.length <= 1}
+                    >
+                      <View className="flex items-center justify-start">
+                        {!counterName ? "选择您的领取柜台" : counterName}
+                        <Image
+                          src={P15}
+                          mode="widthFix"
+                          className="absolute right-33 top-30 w-23"
+                        />
+                      </View>
+                    </MultiplePicker>
                   </View>
-                </MultiplePicker>
-              </View>
-            </View>
+                </View>
+              ) : (
+                <></>
+              )}
+            </Block>
             <PrivacyPolicyText
               callback={PrivacyPolicy}
               checkColor="#000000"
@@ -552,72 +558,74 @@ const Index = () => {
           </View>
         </View>
       )}
-
-      {/* 会员直接领取弹窗 */}
-      {showReserveDialog && (
-        <View className="w-screen h-screen fixed left-0 top-0 z-10000">
-          <View
-            onClick={setReserveDialogFalse}
-            className="w-screen h-screen fixed left-0 top-0"
-            style={{ backgroundColor: "rgba(0,0,0,.5)" }}
-          ></View>
-          <View className="w-640 fixed top-500 left-62 z-999 flex flex-col justify-start items-center text_808080 pb-102 bg-white">
-            <CImage
-              src={Close}
-              className="w-20 h-20 absolute top-21 right-20"
+      <Block>
+        {/* 会员直接领取弹窗 */}
+        {showReserveDialog && (
+          <View className="w-screen h-screen fixed left-0 top-0 z-10000">
+            <View
               onClick={setReserveDialogFalse}
-            ></CImage>
-            <View className="text-36 text-center mt-73 text-black">
-              领取门店
-            </View>
-            <View className="mt-47 h-80 vhCenter">
-              <View className="w-500 h-80 leading-80 borderBlack rotate_360 text-24 px-40 box-border relative">
-                <MultiplePicker
-                  cascadeCount={1}
-                  isCascadeData={false}
-                  pickerData={counterList}
-                  customKeyList={["name"]}
-                  callback={(counter) => {
-                    setCounterName(counter.name);
-                    setCounterId(counter.code);
-                  }}
-                >
-                  <View className="flex items-center justify-start">
-                    {!counterName ? "选择门店" : counterName}
-                    <Image
-                      src={P15}
-                      mode="widthFix"
-                      className="absolute right-33 top-30 w-23"
-                    />
-                  </View>
-                </MultiplePicker>
+              className="w-screen h-screen fixed left-0 top-0"
+              style={{ backgroundColor: "rgba(0,0,0,.5)" }}
+            ></View>
+            <View className="w-640 fixed top-500 left-62 z-999 flex flex-col justify-start items-center text_808080 pb-102 bg-white">
+              <CImage
+                src={Close}
+                className="w-20 h-20 absolute top-21 right-20"
+                onClick={setReserveDialogFalse}
+              ></CImage>
+              <View className="text-36 text-center mt-73 text-black">
+                领取门店
+              </View>
+              <View className="mt-47 h-80 vhCenter">
+                <View className="w-500 h-80 leading-80 borderBlack rotate_360 text-24 px-40 box-border relative">
+                  <MultiplePicker
+                    cascadeCount={1}
+                    isCascadeData={false}
+                    pickerData={counterList}
+                    customKeyList={["name"]}
+                    callback={(counter) => {
+                      setCounterName(counter.name);
+                      setCounterId(counter.code);
+                    }}
+                  >
+                    <View className="flex items-center justify-start">
+                      {!counterName ? "选择门店" : counterName}
+                      <Image
+                        src={P15}
+                        mode="widthFix"
+                        className="absolute right-33 top-30 w-23"
+                      />
+                    </View>
+                  </MultiplePicker>
+                </View>
+              </View>
+              <View
+                className="mt-74 w-277 h-80 bg-black text-white text-30 vhCenter"
+                onClick={reserveGift}
+              >
+                确认预约
               </View>
             </View>
-            <View
-              className="mt-74 w-277 h-80 bg-black text-white text-30 vhCenter"
-              onClick={reserveGift}
-            >
-              确认预约
-            </View>
           </View>
-        </View>
-      )}
-
-      {/* 提示弹窗 */}
-      {showDialog && (
-        <CDialog
-          className="w-390 bg-white py-40 px-30"
-          title=""
-          dialogText={dialogText}
-          cancel={setFalse}
-          showHideBtn={false}
-          btnText="立即查看"
-          confirm={() => {
-            setFalse();
-            to("/subPages/coupon/index", "reLaunch");
-          }}
-        ></CDialog>
-      )}
+        )}
+      </Block>
+      <Block>
+        {/* 提示弹窗 */}
+        {showDialog && (
+          <CDialog
+            className="w-390 bg-white py-40 px-30"
+            title=""
+            dialogText={dialogText}
+            cancel={setFalse}
+            showHideBtn={false}
+            btnText="立即查看"
+            confirm={() => {
+              setFalse();
+              to("/subPages/coupon/index", "reLaunch");
+            }}
+          ></CDialog>
+        )}
+      </Block>
     </View>
   );
 };
