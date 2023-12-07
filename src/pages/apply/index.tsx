@@ -50,8 +50,8 @@ const Index = () => {
   const router = useRouter();
   const { code = "", activityId = "" }: RouterParams = router.params;
   const { headerHeight } = getHeaderHeight();
-  const [counterList, setCounterList] = useState<any>([]);
-  const [cityList, setCityList] = useState<any>([]);
+  const [counterList, setCounterList] = useState<any[]>([]);
+  const [cityList, setCityList] = useState<any[]>([]);
   const [counterName, setCounterName] = useState<string>("");
   const [counterId, setCounterId] = useState<string>("");
   const [
@@ -82,30 +82,32 @@ const Index = () => {
    * 自定义事件
    * @param params
    */
-  const customAction = useLockFn(async (params) => {
-    if (!activityId) return toast("活动ID未配置");
-    let { code } = params;
-    if (code === "applyGift") {
-      AddBehavior({
-        activityId: activityId,
-        type: "APPLY_CLICK_NUM",
-      });
-      let userInfo = await app.init();
-      if (userInfo?.isMember) {
-        //如果是会员
-        if (counterList?.length === 1) {
-          //如果只有一家柜台，直接申领
-          reserveGift();
+  const customAction = useMemoizedFn(
+    useLockFn(async (params) => {
+      if (!activityId) return toast("活动ID未配置");
+      let { code } = params;
+      if (code === "applyGift") {
+        AddBehavior({
+          activityId: activityId,
+          type: "APPLY_CLICK_NUM",
+        });
+        let userInfo = await app.init();
+        if (userInfo?.isMember) {
+          //如果是会员
+          if (counterId) {
+            //如果只有一家柜台，直接申领
+            reserveGift();
+          } else {
+            //如果多家柜台，先选柜台
+            setReserveDialogTrue();
+          }
         } else {
-          //如果多家柜台，先选柜台
-          setReserveDialogTrue();
+          //非会员弹注册弹窗，注册+申领
+          setRegisterDialogTrue();
         }
-      } else {
-        //非会员弹注册弹窗，注册+申领
-        setRegisterDialogTrue();
       }
-    }
-  });
+    }),
+  );
 
   /**
    * 获取城市列表
@@ -170,37 +172,39 @@ const Index = () => {
   /**
    * 提交注册
    */
-  const submit = useLockFn(async () => {
-    const { nickName, birthDate, mobile, city, smsCode } = user;
-    if (isMember) {
-      reserveGift();
-      return;
-    }
+  const submit = useMemoizedFn(
+    useLockFn(async () => {
+      const { nickName, birthDate, mobile, city, smsCode } = user;
+      if (isMember) {
+        reserveGift();
+        return;
+      }
 
-    if (!isNickname(nickName)) {
-      return Taro.showToast({ title: "请输入姓名", icon: "none" });
-    }
-    if (!birthDate) {
-      return Taro.showToast({ title: "请选择生日", icon: "none" });
-    }
-    if (!city) {
-      return Taro.showToast({ title: "请选择城市", icon: "none" });
-    }
-    if (!mobile || !isPhone(mobile)) {
-      return Taro.showToast({ title: "请输入正确的手机号", icon: "none" });
-    }
-    if (!smsCode && inputMobileType) {
-      return Taro.showToast({ title: "请输入验证码", icon: "none" });
-    }
-    if (!counterId) {
-      return Taro.showToast({ title: "请选择柜台", icon: "none" });
-    }
-    if (!agree) {
-      return Taro.showToast({ title: "请先同意隐私条款", icon: "none" });
-    }
-    setRegisterDialogFalse();
-    createMember();
-  });
+      if (!isNickname(nickName)) {
+        return Taro.showToast({ title: "请输入姓名", icon: "none" });
+      }
+      if (!birthDate) {
+        return Taro.showToast({ title: "请选择生日", icon: "none" });
+      }
+      if (!city) {
+        return Taro.showToast({ title: "请选择城市", icon: "none" });
+      }
+      if (!mobile || !isPhone(mobile)) {
+        return Taro.showToast({ title: "请输入正确的手机号", icon: "none" });
+      }
+      if (!smsCode && inputMobileType) {
+        return Taro.showToast({ title: "请输入验证码", icon: "none" });
+      }
+      if (!counterId) {
+        return Taro.showToast({ title: "请选择柜台", icon: "none" });
+      }
+      if (!agree) {
+        return Taro.showToast({ title: "请先同意隐私条款", icon: "none" });
+      }
+      setRegisterDialogFalse();
+      createMember();
+    }),
+  );
 
   /**
    * 创建会员
@@ -276,80 +280,82 @@ const Index = () => {
   /**
    * 领取礼物
    */
-  const reserveGift = useLockFn(async () => {
-    let userInfo = await app.init();
-    if (!counterId) {
-      return Taro.showToast({ title: "请选择柜台", icon: "none" });
-    }
-    setReserveDialogFalse();
+  const reserveGift = useMemoizedFn(
+    useLockFn(async () => {
+      let userInfo = await app.init();
+      if (!counterId) {
+        return Taro.showToast({ title: "请选择柜台", icon: "none" });
+      }
+      setReserveDialogFalse();
 
-    await authorizeLocation();
+      await authorizeLocation();
 
-    Taro.showLoading({ title: "加载中", mask: true });
-    let res = await api.apply
-      .reserve(
-        {
-          arrivalDate: new Date(),
-          counterCode: counterId,
-          id: activityId,
-          mobile: user.mobile,
-        },
-        false,
-      )
-      .catch((res) => {
-        Taro.hideLoading();
-        switch (res.data.code) {
-          case "10000":
-            toast(MESSAGE?.QUANTITY);
-            break;
-          case "400":
-            switch (res?.data?.message) {
-              case "礼品已赠完":
-                toast(MESSAGE?.SELLOUT);
-                break;
+      Taro.showLoading({ title: "加载中", mask: true });
+      let res = await api.apply
+        .reserve(
+          {
+            arrivalDate: new Date(),
+            counterCode: counterId,
+            id: activityId,
+            mobile: user.mobile,
+          },
+          false,
+        )
+        .catch((res) => {
+          Taro.hideLoading();
+          switch (res.data.code) {
+            case "10000":
+              toast(MESSAGE?.QUANTITY);
+              break;
+            case "400":
+              switch (res?.data?.message) {
+                case "礼品已赠完":
+                  toast(MESSAGE?.SELLOUT);
+                  break;
 
-              default:
-                toast(MESSAGE?.OTHERS);
-                break;
-            }
-            break;
-          case "SYSTEM":
-            toast(`服务器异常，请稍后重试`);
-            break;
+                default:
+                  toast(MESSAGE?.OTHERS);
+                  break;
+              }
+              break;
+            case "SYSTEM":
+              toast(`服务器异常，请稍后重试`);
+              break;
 
-          default:
-            toast(MESSAGE?.OTHERS);
-            break;
-        }
-        throw Error(res?.data?.message || "");
-      });
-
-    Taro.hideLoading();
-
-    switch (res.data.code) {
-      case "10000":
-        toast(MESSAGE?.QUANTITY);
-        break;
-      default:
-        await api.apply.takeTag({
-          customerId: userInfo?.id || "",
+            default:
+              toast(MESSAGE?.OTHERS);
+              break;
+          }
+          throw Error(res?.data?.message || "");
         });
-        AddBehavior({
-          activityId: activityId,
-          type: "APPLY_SUCCESS_NUM",
-          counterId,
-        });
-        // setDialogText(MESSAGE.SUCCESS);
-        // setTrue();
 
-        toast(MESSAGE.SUCCESS);
+      Taro.hideLoading();
 
-        setTimeout(() => {
-          to("/subPages/coupon/index", "reLaunch");
-        }, 2000);
-        break;
-    }
-  });
+      switch (res.data.code) {
+        case "10000":
+          toast(MESSAGE?.QUANTITY);
+          break;
+        default:
+          await api.apply.takeTag({
+            customerId: userInfo?.id || "",
+          });
+          AddBehavior({
+            activityId: activityId,
+            type: "APPLY_SUCCESS_NUM",
+            counterId,
+          });
+          // setDialogText(MESSAGE.SUCCESS);
+          // setTrue();
+
+          toast(MESSAGE.SUCCESS);
+
+          setTimeout(() => {
+            to("/subPages/coupon/index", "reLaunch");
+          }, 2000);
+          break;
+      }
+    }),
+  );
 
   /**
    * 同意隐私条款，回调订阅消息
