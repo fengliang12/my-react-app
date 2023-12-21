@@ -30,6 +30,7 @@ import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
 const app: App.GlobalData = Taro.getApp();
+let time: any = null;
 
 const Index = () => {
   const router = useRouter();
@@ -68,6 +69,12 @@ const Index = () => {
    * @param params
    */
   const customAction = useMemoizedFn(async (params) => {
+    if (time) return;
+    time = setTimeout(() => {
+      clearTimeout(time);
+      time = null;
+    }, 1000);
+
     if (!activityId) return toast("活动ID未配置");
     let { code } = params;
     if (code === "applyGift") {
@@ -89,6 +96,7 @@ const Index = () => {
    * 添加用户埋点
    */
   const addUserActions = useMemoizedFn(async (type) => {
+    console.log("腾讯埋点", type);
     if (!gdt_vid) return toast("路径中缺少gdt_vid");
     let userInfo = await app.init();
 
