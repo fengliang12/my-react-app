@@ -268,6 +268,9 @@ export const to = async (data, type = 'navigateTo', pageId) => {
     }
     if (typeof data === 'object') {
       if (type === 'navigateToMiniProgram') {
+        if (!data.shortLink) {
+          data = omit(data, ['shortLink'])
+        }
         return await Taro.navigateToMiniProgram(data as any)
       }
       if (type === 'navigateBackMiniProgram') {
