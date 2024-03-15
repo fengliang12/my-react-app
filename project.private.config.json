@@ -9,8 +9,32 @@
           "query": "activityId=KANDkyecacVDu2hM5AdYqP&gdt_vid=test11111",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "服务预约",
+          "pathName": "subPages/service/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的预约",
+          "pathName": "subPages/service/list/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "老服务",
+          "pathName": "subPages/service-appointment/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
+  },
+  "setting": {
+    "urlCheck": false
   }
 }

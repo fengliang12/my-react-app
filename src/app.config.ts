@@ -10,6 +10,10 @@ export default {
     "pages/test/index",
     "pages/friends/index",
     "pages/apply/index",
+    "subPages/service/index",
+    "subPages/service/introduce/index",
+    "subPages/service/list/index",
+    "subPages/service/detail/index",
   ],
   window: {
     backgroundTextStyle: "light",
@@ -85,6 +89,12 @@ export default {
       {
         pagePath: "pages/member/member",
         text: "先锋礼遇",
+        iconPath: "assets/image/tabbar/home02.jpg",
+        selectedIconPath: "assets/image/tabbar/home.jpg",
+      },
+      {
+        pagePath: "subPages/service/index",
+        text: "服务预约",
         iconPath: "assets/image/tabbar/home02.jpg",
         selectedIconPath: "assets/image/tabbar/home.jpg",
       },
