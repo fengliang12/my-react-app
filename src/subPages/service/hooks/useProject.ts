@@ -1,4 +1,4 @@
-import Taro from "@tarojs/taro";
+import Taro, { useDidShow } from "@tarojs/taro";
 import { useRequest } from "ahooks";
 
 import api from "@/src/api";
@@ -20,16 +20,24 @@ const useProject = () => {
     },
   );
 
-  const { data: project } = useRequest(async () => {
-    Taro.showLoading({ title: "加载中", mask: true });
-    await app.init();
-    let res = await api.adhocReservation.getProjects();
-    let tempItem = res?.data?.[0] || {};
-    getNum(tempItem?.projectCode);
-    Taro.hideLoading();
-    return tempItem;
-  });
+  const { data: project, run: getProject } = useRequest(
+    async () => {
+      Taro.showLoading({ title: "加载中", mask: true });
+      await app.init();
+      let res = await api.adhocReservation.getProjects();
+      let tempItem = res?.data?.[0] || {};
+      getNum(tempItem?.projectCode);
+      Taro.hideLoading();
+      return tempItem;
+    },
+    {
+      manual: true,
+    },
+  );
 
+  useDidShow(() => {
+    getProject();
+  });
   return { project, num, getNum };
 };
 

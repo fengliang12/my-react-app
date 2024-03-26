@@ -16,6 +16,13 @@ const getCounterCity: Api.Counter.GetCityList.FuncT = () => {
   return http.get(`${commonUrl}/list/city`);
 };
 
+/** 获取柜台详情 */
+const getCounterDetail: Api.Counter.GetCounterDetail.FuncT = (
+  counterCode: string,
+) => {
+  return http.get(`${commonUrl}/${counterCode}`);
+};
+
 /** 获取柜台列表 */
 const getNearCounterList: Api.Counter.GetCounterNearList.FuncT = (params) => {
   return http.get(`${commonUrl}/near/list`, { params });
@@ -37,4 +44,5 @@ export default {
   getNearCounterList,
   getCounterTreeCity,
   getCounterCity,
+  getCounterDetail,
 };

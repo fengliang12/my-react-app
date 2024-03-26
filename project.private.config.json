@@ -6,7 +6,7 @@
         {
           "name": "朋友圈",
           "pathName": "pages/friends/index",
-          "query": "activityId=KANDkyecacVDu2hM5AdYqP&gdt_vid=test11111",
+          "query": "activityId=Mz8FQiKwWgtfsVdeguiqqy&gdt_vid=test11111",
           "launchMode": "default",
           "scene": null
         },
@@ -28,6 +28,13 @@
           "name": "老服务",
           "pathName": "subPages/service-appointment/index",
           "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "subPages/service/detail/index",
+          "query": "bookCode=c068ec04189f4000a6b0e7bcd0217669",
           "launchMode": "default",
           "scene": null
         }

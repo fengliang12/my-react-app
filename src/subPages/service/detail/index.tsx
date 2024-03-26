@@ -1,8 +1,8 @@
 import { Text, View } from "@tarojs/components";
 import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
-import { useBoolean, useMemoizedFn, useRequest } from "ahooks";
+import { useAsyncEffect, useBoolean, useMemoizedFn, useRequest } from "ahooks";
 import dayjs from "dayjs";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
@@ -11,13 +11,22 @@ import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
-
+import useProject from "../hooks/useProject";
 import ServiceBox from "../components/ServiceBox";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const router = useRouter();
   const [visible, { setFalse, setTrue }] = useBoolean(false);
+  const { project, num = 0 } = useProject();
+  const [reason,setReason] = useState(null)
+
+  useEffect(()=>{
+    if(project?.reason){
+      console.log('projetc',JSON.parse(project.reason));
+      setReason(JSON.parse(project.reason))
+    }
+  },[project])
 
   /**
    * 获取详情
@@ -40,6 +49,15 @@ const Index = () => {
       pollingInterval: 3000,
     },
   );
+
+  const [detail, setDetail] =
+    useState<Api.Counter.GetCounterDetail.IResponse>();
+  useAsyncEffect(async () => {
+    if (data && !detail) {
+      let res = await api.counter.getCounterDetail(data.storeCode);
+      setDetail(res?.data);
+    }
+  }, [data]);
 
   const statusText = useMemo(() => {
     switch (Number(data?.status)) {
@@ -64,8 +82,8 @@ const Index = () => {
    * 取消服务
    */
   const onCancel = async () => {
-    if (dayjs(beginTime).subtract(12, "hour").valueOf() < Date.now()) {
-      return toast("服务开始前12小时不可取消");
+    if (reason?.cancel && dayjs(beginTime).subtract(reason.cancel, "hour").valueOf() < Date.now()) {
+      return toast(`服务开始前${reason.cancel}小时不可取消`);
     }
     Taro.showModal({
       title: "温馨提示",
@@ -94,8 +112,8 @@ const Index = () => {
    * 修改
    */
   const onModity = useMemoizedFn(() => {
-    if (dayjs(beginTime).subtract(12, "hour").valueOf() < Date.now()) {
-      return toast("服务开始前12小时不可修改");
+    if (reason?.modify && dayjs(beginTime).subtract(reason.modify, "hour").valueOf() < Date.now()) {
+      return toast(`服务开始前${reason.modify}小时不可修改`);
     }
     setTrue();
     cancel();
@@ -154,6 +172,9 @@ const Index = () => {
             <Text>预约门店</Text>
             <Text>{data?.storeName}</Text>
           </View>
+          <View className="text-22 mt-30 w-full pl-150 box-border text-right leading-30">
+            {detail?.address?.address}
+          </View>
           <View className="w-full h-1 bg-black mt-50"></View>
           <View className="w-full">
             <View className="text-26 mt-37">使用规则</View>
@@ -184,7 +205,7 @@ const Index = () => {
                 className="mt-77 text-center text-20"
                 style={{ color: "#717171" }}
               >
-                *服务开始前X小时不可取消
+                *服务开始前12小时不可修改和取消
               </View>
             </>
           ) : null}

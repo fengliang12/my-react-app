@@ -186,6 +186,7 @@ declare namespace Api {
         endTime: string;
         // 门店code
         counterCode: string;
+        serviceProject:string;
       };
       type IResponse = Item[];
 

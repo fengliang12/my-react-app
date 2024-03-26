@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import Layout from "@/src/components/Layout";
 import Page from "@/src/components/Page";
+import PrivacyAuth from "@/src/components/PrivacyAuth";
 import toast from "@/src/utils/toast";
 
 import ServiceBox from "../components/ServiceBox";
@@ -36,6 +37,7 @@ const Index = () => {
         titleColor: "#FFFFFF",
       }}
     >
+      <PrivacyAuth></PrivacyAuth>
       <Layout code="service" onCustomAction={customAction}></Layout>
       {/* 服务预约弹窗 */}
       {visible && (

@@ -26,6 +26,46 @@ declare namespace Api {
     namespace GetCounterList {
       type FuncT = () => MRP<Array<Public.Item>>;
     }
+    namespace GetCounterDetail {
+      type FuncT = (counterCode: string) => MRP<IResponse>;
+
+      type IResponse = {
+        deleted: boolean;
+        createTime: any;
+        updateTime: string;
+        id: string;
+        fourCounterCode: string;
+        loginPassword: any;
+        parentCounterId: any;
+        functionalAuthority: any;
+        storeAttribute: any;
+        putaway: boolean;
+        recommend: boolean;
+        distance: number;
+        address: Address;
+        keyType: any;
+        position: number[];
+        lbsRecommend: boolean;
+        openingTime: any;
+        order: number;
+        channel: any;
+        allowCounterGroups: any[];
+        wareHouseId: any;
+      };
+
+      interface Address {
+        lat: number;
+        lng: number;
+        country: any;
+        area: any;
+        province: string;
+        city: string;
+        county: any;
+        street: any;
+        address: string;
+      }
+    }
+
     namespace GetBaByMarsCode {
       type FuncT = (marsCode: string) => MRP<IResponse>;
 

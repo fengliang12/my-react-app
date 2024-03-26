@@ -1,7 +1,8 @@
 import { Picker, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useBoolean, useRequest, useSetState } from "ahooks";
-import { useEffect, useMemo } from "react";
+import { useBoolean, useMount, useRequest, useSetState } from "ahooks";
+import dayjs from "dayjs";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import api from "@/api/index";
@@ -9,6 +10,7 @@ import { Close, P11 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import useSubMsg from "@/src/hooks/useSubMsg";
+import authorize from "@/src/utils/authorize";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -35,12 +37,66 @@ const Index: React.FC<TProps> = (props) => {
   });
 
   /**
+   * 初始化
+   */
+  useMount(async () => {
+    const res = await new authorize({
+      method: "getLocation",
+    })
+      .runModal({
+        cancelShowModal: false, //用户第一次拒绝时立即弹窗提示需要获取权限
+        modalObj: {
+          show: true,
+          customModal: {
+            show: false, // 是否自定义组件
+          },
+        },
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    if (!initData) {
+      getNearCounterList({
+        type: "DIRECT_SALE",
+        lat: res.latitude,
+        lng: res.longitude,
+      });
+    }
+  });
+
+  /** 获取柜台列表 */
+  const { data: nearCounter, run: getNearCounterList } = useRequest(
+    async (params) => {
+      Taro.showLoading({ title: "加载中", mask: true });
+      await app.init();
+      return api.counter.getNearCounterList(params).then((res) => {
+        Taro.hideLoading();
+        return res.data[0];
+      });
+    },
+    { manual: true },
+  );
+
+  /**
    * 获取门店
    */
   const { data: counterList = [] } = useRequest(async () => {
     await app.init();
     return await api.adhocReservation.getCounters().then((res) => res.data);
   });
+
+  const [initCounterData, setInitCounterData] = useState<Array<string>>([]);
+  useEffect(() => {
+    if (nearCounter && counterList) {
+      let temp = counterList.find((item) => item.storeCode === nearCounter.id);
+      if (temp) {
+        setAppointment({
+          storeCode: nearCounter.id,
+        });
+        setInitCounterData([temp.provinceName, temp.areaName, temp.storeName]);
+      }
+    }
+  }, [nearCounter, setAppointment, counterList]);
 
   /**
    * 可预约日期
@@ -70,13 +126,19 @@ const Index: React.FC<TProps> = (props) => {
   useEffect(() => {
     if (appointment?.storeCode && appointment?.projectCode) {
       getDates();
+      mutateTime([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appointment?.storeCode, appointment?.projectCode, getDates]);
 
   /**
    * 可预约的时间
    */
-  const { data: timePeriodViews = [], run: getTimePeriodViews } = useRequest(
+  const {
+    data: timePeriodViews = [],
+    run: getTimePeriodViews,
+    mutate: mutateTime,
+  } = useRequest(
     async () => {
       Taro.showLoading({ title: "加载中", mask: true });
       await app.init();
@@ -89,9 +151,10 @@ const Index: React.FC<TProps> = (props) => {
         .then((res) => res.data)
         .then((list) => {
           Taro.hideLoading();
-          return list.map((i) => {
+          return list.map((i: any) => {
+            i.previewPeriod = i.period;
             if (i.status === 0) {
-              i.period = `${i.period} (已满)`;
+              i.previewPeriod = `${i.period} (已满)`;
             }
             return i;
           });
@@ -175,6 +238,7 @@ const Index: React.FC<TProps> = (props) => {
         endTime,
         bookCode: initData.bookCode,
         counterCode: appointment.storeCode,
+        serviceProject: initData.projectCode,
       });
       close();
       Taro.hideLoading();
@@ -223,6 +287,7 @@ const Index: React.FC<TProps> = (props) => {
                   isCascadeData={false}
                   cascadeCount={3}
                   pickerData={counterList}
+                  modelValue={initCounterData}
                   customKeyList={["provinceName", "areaName", "storeName"]}
                   callback={(e: any) => {
                     if (!e.storeCode) return;
@@ -271,11 +336,15 @@ const Index: React.FC<TProps> = (props) => {
                 <Picker
                   mode="selector"
                   range={timePeriodViews}
-                  rangeKey="period"
+                  rangeKey="previewPeriod"
                   onChange={(e) => {
                     const { value } = e.detail;
+                    let temp = timePeriodViews?.[value];
+                    if (temp.previewPeriod.includes("已满")) {
+                      return toast("该时段已约满");
+                    }
                     setAppointment({
-                      timePeriod: timePeriodViews?.[value]?.period,
+                      timePeriod: temp.period,
                     });
                   }}
                 >
@@ -312,7 +381,7 @@ const Index: React.FC<TProps> = (props) => {
               <View className="mt-80 text-22">{appointment?.projectName}</View>
               <View className="mt-20 text-22">{computedStoreName}</View>
               <View className="mt-20 text-22">
-                {appointment?.bookableDate}
+                {dayjs(appointment?.bookableDate).format("YYYY.MM.DD")}{" "}
                 {appointment?.timePeriod}
               </View>
               <View className="mt-80 text-24 flex">
@@ -330,7 +399,7 @@ const Index: React.FC<TProps> = (props) => {
                 </View>
               </View>
               <View className="mt-80 text-center text-22">
-                服务开始前X小时不可取消
+                *服务开始前12小时不可修改和取消
               </View>
             </View>
           </View>
