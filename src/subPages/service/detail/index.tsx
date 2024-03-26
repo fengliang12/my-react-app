@@ -11,22 +11,23 @@ import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
-import useProject from "../hooks/useProject";
+
 import ServiceBox from "../components/ServiceBox";
+import useProject from "../hooks/useProject";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const router = useRouter();
   const [visible, { setFalse, setTrue }] = useBoolean(false);
   const { project, num = 0 } = useProject();
-  const [reason,setReason] = useState(null)
+  const [reason, setReason] = useState(null);
 
-  useEffect(()=>{
-    if(project?.reason){
-      console.log('projetc',JSON.parse(project.reason));
-      setReason(JSON.parse(project.reason))
+  useEffect(() => {
+    if (project?.reason) {
+      console.log("projetc", JSON.parse(project.reason));
+      setReason(JSON.parse(project.reason));
     }
-  },[project])
+  }, [project]);
 
   /**
    * 获取详情
@@ -82,7 +83,10 @@ const Index = () => {
    * 取消服务
    */
   const onCancel = async () => {
-    if (reason?.cancel && dayjs(beginTime).subtract(reason.cancel, "hour").valueOf() < Date.now()) {
+    if (
+      reason?.cancel &&
+      dayjs(beginTime).subtract(reason.cancel, "hour").valueOf() < Date.now()
+    ) {
       return toast(`服务开始前${reason.cancel}小时不可取消`);
     }
     Taro.showModal({
@@ -112,7 +116,10 @@ const Index = () => {
    * 修改
    */
   const onModity = useMemoizedFn(() => {
-    if (reason?.modify && dayjs(beginTime).subtract(reason.modify, "hour").valueOf() < Date.now()) {
+    if (
+      reason?.modify &&
+      dayjs(beginTime).subtract(reason.modify, "hour").valueOf() < Date.now()
+    ) {
       return toast(`服务开始前${reason.modify}小时不可修改`);
     }
     setTrue();
@@ -124,6 +131,33 @@ const Index = () => {
     setFalse();
   });
 
+  /**
+   * 门店路线
+   */
+  const toMap = useMemoizedFn(() => {
+    Taro.openLocation({
+      latitude: Number(detail?.address?.lat),
+      longitude: Number(detail?.address?.lng),
+    });
+  });
+
+  /**
+   * 拨打电话
+   */
+  const tel = useMemoizedFn(() => {
+    Taro.makePhoneCall({
+      phoneNumber: detail?.detailInfo?.telephone,
+    });
+  });
+
+  /**
+   * 添加ba
+   */
+  const addBa = useMemoizedFn(() => {
+    Taro.navigateTo({
+      url: `/pages/h5/index?url=https://cnaipswx1v1-stg.shiseido.cn/nars/home`,
+    });
+  });
   useShareAppMessage(() => {
     return setShareParams();
   });
@@ -146,7 +180,7 @@ const Index = () => {
           className="w-222 h-48 ml-40 mt-22"
           src="https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/service/detail_text.png"
         ></CImage>
-        <View className="w-680 ml-35 mt-40 px-34 vhCenter flex-col box-border bg-white pb-40">
+        <View className="w-680 ml-35 mt-40 px-34 vhCenter flex-col box-border bg-white pb-100">
           <View className="text-left flex justify-between mt-53 w-full">
             <Text className="text-35">{data?.projectName}</Text>
             <Text className="text-29">{statusText}</Text>
@@ -172,22 +206,82 @@ const Index = () => {
             <Text>预约门店</Text>
             <Text>{data?.storeName}</Text>
           </View>
-          <View className="text-22 mt-30 w-full pl-150 box-border text-right leading-30">
-            {detail?.address?.address}
+          <View className="text-left text-26 mt-47 w-full flex justify-between">
+            <Text>预约地址</Text>
+            <Text className="flex-1 text-right">
+              {detail?.address?.address}
+            </Text>
           </View>
-          <View className="w-full h-1 bg-black mt-50"></View>
-          <View className="w-full">
-            <View className="text-26 mt-37">使用规则</View>
+          <View className="w-full vhCenter mt-60">
+            <View className="flex-1 vhCenter flex-col" onClick={toMap}>
+              <CImage
+                className="w-50 h-50"
+                src="https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/apponitment/router.png"
+              ></CImage>
+              <Text className="text-22 mt-20">门店路线</Text>
+            </View>
             <View
-              className="text-22 leading-35 mt-23"
+              className="flex-1 vhCenter flex-col"
+              style={{
+                borderLeft: "1px solid #6D6D6D",
+                borderRight: "1px solid #6D6D6D",
+              }}
+              onClick={tel}
+            >
+              <CImage
+                className="w-50 h-50"
+                src="https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/apponitment/tel.png"
+              ></CImage>
+              <Text className="text-22 mt-20">联系专柜</Text>
+            </View>
+            <View className="flex-1 vhCenter flex-col" onClick={addBa}>
+              <CImage
+                className="w-50 h-50"
+                src="https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/apponitment/ba.png"
+              ></CImage>
+              <Text className="text-22 mt-20">联系彩妆师</Text>
+            </View>
+          </View>
+          <View className="w-full h-1 bg-black mt-60"></View>
+          <View className="w-full">
+            <View className="text-26 mt-50">使用规则</View>
+            <View
+              className="text-22 leading-35 mt-20 flex"
               style={{ color: "#6D6D6D" }}
             >
-              规则详情规则详情规则详情规则详情规则详情规则详情规则详情规则详情规则详情规则详情规则详情规则详情规则详情规则详情
+              <Text>·</Text>
+              <Text>
+                请您于预约时间内莅临指定门店，出示本预约码，由柜台彩
+                妆师核销后享受服务
+              </Text>
+            </View>
+            <View
+              className="text-22 leading-35 mt-10 flex"
+              style={{ color: "#6D6D6D" }}
+            >
+              <Text>·</Text>
+              <Text>如无法按时出席，您可在预约开始前24小时修改预约</Text>
+            </View>
+            <View
+              className="text-22 leading-35 mt-10 flex"
+              style={{ color: "#6D6D6D" }}
+            >
+              <Text>·</Text>
+              <Text>
+                如您需要取消预约，您可在预约开始前24小时取消预约，预约一经取消视为放弃本服务
+              </Text>
+            </View>
+            <View
+              className="text-22 leading-35 mt-10 flex"
+              style={{ color: "#6D6D6D" }}
+            >
+              <Text>·</Text>
+              <Text>本妆容课程仅为局部妆容教学，并非完整妆容服务</Text>
             </View>
           </View>
           {data?.status === "0" ? (
             <>
-              <View className="w-full flex justify-between mt-100">
+              <View className="w-full flex justify-between mt-60">
                 <View
                   className="text-26 w-288 h-80 vhCenter borderBlack rotate_360"
                   onClick={onCancel}
@@ -200,12 +294,6 @@ const Index = () => {
                 >
                   修改预约
                 </View>
-              </View>
-              <View
-                className="mt-77 text-center text-20"
-                style={{ color: "#717171" }}
-              >
-                *服务开始前12小时不可修改和取消
               </View>
             </>
           ) : null}

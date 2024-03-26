@@ -95,8 +95,8 @@ export default {
       {
         pagePath: "subPages/service/index",
         text: "服务预约",
-        iconPath: "assets/image/tabbar/home02.jpg",
-        selectedIconPath: "assets/image/tabbar/home.jpg",
+        iconPath: "assets/image/tabbar/service.png",
+        selectedIconPath: "assets/image/tabbar/service02.png",
       },
       {
         pagePath: "pages/user/index",

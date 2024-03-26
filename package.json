@@ -9,7 +9,7 @@
     "css": "less"
   },
   "scripts": {
-    "build:wx": "taro build --type weapp",
+    "build:wx": "SET NODE_OPTIONS=--openssl-legacy-provider && taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
     "build:tt": "taro build --type tt",

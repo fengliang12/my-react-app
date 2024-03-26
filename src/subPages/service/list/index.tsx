@@ -92,36 +92,38 @@ const Index = () => {
         ))}
       </View>
 
-      <ScrollView className="flex-1 overflow-hidden" scrollY>
+      <ScrollView className="flex-1 overflow-hidden text-black" scrollY>
         {list?.length ? (
           <>
             {list?.map((item) => (
               <>
                 <View
                   key={item.storeId}
-                  className="w-690 h-305 bg-grayBg flex ml-30 mb-40 box-border"
+                  className="w-690 h-270 bg-white flex ml-30 mb-40 box-border"
                 >
-                  <CImage className="w-301 h-305" src={item?.imageUrl}></CImage>
-                  <View className="flex-1 flex flex-col justify-start pl-30">
-                    <View className="text-34 mt-36 w-330">
-                      {item.projectName}
+                  <View
+                    className="flex-1 flex flex-col justify-start px-30 text-22 relative"
+                    style={{
+                      backgroundImage: `url(https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/apponitment/record_bg.png)`,
+                      backgroundSize: "100% 100%",
+                    }}
+                  >
+                    <View className="text-34 mt-40 w-full justify-between flex items-center borderBottomBlack pb-30">
+                      <Text>{item.projectName}</Text>
+                      <Text className="text-28">
+                        {tabList[Number(item.status)]}
+                      </Text>
                     </View>
-                    <View className="mt-26 text-21 flex items-center">
-                      <CImage
-                        className="w-17 h-24 mr-18"
-                        src={`${config.imgBaseUrl}/appointment/address.png`}
-                      ></CImage>
+                    <View className="mt-40 flex items-center">
+                      预约地点：
                       {item.storeName}
                     </View>
-                    <View className="text-21 mt-26 flex items-center">
-                      <CImage
-                        className="w-20 h-20 mr-18"
-                        src={`${config.imgBaseUrl}/appointment/time.png`}
-                      ></CImage>
+                    <View className="mt-30 flex items-center">
+                      预约时间：
                       {item.serviceTime}
                     </View>
                     <View
-                      className="w-191 text-21 h-68 text-black vhCenter bg-white mt-30"
+                      className="w-191 text-21 h-68 bg-black vhCenter text-white text-white bg-white mt-30 absolute bottom-50 right-30"
                       onClick={() => toDetail(item)}
                     >
                       查看详情

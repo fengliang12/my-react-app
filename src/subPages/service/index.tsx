@@ -32,9 +32,13 @@ const Index = () => {
           className="w-680 h-100 rounded-50 ml-35 text-white flex justify-between items-center text-22 px-55 box-border"
           style="background: rgba(255,255,255,0.1);"
         >
-          <View>
-            {num > 0 ? `您有${num}次服务预约的机会` : "您暂无预约的机会"}
-          </View>
+          {num > 0 ? (
+            <View>
+              您有 <Text className="ENGLISH_F_Z">{num}</Text> 次服务预约的机会
+            </View>
+          ) : (
+            <View>您暂无预约的机会</View>
+          )}
           <View className="underline">预约规则</View>
         </View>
         <CImage
