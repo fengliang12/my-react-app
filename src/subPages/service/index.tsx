@@ -1,9 +1,12 @@
 import { Text, View } from "@tarojs/components";
 import { useBoolean, useRequest } from "ahooks";
+import { useSelector } from "react-redux";
 
 import CImage from "@/src/components/Common/CImage";
+import CPopup from "@/src/components/Common/CPopup";
 import Page from "@/src/components/Page";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
+import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -12,7 +15,10 @@ import useProject from "./hooks/useProject";
 
 const Index = () => {
   const [visible, { setFalse, setTrue }] = useBoolean(false);
-  const { project, num = 0 } = useProject();
+  const { project, num = 0, reason } = useProject();
+  const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
+    useBoolean(false);
+  const userInfo = useSelector((state: Store.States) => state.user);
 
   return (
     <Page
@@ -34,12 +40,15 @@ const Index = () => {
         >
           {num > 0 ? (
             <View>
-              您有 <Text className="ENGLISH_F_Z">{num}</Text> 次服务预约的机会
+              您有 <Text className="ENGLISH_F_Z text-26">{num}</Text>{" "}
+              次服务预约的机会
             </View>
           ) : (
             <View>您暂无预约的机会</View>
           )}
-          <View className="underline">预约规则</View>
+          <View className="underline text-26" onClick={setRuleTrue}>
+            预约规则
+          </View>
         </View>
         <CImage
           className="w-610 h-922 mt-47 ml-70"
@@ -55,6 +64,9 @@ const Index = () => {
           <View
             className="w-280 h-80 vhCenter bg-white"
             onClick={() => {
+              if (!userInfo?.isMember) {
+                return to("/pages/registerSecond/index");
+              }
               if (num <= 0) {
                 return toast("您暂无预约的机会");
               }
@@ -66,8 +78,13 @@ const Index = () => {
         </View>
 
         <View
-          className="mt-80 text-center text-white text-20 underline"
-          onClick={() => to("/subPages/service/list/index")}
+          className="mt-80 text-center text-white text-26 underline"
+          onClick={() => {
+            if (!userInfo?.isMember) {
+              return to("/pages/registerSecond/index");
+            }
+            to("/subPages/service/list/index");
+          }}
         >
           <Text>我的预约</Text>
         </View>
@@ -75,8 +92,33 @@ const Index = () => {
 
       {/* 服务预约弹窗 */}
       {visible && (
-        <ServiceBox project={project} num={num} close={setFalse}></ServiceBox>
+        <ServiceBox
+          project={project}
+          num={num}
+          close={setFalse}
+          modifyTime={reason?.modify}
+        ></ServiceBox>
       )}
+
+      {/* 规则弹窗 */}
+      <View style={setShow(ruleShow)}>
+        <CPopup maskClose closePopup={() => setRuleFalse()}>
+          <View className="w-640 relative flex flex-col justify-center items-center">
+            <CImage
+              className="w-full"
+              mode="widthFix"
+              src={
+                project?.detailList?.[0] ||
+                "https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/apponitment/rule3.png"
+              }
+            ></CImage>
+            <View
+              className="w-100 h-100 absolute top-0 right-0"
+              onClick={() => setRuleFalse()}
+            ></View>
+          </View>
+        </CPopup>
+      </View>
     </Page>
   );
 };

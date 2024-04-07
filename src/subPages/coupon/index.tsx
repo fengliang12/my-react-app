@@ -142,9 +142,11 @@ const Index = () => {
                         }
                       }}
                     >
-                      <View className="text-28">{item.pAName}</View>
+                      <View className="text-28">
+                        {item?.pAName || item?.goodsName}
+                      </View>
                       <View className="w-full text-20 mt-50 flex items-center justify-between">
-                        {item?.exchangeBeginDate && (
+                        {item?.exchangeBeginDate ? (
                           <Text>
                             {dayjs(
                               item?.exchangeBeginDate?.replaceAll("-", "/"),
@@ -152,6 +154,16 @@ const Index = () => {
                             -{" "}
                             {dayjs(
                               item?.exchangeEndDate?.replaceAll("-", "/"),
+                            ).format("YYYY.MM.DD")}
+                          </Text>
+                        ) : (
+                          <Text>
+                            {dayjs(
+                              item?.ticketBegYmd?.replaceAll("-", "/"),
+                            ).format("YYYY.MM.DD")}{" "}
+                            -{" "}
+                            {dayjs(
+                              item?.ticketEndYmd?.replaceAll("-", "/"),
                             ).format("YYYY.MM.DD")}
                           </Text>
                         )}
@@ -201,7 +213,7 @@ const Index = () => {
                         (item.pAType == 30 && item.ticketStatus == 10)) && (
                         <View className="inline-block mt-30 bg-white">
                           <CQRCodeCustom
-                            text={item.applyId}
+                            text={item?.applyId || item?.ticketSerialNo}
                             width={250}
                             height={250}
                             padding={10}

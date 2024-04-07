@@ -13,7 +13,7 @@ import to from "@/src/utils/to";
 const app: App.GlobalData = Taro.getApp();
 
 const Index = () => {
-  const tabList = ["待到店", "已完成", "已失效"];
+  const tabList = ["待到店", "已完成", "已过期"];
   const [selectedStatus, setSelectedStatus] = useState<string>("0");
   const [list, setList] =
     useState<Api.ArvatoReservation.GetRecords.IResponse | null>(null);
@@ -99,7 +99,7 @@ const Index = () => {
               <>
                 <View
                   key={item.storeId}
-                  className="w-690 h-270 bg-white flex ml-30 mb-40 box-border"
+                  className="w-690 h-250 bg-white flex ml-30 mb-40 box-border"
                 >
                   <View
                     className="flex-1 flex flex-col justify-start px-30 text-22 relative"
@@ -108,22 +108,22 @@ const Index = () => {
                       backgroundSize: "100% 100%",
                     }}
                   >
-                    <View className="text-34 mt-40 w-full justify-between flex items-center borderBottomBlack pb-30">
+                    <View className="text-34 mt-32 w-full justify-between flex items-center borderBottom747474 pb-30">
                       <Text>{item.projectName}</Text>
-                      <Text className="text-28">
+                      <Text className="text-21">
                         {tabList[Number(item.status)]}
                       </Text>
                     </View>
-                    <View className="mt-40 flex items-center">
+                    <View className="mt-35 flex items-center">
                       预约地点：
                       {item.storeName}
                     </View>
-                    <View className="mt-30 flex items-center">
+                    <View className="mt-26 flex items-center">
                       预约时间：
                       {item.serviceTime}
                     </View>
                     <View
-                      className="w-191 text-21 h-68 bg-black vhCenter text-white text-white bg-white mt-30 absolute bottom-50 right-30"
+                      className="w-210 text-21 h-68 bg-black vhCenter text-white text-white bg-white mt-30 absolute bottom-43 right-30"
                       onClick={() => toDetail(item)}
                     >
                       查看详情

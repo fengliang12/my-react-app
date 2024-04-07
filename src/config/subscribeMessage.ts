@@ -12,10 +12,6 @@ const DEV = {
       stage: "预约成功通知",
       subscribeId: "reserveSuccess",
     },
-    // {
-    //   stage: "服务开始提醒",
-    //   subscribeId: "reserveStartRemind",
-    // },
   ],
   REDEEM: [
     {
@@ -25,6 +21,12 @@ const DEV = {
     {
       stage: "快递发货通知",
       subscribeId: "orderSend",
+    },
+  ],
+  SERVICE_CANCEL: [
+    {
+      stage: "预约取消通知",
+      subscribeId: "reserveCancel",
     },
   ],
 };
@@ -41,10 +43,6 @@ const PRO = {
       stage: "预约成功通知",
       subscribeId: "reserveSuccess",
     },
-    // {
-    //   stage: "服务开始提醒",
-    //   subscribeId: "reserveStartRemind",
-    // },
   ],
   REDEEM: [
     {
@@ -54,6 +52,12 @@ const PRO = {
     {
       stage: "快递发货通知",
       subscribeId: "orderSend",
+    },
+  ],
+  SERVICE_CANCEL: [
+    {
+      stage: "预约取消通知",
+      subscribeId: "reserveCancel",
     },
   ],
 };

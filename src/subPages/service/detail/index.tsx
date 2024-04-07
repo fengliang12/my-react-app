@@ -8,6 +8,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import useSubMsg from "@/src/hooks/useSubMsg";
 import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -19,15 +20,7 @@ const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const router = useRouter();
   const [visible, { setFalse, setTrue }] = useBoolean(false);
-  const { project, num = 0 } = useProject();
-  const [reason, setReason] = useState(null);
-
-  useEffect(() => {
-    if (project?.reason) {
-      console.log("projetc", JSON.parse(project.reason));
-      setReason(JSON.parse(project.reason));
-    }
-  }, [project]);
+  const { project, num = 0, reason } = useProject();
 
   /**
    * 获取详情
@@ -69,7 +62,7 @@ const Index = () => {
         return "已完成";
       case 2:
         cancel();
-        return "已失效";
+        return "已过期";
     }
   }, [cancel, data?.status]);
 
@@ -82,6 +75,7 @@ const Index = () => {
   /**
    * 取消服务
    */
+  const subMsg = useSubMsg();
   const onCancel = async () => {
     if (
       reason?.cancel &&
@@ -95,6 +89,7 @@ const Index = () => {
       success: async (res) => {
         // 点击确定的时候取消服务预约
         if (res.confirm) {
+          await subMsg("SERVICE_CANCEL");
           Taro.showLoading({ title: "加载中", mask: true });
           await api.adhocReservation
             .cancel({
@@ -138,6 +133,8 @@ const Index = () => {
     Taro.openLocation({
       latitude: Number(detail?.address?.lat),
       longitude: Number(detail?.address?.lng),
+      name: detail?.detailInfo?.name,
+      address: detail?.address?.address,
     });
   });
 
@@ -218,7 +215,7 @@ const Index = () => {
                 className="w-50 h-50"
                 src="https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/apponitment/router.png"
               ></CImage>
-              <Text className="text-22 mt-20">门店路线</Text>
+              <Text className="text-20 mt-20">门店路线</Text>
             </View>
             <View
               className="flex-1 vhCenter flex-col"
@@ -232,14 +229,14 @@ const Index = () => {
                 className="w-50 h-50"
                 src="https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/apponitment/tel.png"
               ></CImage>
-              <Text className="text-22 mt-20">联系专柜</Text>
+              <Text className="text-20 mt-20">联系专柜</Text>
             </View>
             <View className="flex-1 vhCenter flex-col" onClick={addBa}>
               <CImage
                 className="w-50 h-50"
                 src="https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/apponitment/ba.png"
               ></CImage>
-              <Text className="text-22 mt-20">联系彩妆师</Text>
+              <Text className="text-20 mt-20">联系彩妆师</Text>
             </View>
           </View>
           <View className="w-full h-1 bg-black mt-60"></View>
@@ -251,16 +248,8 @@ const Index = () => {
             >
               <Text>·</Text>
               <Text>
-                请您于预约时间内莅临指定门店，出示本预约码，由柜台彩
-                妆师核销后享受服务
+                本妆容服务为局部妆容服务，非完妆妆容服务，服务时长20分钟。
               </Text>
-            </View>
-            <View
-              className="text-22 leading-35 mt-10 flex"
-              style={{ color: "#6D6D6D" }}
-            >
-              <Text>·</Text>
-              <Text>如无法按时出席，您可在预约开始前24小时修改预约</Text>
             </View>
             <View
               className="text-22 leading-35 mt-10 flex"
@@ -268,7 +257,7 @@ const Index = () => {
             >
               <Text>·</Text>
               <Text>
-                如您需要取消预约，您可在预约开始前24小时取消预约，预约一经取消视为放弃本服务
+                请您于预约时间内莅临指定专柜，出示本预约码，由彩妆师核销后可享受服务，逾期视为放弃本次服务。
               </Text>
             </View>
             <View
@@ -276,7 +265,27 @@ const Index = () => {
               style={{ color: "#6D6D6D" }}
             >
               <Text>·</Text>
-              <Text>本妆容课程仅为局部妆容教学，并非完整妆容服务</Text>
+              <Text>
+                如您无法按时出席，您可在预约开始前{reason?.modify}
+                小时修改预约，若超出修改时间则无法修改。
+              </Text>
+            </View>
+            <View
+              className="text-22 leading-35 mt-10 flex"
+              style={{ color: "#6D6D6D" }}
+            >
+              <Text>·</Text>
+              <Text>
+                如您需要取消预约，您可在预约开始前{reason?.modify}
+                小时取消预约，若超出修改时间则无法取消。
+              </Text>
+            </View>
+            <View
+              className="text-22 leading-35 mt-10 flex"
+              style={{ color: "#6D6D6D" }}
+            >
+              <Text>·</Text>
+              <Text>如有任何问题请联系专柜咨询。</Text>
             </View>
           </View>
           {data?.status === "0" ? (
@@ -305,6 +314,7 @@ const Index = () => {
           initData={data}
           close={closePop}
           callback={getDetail}
+          modifyTime={reason?.modify}
         ></ServiceBox>
       )}
     </>

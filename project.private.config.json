@@ -37,6 +37,20 @@
           "query": "bookCode=3f336b1efb1e408a8a4a7af3756720b7",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/registerSecond/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "卡券中心",
+          "pathName": "subPages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

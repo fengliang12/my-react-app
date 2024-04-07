@@ -20,11 +20,12 @@ interface TProps {
   initData?: Api.AdhocReservation.GetRecords.Item;
   callback?: () => void;
   close: () => void;
+  modifyTime?: number;
 }
 
 const app: App.GlobalData = Taro.getApp();
 const Index: React.FC<TProps> = (props) => {
-  let { project, num = 0, initData, close, callback } = props;
+  let { project, num = 0, initData, close, callback, modifyTime = 24 } = props;
   const [sureShow, { setTrue }] = useBoolean(false);
   const userInfo = useSelector((state: Store.States) => state.user);
   const [appointment, setAppointment] = useSetState<any>({
@@ -151,6 +152,20 @@ const Index: React.FC<TProps> = (props) => {
         .then((res) => res.data)
         .then((list) => {
           Taro.hideLoading();
+          let bookableDate = appointment?.bookableDate.replace(/-/g, "/");
+
+          if (dayjs().isSame(dayjs(bookableDate).subtract(1, "day"), "day")) {
+            list = list.filter((i: any) => {
+              if (
+                dayjs().isBefore(
+                  dayjs(`${bookableDate} ${i.beginTime}`).subtract(1, "day"),
+                )
+              ) {
+                return i;
+              }
+            });
+          }
+
           return list.map((i: any) => {
             i.previewPeriod = i.period;
             if (i.status === 0) {
@@ -340,11 +355,11 @@ const Index: React.FC<TProps> = (props) => {
                   onChange={(e) => {
                     const { value } = e.detail;
                     let temp = timePeriodViews?.[value];
-                    if (temp.previewPeriod.includes("已满")) {
+                    if (temp?.previewPeriod?.includes("已满")) {
                       return toast("该时段已约满");
                     }
                     setAppointment({
-                      timePeriod: temp.period,
+                      timePeriod: temp?.period,
                     });
                   }}
                 >
@@ -399,7 +414,7 @@ const Index: React.FC<TProps> = (props) => {
                 </View>
               </View>
               <View className="mt-80 text-center text-22">
-                *服务开始前12小时不可修改和取消
+                *服务开始前{modifyTime}小时不可修改和取消
               </View>
             </View>
           </View>

@@ -58,17 +58,17 @@ export default {
       name: "activity",
       pages: ["TRENDS/index", "TECHINIQUES/index"],
     },
-    {
-      root: "subPages/service-appointment",
-      name: "serviceAppointment",
-      pages: [
-        "index",
-        "success/index",
-        "appointment/index",
-        "detail/index",
-        "list/index",
-      ],
-    },
+    // {
+    //   root: "subPages/service-appointment",
+    //   name: "serviceAppointment",
+    //   pages: [
+    //     "index",
+    //     "success/index",
+    //     "appointment/index",
+    //     "detail/index",
+    //     "list/index",
+    //   ],
+    // },
     {
       root: "subPages/coupon",
       name: "coupon",
