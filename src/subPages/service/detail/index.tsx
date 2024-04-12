@@ -8,6 +8,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import useAddUserActions from "@/src/hooks/useAddUserActions";
 import useSubMsg from "@/src/hooks/useSubMsg";
 import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
@@ -21,7 +22,6 @@ const Index = () => {
   const router = useRouter();
   const [visible, { setFalse, setTrue }] = useBoolean(false);
   const { project, num = 0, reason } = useProject();
-
   /**
    * 获取详情
    */

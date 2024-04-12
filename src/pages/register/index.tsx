@@ -21,6 +21,7 @@ import PrivacyAuth from "@/src/components/PrivacyAuth";
 import usePrivacyAuth from "@/src/components/PrivacyAuth/hooks/usePrivacyAuth";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
+import useAddUserActions from "@/src/hooks/useAddUserActions";
 import useSubMsg from "@/src/hooks/useSubMsg";
 import {
   formatDateTime,
@@ -48,6 +49,8 @@ const Index = () => {
   const subMsg = useSubMsg();
   const [inputMobileType, { setTrue }] = useBoolean(false);
   const [agree, setAgree] = useState<boolean>(false);
+  const { addActions } = useAddUserActions();
+
   const [user, setUser] = useSetState<any>({
     avatarUrl: "",
     nickName: "",
@@ -74,7 +77,7 @@ const Index = () => {
    */
   useAsyncEffect(async () => {
     let userInfo = await app.init();
-    if (userInfo.isMember) {
+    if (userInfo?.isMember) {
       let path = handleRoute(pageSettingConfig.homePath, router.params);
       to(path, "reLaunch");
       return;
@@ -165,6 +168,7 @@ const Index = () => {
    * 成功回调
    */
   const successRegister = useMemoizedFn((text = "注册成功！") => {
+    addActions("REGISTER");
     Taro.showToast({
       title: text,
       mask: true,

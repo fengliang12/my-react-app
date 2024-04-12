@@ -9,6 +9,7 @@ import api from "@/api/index";
 import { Close, P11 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
+import useAddUserActions from "@/src/hooks/useAddUserActions";
 import useSubMsg from "@/src/hooks/useSubMsg";
 import authorize from "@/src/utils/authorize";
 import to from "@/src/utils/to";
@@ -25,6 +26,8 @@ interface TProps {
 
 const app: App.GlobalData = Taro.getApp();
 const Index: React.FC<TProps> = (props) => {
+  const { addActions } = useAddUserActions();
+
   let { project, num = 0, initData, close, callback, modifyTime = 24 } = props;
   const [sureShow, { setTrue }] = useBoolean(false);
   const userInfo = useSelector((state: Store.States) => state.user);
@@ -269,6 +272,7 @@ const Index: React.FC<TProps> = (props) => {
       });
       close();
       Taro.hideLoading();
+      addActions("CONFIRM_EFFECTIVE_LEADS");
       to(`/subPages/service/detail/index?bookCode=${res.data.bookid}`);
     }
   };

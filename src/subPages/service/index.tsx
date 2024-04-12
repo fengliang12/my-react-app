@@ -1,4 +1,5 @@
 import { Text, View } from "@tarojs/components";
+import { useDidShow } from "@tarojs/taro";
 import { useBoolean, useRequest } from "ahooks";
 import { useSelector } from "react-redux";
 
@@ -6,6 +7,7 @@ import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import Page from "@/src/components/Page";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
+import useAddUserActions from "@/src/hooks/useAddUserActions";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -19,6 +21,11 @@ const Index = () => {
   const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
     useBoolean(false);
   const userInfo = useSelector((state: Store.States) => state.user);
+  const { addActions } = useAddUserActions();
+
+  useDidShow(() => {
+    addActions("VIEW_CONTENT");
+  });
 
   return (
     <Page
@@ -64,6 +71,8 @@ const Index = () => {
           <View
             className="w-280 h-80 vhCenter bg-white"
             onClick={() => {
+              addActions("RESERVATION");
+
               if (!userInfo?.isMember) {
                 return to("/pages/registerSecond/index");
               }

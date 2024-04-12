@@ -28,11 +28,15 @@ class App extends Component<any> {
       userInfo: null,
       systemInfo: null,
       memberInfo: null,
+      counterCode: null,
+      initOptions: null,
     },
     init: createInit(),
     to: to,
   };
-  async onLaunch() {
+  async onLaunch(options) {
+    console.log("options----------", options);
+    this.taroGlobalData.globalData.initOptions = options;
     updateManager();
 
     // Taro.loadFontFace({

@@ -20,6 +20,10 @@ const reserve: Api.Apply.SubmitCounterActivity.FuncT = (
 const addUserActions: Api.Apply.AddUserActionsNew.FuncT = (data) =>
   http.post(`/sp-portal/store/${storeCode}/ocpa/addUserActions`, data);
 
+/** ocpa腾讯--新 */
+const addUserActionsNew: Api.Apply.AddUserActionsNew.FuncT = (data) =>
+  http.post(`/sp-portal/store/${storeCode}/ocpa/addUserActionsNew`, data);
+
 /**
  * 申领结束后进行打标签
  * @param params
@@ -33,4 +37,5 @@ export default {
   reserve,
   addUserActions,
   takeTag,
+  addUserActionsNew,
 };

@@ -13,7 +13,7 @@
         {
           "name": "服务预约",
           "pathName": "subPages/service/index",
-          "query": "",
+          "query": "gdt_vid=1111111",
           "launchMode": "default",
           "scene": null
         },
@@ -48,6 +48,13 @@
         {
           "name": "卡券中心",
           "pathName": "subPages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/register/index",
           "query": "",
           "launchMode": "default",
           "scene": null
