@@ -59,15 +59,16 @@ const Index = () => {
       setDialogText(`您已参与过此活动,\n敬请期待下次惊喜`);
       setTrue();
     } else {
-      await api.apply.takeTag({
-        customerId: info?.id || "",
-      });
-      to(
-        `/pages/h5/index?url=${encodeURIComponent(
-          `https://www.shyb888.cn/vip/N-009-240204/index.html?id=${userInfo.memberId}`,
-        )}`,
-      );
-      // setDialogText("参与成功");
+      // await api.apply.takeTag({
+      //   customerId: info?.id || "",
+      // });
+      // to(
+      //   `/pages/h5/index?url=${encodeURIComponent(
+      //     `https://www.shyb888.cn/vip/N-009-240204/index.html?id=${userInfo.memberId}`,
+      //   )}`,
+      // );
+      setDialogText("参与成功");
+      setTrue();
     }
     loading.current = false;
   }, []);
