@@ -58,6 +58,27 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "申领",
+          "pathName": "pages/apply/index",
+          "query": "activityId=5NSf3QSv9HwnFqQFHQEofu&code=friends",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/applyCoupon/index",
+          "query": "code=applyCoupon&gdt_vid=test111",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/friends/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

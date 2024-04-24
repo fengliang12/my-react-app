@@ -10,6 +10,7 @@ export default {
     "pages/test/index",
     "pages/friends/index",
     "pages/apply/index",
+    "pages/applyCoupon/index",
     "subPages/service/index",
     "subPages/service/introduce/index",
     "subPages/service/list/index",
