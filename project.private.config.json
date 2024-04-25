@@ -67,7 +67,7 @@
           "scene": null
         },
         {
-          "name": "",
+          "name": "申领活动",
           "pathName": "pages/applyCoupon/index",
           "query": "code=applyCoupon&gdt_vid=test111",
           "launchMode": "default",

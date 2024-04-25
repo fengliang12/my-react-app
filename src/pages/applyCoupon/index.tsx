@@ -156,9 +156,9 @@ const Index = () => {
    */
   const getActivityDetail = useMemoizedFn(async () => {
     let res = await api.apply.activityDetail(activityId);
-    Taro.hideLoading();
 
     if (!res || !isBetween(res.data.from, res.data.to)) {
+      Taro.hideLoading();
       Taro.showModal({
         title: "提示",
         content: "当前时间不在活动时间范围内",
@@ -171,6 +171,7 @@ const Index = () => {
 
     let list = res?.data.counterList;
     setCounterList(list);
+    Taro.hideLoading();
     return list;
   });
 
@@ -272,9 +273,8 @@ const Index = () => {
           case "SYSTEM":
             toast(`服务器异常，请稍后重试`);
             break;
-
           default:
-            toast(MESSAGE?.OTHERS);
+            toast(res?.data?.message);
             break;
         }
         throw Error(res?.data?.message || "");
