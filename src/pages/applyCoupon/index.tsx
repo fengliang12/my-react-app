@@ -332,7 +332,7 @@ const Index = () => {
         }}
       />
       <View
-        className="w-450 h-300 absolute left-150 bottom-70 z-10000"
+        className="w-450 h-300 absolute left-150 bottom-70 z-9999"
         onClick={() => {
           customAction({ code: "applyGift" });
         }}
