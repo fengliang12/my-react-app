@@ -310,7 +310,7 @@ const Index = () => {
   });
 
   return (
-    <View>
+    <View className="relative">
       <PrivacyAuth></PrivacyAuth>
       <CHeader
         back
@@ -326,12 +326,17 @@ const Index = () => {
           backgroundColor: "#fdc1b1",
           height: `calc(100vh - ${headerHeight}px)`,
         }}
-        onCustomAction={customAction}
         onLoadCustomData={(e) => {
           let id = e.find((item) => item.code === "activityId")?.value;
           setActivityId(id);
         }}
       />
+      <View
+        className="w-450 h-300 absolute left-150 bottom-70 z-10000"
+        onClick={() => {
+          customAction({ code: "applyGift" });
+        }}
+      ></View>
       {/* 注册弹窗 */}
       {showRegisterDialog && (
         <View className="w-screen h-screen fixed left-0 top-0 z-10000">
