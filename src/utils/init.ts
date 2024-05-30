@@ -42,6 +42,7 @@ export const createInit = () => {
             id: data.customerBasicInfo?.id || "",
             channelName: data.customerBasicInfo?.channelName || "",
             openId: data.customerBasicInfo?.openId || "",
+            unionId: data.customerBasicInfo?.unionId || "",
           };
           // 视图数据放Store
           store.dispatch({

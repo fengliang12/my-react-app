@@ -13,7 +13,7 @@
         {
           "name": "服务预约",
           "pathName": "subPages/service/index",
-          "query": "gdt_vid=1111111",
+          "query": "storeCode=10700001&channel=offline",
           "launchMode": "default",
           "scene": null
         },
@@ -84,6 +84,7 @@
     }
   },
   "setting": {
-    "urlCheck": false
+    "urlCheck": false,
+    "useIsolateContext": true
   }
 }

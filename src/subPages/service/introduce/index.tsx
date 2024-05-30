@@ -1,10 +1,12 @@
 import { useBoolean, useDebounceFn, useMemoizedFn } from "ahooks";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import Layout from "@/src/components/Layout";
 import Page from "@/src/components/Page";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
 import useAddUserActions from "@/src/hooks/useAddUserActions";
+import useLoaclBehavior from "@/src/hooks/useLoaclBehavior";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -16,6 +18,13 @@ const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
   const { project, num = 0, reason } = useProject();
   const { addActions } = useAddUserActions();
+  const { addBehavior } = useLoaclBehavior("RESERVATION");
+
+  useEffect(() => {
+    if (project) {
+      addBehavior(`VIEW_DETAIL_${project.projectCode}`);
+    }
+  }, [addBehavior, project]);
 
   /**
    * 自定义事件
@@ -24,6 +33,10 @@ const Index = () => {
   const { run: customAction } = useDebounceFn(
     (params) => {
       let { code } = params;
+      if (project) {
+        addBehavior(`CLICK_DETAIL_RESERVATION_${project.projectCode}`);
+      }
+
       if (code === "appointment") {
         addActions("RESERVATION");
 

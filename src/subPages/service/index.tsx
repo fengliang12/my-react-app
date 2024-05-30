@@ -1,6 +1,7 @@
 import { Text, View } from "@tarojs/components";
-import { useDidShow } from "@tarojs/taro";
+import { useDidShow, useRouter } from "@tarojs/taro";
 import { useBoolean, useRequest } from "ahooks";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import CImage from "@/src/components/Common/CImage";
@@ -8,6 +9,8 @@ import CPopup from "@/src/components/Common/CPopup";
 import Page from "@/src/components/Page";
 import PrivacyAuth from "@/src/components/PrivacyAuth";
 import useAddUserActions from "@/src/hooks/useAddUserActions";
+import useLoaclBehavior from "@/src/hooks/useLoaclBehavior";
+import handleRoute from "@/src/utils/handleRoute";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -17,15 +20,23 @@ import useProject from "./hooks/useProject";
 
 const Index = () => {
   const [visible, { setFalse, setTrue }] = useBoolean(false);
+  const router = useRouter();
   const { project, num = 0, reason } = useProject();
   const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
     useBoolean(false);
   const userInfo = useSelector((state: Store.States) => state.user);
   const { addActions } = useAddUserActions();
+  const { addBehavior } = useLoaclBehavior("RESERVATION");
 
   useDidShow(() => {
     addActions("VIEW_CONTENT");
   });
+
+  useEffect(() => {
+    if (project) {
+      addBehavior(`VIEW_HOMEPAGE_${project.projectCode}`);
+    }
+  }, [addBehavior, project]);
 
   return (
     <Page
@@ -53,7 +64,13 @@ const Index = () => {
           ) : (
             <View>您暂无预约的机会</View>
           )}
-          <View className="underline text-26" onClick={setRuleTrue}>
+          <View
+            className="underline text-26"
+            onClick={() => {
+              addBehavior("CLICK_RULE");
+              setRuleTrue();
+            }}
+          >
             预约规则
           </View>
         </View>
@@ -64,7 +81,14 @@ const Index = () => {
         <View className="w-610 mt-64 ml-70 flex justify-start text-24">
           <View
             className="w-280 h-80 vhCenter bg-white mr-49"
-            onClick={() => to("/subPages/service/introduce/index")}
+            onClick={() => {
+              project && addBehavior(`CLICK_DETAIL_${project.projectCode}`);
+              let path = handleRoute(
+                "/subPages/service/introduce/index",
+                router.params,
+              );
+              to(path);
+            }}
           >
             查看详情
           </View>
@@ -72,7 +96,8 @@ const Index = () => {
             className="w-280 h-80 vhCenter bg-white"
             onClick={() => {
               addActions("RESERVATION");
-
+              project &&
+                addBehavior(`CLICK_RESERVATION_${project.projectCode}`);
               if (!userInfo?.isMember) {
                 return to("/pages/registerSecond/index");
               }

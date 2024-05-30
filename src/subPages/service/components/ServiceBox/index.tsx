@@ -10,6 +10,7 @@ import { Close, P11 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import useAddUserActions from "@/src/hooks/useAddUserActions";
+import useLoaclBehavior from "@/src/hooks/useLoaclBehavior";
 import useSubMsg from "@/src/hooks/useSubMsg";
 import authorize from "@/src/utils/authorize";
 import to from "@/src/utils/to";
@@ -27,6 +28,7 @@ interface TProps {
 const app: App.GlobalData = Taro.getApp();
 const Index: React.FC<TProps> = (props) => {
   const { addActions } = useAddUserActions();
+  const { addBehavior } = useLoaclBehavior("RESERVATION");
 
   let { project, num = 0, initData, close, callback, modifyTime = 24 } = props;
   const [sureShow, { setTrue }] = useBoolean(false);
@@ -381,6 +383,8 @@ const Index: React.FC<TProps> = (props) => {
             <View
               className="w-300 text-26 h-80 m-auto bg-black text-white vhCenter borderWhite mt-100"
               onClick={async () => {
+                project &&
+                  addBehavior(`SUBMIT_RESERVATION_${project.projectCode}`);
                 await checkParams();
                 setTrue();
               }}
@@ -406,13 +410,23 @@ const Index: React.FC<TProps> = (props) => {
               <View className="mt-80 text-24 flex">
                 <View
                   className="w-220 h-70 vhCenter borderBlack text-black mr-30 box-border"
-                  onClick={close}
+                  onClick={() => {
+                    project &&
+                      addBehavior(
+                        `UNCONFIRM_RESERVATION_${project.projectCode}`,
+                      );
+                    close();
+                  }}
                 >
                   取消
                 </View>
                 <View
                   className="w-220 h-70 vhCenter bg-black text-white"
-                  onClick={onSubmit}
+                  onClick={() => {
+                    project &&
+                      addBehavior(`CONFIRM_RESERVATION_${project.projectCode}`);
+                    onSubmit();
+                  }}
                 >
                   确认
                 </View>
