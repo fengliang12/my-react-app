@@ -5,6 +5,7 @@ import api from "../api";
 
 const app = Taro.getApp();
 
+let time: any = null;
 const LoaclBehavior = (type: string) => {
   let { params } = useRouter();
 
@@ -13,26 +14,34 @@ const LoaclBehavior = (type: string) => {
    */
   const addBehavior = useMemoizedFn(async (key) => {
     let userInfo = await app.init();
-    console.log("userInfo", userInfo);
-
-    let customInfos: Api.Behavior.CustomInfos[] = [
-      {
-        name: "unionid",
-        value: userInfo?.unionId,
-      },
-    ];
-    //会员添加member_id
-    if (userInfo?.isMember) {
-      customInfos.push({
-        name: "member_id",
-        value: userInfo?.id,
-      });
-    }
+    if (time) return;
+    time = setTimeout(async () => {
+      clearTimeout(time);
+      time = null;
+    }, 100);
 
     if (params?.storeCode && params?.channel) {
+      let customInfos: Api.Behavior.CustomInfos[] = [
+        {
+          name: "unionid",
+          value: userInfo?.unionId,
+        },
+        {
+          name: "counterId",
+          value: params?.storeCode,
+        },
+      ];
+
+      //会员添加member_id
+      if (userInfo?.isMember) {
+        customInfos.push({
+          name: "member_id",
+          value: userInfo?.marsId,
+        });
+      }
+
       await api.behavior.behavior({
         channelId: params.channel,
-        counterId: params.storeCode,
         customInfos: customInfos,
         inValid: false,
         key: key,
