@@ -1,3 +1,4 @@
+import { useRouter } from "@tarojs/taro";
 import { useBoolean, useDebounceFn, useMemoizedFn } from "ahooks";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -16,7 +17,10 @@ import useProject from "../hooks/useProject";
 const Index = () => {
   const [visible, { setFalse, setTrue }] = useBoolean(false);
   const userInfo = useSelector((state: Store.States) => state.user);
-  const { project, num = 0, reason } = useProject();
+  const router = useRouter();
+  const { detailPageId = "service", index = 0 } = router.params;
+
+  const { project, num = 0, reason } = useProject(index as number);
   const { addActions } = useAddUserActions();
   const { addBehavior } = useLoaclBehavior("RESERVATION");
 
@@ -65,7 +69,7 @@ const Index = () => {
     >
       <PrivacyAuth></PrivacyAuth>
       <Layout
-        code="service"
+        code={detailPageId}
         globalStyle={{ background: "#000" }}
         onCustomAction={customAction}
       ></Layout>

@@ -1,12 +1,14 @@
 import Taro, { useDidShow } from "@tarojs/taro";
-import { useRequest } from "ahooks";
-import { useState } from "react";
+import { useMemoizedFn, useRequest } from "ahooks";
+import { useEffect, useState } from "react";
 
 import api from "@/src/api";
 
 const app: App.GlobalData = Taro.getApp();
-const useProject = () => {
+
+const useProject = (currentIndex: number = 0) => {
   const [reason, setReason] = useState<any>(null);
+  const [project, setProject] = useState<any>(null);
 
   const { data: num, run: getNum } = useRequest(
     async (projectCode) => {
@@ -25,27 +27,50 @@ const useProject = () => {
     },
   );
 
-  const { data: project, run: getProject } = useRequest(
+  const { data: projectList, run: getProject } = useRequest(
     async () => {
       Taro.showLoading({ title: "加载中", mask: true });
       await app.init();
-
       let res = await api.adhocReservation.getProjects();
-      let tempItem = res?.data?.[0] || {};
-      getNum(tempItem?.projectCode);
-      setReason(JSON.parse(tempItem?.reason));
       Taro.hideLoading();
-      return tempItem;
+      return res?.data;
     },
     {
       manual: true,
     },
   );
 
+  /**
+   * 选择对应的projetc
+   */
+  const [selectIndex, setSelectIndex] = useState<number>(currentIndex);
+
+  useEffect(() => {
+    if (projectList && projectList?.length > 0) {
+      console.log(111);
+
+      if (projectList && projectList?.length > 0) {
+        let tempItem = projectList?.[selectIndex] || {};
+        setProject(tempItem);
+        getNum(tempItem?.projectCode);
+        setReason(JSON.parse(tempItem?.reason));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectList, selectIndex]);
+
   useDidShow(() => {
     getProject();
   });
-  return { project, num, getNum, reason };
+  return {
+    project,
+    projectList,
+    num,
+    getNum,
+    reason,
+    selectIndex,
+    setSelectIndex,
+  };
 };
 
 export default useProject;

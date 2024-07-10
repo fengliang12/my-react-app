@@ -1,6 +1,7 @@
-import { Text, View } from "@tarojs/components";
+import { Swiper, SwiperItem, Text, View } from "@tarojs/components";
 import { useDidShow, useRouter } from "@tarojs/taro";
 import { useBoolean, useRequest } from "ahooks";
+import { current } from "immer";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
@@ -21,7 +22,14 @@ import useProject from "./hooks/useProject";
 const Index = () => {
   const [visible, { setFalse, setTrue }] = useBoolean(false);
   const router = useRouter();
-  const { project, num = 0, reason } = useProject();
+  const {
+    project,
+    projectList,
+    selectIndex,
+    setSelectIndex,
+    num = 0,
+    reason,
+  } = useProject(0);
   const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
     useBoolean(false);
   const userInfo = useSelector((state: Store.States) => state.user);
@@ -37,6 +45,16 @@ const Index = () => {
       addBehavior(`VIEW_HOMEPAGE_${project.projectCode}`);
     }
   }, [addBehavior, project]);
+
+  /**
+   * 轮播变化
+   * @param e
+   */
+  const handleChange = (e) => {
+    console.log(e);
+    let { current } = e.detail;
+    setSelectIndex(current);
+  };
 
   return (
     <Page
@@ -74,19 +92,33 @@ const Index = () => {
             预约规则
           </View>
         </View>
-        <CImage
-          className="w-610 h-922 mt-47 ml-70"
-          src={project?.imageKVList?.[0] || ""}
-        ></CImage>
+        <Swiper
+          className="w-full h-922 mt-47"
+          onChange={handleChange}
+          current={selectIndex}
+        >
+          {projectList?.map((item) => {
+            return (
+              <SwiperItem className="w-full h-full" key={item.projectCode}>
+                <CImage
+                  className="w-610 h-922 mt-47 ml-70"
+                  src={item?.imageKVList?.[0] || ""}
+                ></CImage>
+              </SwiperItem>
+            );
+          })}
+        </Swiper>
+
         <View className="w-610 mt-64 ml-70 flex justify-start text-24">
           <View
             className="w-280 h-80 vhCenter bg-white mr-49"
             onClick={() => {
               project && addBehavior(`CLICK_DETAIL_${project.projectCode}`);
-              let path = handleRoute(
-                "/subPages/service/introduce/index",
-                router.params,
-              );
+              let path = handleRoute("/subPages/service/introduce/index", {
+                ...router.params,
+                detailPageId: reason.detailPageId,
+                index: selectIndex,
+              });
               to(path);
             }}
           >
@@ -99,7 +131,7 @@ const Index = () => {
               project &&
                 addBehavior(`CLICK_RESERVATION_${project.projectCode}`);
               if (!userInfo?.isMember) {
-                return to("/pages/registerSecond/index");
+                return to(`/pages/registerSecond/index?index=${selectIndex}`);
               }
               if (num <= 0) {
                 return toast("您暂无预约的机会");

@@ -31,7 +31,7 @@ const baseConfig = {
   errCodeList: ["10000", "MobileHasRegistered"],
   postagePoints: 100,
   postageMoney: 9.9,
-  key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ",
+  key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ", 
   DEBUG_TOKEN: "",
 };
 const config = merge(baseConfig, IS_PRO ? prod : dev);

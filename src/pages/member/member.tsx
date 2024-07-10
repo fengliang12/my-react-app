@@ -102,6 +102,7 @@ const Index = () => {
   });
 
   useAsyncEffect(async () => {
+    await app.init();
     // 不在名单
     if (!customData) return;
 
