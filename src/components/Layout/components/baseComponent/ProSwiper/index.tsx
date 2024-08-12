@@ -1,17 +1,17 @@
 import { Swiper, SwiperItem, View } from "@tarojs/components"
-import { get, omit, assign, cloneDeep, isNil } from 'lodash-es'
+import { get, omit, assign, cloneDeep } from 'lodash-es'
 import { CSSProperties, useMemo, useContext } from "react"
-import { useMemoizedFn, useWhyDidYouUpdate } from "ahooks"
 import { getDomId, getHotStyle } from "../../../helper"
 import ButtonAuth from "../../ButtonAuth"
 import ImagePR from "../../ImagePR"
 import Compiler from "../../Compiler"
 import useHanlder from "../../../hooks/useHanlder"
-import { LayoutContext, FullScreemContext, TemplateContext, SwiperTemplateContext } from '../../../index'
+import { FullScreemContext, TemplateContext, SwiperTemplateContext } from '../../../index'
 import useStore from "../../../hooks/useStore"
 import useStyle from "../../../hooks/useStyle"
 import usePage from "../../../hooks/usePage"
 import useInsertSlot from "../../../hooks/useInsertSlot"
+import useFullScreen from "../../../hooks/useFullScreen"
 
 
 type ProSwiperProps = {
@@ -20,38 +20,25 @@ type ProSwiperProps = {
 }
 
 const ProSwiper: React.FC<ProSwiperProps> = ({ comInfo, comIndex }) => {
-    const { tabHeight } = useContext(LayoutContext)
     const { fullScreen } = useContext(FullScreemContext)
     const { templateCustomData } = useContext(TemplateContext)
     const { defaultCurrent, slots } = useContext(SwiperTemplateContext)
     const { iSlot } = useInsertSlot({ path: comInfo.path })
     const { updateCurrent } = useStore(comInfo)
     const { baseStyle, baseClassName } = useStyle(comInfo)
+    const { fullScreenStyle } = useFullScreen(comInfo)
     const { hanlderEvent, hanlderSwiperChange } = useHanlder(comInfo)
     const { isNowPage } = usePage()
     const swiperStyle = useMemo(() => {
         let result: CSSProperties = cloneDeep(baseStyle)
-        if (['zoom', 'open'].includes(comInfo?.openFullScreen || "")) {
-            if (fullScreen) {
-                assign(result, {
-                    transition: '400ms',
-                    zIndex: 9,
-                    width: '100vw',
-                    height: `calc(100vh - ${tabHeight || '0px'})`
-                })
-            } else {
-                assign(result, {
-                    transition: '400ms',
-                })
-            }
+        if (fullScreenStyle) {
+            assign(result, fullScreenStyle)
         }
         return result ?? {}
     }, [comInfo, baseStyle, fullScreen])
     const swiperCurrent = useMemo(() => {
         return updateCurrent ?? defaultCurrent
     }, [updateCurrent, defaultCurrent])
-
-    // useWhyDidYouUpdate('Swiper渲染', { baseStyle, comInfo, tabHeight, fullScreen, updateCurrent })
 
     return (<Swiper
         id={getDomId(comInfo?.id)}

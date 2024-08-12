@@ -75,6 +75,7 @@ declare namespace Api {
         storeId: string;
         imageUrl: string;
         storeName: string;
+        serviceTime: string;
         storeAddr: string;
         status: string;
         projectCode: string;
@@ -84,6 +85,7 @@ declare namespace Api {
         bookCode: string;
         signTime: any;
         signMan: any;
+        storeCode: string;
         detailList: Array<string>;
         imageKVList: Array<string>;
       };

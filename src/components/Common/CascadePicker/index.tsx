@@ -62,7 +62,7 @@ const CascadePicker: React.FC<T_Props> = React.memo((props) => {
       if (modelValue && modelValue?.length > 0) {
         //内容回显
         index = tempArr.findIndex((item) => {
-          return item[value] === modelValue?.[i];
+          return item[label] === modelValue?.[i];
         });
         tempMultiIndex[i] = index;
       }
@@ -99,7 +99,7 @@ const CascadePicker: React.FC<T_Props> = React.memo((props) => {
         result = list.map((item, index) => {
           let tempObj = multiArray[index][item];
           return Object.fromEntries(
-            resultProps.map((key) => [key, tempObj[key]])
+            resultProps.map((key) => [key, tempObj[key]]),
           );
         });
       }

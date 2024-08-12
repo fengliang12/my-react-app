@@ -8,6 +8,13 @@ export default {
     "pages/register/index",
     "pages/registerSecond/index",
     "pages/test/index",
+    "pages/friends/index",
+    "pages/apply/index",
+    "pages/applyCoupon/index",
+    "subPages/service/index",
+    "subPages/service/introduce/index",
+    "subPages/service/list/index",
+    "subPages/service/detail/index",
   ],
   window: {
     backgroundTextStyle: "light",
@@ -52,17 +59,17 @@ export default {
       name: "activity",
       pages: ["TRENDS/index", "TECHINIQUES/index"],
     },
-    {
-      root: "subPages/service-appointment",
-      name: "serviceAppointment",
-      pages: [
-        "index",
-        "success/index",
-        "appointment/index",
-        "detail/index",
-        "list/index",
-      ],
-    },
+    // {
+    //   root: "subPages/service-appointment",
+    //   name: "serviceAppointment",
+    //   pages: [
+    //     "index",
+    //     "success/index",
+    //     "appointment/index",
+    //     "detail/index",
+    //     "list/index",
+    //   ],
+    // },
     {
       root: "subPages/coupon",
       name: "coupon",
@@ -85,6 +92,12 @@ export default {
         text: "先锋礼遇",
         iconPath: "assets/image/tabbar/home02.jpg",
         selectedIconPath: "assets/image/tabbar/home.jpg",
+      },
+      {
+        pagePath: "subPages/service/index",
+        text: "服务预约",
+        iconPath: "assets/image/tabbar/service.png",
+        selectedIconPath: "assets/image/tabbar/service02.png",
       },
       {
         pagePath: "pages/user/index",

@@ -1,5 +1,7 @@
+import adhocReservation from "./adhocReservation";
 import apply from "./apply/index";
 import arvatoReservation from "./arvatoReservation/index";
+import behavior from "./behavior";
 import birthdayGift from "./birthdayGift";
 import buyBonusPoint from "./buyBonusPoint/index";
 import buyNow from "./buyNow";
@@ -33,4 +35,6 @@ export default {
   order,
   birthdayGift,
   apply,
+  adhocReservation,
+  behavior,
 };

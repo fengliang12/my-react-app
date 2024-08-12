@@ -11,6 +11,7 @@ import store from "@/store/index";
 
 import pageSettingConfig from "./config/pageSettingConfig";
 import { createInit } from "./utils/init";
+import pageNoFound from "./utils/pageNoFound";
 import to from "./utils/to";
 import updateManager from "./utils/updateManager";
 
@@ -27,11 +28,15 @@ class App extends Component<any> {
       userInfo: null,
       systemInfo: null,
       memberInfo: null,
+      counterCode: null,
+      initOptions: null,
     },
     init: createInit(),
     to: to,
   };
-  async onLaunch() {
+  async onLaunch(options) {
+    console.log("options----------", options);
+    this.taroGlobalData.globalData.initOptions = options;
     updateManager();
 
     // Taro.loadFontFace({
@@ -64,10 +69,8 @@ class App extends Component<any> {
         query.scene ?? query.counterCode;
     }
   }
-  onPageNotFound() {
-    Taro.switchTab({
-      url: pageSettingConfig.homePath,
-    });
+  onPageNotFound(options) {
+    pageNoFound(options, pageSettingConfig.homePath);
   }
   render() {
     return <Provider store={store}>{this.props.children}</Provider>;

@@ -10,7 +10,7 @@ import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
 import { setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
-
+ 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const router = useRouter();

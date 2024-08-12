@@ -1,143 +1,46 @@
 {
   "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
-  "projectname": "mini-nars",
-  "setting": {
-    "compileHotReLoad": false,
-    "urlCheck": false,
-    "bigPackageSizeSupport": true
-  },
   "condition": {
     "miniprogram": {
       "list": [
         {
-          "name": "附近门店",
-          "pathName": "subPages/nearby-stores/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "用户信息更改",
-          "pathName": "pages/update/index",
-          "query": "code=test0428",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "个人中心",
-          "pathName": "pages/user/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "注册会员",
-          "pathName": "pages/register/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "订单列表",
-          "pathName": "subPages/redeem/orderList/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "会员注册",
-          "pathName": "pages/register/index",
-          "query": "",
+          "name": "朋友圈",
+          "pathName": "pages/friends/index",
+          "query": "activityId=Mz8FQiKwWgtfsVdeguiqqy&gdt_vid=test11111",
           "launchMode": "default",
           "scene": null
         },
         {
           "name": "服务预约",
+          "pathName": "subPages/service/index",
+          "query": "storeCode=10700001&channel=offline",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的预约",
+          "pathName": "subPages/service/list/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "老服务",
           "pathName": "subPages/service-appointment/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "预约成功",
-          "pathName": "subPages/service-appointment/success/index",
-          "query": "bookId=53",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "预约填写",
-          "pathName": "subPages/service-appointment/appointment/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "预约详情",
-          "pathName": "subPages/service-appointment/detail/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "预约列表",
-          "pathName": "subPages/service-appointment/list/index",
-          "query": "",
+          "name": "",
+          "pathName": "subPages/service/detail/index",
+          "query": "bookCode=3f336b1efb1e408a8a4a7af3756720b7",
           "launchMode": "default",
           "scene": null
         },
         {
           "name": "",
-          "pathName": "pages/activity/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "首页",
-          "pathName": "pages/member/member",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "积分商城",
-          "pathName": "subPages/redeem/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "兑礼成功",
-          "pathName": "subPages/redeem/success/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "订单列表",
-          "pathName": "subPages/redeem/orderList/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "订单详情",
-          "pathName": "subPages/redeem/orderDetail/index",
-          "query": "orderId=nars2310120000018013",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "消费记录",
-          "pathName": "subPages/common/consumeRecord/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "订单提交",
-          "pathName": "subPages/redeem/confirm/index",
+          "pathName": "pages/registerSecond/index",
           "query": "",
           "launchMode": "default",
           "scene": null
@@ -150,63 +53,38 @@
           "scene": null
         },
         {
-          "name": "消费记录",
-          "pathName": "subPages/common/consumeRecord/index",
+          "name": "",
+          "pathName": "pages/register/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "我的二维码",
-          "pathName": "subPages/common/myQRCode/index",
-          "query": "",
+          "name": "申领",
+          "pathName": "pages/apply/index",
+          "query": "activityId=5NSf3QSv9HwnFqQFHQEofu&code=friends",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "潮装",
-          "pathName": "pages/activity/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "测试",
-          "pathName": "pages/test/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "趋势妆容",
-          "pathName": "subPages/activity/TRENDS/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "入门美妆",
-          "pathName": "subPages/activity/TECHINIQUES/index",
-          "query": "",
+          "name": "申领活动",
+          "pathName": "pages/applyCoupon/index",
+          "query": "code=applyCoupon&gdt_vid=test111",
           "launchMode": "default",
           "scene": null
         },
         {
           "name": "",
-          "pathName": "subPages/redeem/orderDetail/index",
-          "query": "orderId=nars2310120000018013",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "生日礼申领",
-          "pathName": "pages/member/member",
-          "query": "type=birthday_gift",
+          "pathName": "pages/friends/index",
+          "query": "",
           "launchMode": "default",
           "scene": null
         }
       ]
     }
   },
-  "libVersion": "3.0.2"
+  "setting": {
+    "urlCheck": false,
+    "useIsolateContext": true
+  }
 }

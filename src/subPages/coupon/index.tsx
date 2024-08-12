@@ -1,8 +1,8 @@
 import { ScrollView, Text, View } from "@tarojs/components";
 import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
-import { useMemoizedFn, useUpdateEffect } from "ahooks";
+import { useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import api from "@/src/api";
 import { P9 } from "@/src/assets/image";
@@ -25,28 +25,14 @@ const Index = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [couponStatus, setCouponStatus] = useState<string>("wait");
 
-  const getList = useMemoizedFn(async () => {
+  useDidShow(async () => {
     await app.init();
     Taro.showLoading({ title: "加载中", mask: true });
-    let res: any = null;
-    if (couponStatus === "wait") {
-      res = await api.coupon.usable({ needSendCoupon: true });
-    } else if (couponStatus === "used") {
-      res = await api.coupon.redeem({ needSendCoupon: true });
-    } else if (couponStatus === "expired") {
-      res = await api.coupon.expire();
-    }
-    setOriginList(res?.data);
+    const { data } = await api.coupon.posCouponDetail({});
+
+    setOriginList(data);
     Taro.hideLoading();
   });
-
-  useDidShow(async () => {
-    getList();
-  });
-
-  useUpdateEffect(() => {
-    getList();
-  }, [couponStatus, getList]);
 
   /**
    * 点击菜单栏切换
@@ -156,9 +142,11 @@ const Index = () => {
                         }
                       }}
                     >
-                      <View className="text-28">{item.pAName}</View>
+                      <View className="text-28">
+                        {item?.pAName || item?.goodsName}
+                      </View>
                       <View className="w-full text-20 mt-50 flex items-center justify-between">
-                        {item?.exchangeBeginDate && (
+                        {item?.exchangeBeginDate ? (
                           <Text>
                             {dayjs(
                               item?.exchangeBeginDate?.replaceAll("-", "/"),
@@ -166,6 +154,16 @@ const Index = () => {
                             -{" "}
                             {dayjs(
                               item?.exchangeEndDate?.replaceAll("-", "/"),
+                            ).format("YYYY.MM.DD")}
+                          </Text>
+                        ) : (
+                          <Text>
+                            {dayjs(
+                              item?.ticketBegYmd?.replaceAll("-", "/"),
+                            ).format("YYYY.MM.DD")}{" "}
+                            -{" "}
+                            {dayjs(
+                              item?.ticketEndYmd?.replaceAll("-", "/"),
                             ).format("YYYY.MM.DD")}
                           </Text>
                         )}
@@ -215,7 +213,7 @@ const Index = () => {
                         (item.pAType == 30 && item.ticketStatus == 10)) && (
                         <View className="inline-block mt-30 bg-white">
                           <CQRCodeCustom
-                            text={item.applyId}
+                            text={item?.applyId || item?.ticketSerialNo}
                             width={250}
                             height={250}
                             padding={10}
