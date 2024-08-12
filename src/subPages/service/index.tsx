@@ -1,3 +1,5 @@
+import "./index.scss";
+
 import { Swiper, SwiperItem, Text, View } from "@tarojs/components";
 import { useDidShow, useRouter } from "@tarojs/taro";
 import { useBoolean, useRequest } from "ahooks";
@@ -92,22 +94,46 @@ const Index = () => {
             预约规则
           </View>
         </View>
-        <Swiper
-          className="w-full h-922 mt-47"
-          onChange={handleChange}
-          current={selectIndex}
-        >
-          {projectList?.map((item) => {
-            return (
-              <SwiperItem className="w-full h-full" key={item.projectCode}>
-                <CImage
-                  className="w-610 h-922 mt-47 ml-70"
-                  src={item?.imageKVList?.[0] || ""}
-                ></CImage>
-              </SwiperItem>
-            );
-          })}
-        </Swiper>
+        <View>
+          <Swiper
+            className="w-full h-922 mt-47"
+            onChange={handleChange}
+            current={selectIndex}
+            autoplay
+            circular
+            interval={8000}
+            // nextMargin="40"
+          >
+            {projectList?.map((item) => {
+              return (
+                <SwiperItem
+                  className="w-full h-full vhCenter"
+                  key={item.projectCode}
+                >
+                  <CImage
+                    className="w-610 h-922 mt-47"
+                    src={item?.imageKVList?.[0] || ""}
+                  ></CImage>
+                </SwiperItem>
+              );
+            })}
+          </Swiper>
+          <View
+            className="flex justify-center m-20"
+            style="--indicatorActiveColor:#fff;--indicatorColor:#999"
+          >
+            {new Array(projectList?.length).fill(true).map((elem, index) => {
+              return (
+                <View
+                  key={elem.code}
+                  className={`w-70 h-10 rounded-p50 ml-10 transition-all delay-500 doitItem  ${
+                    selectIndex === index && "setDoitItem"
+                  }`}
+                ></View>
+              );
+            })}
+          </View>
+        </View>
 
         <View className="w-610 mt-64 ml-70 flex justify-start text-24">
           <View

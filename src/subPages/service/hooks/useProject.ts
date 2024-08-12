@@ -12,14 +12,12 @@ const useProject = (currentIndex: number = 0) => {
 
   const { data: num, run: getNum } = useRequest(
     async (projectCode) => {
-      Taro.showLoading({ title: "加载中", mask: true });
       let userInfo = await app.init();
       if (!userInfo?.isMember) return 0;
 
       let res = await api.adhocReservation.getNum({
         projectCode,
       });
-      Taro.hideLoading();
       return res?.data > 0 ? res?.data : 0;
     },
     {
