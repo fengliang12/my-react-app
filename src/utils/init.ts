@@ -64,8 +64,16 @@ export const createInit = () => {
  * 获取数云接口
  */
 export const getShuYunMemberInfo = async () => {
+  let shopName: string = "";
   let { data } = await api.shuYunMember.queryMember();
   console.log("获取数云接口", data);
+
+  if (data?.customizedProperties?.belongShop) {
+    let { data: res } = await api.shuYunMember.queryCabinet(
+      data?.customizedProperties?.belongShop,
+    );
+    shopName = res?.detailInfo?.name;
+  }
 
   let userInfo = {
     cardNo: data.cardNo,
@@ -76,7 +84,11 @@ export const getShuYunMemberInfo = async () => {
     nextGradeName: data.nextGradeName,
     nextGradeNeedAmount: data.nextGradeNeedAmount,
     points: data.points,
+    belongShop: data?.customizedProperties?.belongShop,
+    belongShopName: shopName,
   };
+  console.log("---userInfo", userInfo);
+
   // 视图数据放Store
   store.dispatch({
     type: SET_USER,

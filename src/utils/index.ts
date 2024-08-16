@@ -118,6 +118,33 @@ export const verifyAddressInfo: (e: T_Area_Form) => Promise<string> = (
   });
 };
 
+/**
+ * 防抖 立即执行版本
+ * @param fn 防抖函数
+ * @param wait 防抖时间
+ * @param msg 添加重复执行提示
+ */
+export function debounceImme(fn: Function, wait: number, msg?: string) {
+  let timer: any = null;
+  return function (this: any, ...args: any[]) {
+    timer && clearTimeout(timer);
+    const callNow = !timer;
+    if (!callNow && msg) {
+      wx.showToast({
+        title: msg,
+        icon: "none",
+        duration: wait,
+      });
+    }
+    timer = setTimeout(() => {
+      timer = null;
+    }, wait);
+    // @ts-ignore
+    callNow && fn.apply(this, args);
+  };
+}
+
+
 // 手机号掩码
 export const maskPhone = (phone: string) => {
   if (phone.includes("*")) return phone;

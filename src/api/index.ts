@@ -9,6 +9,7 @@ import cart from "./cart/index";
 import common from "./common/index";
 import counter from "./counter/index";
 import coupon from "./coupon/index";
+import draw from "./draw/index";
 import goods from "./goods/index";
 import memberOrder from "./memberOrder";
 import order from "./order/index";
@@ -37,4 +38,5 @@ export default {
   apply,
   adhocReservation,
   behavior,
+  draw,
 };

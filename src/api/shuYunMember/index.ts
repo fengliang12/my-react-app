@@ -18,6 +18,10 @@ const queryMember = () => http.get(`${commonUrl}/queryMember`);
 //消费记录
 const orderPage = (data) => http.post(`${commonUrl}/orderPage`, data);
 
+// 柜台信息查询
+const queryCabinet = (shopId) =>
+  http.get(`/sp-portal/store/${config.storeCode}/counter/${shopId}`);
+
 export default {
   /** 距离下一等级金额 */
   nextGradeAmount,
@@ -28,4 +32,5 @@ export default {
   // 会员信息查询
   queryMember,
   orderPage,
+  queryCabinet,
 };

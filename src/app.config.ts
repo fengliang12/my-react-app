@@ -15,6 +15,8 @@ export default {
     "subPages/service/introduce/index",
     "subPages/service/list/index",
     "subPages/service/detail/index",
+    "subPages/drawLottery/index",
+    "subPages/drawLottery/records/index",
   ],
   window: {
     backgroundTextStyle: "light",

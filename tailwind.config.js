@@ -86,9 +86,19 @@ module.exports = {
         373737: "#373737",
         b4F4F4F: "#4F4F4F",
       }),
+      lineClamp: {
+        3: "3",
+        4: "4",
+        5: "5",
+        6: "6",
+        7: "7",
+      },
     },
     spacing: {
       ...generateSpacing(1501),
+    },
+    variants: {
+      lineClamp: ["responsive", "hover"],
     },
     fontSize: (theme) => theme("spacing"),
     borderWidth: (theme) => theme("spacing"),
