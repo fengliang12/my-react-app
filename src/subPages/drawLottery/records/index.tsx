@@ -1,15 +1,18 @@
 import { Image, ScrollView, View } from "@tarojs/components";
-import { useDidShow, useRouter } from "@tarojs/taro";
+import Taro, { useDidShow, useRouter } from "@tarojs/taro";
 import { useMemoizedFn, useSetState } from "ahooks";
 import dayjs from "dayjs";
+import { useRef } from "react";
 
 import api from "@/src/api";
 import { LogoB } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
 
+const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const router = useRouter();
+  let _userInfo = useRef<any>({});
   const { id, shopName } = router.params;
   const [state, setState] = useSetState<{
     navHeight: string;
@@ -20,6 +23,8 @@ const Index = () => {
   });
 
   useDidShow(async () => {
+    let userInfo = await app.init(true);
+    _userInfo.current = userInfo;
     const rectInfo = getHeaderHeight();
     setState({ navHeight: rectInfo?.headerHeight + "Px" });
     queryDrawRecords();
@@ -30,6 +35,7 @@ const Index = () => {
     const { data } = await api.draw.queryDrawRecords({
       luckDrawId: id, //活动id
       queryType: "real",
+      customerId: _userInfo.current?.id, //用户id
     });
     setState({ recordsList: data?.luckDrawRecordList });
   });
