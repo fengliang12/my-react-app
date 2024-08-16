@@ -46,7 +46,7 @@ const Index = () => {
     surplusDrawTimes: 0,
     showRulePopup: false,
     showDrawPopup: false,
-    turn: 1,
+    turn: 3,
     prize: {},
     showFailPopup: "",
     ruleImage: "",
@@ -86,7 +86,7 @@ const Index = () => {
       // 按钮
       giftsList.splice(4, 0, {
         prizeId: "draw",
-        id: "draw1",
+        id: "draw_id_1",
         auxiliaryImage:
           "https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/lottery/button.png",
       });
@@ -109,7 +109,7 @@ const Index = () => {
       Taro.showToast({ title: "活动不存在", icon: "none", duration: 1500 });
       setTimeout(() => {
         app.to(pageSettingConfig.homePath);
-      }, 1500);
+      }, 2000);
     }
   });
 
@@ -166,11 +166,11 @@ const Index = () => {
     let curIndex = 0;
     let turn = 0; //
 
-    let prizeId = data.prizeId || null;
+    let curId = data.id || null;
     // 谢谢参与
-    if (!prizeId || null) {
-      let array = ["thanks0", "thanks1"];
-      prizeId = array[Math.floor(Math.random() * array.length)];
+    if (!curId || null) {
+      let array = ["thanks_id_0", "thanks_id_1"];
+      curId = array[Math.floor(Math.random() * array.length)];
     }
 
     const intervalId = setInterval(() => {
@@ -180,20 +180,19 @@ const Index = () => {
       }
 
       // 圈数够了且奖品是指定的就停止
-      if (
-        turn === state.turn &&
-        prizeId === state.giftsList[path[curIndex]].prizeId
-      ) {
+      if (turn === state.turn && curId === state.giftsList[path[curIndex]].id) {
         clearInterval(intervalId);
         let prize = data;
         prize.visible = true;
         drawing.current = false;
         setState({ prize });
         if (
-          !["thanks0", "thanks1", "draw"].includes(data?.prizeId) &&
-          data?.prizeId
+          !["thanks_id_0", "thanks_id_0", "draw_id_1"].includes(data?.id) &&
+          data?.id
         ) {
-          setState({ showDrawPopup: true });
+          setTimeout(() => {
+            setState({ showDrawPopup: true });
+          }, 1000);
         } else {
           setState({ showFailPopup: "noPrize" });
         }
@@ -286,8 +285,9 @@ const Index = () => {
                     <View
                       className="absolute top-0 right-0 bottom-0 left-0 z-999"
                       style={{
-                        backgroundColor: "#e02727",
-                        opacity: itm.action ? 0.2 : 0,
+                        backgroundColor: "rgba(224,39,39,0.2)",
+                        opacity: itm.action ? 1 : 0,
+                        border: "1px solid #ce1f1f",
                       }}
                     ></View>
                   </View>
@@ -390,9 +390,11 @@ const Index = () => {
                     <View className="text-20 text-right leading-28 line-clamp-3  overflow-hidden h-78 w-270 ">
                       {state.prize?.prizeName}
                     </View>
-                    <View className="text-20 text-right mt-4 w-270 ">
-                      产品价值¥{state.prize?.money || 0}
-                    </View>
+                    {!!Number(state.prize?.money) && (
+                      <View className="text-20 text-right mt-4 w-270 ">
+                        产品价值¥{state.prize?.money || 0}
+                      </View>
+                    )}
                   </View>
                 </View>
               </View>
