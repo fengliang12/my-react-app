@@ -301,8 +301,9 @@ const Index = () => {
           )}
 
           {/* 记录&规则 */}
-          <View className="absolute bottom-40 w-full box-border  flex flex-row justify-between px-183 text-18 underline  text-white">
+          <View className="absolute bottom-20 w-full box-border  flex flex-row justify-between px-133 text-18 underline  text-white">
             <View
+              className="px-60 py-30 bg-red"
               onClick={() => {
                 app.to(
                   `/subPages/drawLottery/records/index?id=${
@@ -314,6 +315,7 @@ const Index = () => {
               中奖记录
             </View>
             <View
+              className="px-60 py-30  bg-red"
               onClick={() => {
                 setState({ showRulePopup: true });
               }}
