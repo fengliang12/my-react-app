@@ -433,7 +433,7 @@ const Index = () => {
                     </View>
                     {!!Number(state.prize?.money) && (
                       <View className="text-20 text-right mt-4 w-270 ">
-                        产品价值¥{state.prize?.money || 0}
+                        {`产品价值¥${state.prize?.money || 0}`}
                       </View>
                     )}
                   </View>
