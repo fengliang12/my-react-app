@@ -29,6 +29,7 @@ interface IInitState {
   prize: any;
   showFailPopup: "noTimes" | "noPrize" | "";
   ruleImage: string;
+  activityStatus: string;
 }
 
 const app: App.GlobalData = Taro.getApp();
@@ -52,6 +53,7 @@ const Index = () => {
     prize: {},
     showFailPopup: "",
     ruleImage: "",
+    activityStatus: "",
   });
   let _userInfo = useRef<any>({});
   let _activityLuckDrawId = useRef<any>("");
@@ -100,6 +102,15 @@ const Index = () => {
         auxiliaryImage: noPrizeSetting,
       });
 
+      // 判断活动是否开始
+      if (now.isBefore(dayjs(data?.activityStartTime))) {
+        setState({ activityStatus: "notStart" });
+      }
+
+      if (now.isAfter(dayjs(data?.activityEndTime))) {
+        setState({ activityStatus: "isOver" });
+      }
+
       setState({
         activityBg: data?.headPicture,
         activityTitle: data?.activityTitle,
@@ -138,12 +149,12 @@ const Index = () => {
 
     // 判断活动是否开始
     if (now.isBefore(dayjs(state.activityStartTime))) {
-      Taro.showToast({ title: "活动未开始", icon: "none" });
+      setState({ activityStatus: "notStart" });
       return;
     }
 
     if (now.isAfter(dayjs(state.activityEndTime))) {
-      Taro.showToast({ title: "活动已结束", icon: "none" });
+      setState({ activityStatus: "isOver" });
       return;
     }
 
@@ -325,6 +336,27 @@ const Index = () => {
           </View>
         </View>
 
+        {/* 活动未开始、已结束弹窗 */}
+        {!!state.activityStatus && (
+          <CPopup closePopup={() => setState({ activityStatus: "" })}>
+            <View className="w-460 pt-120 pb-40 bg-white flex flex-col justify-center items-center relative">
+              <View>
+                {state.activityStatus === "notStart"
+                  ? "活动尚未开始"
+                  : "活动已经结束"}
+              </View>
+              <View
+                onClick={() => {
+                  app.to(pageSettingConfig.homePath);
+                }}
+                className="flex justify-center items-center px-60 py-10 mt-100 text-white bg-black"
+              >
+                好的
+              </View>
+            </View>
+          </CPopup>
+        )}
+
         {/* 谢谢参与、暂无机会弹窗 */}
         {!!state.showFailPopup && (
           <CPopup closePopup={() => setState({ showFailPopup: "" })}>
@@ -346,6 +378,7 @@ const Index = () => {
           </CPopup>
         )}
 
+        {/* 活动规则弹窗 */}
         {state.showRulePopup && (
           <CPopup closePopup={() => setState({ showRulePopup: false })}>
             <View className="w-660 bg-white relative">
@@ -358,6 +391,7 @@ const Index = () => {
           </CPopup>
         )}
 
+        {/* 获得奖品弹窗 */}
         {state.showDrawPopup && (
           <CPopup closePopup={() => setState({ showDrawPopup: false })}>
             <View className="w-610 py-62 text-center relative bg-white">
