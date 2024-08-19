@@ -20,7 +20,7 @@ const LoaclBehavior = (type: string) => {
       time = null;
     }, 100);
 
-    if (params?.storeCode && params?.channel) {
+    if (params?.storeCode || params?.channel) {
       let customInfos: Api.Behavior.CustomInfos[] = [
         {
           name: "unionid",

@@ -4,16 +4,16 @@
     "miniprogram": {
       "list": [
         {
-          "name": "抽奖记录",
-          "pathName": "subPages/drawLottery/records/index",
-          "query": "id=",
+          "name": "抽奖",
+          "pathName": "subPages/drawLottery/index",
+          "query": "id=d3dhh28hd&channel=onetimewecom",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "抽奖",
-          "pathName": "subPages/drawLottery/index",
-          "query": "",
+          "name": "抽奖记录",
+          "pathName": "subPages/drawLottery/records/index",
+          "query": "id=",
           "launchMode": "default",
           "scene": null
         },

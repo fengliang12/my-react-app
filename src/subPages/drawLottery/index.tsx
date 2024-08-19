@@ -9,6 +9,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CPopup from "@/src/components/Common/CPopup";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
+import useLoaclBehavior from "@/src/hooks/useLoaclBehavior";
 import { debounceImme } from "@/src/utils";
 import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
 
@@ -36,6 +37,7 @@ const Index = () => {
   const userInfo = useSelector((state: Store.States) => state.user);
   const router = useRouter();
   const { id = "d3dhh28hd" } = router.params;
+  const { addBehavior } = useLoaclBehavior("DRAW");
   const [state, setState] = useSetState<IInitState>({
     activityBg: "",
     navHeight: "",
@@ -57,6 +59,8 @@ const Index = () => {
   const drawing = useRef<boolean>(false);
 
   useDidShow(async () => {
+    addBehavior("DRAW_VIEW");
+
     let userInfo = await app.init(true);
     _userInfo.current = userInfo;
 
