@@ -62,6 +62,7 @@ const Index = () => {
 
   useDidShow(async () => {
     addBehavior("DRAW_VIEW");
+    Taro.hideShareMenu();
 
     let userInfo = await app.init(true);
     _userInfo.current = userInfo;
