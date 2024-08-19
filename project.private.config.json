@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "subPages/coupon/index",
+          "pathName": "subPages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "抽奖",
           "pathName": "subPages/drawLottery/index",
           "query": "id=d3dhh28hd&channel=onetimewecom",

@@ -145,7 +145,14 @@ const Index = () => {
                       <View className="text-28">
                         {item?.pAName || item?.goodsName}
                       </View>
-                      <View className="w-full text-20 mt-50 flex items-center justify-between">
+
+                      <View className="text-22 mt-10">
+                        {item?.exchangeStoreName
+                          ? `领取柜台:${item?.exchangeStoreName}`
+                          : ""}
+                      </View>
+
+                      <View className="w-full text-20 mt-20 flex items-center justify-between">
                         {item?.exchangeBeginDate ? (
                           <Text>
                             {dayjs(
