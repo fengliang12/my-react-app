@@ -247,14 +247,18 @@ const Index = () => {
           <View className="w-full mt-30 flex flex-col items-center">
             <View className="text-white text-48">{state.activityTitle}</View>
             <View className="text-white text-20 mt-32">
-              活动时间: {dayjs(state?.activityStartTime).format("YYYY.MM.DD")} -{" "}
-              {dayjs(state?.activityEndTime).format("YYYY.MM.DD")}
+              活动时间:
+              {dayjs(state?.activityStartTime).format("YYYY年MM月DD日")} -{" "}
+              {dayjs(state?.activityEndTime).format("YYYY年MM月DD日")}
+            </View>
+            <View className="text-white text-20 mt-22">
+              至指定柜台任意消费即可随单加赠奖品
             </View>
           </View>
           {/* 九宫格 */}
           {state.giftsList.length > 0 && (
             <View
-              className="w-667 h-667 overflow-hidden box-border relative mt-512 flex justify-between z-100 mx-auto flex-wrap border-4 "
+              className="w-668 h-668 overflow-hidden box-border relative mt-512 flex justify-between z-100 mx-auto flex-wrap border-4 "
               style={{
                 border: "2px solid #ce1f1f",
                 boxShadow: "0px 0px 20px #e02727",
@@ -313,7 +317,7 @@ const Index = () => {
           )}
 
           {/* 记录&规则 */}
-          <View className="absolute bottom-20 w-full box-border  flex flex-row justify-between px-133 text-18 underline  text-white">
+          <View className="w-full box-border  flex flex-row justify-between px-133 text-18 underline  text-white">
             <View
               className="px-60 py-30 bg-red"
               onClick={() => {

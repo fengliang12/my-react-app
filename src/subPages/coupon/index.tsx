@@ -2,7 +2,8 @@ import { ScrollView, Text, View } from "@tarojs/components";
 import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import { P9 } from "@/src/assets/image";
@@ -24,9 +25,9 @@ const Index = () => {
   const [originList, setOriginList] = useState<any>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [couponStatus, setCouponStatus] = useState<string>("wait");
+  const userInfo = useSelector((state: Store.States) => state.user);
 
   useDidShow(async () => {
-    await app.init();
     Taro.showLoading({ title: "加载中", mask: true });
     const { data } = await api.coupon.posCouponDetail({});
 
@@ -129,11 +130,11 @@ const Index = () => {
               return (
                 <View className="w-670 p-22" key={item.id}>
                   <View
-                    className="w-full flex h-156 justify-between"
+                    className="w-full flex justify-between"
                     style={`background: url(${config.imgBaseUrl}/coupon/list_bg.png);background-size:100% 100%`}
                   >
                     <View
-                      className="flex-1 px-60 py-40 text-black text-28 flex justify-center items-start flex-col"
+                      className="flex-1 px-60 py-30 text-black text-28 flex justify-center items-start flex-col"
                       onClick={() => {
                         if (selectedIndex === index) {
                           setSelectedIndex(-1);
@@ -147,8 +148,11 @@ const Index = () => {
                       </View>
 
                       <View className="text-22 mt-10">
-                        {item?.exchangeStoreName
-                          ? `领取柜台:${item?.exchangeStoreName}`
+                        {item?.exchangeStoreName || userInfo?.belongShopName
+                          ? `领取柜台:${
+                              item?.exchangeStoreName ||
+                              userInfo?.belongShopName
+                            }`
                           : ""}
                       </View>
 
@@ -213,7 +217,7 @@ const Index = () => {
                       <View className="text-left flex">
                         <View>3、</View>
                         <View>
-                          礼品仅限会员本人莅临所选专柜领取。礼品一经兑换不退不换
+                          礼品仅限会员本人莅临指定专柜领取。礼品一经兑换不退不换
                         </View>
                       </View>
                       {((item.pAType != 30 && item.goodsStatus == 20) ||
