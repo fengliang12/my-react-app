@@ -16,6 +16,7 @@ import toast from "@/src/utils/toast";
 
 import ServiceBox from "../components/ServiceBox";
 import useProject from "../hooks/useProject";
+import { IS_PRO } from "@/src/config";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
@@ -151,9 +152,15 @@ const Index = () => {
    * 添加ba
    */
   const addBa = useMemoizedFn(() => {
-    Taro.navigateTo({
-      url: `/pages/h5/index?url=https://cnaipswx1v1-stg.shiseido.cn/nars/home`,
-    });
+    if(IS_PRO){
+      Taro.navigateTo({
+        url: `/pages/h5/index?url=https://cnaipswx1v1.shiseido.cn/nars/home`,
+      });
+    }else{
+      Taro.navigateTo({
+        url: `/pages/h5/index?url=https://cnaipswx1v1-stg.shiseido.cn/nars/home`,
+      });
+    }
   });
   useShareAppMessage(() => {
     return setShareParams();

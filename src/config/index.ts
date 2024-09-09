@@ -7,7 +7,7 @@ import prod from "./prod";
 // 配置生产项目APPID
 // 测试：wxbd3891c0f73d0592
 // 生产：wx7d12b21af0a8bed3
-const IS_PRO =
+export const IS_PRO =
   Taro.getAccountInfoSync()?.miniProgram?.appId === "wx7d12b21af0a8bed3";
 
 const baseConfig = {
