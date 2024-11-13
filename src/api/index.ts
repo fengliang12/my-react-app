@@ -11,6 +11,7 @@ import counter from "./counter/index";
 import coupon from "./coupon/index";
 import draw from "./draw/index";
 import goods from "./goods/index";
+import kvdata from "./kvdata/index";
 import memberOrder from "./memberOrder";
 import order from "./order/index";
 import salesCategory from "./salesCategory";
@@ -39,4 +40,5 @@ export default {
   adhocReservation,
   behavior,
   draw,
+  kvdata,
 };

@@ -17,6 +17,7 @@ import to from "@/src/utils/to";
 
 import AddCart from "./components/AddCart";
 import ApplyType from "./components/ApplyType";
+import ApplyTypeOnlyPickUp from "./components/ApplyTypeOnlyPickUp";
 import MiniGoodClass from "./components/MiniGoodClass";
 
 const app: App.GlobalData = Taro.getApp();
@@ -27,6 +28,7 @@ const Index = () => {
   const { applyType, counter } = useSelector(
     (state: Store.States) => state.exchangeGood,
   );
+  const [hideExpress, setHideExpress] = useState<string>("");
 
   /**
    * 获取商品列表
@@ -68,7 +70,12 @@ const Index = () => {
       });
   });
 
-  useDidShow(() => {
+  useDidShow(async () => {
+    let ret = await api.kvdata.getKvDataByType("hide_express");
+    let kvData = ret?.data?.[0];
+    if (kvData) {
+      setHideExpress(kvData?.content || "");
+    }
     getGoodList();
   });
 
@@ -138,7 +145,15 @@ const Index = () => {
       </View>
 
       {/* 选择领取方式 */}
-      <ApplyType></ApplyType>
+      {hideExpress && (
+        <>
+          {hideExpress === "true" ? (
+            <ApplyTypeOnlyPickUp></ApplyTypeOnlyPickUp>
+          ) : (
+            <ApplyType></ApplyType>
+          )}
+        </>
+      )}
 
       {/* 购物车 */}
       {applyType && <AddCart></AddCart>}

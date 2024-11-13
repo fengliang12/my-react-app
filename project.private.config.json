@@ -100,14 +100,43 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "subPages/redeem/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "subPages/redeem/success/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "subPages/common/privacy/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "subPages/redeem/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
   },
   "setting": {
     "urlCheck": false,
-    "useIsolateContext": true,
-    "compileHotReLoad": true
+    "useIsolateContext": false,
+    "compileHotReLoad": false,
+    "preloadBackgroundData": false
   },
   "projectname": "mini-nars"
 }

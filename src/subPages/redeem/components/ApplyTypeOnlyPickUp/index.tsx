@@ -5,11 +5,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import api from "@/src/api";
-import { P2, P6, P9 } from "@/src/assets/image";
+import { P9 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import MultiplePicker from "@/src/components/Common/MultiplePicker";
-import config from "@/src/config";
 import { SET_COMMON, SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import toast from "@/src/utils/toast";
 
@@ -26,7 +25,7 @@ const Index: React.FC<PropsType> = (props) => {
   const dispatch = useDispatch();
   const [counterList, setCounterList] = useState<any>([]);
   const [showApply, setShowApply] = useState<boolean>(false);
-  const [applyType, setApplyType] = useState<string>("self_pick_up");
+  const [applyType] = useState<string>("self_pick_up");
   const [selectCounter, setSelectCounter] = useState<any>(null);
 
   /**
@@ -92,37 +91,16 @@ const Index: React.FC<PropsType> = (props) => {
     <>
       {showApply && (
         <CPopup catchMove>
-          <View className="w-600 h-650 bg-white vhCenter flex-col">
-            <View>
-              <CImage
-                className="w-220"
-                mode="widthFix"
-                src={`${config.imgBaseUrl}/redeem/apply_type_popup.png`}
-              ></CImage>
+          <View className="w-615 h-434 bg-white vhCenter flex-col">
+            <View className="flex items-center justify-start w-520">
+              <View className="text-36">免费到柜领取</View>
             </View>
-            <View
-              className="flex items-center justify-start w-400 mt-50"
-              onClick={() => setApplyType("self_pick_up")}
-            >
-              <View
-                className="w-30 h-30 rounded-30 mr-20 vhCenter"
-                style={{ border: "1px solid #959595" }}
-              >
-                {applyType === "self_pick_up" && (
-                  <View
-                    className="w-18 h-18 rounded-30"
-                    style={{ backgroundColor: "#959595" }}
-                  ></View>
-                )}
-              </View>
-              <View className="text-30">免费到柜领取</View>
-            </View>
-            <View className="w-300 text-16 mt-10" style="white-space: nowrap">
+            <View className="w-520 text-16 mt-25" style="white-space: nowrap">
               *选择领取门店后，您的所属门店将默认调整为所选门店
             </View>
 
             {/* 省市区 */}
-            <View className="w-500 mt-30 text-26">
+            <View className="w-520 mt-43 text-26">
               <MultiplePicker
                 isCascadeData={false}
                 cascadeCount={3}
@@ -134,19 +112,19 @@ const Index: React.FC<PropsType> = (props) => {
                 }}
               >
                 <View className="w-full h-full flex justify-between">
-                  <View className="w-130 leading-60 border_999 flex justify-between items-center px-10 box-border">
+                  <View className="w-130 leading-50 border_999 flex justify-between items-center px-10 box-border">
                     <Text className="inline-block text-overflow">
                       {selectCounter?.province ? selectCounter?.province : "省"}
                     </Text>
                     <CImage className="w-20 h-16" src={P9}></CImage>
                   </View>
-                  <View className="w-130 leading-60 border_999 flex justify-between items-center px-10 box-border">
+                  <View className="w-130 leading-50 border_999 flex justify-between items-center px-10 box-border">
                     <Text className="inline-block text-overflow">
                       {selectCounter?.city ? selectCounter?.city : "市"}
                     </Text>
                     <CImage className="w-20 h-16" src={P9}></CImage>
                   </View>
-                  <View className="w-220 leading-60 border_999 flex justify-between items-center px-10 box-border">
+                  <View className="w-220 leading-50 border_999 flex justify-between items-center px-10 box-border">
                     <Text className="inline-block text-overflow">
                       {selectCounter?.name ? selectCounter?.name : "柜台"}
                     </Text>
@@ -157,32 +135,7 @@ const Index: React.FC<PropsType> = (props) => {
             </View>
 
             <View
-              className="flex items-center justify-start w-400 mt-40"
-              onClick={() => {
-                setSelectCounter(null);
-                setApplyType("express");
-              }}
-            >
-              <View
-                className="w-30 h-30 rounded-30 mr-20 vhCenter"
-                style={{ border: "1px solid #959595" }}
-              >
-                {applyType === "express" && (
-                  <View
-                    className="w-18 h-18 rounded-30"
-                    style={{ backgroundColor: "#959595" }}
-                  ></View>
-                )}
-              </View>
-              <View className="flex-1 text-30">
-                <Text decode>邮寄到家</Text>
-              </View>
-            </View>
-            <View className="text-16 w-300 h-20 mt-10">
-              {applyType === "express" && `*100积分抵扣邮费`}
-            </View>
-            <View
-              className="w-180 h-60 text-28 vhCenter bg-black text-white mt-50"
+              className="w-180 h-50 text-28 vhCenter bg-black text-white mt-77"
               onClick={confirm}
             >
               确定
