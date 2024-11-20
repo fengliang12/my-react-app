@@ -86,6 +86,7 @@ export const getShuYunMemberInfo = async () => {
     points: data.points,
     belongShop: data?.customizedProperties?.belongShop,
     belongShopName: shopName,
+    invalidPoints: data.invalidPoints,
   };
   console.log("---userInfo", userInfo);
 

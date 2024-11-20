@@ -51,6 +51,8 @@ declare namespace Store {
     openId: string;
     // 柜台名称
     belongShopName: string;
+    /** 过期积分 */
+    invalidPoints: number;
   };
   type Common = {
     /** Nav高度 */

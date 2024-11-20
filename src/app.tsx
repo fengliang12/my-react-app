@@ -11,6 +11,7 @@ import store from "@/store/index";
 
 import pageSettingConfig from "./config/pageSettingConfig";
 import { createInit } from "./utils/init";
+import { schemaTrack } from "./utils/memberTrackBehavior";
 import pageNoFound from "./utils/pageNoFound";
 import to from "./utils/to";
 import updateManager from "./utils/updateManager";
@@ -57,6 +58,8 @@ class App extends Component<any> {
     this.taroGlobalData.globalData.systemInfo = Taro.getSystemInfoSync();
     let userInfo = await this.taroGlobalData.init();
 
+    /** 短链埋点 */
+    schemaTrack();
     /** 注销用户再次注册需刷新token */
     if (!userInfo?.isMember && userInfo?.channelName) {
       await this.taroGlobalData.init(true);

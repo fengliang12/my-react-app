@@ -85,9 +85,13 @@ declare namespace Api {
     namespace AddBehavior {
       type FuncT = (data: RequestBody) => MRP<any>;
       interface RequestBody {
-        activityId: string;
-        type: string;
+        activityId?: string;
+        type?: string;
         counterId?: string;
+        /**
+         * 行为值
+         */
+        value: string;
       }
     }
 

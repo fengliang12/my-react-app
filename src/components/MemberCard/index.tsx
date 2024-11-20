@@ -22,6 +22,7 @@ interface PropsType {
 const Index: React.FC<PropsType> = (props) => {
   let { showBindPopup } = props;
   const userInfo = useSelector((state: Store.States) => state.user);
+
   const isMember = useSelector((state: Store.States) => state.user.isMember);
   const [process, setProcess] = useState<number>(0);
   const [ruleShow, { setTrue: setRuleTrue, setFalse: setRuleFalse }] =
@@ -129,22 +130,21 @@ const Index: React.FC<PropsType> = (props) => {
             </View>
             <View className="flex-1 h-full flex items-end flex-col">
               <View
-                className="text-42 ENGLISH_FAMILY"
+                className="flex items-end"
                 onClick={() => {
                   goNextPage("/subPages/common/pointsDetail/index");
-                  // setRuleTrue();
                 }}
               >
-                {userInfo.points}
+                <View className="text-21 mr-10 pb-6">当前积分</View>
+                <View className="text-42 ENGLISH_FAMILY">
+                  {userInfo.points}
+                </View>
               </View>
-              <View
-                className="vhCenter text-24 mt-11"
-                onClick={() => {
-                  goNextPage("/subPages/common/pointsDetail/index");
-                  // setRuleTrue();
-                }}
-              >
-                当前积分
+              <View className="flex items-center mt-20">
+                <View className="text-14 mr-10">本月过期积分</View>
+                <View className="text-21 ENGLISH_FAMILY">
+                  {userInfo.invalidPoints}
+                </View>
               </View>
             </View>
           </View>
