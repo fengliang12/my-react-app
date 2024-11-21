@@ -43,10 +43,12 @@ const Index = () => {
       >
         <Text className="text-54 ENGLISH_FAMILY">{points}</Text>
         <Text className="text-26 mt-24">当前积分</Text>
-        <Text className="text-21 mt-50">
-          {userInfo.invalidPoints} 积分 将在{" "}
-          {dayjs().endOf("month").format("YYYY.MM.DD")} 23:59:59 过期
-        </Text>
+        {userInfo?.invalidPoints > 0 && (
+          <Text className="text-21 mt-50">
+            {userInfo?.invalidPoints} 积分 将在{" "}
+            {dayjs().endOf("month").format("YYYY.MM.DD")} 23:59:59 过期
+          </Text>
+        )}
       </View>
       {list?.length ? (
         <ScrollView className="flex-1 overflow-hidden py-40" scrollY>

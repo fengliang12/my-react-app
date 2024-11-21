@@ -135,17 +135,19 @@ const Index: React.FC<PropsType> = (props) => {
                   goNextPage("/subPages/common/pointsDetail/index");
                 }}
               >
-                <View className="text-21 mr-10 pb-6">当前积分</View>
-                <View className="text-42 ENGLISH_FAMILY">
+                <View className="text-21 mr-10">当前积分</View>
+                <View className="text-42 ENGLISH_FAMILY -mb-12">
                   {userInfo.points}
                 </View>
               </View>
-              <View className="flex items-center mt-20">
-                <View className="text-14 mr-10">本月过期积分</View>
-                <View className="text-21 ENGLISH_FAMILY">
-                  {userInfo.invalidPoints}
+              {userInfo?.invalidPoints > 0 && (
+                <View className="flex items-center mt-20">
+                  <View className="text-14 mr-10">本月过期积分</View>
+                  <View className="text-21 ENGLISH_FAMILY -mb-5">
+                    {userInfo?.invalidPoints}
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
           </View>
           {/* 进度条 */}
