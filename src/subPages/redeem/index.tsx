@@ -161,13 +161,13 @@ const Index = () => {
       {/* 活动规则 */}
       <View style={setShow(show)}>
         <CPopup maskClose closePopup={setFalse}>
-          <View className="w-647 h-841 bg-white rounded-20 overflow-hidden">
+          <View className="w-640 h-1037 bg-white rounded-20 overflow-hidden">
             <CImage
               className="w-full h-full"
-              src={`${config.imgBaseUrl}/redeem/rule_01.png`}
+              src={`${config.imgBaseUrl}/redeem/rule_02.png`}
             ></CImage>
             <View
-              className="absolute w-80 h-80 top-20 right-10 vhCenter"
+              className="absolute w-80 h-80 top-0 right-10 vhCenter"
               onClick={setFalse}
             ></View>
           </View>
