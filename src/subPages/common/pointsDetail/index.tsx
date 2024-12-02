@@ -58,7 +58,7 @@ const Index = () => {
                 <View className="flex justify-between text-35">
                   <Text>{item.description}</Text>
                   <Text className="ENGLISH_FAMILY">
-                    {item.changeType === "DEDUCT" ? "-" : "+"}
+                    {["DEDUCT", "EXPIRE"].includes(item.changeType) ? "-" : "+"}
                     {item.point}
                   </Text>
                 </View>
