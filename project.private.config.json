@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/user/index",
+          "pathName": "pages/user/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "subPages/coupon/index",
           "pathName": "subPages/coupon/index",
           "query": "",
@@ -128,6 +135,20 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "subPages/rule/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "subPages/common/privacy/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
@@ -136,7 +157,8 @@
     "urlCheck": false,
     "useIsolateContext": false,
     "compileHotReLoad": false,
-    "preloadBackgroundData": false
+    "preloadBackgroundData": false,
+    "bigPackageSizeSupport": true
   },
   "projectname": "mini-nars"
 }

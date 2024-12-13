@@ -77,7 +77,7 @@ const Index: React.FC<PropsType> = (props) => {
               src={subDialogConfig.img}
             ></CImage>
             <View
-              className="w-100 h-100 absolute top-30 right-30"
+              className="w-100 h-100 absolute top-0 right-0"
               onClick={() => setShowDialog(false)}
             ></View>
           </View>

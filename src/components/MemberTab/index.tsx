@@ -53,7 +53,7 @@ const Index = () => {
           <View className="relative">
             <Swiper
               current={tabIndex}
-              className="w-full h-876"
+              className="w-full h-584"
               onChange={(e) => setTabIndex(e.detail.current)}
             >
               {tabList?.length &&
@@ -62,7 +62,7 @@ const Index = () => {
                     <SwiperItem key={index} className="w-full h-full">
                       <CImage
                         className="w-full h-full"
-                        src={`${config.imgBaseUrl}/grade/${item.value}.png`}
+                        src={`${config.imgBaseUrl}/grade/${item.value}.png?V=1`}
                       ></CImage>
                     </SwiperItem>
                   );
