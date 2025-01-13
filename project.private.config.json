@@ -4,6 +4,48 @@
     "miniprogram": {
       "list": [
         {
+          "name": "数据总览",
+          "pathName": "pages/qy/dataQuery/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "单品实际库存",
+          "pathName": "pages/qy/stockSingleQuery/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "库存查询",
+          "pathName": "pages/qy/stockQuery/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "兑礼明细查询",
+          "pathName": "pages/qy/recordQuery/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "企业微信首页",
+          "pathName": "pages/qy/home/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/user/index",
+          "pathName": "pages/user/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/user/index",
           "pathName": "pages/user/index",
           "query": "",

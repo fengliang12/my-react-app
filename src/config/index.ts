@@ -31,8 +31,10 @@ const baseConfig = {
   errCodeList: ["10000", "MobileHasRegistered"],
   postagePoints: 100,
   postageMoney: 9.9,
-  key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ", 
+  key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ",
   DEBUG_TOKEN: "",
+  /**图片前缀**/
+  imgBaseUrl: "https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com",
 };
 const config = merge(baseConfig, IS_PRO ? prod : dev);
 config.loginUrl = `${config.basePathUrl}/sp-portal/store/${config.storeCode}/wechat/login/`;

@@ -18,6 +18,11 @@ export default {
     "subPages/drawLottery/index",
     "subPages/drawLottery/records/index",
     "subPages/rule/index",
+    "pages/qy/home/index",
+    "pages/qy/dataQuery/index",
+    "pages/qy/recordQuery/index",
+    "pages/qy/stockQuery/index",
+    "pages/qy/stockSingleQuery/index",
   ],
   window: {
     backgroundTextStyle: "light",

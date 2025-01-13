@@ -22,8 +22,7 @@ const config = {
     "@/store": path.resolve(__dirname, "..", "src/store"),
   },
   plugins: [
-    "taro-plugin-compiler-optimization",
-    "taro-plugin-tailwind",
+    "@dcasia/mini-program-tailwind-webpack-plugin/dist/taro",
     [
       "@tarojs/plugin-inject",
       {

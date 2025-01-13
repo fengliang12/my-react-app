@@ -39,22 +39,6 @@ class App extends Component<any> {
     console.log("options----------", options);
     this.taroGlobalData.globalData.initOptions = options;
     updateManager();
-
-    // Taro.loadFontFace({
-    //   family: "CHINESE_F_Z",
-    //   global: true,
-    //   source: `url("${config.imgBaseUrl}/font/FZLTCXHJT.TTF")`,
-    //   success: console.log,
-    //   fail: console.log,
-    // });
-    // Taro.loadFontFace({
-    //   family: "ENGLISH_F_Z",
-    //   global: true,
-    //   source: `url("${config.imgBaseUrl}/font/HelveticaNeueLTStd-Lt.otf")`,
-    //   success: console.log,
-    //   fail: console.log,
-    // });
-
     this.taroGlobalData.globalData.systemInfo = Taro.getSystemInfoSync();
     let userInfo = await this.taroGlobalData.init();
 
