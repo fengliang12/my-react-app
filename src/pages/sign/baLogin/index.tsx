@@ -1,0 +1,68 @@
+import { Input, Text, View } from "@tarojs/components";
+import { useEffect, useState } from "react";
+
+import CHeader from "@/src/components/Common/CHeader";
+import CImage from "@/src/components/Common/CImage";
+
+const Index = () => {
+  useEffect(() => {});
+  const [inputValue, setInputValue] = useState<string>("");
+
+  return (
+    <View
+      className="w-full min-h-screen"
+      style={{
+        background:
+          "url(https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/sign/indexBg.jpg)",
+        backgroundSize: "100% 100%",
+      }}
+    >
+      <CHeader
+        back
+        fill
+        title="NARS"
+        backgroundColor="rgba(0,0,0,0)"
+        titleColor="#FFFFFF"
+      ></CHeader>
+
+      <View className="w-640 mt-55 ml-55 pb-80">
+        <View className="w-full flex justify-end text-white text-20">
+          <View className="underline">活动规则</View>
+        </View>
+
+        <View className="w-full h-886 mt-40">
+          <CImage
+            className="w-full h-full"
+            mode="widthFix"
+            src="https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/sign/indexKV.png"
+          ></CImage>
+        </View>
+
+        <View className="w-full text-center text-20 mt-44 text-white">
+          请彩妆师输入【门店编码】
+        </View>
+
+        <View className="w-full mt-39 text-white box-border text-20">
+          <Input
+            className="w-full h-81 flex justify-between items-center px-20 box-border"
+            style={{
+              border: "1px solid #FFFFFF",
+            }}
+            placeholder="请输入门店编码"
+            placeholderClass="text-20 text-white"
+            value={inputValue}
+            onInput={(e) => {
+              setInputValue(e.detail.value);
+            }}
+          ></Input>
+          <View className="w-full mt-22 text-left">例：2200004633</View>
+        </View>
+
+        <View className="w-400 ml-120 mt-49 h-80 text-24 bg-white flex items-center justify-center">
+          确认登录
+        </View>
+      </View>
+    </View>
+  );
+};
+export default Index;

@@ -4,6 +4,27 @@
     "miniprogram": {
       "list": [
         {
+          "name": "签到二维码",
+          "pathName": "pages/sign/qrCode/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "签到ba的登录页面",
+          "pathName": "pages/sign/baLogin/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "签到",
+          "pathName": "pages/sign/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/user/index",
           "pathName": "pages/user/index",
           "query": "",

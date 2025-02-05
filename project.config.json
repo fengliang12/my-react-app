@@ -3,8 +3,8 @@
   "description": "",
   "setting": {
     "urlCheck": true,
-    "es6": false,
-    "enhance": false,
+    "es6": true,
+    "enhance": true,
     "compileHotReLoad": false,
     "postcss": false,
     "preloadBackgroundData": false,
@@ -42,6 +42,6 @@
     "ignore": [],
     "include": []
   },
-  "appid": "wx7d12b21af0a8bed3",
+  "appid": "wxbd3891c0f73d0592",
   "projectname": "mini-nars"
 }
