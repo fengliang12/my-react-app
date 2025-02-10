@@ -1,20 +1,33 @@
-import { Input, Text, View } from "@tarojs/components";
-import { useEffect, useState } from "react";
+import { View } from "@tarojs/components";
+import { useRouter } from "@tarojs/taro";
+import { useRequest } from "ahooks";
 
+import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
-import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import config from "@/src/config";
+
+import RulePopup from "../components/RulePopup";
+import useActivityHook from "../hooks/activity";
 
 const Index = () => {
-  useEffect(() => {});
-  const [inputValue, setInputValue] = useState<string>("");
+  const { params } = useRouter();
+  const { activityDetail } = useActivityHook();
+
+  const getQrCode = async () => {
+    let res = await api.clockin.createClockInQrCode(params?.counterCode);
+    return res?.data || "";
+  };
+
+  const { data: qrCode } = useRequest(getQrCode, {
+    pollingInterval: 10000,
+  });
 
   return (
     <View
       className="w-full min-h-screen"
       style={{
-        background:
-          "url(https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/sign/qrCodeBg.jpg)",
+        background: `url(${config.imgBaseUrl}/sign/qrCodeBg.jpg)`,
         backgroundSize: "100% 100%",
       }}
     >
@@ -28,7 +41,7 @@ const Index = () => {
 
       <View className="w-640 mt-55 ml-55 pb-80 text-white">
         <View className="w-full flex justify-end text-20">
-          <View className="underline">活动规则</View>
+          <RulePopup imageUrl={activityDetail.ruleImage}></RulePopup>
         </View>
 
         <View className="w-full mt-62 text-54 text-center">
@@ -44,7 +57,7 @@ const Index = () => {
         </View>
         <View className="w-356 ml-142 h-356 mt-81 bg-white">
           <CQRCodeCustom
-            text="111"
+            text={qrCode}
             width={356}
             height={356}
             padding={20}

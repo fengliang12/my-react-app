@@ -69,3 +69,15 @@ declare interface ActivityForm {
 }
 
 declare var __wxConfig: any;
+declare let App: any;
+declare let Page: any;
+
+/**
+ * 自定义扩展信息
+ */
+interface ExtendInfo {
+  code?: string;
+  name?: string;
+  value?: string;
+  [property: string]: any;
+}

@@ -33,7 +33,6 @@ instance.interceptors.response.use(
     return res;
   },
   (err: any) => {
-    console.log(err);
     Taro.hideLoading();
     // token失效
     if (err.status === 400 && config.refreshCodeList?.includes(err.data.code)) {

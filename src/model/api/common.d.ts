@@ -91,7 +91,7 @@ declare namespace Api {
         /**
          * 行为值
          */
-        value: string;
+        value?: string;
       }
     }
 

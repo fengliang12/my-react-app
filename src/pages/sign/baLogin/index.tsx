@@ -1,19 +1,33 @@
 import { Input, Text, View } from "@tarojs/components";
+import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
 
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
+import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
+
+import RulePopup from "../components/RulePopup";
+import useActivityHook from "../hooks/activity";
 
 const Index = () => {
-  useEffect(() => {});
-  const [inputValue, setInputValue] = useState<string>("");
+  const [counterCode, setCounterCode] = useState<string>("00300123");
+  const { activityDetail, extendInfos } = useActivityHook();
+
+  /**
+   * 点击登录按钮
+   */
+  const onSubmit = useMemoizedFn(() => {
+    if (!counterCode) return toast("请输入门店编码");
+    to(`/pages/sign/qrCode/index?counterCode=${counterCode}`);
+  });
 
   return (
     <View
       className="w-full min-h-screen"
       style={{
-        background:
-          "url(https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/sign/indexBg.jpg)",
+        background: `url(${activityDetail?.backgroundImage})`,
         backgroundSize: "100% 100%",
       }}
     >
@@ -27,14 +41,14 @@ const Index = () => {
 
       <View className="w-640 mt-55 ml-55 pb-80">
         <View className="w-full flex justify-end text-white text-20">
-          <View className="underline">活动规则</View>
+          <RulePopup imageUrl={activityDetail.ruleImage}></RulePopup>
         </View>
 
         <View className="w-full h-886 mt-40">
           <CImage
             className="w-full h-full"
             mode="widthFix"
-            src="https://cna-uat-nars-oss.oss-cn-shanghai.aliyuncs.com/sign/indexKV.png"
+            src={`${config.imgBaseUrl}/${extendInfos?.main_img}`}
           ></CImage>
         </View>
 
@@ -50,15 +64,18 @@ const Index = () => {
             }}
             placeholder="请输入门店编码"
             placeholderClass="text-20 text-white"
-            value={inputValue}
+            value={counterCode}
             onInput={(e) => {
-              setInputValue(e.detail.value);
+              setCounterCode(e.detail.value);
             }}
           ></Input>
           <View className="w-full mt-22 text-left">例：2200004633</View>
         </View>
 
-        <View className="w-400 ml-120 mt-49 h-80 text-24 bg-white flex items-center justify-center">
+        <View
+          className="w-400 ml-120 mt-49 h-80 text-24 bg-white flex items-center justify-center"
+          onClick={onSubmit}
+        >
           确认登录
         </View>
       </View>
