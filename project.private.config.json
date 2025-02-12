@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/qy/index",
+          "pathName": "pages/qy/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "朋友圈",
           "pathName": "pages/friends/index",
           "query": "activityId=FnpPkLs7pexSjdzYzoHwCn&gdt_vid=test11111",

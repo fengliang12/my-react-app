@@ -8,6 +8,7 @@ export default {
     "pages/register/index",
     "pages/registerSecond/index",
     "pages/test/index",
+    "pages/qy/index",
     "pages/friends/index",
     "pages/apply/index",
     "pages/applyCoupon/index",
