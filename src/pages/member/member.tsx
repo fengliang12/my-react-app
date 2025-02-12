@@ -14,7 +14,7 @@ import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
-import { codeMapValue, isBetween, setShareParams } from "@/src/utils";
+import { isBetween, setShareParams } from "@/src/utils";
 import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
 import to from "@/src/utils/to";
 
@@ -31,7 +31,8 @@ const Index = () => {
   const [giftPop, setGiftPop] = useState<string>("");
   const loading = useRef<boolean>(false);
 
-  const { canActive, extendInfos } = useActivityHook();
+  const { canActive, extendInfos, addCustomerBehavior } =
+    useActivityHook("VIEW_HOMEPAGE");
 
   useAsyncEffect(async () => {
     if (!scene || loading.current) return;
@@ -136,7 +137,7 @@ const Index = () => {
   /**
    * 生日礼提交
    */
-  const confirmGift = () => {
+  const confirmGift = useMemoizedFn(() => {
     if (userInfo?.isMember) {
       if (userInfo.gradeName === "玩妆达人") {
         setGiftPop("sure_pop");
@@ -146,14 +147,14 @@ const Index = () => {
     } else {
       to(pageSettingConfig.registerPath, "navigateTo");
     }
-  };
+  });
 
   /**
    * 关闭弹窗
    */
-  const closeGiftPop = () => {
+  const closeGiftPop = useMemoizedFn(() => {
     setGiftPop("");
-  };
+  });
 
   return (
     <Page
@@ -166,12 +167,14 @@ const Index = () => {
     >
       <MemberCard showBindPopup={showBind}></MemberCard>
 
+      {/* 新品活动 */}
       {canActive && (
         <CImage
           src={`${config.imgBaseUrl}/${extendInfos?.enter_img}`}
           className="w-screen"
           mode="widthFix"
           onClick={() => {
+            addCustomerBehavior("CLICK_BANNER");
             if (!userInfo?.isMember) {
               showBind();
               return;

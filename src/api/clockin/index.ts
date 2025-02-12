@@ -6,8 +6,8 @@ const joinClockInFlag: Api.ClockIn.JoinClockInFlag.FuncT = () =>
   http.post(`/sp-portal/store/${config.storeCode}/clockin/joinFlag`);
 
 //生成活动二维码
-const createClockInQrCode = (data) =>
-  http.post(`/sp-portal/store/${config.storeCode}/clockin/code/10700001`, data);
+const createClockInQrCode = (counterCode) =>
+  http.post(`/sp-portal/store/${config.storeCode}/clockin/code/${counterCode}`);
 
 //打卡
 const submitClockInQrCode: Api.ClockIn.SubmitClockInQrCode.FuncT = (data) =>

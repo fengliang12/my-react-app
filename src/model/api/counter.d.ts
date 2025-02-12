@@ -16,6 +16,28 @@ declare namespace Api {
       }
     }
 
+    interface DetailInfo {
+      name: string;
+      pinyin: any;
+      businessHoursStart: string;
+      businessHoursEnd: string;
+      telephone: string;
+      payChannel: any;
+      type: string;
+      counterType: any;
+      orderDeliverType: string[];
+      payUrl: any;
+      appId: any;
+      mchId: any;
+      payCode: any;
+      payKey: any;
+      imageUrl: any;
+      imageList: any;
+      description: any;
+      mapDepartmentId: any;
+      managerImage: any;
+    }
+
     namespace GetCityList {
       type FuncT = () => MRP<Array<Item>>;
       type Item = {
@@ -51,6 +73,7 @@ declare namespace Api {
         channel: any;
         allowCounterGroups: any[];
         wareHouseId: any;
+        detailInfo: DetailInfo;
       };
 
       interface Address {
@@ -129,28 +152,6 @@ declare namespace Api {
         allowCounterGroups: any[];
         wareHouseId: any;
       };
-
-      interface DetailInfo {
-        name: string;
-        pinyin: any;
-        businessHoursStart: string;
-        businessHoursEnd: string;
-        telephone: string;
-        payChannel: any;
-        type: string;
-        counterType: any;
-        orderDeliverType: string[];
-        payUrl: any;
-        appId: any;
-        mchId: any;
-        payCode: any;
-        payKey: any;
-        imageUrl: any;
-        imageList: any;
-        description: any;
-        mapDepartmentId: any;
-        managerImage: any;
-      }
 
       interface Address {
         lat: number;

@@ -4,6 +4,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "朋友圈",
+          "pathName": "pages/friends/index",
+          "query": "activityId=3isAkgo1EWCRiT23PhnZAv&gdt_vid=test11111",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/register/index",
+          "pathName": "pages/register/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "签到ba的登录页面",
           "pathName": "pages/sign/baLogin/index",
           "query": "id=FHkC1dnqWi6rg3tRNp66pP",
@@ -49,13 +63,6 @@
           "name": "抽奖记录",
           "pathName": "subPages/drawLottery/records/index",
           "query": "id=",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "朋友圈",
-          "pathName": "pages/friends/index",
-          "query": "activityId=Mz8FQiKwWgtfsVdeguiqqy&gdt_vid=test11111",
           "launchMode": "default",
           "scene": null
         },

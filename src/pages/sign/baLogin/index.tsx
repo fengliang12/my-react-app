@@ -2,6 +2,7 @@ import { Input, Text, View } from "@tarojs/components";
 import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
 
+import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
@@ -12,15 +13,18 @@ import RulePopup from "../components/RulePopup";
 import useActivityHook from "../hooks/activity";
 
 const Index = () => {
-  const [counterCode, setCounterCode] = useState<string>("00300123");
+  const [counterCode, setCounterCode] = useState<string>("");
   const { activityDetail, extendInfos } = useActivityHook();
 
   /**
    * 点击登录按钮
    */
-  const onSubmit = useMemoizedFn(() => {
+  const onSubmit = useMemoizedFn(async () => {
     if (!counterCode) return toast("请输入门店编码");
-    to(`/pages/sign/qrCode/index?counterCode=${counterCode}`);
+    let res = await api.clockin.createClockInQrCode(counterCode);
+    if (res?.data) {
+      to(`/pages/sign/qrCode/index?counterCode=${counterCode}`);
+    }
   });
 
   return (

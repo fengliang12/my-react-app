@@ -1,9 +1,8 @@
 // import { getSceneObject, init } from "@lw/mini/utils";
 import Taro, { useRouter } from "@tarojs/taro";
-import { cloneDeep, isEmpty } from "lodash-es";
 
-import api from "@/src/api";
 import { getSceneObject } from "@/src/utils";
+import AddBehavior from "@/src/utils/addBehavior";
 
 type params = {
   button?: string; //触发按钮 ,
@@ -76,18 +75,37 @@ export const trackingFn = async (params: params) => {
     const remarkStr = Object.keys(remark)?.length
       ? JSON.stringify(remark)
       : undefined;
-    const pageName = "";
     Taro.getApp()
       .init()
       .then(() => {
-        api.common.addBehavior({
-          pageName,
-          ...params,
-          pagePath,
-          remark: remarkStr,
-          scene: String(res.scene),
-          channel,
-          clickId,
+        AddBehavior({
+          key: "PAGE_VIEW",
+          customInfos: [
+            {
+              name: "pagePath",
+              value: pagePath || "",
+            },
+            {
+              name: "query",
+              value: query || "",
+            },
+            {
+              name: "remark",
+              value: remarkStr || "",
+            },
+            {
+              name: "scene",
+              value: String(res.scene) || "",
+            },
+            {
+              name: "channel",
+              value: channel || "",
+            },
+            {
+              name: "clickId",
+              value: clickId || "",
+            },
+          ],
         });
       });
   } catch (err) {

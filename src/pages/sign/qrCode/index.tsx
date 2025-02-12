@@ -1,6 +1,8 @@
 import { View } from "@tarojs/components";
 import { useRouter } from "@tarojs/taro";
-import { useRequest } from "ahooks";
+import { useMemoizedFn, useRequest } from "ahooks";
+import dayjs from "dayjs";
+import { useMemo } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
@@ -14,14 +16,26 @@ const Index = () => {
   const { params } = useRouter();
   const { activityDetail } = useActivityHook();
 
-  const getQrCode = async () => {
+  const getQrCode = useMemoizedFn(async () => {
     let res = await api.clockin.createClockInQrCode(params?.counterCode);
     return res?.data || "";
-  };
+  });
 
   const { data: qrCode } = useRequest(getQrCode, {
     pollingInterval: 10000,
   });
+
+  const { data: counterInfo } = useRequest(async () => {
+    if (params?.counterCode) {
+      let res = await api.counter.getCounterDetail(params?.counterCode);
+      return res?.data || "";
+    }
+  }, {});
+
+  const timeStr = useMemo(() => {
+    let str = dayjs().add(10, "second").format("HH:mm:ss");
+    return str;
+  }, [qrCode]);
 
   return (
     <View
@@ -53,7 +67,7 @@ const Index = () => {
         </View>
 
         <View className="w-full mt-140 text-32 text-center box-border">
-          上海新天地
+          {counterInfo?.detailInfo?.name}
         </View>
         <View className="w-356 ml-142 h-356 mt-81 bg-white">
           <CQRCodeCustom
@@ -66,7 +80,7 @@ const Index = () => {
         </View>
 
         <View className="w-full mt-80 text-24 text-center">
-          活动码将于14:48:30更新 截图无效
+          活动码将于 {timeStr} 更新 截图无效
         </View>
         <View className="w-full mt-147 text-20 text-center">
           *活动将根据门店追踪打卡及积分发放数据，

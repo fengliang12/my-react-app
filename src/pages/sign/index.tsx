@@ -1,12 +1,20 @@
 import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useAsyncEffect, useMount, useRequest, useUpdateEffect } from "ahooks";
+import {
+  useBoolean,
+  useMemoizedFn,
+  useMount,
+  useRequest,
+  useUpdateEffect,
+} from "ahooks";
 import { useState } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
+import CPopup from "@/src/components/Common/CPopup";
 import config from "@/src/config";
+import useSubMsg from "@/src/hooks/useSubMsg";
 import authorize from "@/src/utils/authorize";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
@@ -15,48 +23,54 @@ import RulePopup from "./components/RulePopup";
 import useActivityHook from "./hooks/activity";
 
 const app: App.GlobalData = Taro.getApp();
-
 const Index = () => {
-  const { activityDetail, extendInfos } = useActivityHook();
-  const [joinFlag, setJoinFlag] = useState<boolean>(false);
-
+  const { activityDetail, extendInfos, canActive, addCustomerBehavior } =
+    useActivityHook("VIEW_CLOCKIN");
+  const [successPopup, { setTrue, setFalse }] = useBoolean(false);
   /** 请求参数 */
   const [getCounterParams, setGetCounterParams] =
     useState<Api.Counter.GetCounterNearList.IRequest>({
       type: "DIRECT_SALE",
     });
 
-  useAsyncEffect(async () => {
-    await app.init();
-    const res = await api.clockin.joinClockInFlag();
-    setJoinFlag(res.data);
-  }, []);
+  const [getLocation] = useState(
+    new authorize({
+      method: "getLocation",
+    }),
+  );
 
   /**
-   * 初始化
+   * 是否已经参与活动
    */
-  useMount(async () => {
-    const res = await new authorize({
-      method: "getLocation",
-    })
-      .runModal({
-        cancelShowModal: false, //用户第一次拒绝时立即弹窗提示需要获取权限
-        modalObj: {
-          show: true,
-          customModal: {
-            show: false, // 是否自定义组件
-          },
-        },
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const { data: joinFlag, run: getJoinFlag } = useRequest(async () => {
+    await app.init();
+    const res = await api.clockin.joinClockInFlag();
+    return res.data;
+  });
+
+  /**
+   * 定位
+   */
+  const getLocationFn = useMemoizedFn(async () => {
+    const res = await getLocation.runModal({
+      cancelShowModal: true, //用户第一次拒绝时立即弹窗提示需要获取权限
+      modalObj: {
+        show: true,
+      },
+    });
 
     setGetCounterParams((prev) => ({
       ...prev,
       lat: res?.latitude,
       lng: res?.longitude,
     }));
+  });
+
+  /**
+   * 初始化
+   */
+  useMount(async () => {
+    getLocationFn();
   });
 
   /** 获取柜台列表 */
@@ -80,28 +94,46 @@ const Index = () => {
   /**
    * 拉起导航
    */
-  const onOpenLocation = (
-    counter: Api.Counter.GetCounterNearList.NearbyCounter,
-  ) => {
-    if (!counter.address.lat && !counter.address.lng)
-      return toast("无法导航到当前门店");
-    Taro.openLocation({
-      latitude: counter.address.lat,
-      longitude: counter.address.lng,
-      name: counter.detailInfo.name,
-      address: counter.address.address,
-    });
-  };
+  const onOpenLocation = useMemoizedFn(
+    (counter: Api.Counter.GetCounterNearList.NearbyCounter) => {
+      if (!counter.address.lat && !counter.address.lng)
+        return toast("无法导航到当前门店");
+      Taro.openLocation({
+        latitude: counter.address.lat,
+        longitude: counter.address.lng,
+        name: counter.detailInfo.name,
+        address: counter.address.address,
+      });
+    },
+  );
 
-  const onSubmit = () => {
+  /**
+   * 立即打卡
+   * @returns
+   */
+  const subMsg = useSubMsg();
+  const onSubmit = useMemoizedFn(async () => {
+    addCustomerBehavior("CLICK_SUBMIT");
+
+    if (!canActive) return toast("您暂无活动参与资格");
+    if (joinFlag) return toast("您已参与活动");
     const system = Taro.getSystemInfoSync();
     if (!system.locationEnabled || !system.locationAuthorized) {
       toast("手机-设置-微信-位置授权 未开启");
       return;
     }
 
-    if (joinFlag) return;
+    if (!getCounterParams.lat) {
+      getLocationFn();
+      return;
+    }
 
+    if (counterList?.[0]?.distance > extendInfos?.distance) {
+      toast("请前往门店打卡");
+      return;
+    }
+
+    await subMsg("POINTS_CHANGE");
     // 扫码签到
     Taro.scanCode({
       success: async (res) => {
@@ -112,13 +144,16 @@ const Index = () => {
             code: res.result,
           });
           console.log(result);
+          getJoinFlag();
+          setTrue();
         }
       },
       fail: (err) => {
         console.log(err);
       },
     });
-  };
+  });
+
   return (
     <View
       className="w-full min-h-screen"
@@ -135,15 +170,23 @@ const Index = () => {
         titleColor="#FFFFFF"
       ></CHeader>
 
-      <View className="w-640 mt-55 ml-55 pb-80">
+      <View className="w-640 mt-55 ml-55 pb-60">
         <View className="w-full flex justify-between text-white text-20">
           <View
             className="underline"
-            onClick={() => to("/subPages/common/pointsDetail/index")}
+            onClick={() => {
+              addCustomerBehavior("CLICK_POINT");
+              to("/subPages/common/pointsDetail/index");
+            }}
           >
             积分明细
           </View>
-          <RulePopup imageUrl={activityDetail.ruleImage}></RulePopup>
+          <RulePopup
+            imageUrl={activityDetail.ruleImage}
+            callbackFn={() => {
+              addCustomerBehavior("CLICK_RULE");
+            }}
+          ></RulePopup>
         </View>
 
         <View className="w-full h-886 mt-40">
@@ -160,7 +203,14 @@ const Index = () => {
         >
           <View
             className="w-full h-91 flex justify-between items-center px-20 box-border"
-            onClick={() => onOpenLocation(counterList?.[0])}
+            onClick={() => {
+              addCustomerBehavior("CLICK_LBS");
+              if (getCounterParams?.lat) {
+                onOpenLocation(counterList?.[0]);
+              } else {
+                getLocationFn();
+              }
+            }}
           >
             <View
               className="w-77 h-42 rounded-42 mr-28 flex items-center justify-center"
@@ -168,16 +218,26 @@ const Index = () => {
             >
               附近
             </View>
-            <View className="flex-1">{counterList?.[0]?.detailInfo?.name}</View>
+
+            <View className="flex-1">
+              {getCounterParams?.lat
+                ? counterList?.[0]?.detailInfo?.name
+                : "前往授权位置信息"}
+            </View>
             <View className="flex items-center ml-10">{`${
-              counterList?.[0]?.distance?.toFixed(2) ?? 0.0
+              getCounterParams?.lat
+                ? counterList?.[0]?.distance?.toFixed(2) ?? 0.0
+                : 0
             }km >`}</View>
           </View>
           <View className="w-full h-1 bg-white"></View>
           <View className="w-full h-68 vhCenter">
             <Text
               className="underline"
-              onClick={() => to("/subPages/nearby-stores/index")}
+              onClick={() => {
+                addCustomerBehavior("CLICK_COUNTER");
+                to("/subPages/nearby-stores/index");
+              }}
             >
               查看更多门店
             </Text>
@@ -211,16 +271,44 @@ const Index = () => {
           如有疑问，请点击咨询
           <Text
             className="underline"
-            onClick={() =>
+            onClick={() => {
+              addCustomerBehavior("CLICK_RECOMMAND");
               to(
                 "/pages/h5/index?url=https://cnaipswx1v1-stg.shiseido.cn/nars/home",
-              )
-            }
+              );
+            }}
           >
             专属彩妆师
           </Text>
         </View>
       </View>
+
+      {/* 成功弹窗 */}
+      {successPopup && (
+        <CPopup maskClose closePopup={setFalse}>
+          <View
+            className="w-640 bg-white rounded-0 overflow-hidden"
+            style={{ transform: "translateY(-10%)" }}
+          >
+            <CImage
+              className="w-full h-full"
+              mode="widthFix"
+              src={`${config.imgBaseUrl}/${extendInfos?.success_img}`}
+            ></CImage>
+            <View
+              className="absolute w-80 h-80 top-0 right-0 vhCenter"
+              onClick={setFalse}
+            ></View>
+            <View
+              className="absolute w-400 h-80 bottom-80 left-120"
+              onClick={() => {
+                addCustomerBehavior("CLICK_EXCHANGE");
+                to("/subPages/redeem/index", "redirectTo");
+              }}
+            ></View>
+          </View>
+        </CPopup>
+      )}
     </View>
   );
 };
