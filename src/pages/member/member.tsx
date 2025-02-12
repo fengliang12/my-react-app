@@ -170,7 +170,7 @@ const Index = () => {
       {/* 新品活动 */}
       {canActive && (
         <CImage
-          src={`${config.imgBaseUrl}/${extendInfos?.enter_img}`}
+          src={`${extendInfos?.enter_img}`}
           className="w-screen"
           mode="widthFix"
           onClick={() => {

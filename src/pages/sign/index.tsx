@@ -193,7 +193,7 @@ const Index = () => {
           <CImage
             className="w-full h-full"
             mode="widthFix"
-            src={`${config.imgBaseUrl}/${extendInfos?.main_img}`}
+            src={`${extendInfos?.main_img}`}
           ></CImage>
         </View>
 
@@ -293,7 +293,7 @@ const Index = () => {
             <CImage
               className="w-full h-full"
               mode="widthFix"
-              src={`${config.imgBaseUrl}/${extendInfos?.success_img}`}
+              src={`${extendInfos?.success_img}`}
             ></CImage>
             <View
               className="absolute w-80 h-80 top-0 right-0 vhCenter"

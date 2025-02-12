@@ -42,8 +42,10 @@ const useActivityHook = (pageType?: string) => {
    */
   const addCustomerBehavior = useMemoizedFn(async (key: string) => {
     let userInfo = await app.init();
+    const res = Taro.getLaunchOptionsSync();
+    const { scene } = res;
+
     await addBehavior({
-      /** 渠道标识(公众号、小程序、PC、线下门店) = ['wm', 'wa', 'pc', 'store'] */
       channelId: "wa",
       customInfos: [
         {
@@ -53,6 +55,10 @@ const useActivityHook = (pageType?: string) => {
         {
           name: "member_id", //已经注册登录才上报
           value: userInfo?.memberId ?? "",
+        },
+        {
+          name: "scene",
+          value: String(scene) ?? "",
         },
       ],
       inValid: false,
