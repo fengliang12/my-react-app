@@ -83,7 +83,7 @@ declare namespace Api {
      * 埋点
      */
     namespace AddBehavior {
-      type FuncT = (data: RequestBody) => MRP<any>;
+      type FuncT = (data: Partial<RequestBody>) => MRP<any>;
       interface RequestBody {
         activityId?: string;
         type?: string;

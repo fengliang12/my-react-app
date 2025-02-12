@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "朋友圈",
+          "pathName": "pages/friends/index",
+          "query": "activityId=FnpPkLs7pexSjdzYzoHwCn&gdt_vid=test11111",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/user/index",
           "pathName": "pages/user/index",
           "query": "",
@@ -28,13 +35,6 @@
           "name": "抽奖记录",
           "pathName": "subPages/drawLottery/records/index",
           "query": "id=",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "朋友圈",
-          "pathName": "pages/friends/index",
-          "query": "activityId=Mz8FQiKwWgtfsVdeguiqqy&gdt_vid=test11111",
           "launchMode": "default",
           "scene": null
         },

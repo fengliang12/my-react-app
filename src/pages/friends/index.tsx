@@ -78,7 +78,7 @@ const Index = () => {
     if (!activityId) return toast("活动ID未配置");
     let { code } = params;
     if (code === "applyGift") {
-      addUserActions("RESERVATION");
+      addUserActions("LANDING_PAGE_CLICK");
       AddBehavior({
         activityId: activityId,
         type: "APPLY_CLICK_NUM",
@@ -255,7 +255,7 @@ const Index = () => {
       await api.apply.takeTag({
         customerId: userInfo?.id || "",
       });
-      addUserActions("CONFIRM_EFFECTIVE_LEADS");
+      addUserActions("RESERVATION");
       AddBehavior({
         activityId: activityId,
         type: "APPLY_SUCCESS_NUM",

@@ -19,11 +19,11 @@ export const createInit = () => {
             : api.common.login(code, { checkMember: true }),
         )
         .then(async ({ data }) => {
+          Taro.setStorageSync("token", data.jwtString);
+
           if (data.customerBasicInfo.member && shuYunMember) {
             await getShuYunMemberInfo();
           }
-
-          Taro.setStorageSync("token", data.jwtString);
 
           let userInfo = {
             mobile: data.customerBasicInfo?.mobile || "",
