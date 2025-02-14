@@ -7,7 +7,7 @@ import {
   useRequest,
   useUpdateEffect,
 } from "ahooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
@@ -107,6 +107,10 @@ const Index = () => {
     },
   );
 
+  useUpdateEffect(() => {
+    if (!canActive) return toast("活动仅限玩妆达人/先锋/大师参与");
+  }, [canActive]);
+
   /**
    * 立即打卡
    * @returns
@@ -115,7 +119,7 @@ const Index = () => {
   const onSubmit = useMemoizedFn(async () => {
     addCustomerBehavior("CLICK_SUBMIT");
 
-    if (!canActive) return toast("您暂无活动参与资格");
+    if (!canActive) return toast("活动仅限玩妆达人/先锋/大师参与");
     if (joinFlag) return toast("您已参与活动");
     const system = Taro.getSystemInfoSync();
     if (!system.locationEnabled || !system.locationAuthorized) {

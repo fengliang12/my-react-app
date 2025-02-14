@@ -6,7 +6,7 @@
         {
           "name": "朋友圈",
           "pathName": "pages/friends/index",
-          "query": "activityId=3isAkgo1EWCRiT23PhnZAv&gdt_vid=test11111",
+          "query": "activityId=FnpPkLs7pexSjdzYzoHwCn&gdt_vid=test11111",
           "launchMode": "default",
           "scene": null
         },
@@ -182,7 +182,7 @@
     }
   },
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
     "useIsolateContext": false,
     "compileHotReLoad": false,
     "preloadBackgroundData": false,

@@ -4,15 +4,13 @@ import { useMemo, useState } from "react";
 
 import api from "@/src/api";
 import { codeMapValue } from "@/src/utils";
-import addBehavior from "@/src/utils/addBehavior";
-import toast from "@/src/utils/toast";
 
 const app: App.GlobalData = Taro.getApp();
 
 const useActivityHook = (pageType?: string) => {
   const [activityDetail, setActivityDetail] = useState<any>({});
   const [activityId, setActivityId] = useState<string>("");
-  const [canActive, setCanActive] = useState<boolean>(false);
+  const [canActive, setCanActive] = useState<boolean>();
 
   useAsyncEffect(async () => {
     let userInfo = await app.init();
@@ -28,7 +26,7 @@ const useActivityHook = (pageType?: string) => {
       setActivityDetail(res1?.data);
       setCanActive(res1?.data?.tags.includes(userInfo?.gradeName));
     } else {
-      toast("数据字典中没有配置活动编码");
+      console.log("数据字典中没有配置活动编码");
     }
   }, []);
 
@@ -44,8 +42,9 @@ const useActivityHook = (pageType?: string) => {
     let userInfo = await app.init();
     const res = Taro.getLaunchOptionsSync();
     const { scene } = res;
+    console.log("打卡埋点", key);
 
-    await addBehavior({
+    await api.behavior.behavior({
       channelId: "wa",
       customInfos: [
         {
