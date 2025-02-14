@@ -371,7 +371,7 @@ const Index = () => {
         back
         fill
         title="NARS"
-        backgroundColor="rgba(0,0,0,0)"
+        backgroundColor="rgba(0,0,0)"
         titleColor="#FFFFFF"
       ></CHeader>
       <Layout
