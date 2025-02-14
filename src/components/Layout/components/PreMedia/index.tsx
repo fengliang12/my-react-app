@@ -1,21 +1,22 @@
-import { Image, Video } from '@tarojs/components'
-import { useMemo } from 'react'
-import { getUrl } from '../../helper'
+import { Image, Video } from '@tarojs/components';
+import React, { useMemo } from 'react';
+
+import { getUrl } from '../../helper';
 
 type PreMediaType = {
   medias: {
-    type: 'image' | 'video'
-    url: string
-  }[]
-}
+    type: 'image' | 'video';
+    url: string;
+  }[];
+};
 
 const PreMedia: React.FC<PreMediaType> = ({ medias = [] }) => {
   const list = useMemo(() => {
-    return medias.map(x => {
-      x.url = getUrl(x.url)
-      return x
-    })
-  }, [medias])
+    return medias.map((x: any) => {
+      x.url = getUrl(x.url);
+      return x;
+    });
+  }, [medias]);
   return (
     <>
       {list.map((item: any) => {
@@ -25,7 +26,7 @@ const PreMedia: React.FC<PreMediaType> = ({ medias = [] }) => {
               src={item.url}
               style={{ position: 'fixed', left: -99999999 }}
             ></Image>
-          )
+          );
         }
         if (item.type === 'video') {
           return (
@@ -33,12 +34,12 @@ const PreMedia: React.FC<PreMediaType> = ({ medias = [] }) => {
               src={item.url}
               style={{ position: 'fixed', left: -99999999 }}
             ></Video>
-          )
+          );
         }
-        return <></>
+        return <></>;
       })}
     </>
-  )
-}
+  );
+};
 
-export default PreMedia
+export default PreMedia;

@@ -1,36 +1,55 @@
-import { isPlainObject, deepMerge } from './util'
-import { Method } from '../types/index'
+import { Method } from '../types/index';
+import { deepMerge, isPlainObject } from './util';
 
 function normalizeHeaderName(headers: any, normalizedName: string): void {
-  if (!headers) { return }
+  if (!headers) {
+    return;
+  }
   Object.keys(headers).forEach(name => {
-    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-      headers[normalizedName] = headers[name]
-      delete headers[name]
+    if (
+      name !== normalizedName &&
+      name.toUpperCase() === normalizedName.toUpperCase()
+    ) {
+      headers[normalizedName] = headers[name];
+      delete headers[name];
     }
-  })
+  });
 }
 export function processHeaders(headers: any, data: any): any {
-  normalizeHeaderName(headers, 'Content-Type')
+  normalizeHeaderName(headers, 'Content-Type');
   if (isPlainObject(data)) {
     if (headers && !headers['Content-Type']) {
-      headers['Content-Type'] = 'application/json;charset=utf-8'
+      headers['Content-Type'] = 'application/json;charset=utf-8';
     }
   }
-  return headers
+  return headers;
 }
 export function flattenHeaders(headers: any, method: Method): any {
-  const methodLower = method.toLowerCase()
+  const methodLower = method.toLowerCase();
   if (!headers) {
-    return headers
+    return headers;
   }
-  headers = deepMerge(headers.common || {}, headers[methodLower] || {}, headers)
+  headers = deepMerge(
+    headers.common || {},
+    headers[methodLower] || {},
+    headers
+  );
 
-  const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'trace', 'connect', 'common']
+  const methodsToDelete = [
+    'delete',
+    'get',
+    'head',
+    'options',
+    'post',
+    'put',
+    'trace',
+    'connect',
+    'common'
+  ];
 
   methodsToDelete.forEach(_method => {
-    delete headers[_method]
-  })
+    delete headers[_method];
+  });
 
-  return headers
+  return headers;
 }

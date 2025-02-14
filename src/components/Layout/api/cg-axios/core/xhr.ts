@@ -1,15 +1,32 @@
-import Taro from '@tarojs/taro'
-import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from "../types/index";
+import Taro from '@tarojs/taro';
+
+import {
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse
+} from '../types/index';
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { data, url, method = 'GET', headers, responseType, dataType, timeout, cancelToken, filePath, name = 'file', formData } = config
+    const {
+      data,
+      url,
+      method = 'GET',
+      headers,
+      responseType,
+      dataType,
+      timeout,
+      cancelToken,
+      filePath,
+      name = 'file',
+      formData
+    } = config;
     Object.keys(headers).forEach(item => {
       if (!data && item.toLowerCase() === 'content-type') {
-        delete headers[item]
+        delete headers[item];
       }
-    })
-    let task = Object.create(null)
+    });
+    let task = Object.create(null);
     if (method === 'UPLOAD') {
       task = Taro.uploadFile({
         url,
@@ -24,21 +41,21 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
             status: res.statusCode,
             statusText: res.errMsg,
             config: { method, ...config }
-          }
-          handleResponse(response)
+          };
+          handleResponse(response);
         },
         fail(err: any) {
           reject({
             data: {
               code: -1,
-              message: "网络异常，请稍后重试"
+              message: '网络异常，请稍后重试'
             },
             status: -1,
             statusText: err.errMsg,
             config: { method, ...config }
-          })
+          });
         }
-      })
+      } as any);
     } else {
       task = Taro.request({
         url,
@@ -55,40 +72,39 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
             statusText: res.errMsg,
             headers: res.header,
             config: { method, ...config }
-          }
-          handleResponse(response)
+          };
+          handleResponse(response);
         },
         fail(err: any) {
           reject({
             data: {
               code: -1,
-              message: "网络异常，请稍后重试"
+              message: '网络异常，请稍后重试'
             },
             status: -1,
             statusText: err.errMsg,
             config: { method, ...config }
-          })
+          });
         }
-      })
+      } as any);
     }
-    processCancel()
+    processCancel();
     function processCancel(): void {
       if (cancelToken) {
         cancelToken.promise
           .then(reason => {
-            task.abort()
-            reject(reason)
+            task.abort();
+            reject(reason);
           })
-          .catch(() => { })
+          .catch(() => {});
       }
     }
     function handleResponse(response: AxiosResponse): void {
       if (response.status >= 200 && response.status < 300) {
-        resolve(response)
+        resolve(response);
       } else {
-        reject(response)
+        reject(response);
       }
     }
-  })
+  });
 }
-

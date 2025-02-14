@@ -1,23 +1,34 @@
-import { MovableView } from '@tarojs/components'
+import { MovableView } from '@tarojs/components';
+import Taro from '@tarojs/taro';
+import { useUpdateEffect } from 'ahooks';
 import { cloneDeep, pick } from 'lodash-es';
-import { CSSProperties, useMemo } from 'react'
+import React, { CSSProperties, useMemo, useState } from 'react';
+import { getBaseStyle, getDomId } from '../../helper';
+
 import useStore from '../../hooks/useStore';
 
-
 type MovableProps = {
-  comId?: string
-  movable?: Edit.IMovable;
+  comId?: string;
+  movable?: any;
   comStyle?: CSSProperties;
-  openMovableAreaHeight100VH?: boolean
-  children: any
+  openMovableAreaHeight100VH?: boolean;
+  children: any;
 };
 
-const Movable: React.FC<MovableProps> = ({ movable = null, comId = "", comStyle = {},openMovableAreaHeight100VH, children }) => {
-  const { updateStyle } = useStore({ id: comId })
+const Movable: React.FC<MovableProps> = ({
+  movable = {},
+  comId = '',
+  comStyle = {},
+  openMovableAreaHeight100VH,
+  children
+}) => {
+
+  const { updateStyle } = useStore({ id: comId });
+  const [height, setHeight] = useState('auto')
   const movableStyle: CSSProperties = useMemo(() => {
-    let result: CSSProperties = {}
+    let result: CSSProperties = {};
     if (movable) {
-      const baseStyle = cloneDeep(comStyle)
+      const baseStyle = cloneDeep(getBaseStyle(comStyle));
       result = pick(baseStyle, [
         'width',
         'height',
@@ -27,29 +38,51 @@ const Movable: React.FC<MovableProps> = ({ movable = null, comId = "", comStyle 
         'right',
         'bottom',
         'zIndex',
-        'transition',
-      ])
+        'transition'
+      ]);
       if (!result.width) {
-        result.width = 'auto'
+        result.width = 'auto';
       }
       if (!result.height) {
-        result.height = 'auto'
+        result.height = height ?? 'auto';
       }
-      result.position = 'absolute'
+      result.position = 'absolute';
     }
     return {
       ...result,
-      pointerEvents: 'auto'
-    }
-  }, [movable, comStyle])
+      pointerEvents: 'auto',
+      ...(updateStyle ?? {})
+    };
+  }, [movable, comStyle, updateStyle, height]);
+
+  useUpdateEffect(() => {
+    Taro.nextTick(() => {
+      const query = Taro.createSelectorQuery();
+      query.select(`#${getDomId(comId)}`)
+        .boundingClientRect()
+        .exec((res) => {
+          if (res?.[0]?.height) {
+            setHeight(res[0].height)
+          }
+        });
+    })
+  }, [comStyle, updateStyle])
+
   return (
     <>
-      {movable && <MovableView y={openMovableAreaHeight100VH ? '0rpx' : '1000rpx'} style={{ ...movableStyle, ...(updateStyle ?? {}) }} {...movable}>
-        {children}
-      </MovableView>}
-      {!movable && children}
+      {movable && (
+        <MovableView
+          y={openMovableAreaHeight100VH ? '0rpx' : '1000rpx'}
+          style={movableStyle}
+          {...movable}
+        >
+          {children}
+        </MovableView>
+      )
+      }
+      { !movable && children}
     </>
-  )
-}
+  );
+};
 
-export default Movable
+export default Movable;

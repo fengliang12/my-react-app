@@ -1,6 +1,6 @@
-import { AxiosRequestConfig, Method } from './types/index'
-import { processHeaders } from './helpers/headers'
-import { transformRequest, transformResponse } from './helpers/data'
+import { transformRequest, transformResponse } from './helpers/data';
+import { processHeaders } from './helpers/headers';
+import { AxiosRequestConfig, Method } from './types/index';
 
 const defaults: AxiosRequestConfig = {
   method: 'GET',
@@ -12,29 +12,35 @@ const defaults: AxiosRequestConfig = {
   },
   transformRequest: [
     function (data: any, headers: any): any {
-      processHeaders(headers, data)
-      return transformRequest(data)
+      processHeaders(headers, data);
+      return transformRequest(data);
     }
   ],
 
   transformResponse: [
     function (data: any): any {
-      return transformResponse(data)
+      return transformResponse(data);
     }
   ]
-}
-const methodsNoData: Array<Method> = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'TRACE']
+};
+const methodsNoData: Array<Method> = [
+  'DELETE',
+  'GET',
+  'HEAD',
+  'OPTIONS',
+  'TRACE'
+];
 
 methodsNoData.forEach(method => {
-  const methodLower = method.toLowerCase()
-  defaults.headers[methodLower] = {}
-})
+  const methodLower = method.toLowerCase();
+  defaults.headers[methodLower] = {};
+});
 
-const methodsWithData: Array<Method> = ['POST', 'PUT', 'CONNECT']
+const methodsWithData: Array<Method> = ['POST', 'PUT', 'CONNECT'];
 
 methodsWithData.forEach(method => {
-  const methodLower = method.toLowerCase()
-  defaults.headers[methodLower] = {}
-})
+  const methodLower = method.toLowerCase();
+  defaults.headers[methodLower] = {};
+});
 
-export default defaults
+export default defaults;

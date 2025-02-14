@@ -29,6 +29,8 @@ declare namespace Edit {
       plane: T[];
       /** 平面层热区数据 */
       hot: IHot[];
+      /** 挂件 */
+      pendant: T[];
     };
     /** 自定义数据 */
     customData: any[];
@@ -59,47 +61,47 @@ declare namespace Edit {
        */
       status: {
         /** 组件id */
-        id: string
+        id: string;
         /** 关联状态合集 */
         list: {
-          key: string,
-          hide: string[],
-        }[]
-      }[]
+          key: string;
+          hide: string[];
+        }[];
+      }[];
       /** 页面所有需要预解析的媒体 */
       preMedia: {
-        type: 'image' | 'video',
-        url: string
-      }[],
+        type: "image" | "video";
+        url: string;
+      }[];
       /** 组件所有视频的高度 */
       videoHeight: {
-        id: string
-        height: string
-      }[],
+        id: string;
+        height: string;
+      }[];
       /** 预解析关联轮播数据 */
       swiperRelation: {
-        id: string
-        count: number
-      }[]
+        id: string;
+        count: number;
+      }[];
       /** 店铺公告的预解析数据 */
       notice: {
-        id: string
-        width: number
-        interval: number
-      }[]
+        id: string;
+        width: number;
+        interval: number;
+      }[];
       /** 全屏状态 */
-      openFullScreen?: "close" | "open" | "zoom";
+      openFullScreen?: "close" | "open" | "open-move" | "zoom";
       /** 业务模板 */
       customTemp?: {
-        id: string
-        code: string
+        id: string;
+        code: string;
         data: {
-          code: string
-          value: string
-          index: number
-          type: 'image' | 'video' | 'text' | 'richText'
+          code: string;
+          value: string;
+          index: number;
+          type: "image" | "video" | "text" | "richText";
         }[];
-      }[]
+      }[];
       /** 直播组件相关数据 */
       lives?: {
         id: string;
@@ -109,53 +111,53 @@ declare namespace Edit {
         type?: string;
         subscribeId?: string;
         data: {
-          type: 'unstart' | 'live' | 'end'
+          type: "unstart" | "live" | "end";
           countId: string;
           statusId: string;
           baseCount: number;
-          statusName: string
-        }[]
-      }[]
+          statusName: string;
+        }[];
+      }[];
       /** 电梯相关数据 */
       eles?: {
-        selIndex: number
+        selIndex: number;
         tops: {
-          id: string
-          actions: IActions[]
-        }[]
-      }[]
+          id: string;
+          actions: IActions[];
+        }[];
+      }[];
       /** 观察者主题合集 */
       subjects?: {
-        comId: string
-        type: 'touchTB' | 'touchLR',
-        value: number
-        totalLength: number
-        needComputed: boolean
+        comId: string;
+        type: "touchTB" | "touchLR";
+        value: number;
+        totalLength: number;
+        needComputed: boolean;
         observers: {
-          id: string
-          type: 'style' | 'component'
-          value: number
+          id: string;
+          type: "style" | "component";
+          value: number;
           /** 大于 */
           gt: {
-            style: IStyle
-            component: IActionComponent
-          }
+            style: IStyle;
+            component: IActionComponent;
+          };
           /** 等于 */
           eq: {
-            style: IStyle
-            component: IActionComponent
-          }
+            style: IStyle;
+            component: IActionComponent;
+          };
           /** 小于 */
           lt: {
-            style: IStyle
-            component: IActionComponent
-          }
-        }[]
-      }[]
+            style: IStyle;
+            component: IActionComponent;
+          };
+        }[];
+      }[];
       /** 自定义字段 */
-      customData?: any
+      customData?: any;
     };
-  }
+  };
   /** 模板实例 id 数组 */
   type ITemplateExampleIds = string;
 
@@ -163,7 +165,7 @@ declare namespace Edit {
   type ITemplateToPage = IPage<ITemplateExample>;
 
   /** 模板配置 */
-  interface ITemplate {
+  type ITemplate = {
     /** 模板Id */
     id: string;
     /** 模板code */
@@ -178,25 +180,52 @@ declare namespace Edit {
     customCode: string;
     /** 自定义数据 */
     customData: {
-      code: string
-      value: string
-      index: number
-      type: 'image' | 'video' | 'text' | 'richText'
+      code: string;
+      value: string;
+      index: number;
+      type: "image" | "video" | "text" | "richText";
     }[];
     /** 直播房间号 */
-    liveRoomId: string
+    liveRoomId: string;
     /** 电梯配置 */
     ele: {
-      auto: boolean
-      selIndex: number
-    }
+      auto: boolean;
+      selIndex: number;
+    };
     /** 模板快照 */
     snapshot: string;
     /** 模板数据 */
     data: IComponents[];
+    /** 扩展字段 */
+    extendInfo?: {
+      /** 版本 */
+      version?: number;
+      /** 显示规则 */
+      showRule: {
+        /** 事时间规则类型
+         *  1.每次进入页面显示一次
+         *  2.每天显示一次
+         */
+        timeType?: number;
+        /** 设置当天显示有效期 */
+        timeValue?: string[];
+        /** 空间规则类型
+         *  1.手机第一屏显示
+         *  2.手机非第一屏显示
+         *  3.指定高度区间显示
+         */
+        spaceType?: number;
+        /** 指定开始高度 */
+        spaceHeightStart?: number;
+        /** 指定结束高度 */
+        spaceHeightEnd?: number;
+      };
+      /** 挂件信息 */
+      pendants: any[];
+    };
     /** 模板数据的映射属性 */
     mapping: Edit.IMapping;
-  }
+  };
   /* 移动属性-目前只支持窗口层模板 */
   type IMovable = {
     disabled: boolean;
@@ -209,7 +238,7 @@ declare namespace Edit {
     scaleMin: number;
     scaleMax: number;
     scaleValue: number;
-  }
+  };
   /** 置顶属性-目前只支持平面层模板 */
   type ITopdata = {
     /** 组件Id */
@@ -246,8 +275,7 @@ declare namespace Edit {
     event: IEvent[];
     /** 互斥事件 */
     exclusiveEvent: IEvent[];
-
-  }
+  };
 
   type ITemplateExample = ITemplate & {
     /**
@@ -279,7 +307,7 @@ declare namespace Edit {
     openShare: boolean;
     /** 页面背景色 */
     background: string;
-  }
+  };
 
   /** 分享配置 */
   type IShare = {
@@ -289,7 +317,7 @@ declare namespace Edit {
     path: string;
     /** 图片路径 */
     imageUrl: string;
-  }
+  };
 
   /** 组件
    *  1、元组件区分容器元组件和非容器元组件
@@ -313,7 +341,7 @@ declare namespace Edit {
     /** 样式 */
     style: IStyle;
     /** React样式 */
-    reactStyle: React.CSSProperties
+    reactStyle: React.CSSProperties;
     /** 数据源 */
     data?: {
       /** 静态 */
@@ -322,11 +350,22 @@ declare namespace Edit {
       dynamic: any;
     };
     /** 自定义字段 */
-    customData?: any
+    customData?: {
+      /** 动态数据 */
+      dynamics: {
+        // 动态类型
+        type: "value" | "condition" | "list";
+        // 条件表达式
+        conditionExpression?: string;
+        // 动态数据Key
+        dataKey: any;
+      }[];
+      [key: string]: any;
+    };
     /** 轮播导航数据 */
     swiperNav?: {
       /** 导航类型 */
-      type: "point" | "line" | "image" | 'move-line';
+      type: "point" | "line" | "image" | "move-line";
       /** 关联轮播的组件Id */
       swiperId: string;
       /** 关联轮播的子元素数量 */
@@ -338,33 +377,33 @@ declare namespace Edit {
       /** 导航图片数据 */
       currentImgs: string[];
       /** 样式 */
-      currentStyle: IStyle
+      currentStyle: IStyle;
     };
     /** 轮播Current样式变更 */
     swiperCurrent?: {
       /** 轮播模板Code */
-      swiperCode: string
+      swiperCode: string;
       /** 关联轮播的组件Id */
-      swiperId: string
+      swiperId: string;
       /** 关联轮播的子元素数量 */
-      swiperCount: number
+      swiperCount: number;
       /** 当前SwiperItem对应的索引 */
-      current: number
+      current: number;
       /** 当前SwiperItem里面元素对应的索引 */
-      index: number
+      index: number;
       /** 未选中模板样式 */
-      unCheckedStyle: IStyle
+      unCheckedStyle: IStyle;
       /** 选中模板样式 */
-      checkedStyle: IStyle
+      checkedStyle: IStyle;
     };
     /** 关联数据 */
-    relation?: string[]
-    /** 开启全屏 */
-    openFullScreen?: "close" | "open" | "zoom";
+    relation?: string[];
+    /** 全屏状态 */
+    openFullScreen?: "close" | "open" | "open-move" | "zoom";
     /** 直播状态 */
-    liveStatus?: number[]
+    liveStatus?: number[];
     /** 当前索引情况 */
-    currentIndex?: number
+    currentIndex?: number;
     /** View组件属性 */
     view?: IView;
     /** 图片组件属性 */
@@ -385,7 +424,7 @@ declare namespace Edit {
     children: IComponents[];
     /** 热区数据 */
     hot: IHot[];
-  }
+  };
   interface IEvent {
     /** 事件类型
      *  tap - 点击
@@ -405,6 +444,8 @@ declare namespace Edit {
     actionName: string;
     /** 动作类型 */
     actionType: IActionType;
+    /** 动作执行条件 */
+    exeCondition: any;
     /** 是否拥有动作队列 */
     hasQueue: boolean;
     /** 动作回调队列 */
@@ -429,7 +470,15 @@ declare namespace Edit {
     /** 自定义操作 */
     custom: IActionCustom;
     /** 业务 */
-    business: IActionBusiness
+    business: IActionBusiness;
+    /** 自定义数据 */
+    customData: {
+      /** 模态弹窗 */
+      showModal: IActionShowModal;
+      /** 修改页面数据 */
+      setPage: IActionSetPage;
+      [key: string]: any;
+    };
   };
 
   type IActionComponent = {
@@ -439,16 +488,30 @@ declare namespace Edit {
     type: IComponentValueType;
     /**  VideoContext实例 */
     videoCtx: {
-      type: 'play' | 'pause' | 'stop' | 'showStatusBar' | 'sendDanmu' | 'seek' | 'requestFullScreen' | 'requestBackgroundPlayback' | 'playbackRate' | 'hideStatusBar' | 'exitPictureInPicture' | 'exitFullScreen' | 'exitBackgroundPlayback' | 'requestFullScreenAndPlay'
-      position: number
+      type:
+      | "play"
+      | "pause"
+      | "stop"
+      | "showStatusBar"
+      | "sendDanmu"
+      | "seek"
+      | "requestFullScreen"
+      | "requestBackgroundPlayback"
+      | "playbackRate"
+      | "hideStatusBar"
+      | "exitPictureInPicture"
+      | "exitFullScreen"
+      | "exitBackgroundPlayback"
+      | "requestFullScreenAndPlay";
+      position: number;
       danmu: {
-        text: string
-        color: string
-      }
-      direction: 0 | 90 | -90,
-      rate: 0.5 | 0.8 | 1.0 | 1.25 | 1.5 | 2.0
-    }
-    muted: boolean
+        text: string;
+        color: string;
+      };
+      direction: 0 | 90 | -90;
+      rate: 0.5 | 0.8 | 1.0 | 1.25 | 1.5 | 2.0;
+    };
+    muted: boolean;
     src: string;
     current: {
       value: number | "last" | "next";
@@ -479,6 +542,9 @@ declare namespace Edit {
     | "POPUP"
     | "CUSTOM"
     | "BUSINESS"
+    | "SHOWMODAL"
+    | "SETPAGE"
+    | "SETAPP";
 
   type IActionRoute = {
     /** 小程序跳转方式 */
@@ -584,14 +650,16 @@ declare namespace Edit {
     | "openSetting"
     | "feedback"
     | "subscribe"
-    | "getUserProfile";
+    | "getUserProfile"
+    | "copy"
+    | "makePhoneCall"
     isButton: boolean;
     /** 客服相关数据 */
     contact: {
       /** 客服链接 */
-      url?: string
+      url?: string;
       /** 企业Id */
-      corpId?: string
+      corpId?: string;
       show: boolean;
       title: string;
       path: string;
@@ -604,6 +672,14 @@ declare namespace Edit {
       imageUrl: string;
     };
     subscribeTmpIds: string[];
+    /** 订阅点位配置 */
+    subscribeRecord: {
+      open: boolean;
+      subscribeIds: string[];
+      stage: string;
+    };
+    /** 字符串通用属性（比如复制文本值） */
+    value: string;
   };
 
   type IActionOpenWxShare = IShare;
@@ -623,29 +699,44 @@ declare namespace Edit {
     maskClosable: boolean;
     /** 触发弹窗的组件信息 */
     templateInfo?: {
-      name: string
-      code: string
-      index: string
-    }
+      name: string;
+      code: string;
+      index: string;
+    };
   };
 
   type IActionCustom = {
-    code: string
-    data?: string
-  }
+    code: string;
+    data?: string;
+  };
 
   type IActionBusiness = {
     /** 业务类型 */
-    businessType: string
+    businessType: string;
     /** json数据 */
-    jsonData: any
+    jsonData: any;
     /** 映射类型 */
-    actions: IActions[]
-  }
+    actions: IActions[];
+  };
 
-  interface IStyle {
+  type IActionShowModal = {
+    title: string;
+    content: string;
+    showCancel: boolean;
+    cancelText: string;
+    cancelColor: string;
+    confirmText: string;
+    confirmColor: string;
+  };
+
+  type IActionSetPage = {
+    key: string;
+    value: string;
+  }[];
+
+  type IStyle = {
     /** React Style */
-    reactStyle?: React.CSSProperties
+    reactStyle?: React.CSSProperties;
     /** 盒模型属性 */
     boxModel?: Partial<IBoxModel>;
     /** 定位属性 */
@@ -658,10 +749,10 @@ declare namespace Edit {
     common?: Partial<ICommon>;
     /** 动效属性 */
     dynamicEffect?: IDynamicEffect;
-  }
+  };
 
   /** 盒模型 */
-  interface IBoxModel {
+  type IBoxModel = {
     display?: "flex" | "inline-flex" | "block";
     width?: string | number;
     height?: string | number;
@@ -673,47 +764,47 @@ declare namespace Edit {
     borderRight?: string;
     borderTop?: string;
     borderBottom?: string;
-    paddingTop?: string | number
-    paddingBottom?: string | number
-    paddingLeft?: string | number
-    paddingRight?: string | number
-    marginTop?: string | number
-    marginBottom?: string | number
-    marginLeft?: string | number
-    marginRight?: string | number
-    borderWidth?: string | number
-    borderStyle?: string
-    borderColor?: string
-  }
+    paddingTop?: string | number;
+    paddingBottom?: string | number;
+    paddingLeft?: string | number;
+    paddingRight?: string | number;
+    marginTop?: string | number;
+    marginBottom?: string | number;
+    marginLeft?: string | number;
+    marginRight?: string | number;
+    borderWidth?: string | number;
+    borderStyle?: string;
+    borderColor?: string;
+  };
 
   /** 定位类型 */
   type TPosition = "static" | "absolute" | "fixed" | "relative";
 
   /** 定位属性 */
-  interface IPosition {
+  type IPosition = {
     /** 定位类型 */
     position?: TPosition;
     left?: string | number;
     right?: string | number;
     top?: string | number;
     bottom?: string | number;
-  }
+  };
 
   /** 文字属性 */
-  interface IFont {
+  type IFont = {
     fontSize?: string | number;
-    fontWeight?: 'normal' | 'blod' | 'bolder' | 'lighter' | number | any;
+    fontWeight?: "normal" | "blod" | "bolder" | "lighter" | number | any;
     lineHeight?: string | number;
     color?: string;
-    textDecoration?: 'underline' | 'overline' | 'line-through' | 'blink';
+    textDecoration?: "underline" | "overline" | "line-through" | "blink";
     whiteSpace: string;
     textOverflow: string;
     fontFamily: string;
     textShadow: string;
-  }
+  };
 
   /** Flex属性 */
-  interface IFlex {
+  type IFlex = {
     flexDirection: "row" | "row-reverse" | "column" | "column-reverse";
     flexWrap: "nowrap" | "wrap" | "wrap-reverse";
     justifyContent:
@@ -734,11 +825,11 @@ declare namespace Edit {
     flexGrow?: number;
     flexShrink?: number;
     alignSelf?: "flex-start" | "flex-end" | "center" | "baseline" | "stretch";
-  }
+  };
 
   /** 通用属性 */
-  interface ICommon {
-    background: string
+  type ICommon = {
+    background: string;
     backgroundColor: string;
     zIndex: number;
     opacity: string;
@@ -754,25 +845,25 @@ declare namespace Edit {
     overflowX: string;
     textAlign: string;
     pointerEvents: string;
-  }
+  };
 
   /** 动态效果 */
-  interface IDynamicEffect {
+  type IDynamicEffect = {
     animotion: string;
     transition: string;
     /** 过渡时间 */
-    animationDuration: string
-  }
+    animationDuration: string;
+  };
 
   /** 组件默认属性 */
-  interface IBaseComponentsProps {
+  type IBaseComponentsProps = {
     style?: React.CSSProperties;
     className?: string;
     bindtap?: (e: any) => void;
-  }
+  };
 
   /** 轮播容器属性 */
-  interface ISwiperView {
+  type ISwiperView = {
     /** 是否显示面板指示点 */
     indicatorDots?: boolean;
     /** 指示点颜色 */
@@ -796,39 +887,39 @@ declare namespace Edit {
     /** 同时显示的滑块数量 */
     displayMultipleItems?: number;
     /** 是否采用衔接滑动 false */
-    circular?: boolean
+    circular?: boolean;
     bindchange?: (e: any) => void;
-  }
+  };
 
   /** View组件属性 */
-  interface IView {
-    catchMove?: boolean
-  }
+  type IView = {
+    catchMove?: boolean;
+  };
 
   /** 滚动容器属性 */
-  interface IScrollView {
+  type IScrollView = {
     scrollType?: "x" | "y";
     bindscroll?: (e: any) => void;
-  }
+  };
 
   /** 图片属性 */
-  interface IImage {
+  type IImage = {
     src?: string;
     mode?: ImageMode;
     showMenuByLongpress?: boolean;
     bindload?: (e: any) => void;
-  }
+  };
 
-  interface IText {
+  type IText = {
     nodes?: string;
     /**文本是否可选，该属性会使文本节点显示为 inline-block */
     userSelect?: boolean;
     /**显示连续空格 */
     space?: SpaceType;
-  }
+  };
 
   /** 视频属性 */
-  interface IVideo {
+  type IVideo = {
     src?: string;
     controls?: boolean;
     autoplay?: boolean;
@@ -839,25 +930,25 @@ declare namespace Edit {
     showCenterPlayBtn?: boolean;
     showMuteBtn?: boolean;
     objectFit?: ObjectFitType;
-    onLoadMetadata?: IActions[]
-    onPlay?: IActions[]
-    onPause?: IActions[]
-    onEnded?: IActions[]
-    onFullscreenChange?: IActions[]
-    onEnterPictureInPicture?: IActions[]
-    onLeavePictureInPicture?: IActions[]
-    onSeekComplete?: IActions[]
-    onControlsToggle?: IActions[]
-    onProgress?: IActions[]
-    onWaiting?: IActions[]
-    onError?: IActions[]
-  }
+    onLoadMetadata?: IActions[];
+    onPlay?: IActions[];
+    onPause?: IActions[];
+    onEnded?: IActions[];
+    onFullscreenChange?: IActions[];
+    onEnterPictureInPicture?: IActions[];
+    onLeavePictureInPicture?: IActions[];
+    onSeekComplete?: IActions[];
+    onControlsToggle?: IActions[];
+    onProgress?: IActions[];
+    onWaiting?: IActions[];
+    onError?: IActions[];
+  };
 
   /** 富文本信息 */
-  interface IRichText {
+  type IRichText = {
     nodes?: string;
     space?: SpaceType;
-  }
+  };
 
   type IMapping = {
     style?: IMappingItem[];
@@ -880,7 +971,7 @@ declare namespace Edit {
 
   type DragType = "sort" | "move" | "nest";
 
-  type ComponentType = "plane" | "window";
+  type ComponentType = "plane" | "window" | "pendant";
 
   type ComponentViewType = "plane" | "window" | "all";
 
@@ -893,9 +984,9 @@ declare namespace Edit {
   /** store */
   type StoreLayout = {
     /** 当前Layout的全屏状态 */
-    fullScreen: any
+    fullScreen: any;
     /** 当前Layout所在页面的路径 */
-    currentPage: any
+    currentPage: any;
     /** 元组件数据运行时 */
     updateCom: any;
     /** 样式修改运行时 */
@@ -904,5 +995,73 @@ declare namespace Edit {
     eventPointTo: any;
     /** 弹窗 */
     popup: any;
+  };
+
+  /** 个人信息 */
+  type User = {
+    // 是否是会员
+    isMember: boolean;
+    // 真实名称
+    realName: string;
+    // 昵称
+    nickName: string;
+    // 头像
+    avatarUrl: string | null;
+    // 头像额外样式
+    avatarStyle: React.CSSProperties
+    // 头像边框
+    avatarBorderUrl: string | null;
+    // 头像边框额外样式
+    avatarBorderStyle: React.CSSProperties
+    // 性别
+    gender: string;
+    // 手机号
+    phone: string;
+    // 生日
+    birthday: string;
+    // 会员等级索引
+    memberIndex: -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+    // 会员卡号
+    memberNum: string;
+    // 会员卡号二维码地址
+    memberNumQrCode: string;
+    // 当前会员等级
+    memberLevel: string;
+    // 上一级会员等级
+    lastMemberLevel: string;
+    // 下一级会员等级
+    nextMemberLevel: string;
+    // 下一级会员等级需要消费金额
+    nextMemberLevelSum: string;
+    // 下一等级描述文案
+    nextMemberLevelText: string;
+    // 保级需要消费金额
+    keepMemberLevelSum: string;
+    // 下一级会员等级需要消费次数
+    nextMemberLevelCount: string;
+    // 等级进度百分比
+    memberLevelProgress: string;
+    // 等级截止日期、等级有效期
+    memberLevelDeadline: string;
+    // 当前积分
+    point: string;
+    // 即将到期的积分
+    pointA: string;
+    // 即将到期积分截止时间
+    pointATime: string;
+    // 一个月内到期积分
+    pointB: string;
+    // 过期积分
+    pointC: string;
+    // 优惠券数量
+    couponCount: string;
+    // 是否是徽章达人
+    isHaveBadge: boolean
+    // 是否显示等级截止日期、等级有效期
+    isShowMemberLevelDeadline: boolean
+    // 是否显示即将到期积分截止时间
+    isShowPointATime: boolean;
+    // 生日Logo图片
+    birthdayLogoUrl: string
   };
 }
