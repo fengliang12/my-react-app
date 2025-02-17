@@ -182,7 +182,7 @@
     }
   },
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "useIsolateContext": false,
     "compileHotReLoad": false,
     "preloadBackgroundData": false,

@@ -169,7 +169,7 @@ const Index = () => {
       <CHeader
         back
         fill
-        title="NARS"
+        title="MY NARS"
         backgroundColor="rgba(0,0,0,0)"
         titleColor="#FFFFFF"
       ></CHeader>

@@ -48,7 +48,7 @@ const Index = () => {
       <CHeader
         back
         fill
-        title="NARS"
+        title="MY NARS"
         backgroundColor="rgba(0,0,0,0)"
         titleColor="#FFFFFF"
       ></CHeader>
@@ -58,11 +58,28 @@ const Index = () => {
           <RulePopup imageUrl={activityDetail.ruleImage}></RulePopup>
         </View>
 
-        <View className="w-full mt-62 text-54 text-center">
-          重磅上新 到店有礼
+        <View className="w-full mt-21 text-32 text-center flex items-center justify-center">
+          <View
+            className="w-87 h-4 mr-20"
+            style={{
+              background:
+                "linear-gradient(to left, white, rgba(255, 255, 255, 0))",
+            }}
+          ></View>
+          2/20 - 3/8
+          <View
+            className="w-87 h-4 bg-white ml-20"
+            style={{
+              background:
+                "linear-gradient(to right, white, rgba(255, 255, 255, 0))",
+            }}
+          ></View>
+        </View>
+        <View className="w-full mt-38 text-48 text-center">
+          线下门店打卡送{activityDetail?.point}积分
         </View>
 
-        <View className="w-full text-center text-32 mt-50">
+        <View className="w-full text-center text-32 mt-38">
           请出示给会员进行扫码 参与打卡活动
         </View>
 
@@ -87,6 +104,9 @@ const Index = () => {
         </View>
         <View className="w-full mt-20 text-20 text-center">
           切勿将活动码链接转发给客人
+        </View>
+        <View className="w-full mt-20 text-20 text-center">
+          *同一个码只能供一位会员扫描，刷新后可以给下一位会员扫描
         </View>
       </View>
     </View>

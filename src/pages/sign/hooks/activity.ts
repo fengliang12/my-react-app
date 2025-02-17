@@ -3,7 +3,7 @@ import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import { useMemo, useState } from "react";
 
 import api from "@/src/api";
-import { codeMapValue } from "@/src/utils";
+import { codeMapValue, isBetween } from "@/src/utils";
 
 const app: App.GlobalData = Taro.getApp();
 
@@ -11,6 +11,7 @@ const useActivityHook = (pageType?: string) => {
   const [activityDetail, setActivityDetail] = useState<any>({});
   const [activityId, setActivityId] = useState<string>("");
   const [canActive, setCanActive] = useState<boolean>();
+  const [inTime, setInTime] = useState<boolean>(false);
 
   useAsyncEffect(async () => {
     let userInfo = await app.init();
@@ -25,6 +26,10 @@ const useActivityHook = (pageType?: string) => {
       setActivityId(res?.data?.[0]?.content);
       setActivityDetail(res1?.data);
       setCanActive(res1?.data?.tags.includes(userInfo?.gradeName));
+      setInTime(
+        isBetween(res1?.data?.startTime, res1?.data?.endTime) &&
+          res1?.data?.active,
+      );
     } else {
       console.log("数据字典中没有配置活动编码");
     }
@@ -77,6 +82,8 @@ const useActivityHook = (pageType?: string) => {
   return {
     /** 是否有权限参加 */
     canActive,
+    /** 是否在活动时间 */
+    inTime,
     /** 活动id：取值字典 */
     activityId: activityId,
     /** 活动详情 */

@@ -31,7 +31,7 @@ const Index = () => {
   const [giftPop, setGiftPop] = useState<string>("");
   const loading = useRef<boolean>(false);
 
-  const { canActive, extendInfos, addCustomerBehavior } =
+  const { canActive, inTime, extendInfos, addCustomerBehavior } =
     useActivityHook("VIEW_HOMEPAGE");
 
   useAsyncEffect(async () => {
@@ -168,7 +168,7 @@ const Index = () => {
       <MemberCard showBindPopup={showBind}></MemberCard>
 
       {/* 新品活动 */}
-      {canActive && (
+      {canActive && inTime && (
         <CImage
           src={`${extendInfos?.enter_img}`}
           className="w-screen"
