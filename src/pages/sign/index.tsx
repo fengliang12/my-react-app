@@ -133,7 +133,7 @@ const Index = () => {
     }
 
     if (counterList?.[0]?.distance > extendInfos?.distance) {
-      toast("请前往门店打卡");
+      toast("请前往NARS门店操作打卡");
       return;
     }
 
