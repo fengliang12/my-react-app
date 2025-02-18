@@ -19,6 +19,9 @@ export default {
     "subPages/drawLottery/index",
     "subPages/drawLottery/records/index",
     "subPages/rule/index",
+    "pages/sign/index",
+    "pages/sign/baLogin/index",
+    "pages/sign/qrCode/index",
   ],
   window: {
     backgroundTextStyle: "light",

@@ -29,6 +29,12 @@ const DEV = {
       subscribeId: "reserveCancel",
     },
   ],
+  POINTS_CHANGE: [
+    {
+      stage: "积分变动通知",
+      subscribeId: "pointsChange",
+    },
+  ],
 };
 
 const PRO = {
@@ -58,6 +64,12 @@ const PRO = {
     {
       stage: "预约取消通知",
       subscribeId: "reserveCancel",
+    },
+  ],
+  POINTS_CHANGE: [
+    {
+      stage: "积分变动通知",
+      subscribeId: "pointsChange",
     },
   ],
 };

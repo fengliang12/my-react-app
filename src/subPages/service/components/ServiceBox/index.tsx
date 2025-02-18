@@ -391,6 +391,19 @@ const Index: React.FC<TProps> = (props) => {
             >
               立 即 预 约
             </View>
+            <View className="w-full text-center text-20 mt-32 text-black">
+              更多可预约时间，点击咨询
+              <Text
+                className="underline"
+                onClick={() =>
+                  to(
+                    "/pages/h5/index?url=https://cnaipswx1v1-stg.shiseido.cn/nars/home",
+                  )
+                }
+              >
+                专属彩妆师
+              </Text>
+            </View>
           </View>
         ) : (
           <View>

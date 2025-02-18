@@ -85,12 +85,19 @@ declare namespace Api {
     namespace AddBehavior {
       type FuncT = (data: Partial<RequestBody>) => MRP<any>;
       interface RequestBody {
-        activityId?: string;
-        type?: string;
-        counterId?: string;
-        /**
-         * 行为值
-         */
+        activityId: string;
+        type: string;
+        counterId: string;
+        value: string;
+        channelId: string;
+        customInfos: CustomInfos[];
+        inValid: false;
+        key: string;
+        sourceId: string;
+        took: 0;
+      }
+      interface CustomInfos {
+        name: string;
         value: string;
       }
     }

@@ -108,6 +108,11 @@ const NearbyStores = () => {
     })
       .runModal({
         cancelShowModal: false, //用户第一次拒绝时立即弹窗提示需要获取权限
+        reqData: {
+          type: "gcj02",
+          isHighAccuracy: true,
+          highAccuracyExpireTime: 5000,
+        },
         modalObj: {
           show: true,
           customModal: {
@@ -118,6 +123,9 @@ const NearbyStores = () => {
       .catch((err) => {
         console.log(err);
       });
+
+    console.log("附近门店定位结果latitude", res.latitude);
+    console.log("附近门店定位结果longitude", res.longitude);
 
     setGetCounterParams((prev) => ({
       ...prev,

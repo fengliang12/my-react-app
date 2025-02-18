@@ -53,6 +53,8 @@ declare namespace Store {
     belongShopName: string;
     /** 过期积分 */
     invalidPoints: number;
+    /** unionId */
+    unionId: string;
   };
   type Common = {
     /** Nav高度 */

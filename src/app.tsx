@@ -1,6 +1,7 @@
 import "./app.less";
 import "windi.css";
 
+// import "./utils/globalTracking/index";
 import Taro from "@tarojs/taro";
 import { Component } from "react";
 import { Provider } from "react-redux";

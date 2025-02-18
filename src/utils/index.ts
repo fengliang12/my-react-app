@@ -144,7 +144,6 @@ export function debounceImme(fn: Function, wait: number, msg?: string) {
   };
 }
 
-
 // 手机号掩码
 export const maskPhone = (phone: string) => {
   if (phone.includes("*")) return phone;
@@ -171,4 +170,77 @@ export const setShareParams = () => {
     path: "/pages/member/member",
     imageUrl: `https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/share/share.png`,
   };
+};
+
+/**获取中转前的参数对象 */
+export const getSceneObject = async <T extends Partial<Record<string, any>>>(
+  scene: string,
+): Promise<T | undefined> => {
+  const decodeScene = decodeURIComponent(scene);
+
+  /**
+   * 判断是否为keyq=***&key2=***结构
+   */
+  if (validateQueryString(decodeScene)) {
+    return queryToOptions(decodeScene) as T;
+  }
+
+  return;
+};
+
+/**
+ * 将查询字符串转换为对象
+ * @param str - 查询字符串，如 "a=1&b=2" 或 "?a=1&b=2"
+ * @returns 一个对象，如 {a: '1', b: '2'}
+ */
+const queryToOptions = (str: string): Record<string, string | null> => {
+  if (str.indexOf("?") !== -1) {
+    str = str.split("?")[1];
+  }
+  let ps: string[] = [];
+  try {
+    ps = decodeURIComponent(str).split("&");
+  } catch (err) {
+    ps = str.split("&");
+  }
+
+  const obj: Record<string, string | null> = {};
+
+  ps.forEach((item) => {
+    const temp = item.split("=");
+    const key = temp[0];
+    const value = temp[1] !== undefined ? temp[1] : null; // 如果参数没有等号或等号后面没有值，将值设置为 null
+    obj[key] = value;
+  });
+
+  return obj;
+};
+
+/**
+ * 正则检查 keyq=***&key2=***
+ */
+const validateQueryString = (str) => {
+  const regex = /^[a-zA-Z0-9_]+=[a-zA-Z0-9_]+(&[a-zA-Z0-9_]+=[a-zA-Z0-9_]+)*$/;
+  let newStr = str;
+  try {
+    newStr = decodeURIComponent(str);
+  } catch (err) {
+    newStr = str;
+  }
+  if (str.indexOf("?") !== -1) {
+    newStr = str.split("?")[1];
+  }
+  return regex.test(newStr);
+};
+
+/**
+ * 数组中codeValue转换为对象
+ */
+export const codeMapValue = (e?: ExtendInfo[]) => {
+  if (!e?.length) return {};
+  return Object.fromEntries(
+    e.map((elem) => {
+      return [elem.code, elem.value];
+    }),
+  );
 };
