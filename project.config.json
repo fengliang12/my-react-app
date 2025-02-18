@@ -24,7 +24,8 @@
     "packNpmRelationList": [],
     "ignoreUploadUnusedFiles": false,
     "minifyWXSS": false,
-    "minifyWXML": false
+    "minifyWXML": false,
+    "bigPackageSizeSupport": false
   },
   "compileType": "miniprogram",
   "simulatorType": "wechat",
@@ -37,10 +38,11 @@
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "appid": "wxbd3891c0f73d0592",
+  "appid": "wx7d12b21af0a8bed3",
   "libVersion": "2.31.0",
   "packOptions": {
     "ignore": [],
     "include": []
-  }
+  },
+  "projectname": "mini-nars"
 }
