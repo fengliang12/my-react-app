@@ -4,15 +4,15 @@
     "miniprogram": {
       "list": [
         {
-          "name": "签到ba的登录页面",
-          "pathName": "pages/sign/baLogin/index",
-          "query": "",
+          "name": "签到",
+          "pathName": "pages/sign/index",
+          "query": "from=qy",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "签到",
-          "pathName": "pages/sign/index",
+          "name": "签到ba的登录页面",
+          "pathName": "pages/sign/baLogin/index",
           "query": "",
           "launchMode": "default",
           "scene": null

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import api from "@/src/api";
 import { codeMapValue, isBetween } from "@/src/utils";
+import { getPages } from "@/src/utils/getPages";
 
 const app: App.GlobalData = Taro.getApp();
 
@@ -63,6 +64,10 @@ const useActivityHook = (pageType?: string) => {
         {
           name: "scene",
           value: String(scene) ?? "",
+        },
+        {
+          name: "path",
+          value: getPages({ getKey: "$taroPath" }) ?? "",
         },
       ],
       inValid: false,
