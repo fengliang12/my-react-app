@@ -1,11 +1,22 @@
 import { Text, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
+import { useAsyncEffect } from "ahooks";
+import { useEffect } from "react";
 
+import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 import to from "@/src/utils/to";
 
+const app = Taro.getApp();
 const Index = () => {
+  useAsyncEffect(async () => {
+    // await to("/pages/qy/home/index");
+    await app.init();
+    let res = await api.qy.baDetail();
+    console.log(res);
+  });
   return (
     <View className="bg-[#F8F5F8] min-h-screen">
       <CHeader
@@ -19,6 +30,8 @@ const Index = () => {
           mode="widthFix"
           src={`${config.imgBaseUrl}/qy/home/title_img.png`}
         ></CImage>
+
+        {/* 用户信息展示 */}
         <View className="absolute bottom-74 right-37 text-[#F9F9F9] flex flex-col items-center justify-center">
           <View className="vhCenter mb-34">
             <Text className="text-36 mr-46">张兰</Text>
@@ -37,6 +50,7 @@ const Index = () => {
         </View>
       </View>
 
+      {/* 入口 */}
       <View className="w-full bg-[#F8F5F8] pt-37 pb-52 flex flex-col items-center justify-center">
         <CImage
           className="w-686 mb-33"

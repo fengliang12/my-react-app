@@ -14,6 +14,7 @@ import goods from "./goods/index";
 import kvdata from "./kvdata/index";
 import memberOrder from "./memberOrder";
 import order from "./order/index";
+import qy from "./qy/index";
 import salesCategory from "./salesCategory";
 import shuYunMember from "./shuYunMember/index";
 import user from "./user/index";
@@ -41,4 +42,5 @@ export default {
   behavior,
   draw,
   kvdata,
+  qy,
 };

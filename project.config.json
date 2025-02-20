@@ -3,8 +3,8 @@
   "description": "",
   "setting": {
     "urlCheck": true,
-    "es6": true,
-    "enhance": true,
+    "es6": false,
+    "enhance": false,
     "compileHotReLoad": false,
     "postcss": false,
     "preloadBackgroundData": false,
@@ -29,7 +29,7 @@
   "compileType": "miniprogram",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {
-    "qywx_simulator_plugin": "2.4.0"
+    "qywx_simulator_plugin": "2.20.3"
   },
   "condition": {},
   "srcMiniprogramRoot": "dist/",
@@ -42,5 +42,5 @@
     "ignore": [],
     "include": []
   },
-  "appid": "wx7d12b21af0a8bed3"
+  "appid": "wxbd3891c0f73d0592"
 }

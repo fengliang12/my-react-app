@@ -22,6 +22,7 @@ const config = {
     "@/store": path.resolve(__dirname, "..", "src/store"),
   },
   plugins: [
+    "@tarojs/plugin-platform-weapp-qy",
     "@dcasia/mini-program-tailwind-webpack-plugin/dist/taro",
     [
       "@tarojs/plugin-inject",

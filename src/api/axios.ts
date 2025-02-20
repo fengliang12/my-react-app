@@ -11,10 +11,9 @@ interface CustomConfig {
   showError?: boolean;
 }
 
-const isH5 = process.env.TARO_ENV === "h5";
 // 创建axios实例
 const instance = axios.create({
-  baseURL: isH5 ? "http://localhost:10086/api" : config.basePathUrl,
+  baseURL: config.env === "qy" ? config.qyBasePathUrl : config.basePathUrl,
   timeout: 60000,
 });
 
@@ -30,10 +29,11 @@ instance.interceptors.request.use((_config) => {
 // axios实例添加response阻流器
 instance.interceptors.response.use(
   (res) => {
+    console.log("res", res);
     return res;
   },
   (err: any) => {
-    console.log(err);
+    console.log("err", err);
     Taro.hideLoading();
     // token失效
     if (err.status === 400 && config.refreshCodeList?.includes(err.data.code)) {

@@ -2333,6 +2333,11 @@
     "@tarojs/service" "3.6.8"
     "@tarojs/shared" "3.6.8"
 
+"@tarojs/plugin-platform-weapp-qy@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.npmmirror.com/@tarojs/plugin-platform-weapp-qy/-/plugin-platform-weapp-qy-0.0.9.tgz#eaf571b1186a73e84a661deed197c91cbdf7793b"
+  integrity sha512-86RDKByuev0eekg0NUd4RBHw30FGbgvjOQktKLOuvRJ+ivxAd1CLtf3lcR6u7gGiTfvxH3H1SGPWkAsjf+wvfQ==
+
 "@tarojs/plugin-platform-weapp@3.6.8":
   version "3.6.8"
   resolved "https://registry.npmmirror.com/@tarojs/plugin-platform-weapp/-/plugin-platform-weapp-3.6.8.tgz#53a774943026e4e6b44d98599079822766d8ae76"
