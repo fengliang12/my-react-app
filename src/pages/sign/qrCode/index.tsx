@@ -14,10 +14,14 @@ import useActivityHook from "../hooks/activity";
 
 const Index = () => {
   const { params } = useRouter();
-  const { activityDetail } = useActivityHook();
+  const { activityDetail, addCustomerBehavior } = useActivityHook();
 
   const getQrCode = useMemoizedFn(async () => {
     let res = await api.clockin.createClockInQrCode(params?.counterCode);
+    addCustomerBehavior("CREATE_QR_CODE", {
+      name: "CREATE_QR_CODE_RESULT",
+      value: JSON.stringify(res),
+    });
     return res?.data || "";
   });
 

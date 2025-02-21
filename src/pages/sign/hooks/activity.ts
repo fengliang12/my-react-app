@@ -44,15 +44,14 @@ const useActivityHook = (pageType?: string) => {
   /**
    * 埋点
    */
-  const addCustomerBehavior = useMemoizedFn(async (key: string) => {
-    let userInfo = await app.init();
-    const res = Taro.getLaunchOptionsSync();
-    const { scene } = res;
-    console.log("打卡埋点", key);
+  const addCustomerBehavior = useMemoizedFn(
+    async (key: string, extend?: any) => {
+      let userInfo = await app.init();
+      const res = Taro.getLaunchOptionsSync();
+      const { scene } = res;
+      console.log("打卡埋点", key);
 
-    await api.behavior.behavior({
-      channelId: "wa",
-      customInfos: [
+      let customInfos = [
         {
           name: "unionid",
           value: userInfo?.unionId ?? "",
@@ -69,14 +68,23 @@ const useActivityHook = (pageType?: string) => {
           name: "path",
           value: getPages({ getKey: "$taroPath" }) ?? "",
         },
-      ],
-      inValid: false,
-      key: key,
-      sourceId: activityId,
-      took: 0,
-      type: "CLOCKIN",
-    });
-  });
+      ];
+
+      if (extend) {
+        customInfos.push(extend);
+      }
+
+      await api.behavior.behavior({
+        channelId: "wa",
+        customInfos: customInfos,
+        inValid: false,
+        key: key,
+        sourceId: activityId,
+        took: 0,
+        type: "CLOCKIN",
+      });
+    },
+  );
 
   useDidShow(() => {
     if (pageType) {

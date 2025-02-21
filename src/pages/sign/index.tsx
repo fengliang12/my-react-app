@@ -149,14 +149,21 @@ const Index = () => {
     // 扫码签到
     Taro.scanCode({
       success: async (res) => {
+        addCustomerBehavior("SCAN_CODE", {
+          name: "SCAN_CODE_RESULT",
+          value: JSON.stringify(res),
+        });
+
         if (res?.result) {
-          let result = await api.clockin.submitClockInQrCode({
+          if (!res.result.includes("nars"))
+            return toast("无效的二维码，请重新扫码");
+          let res1 = await api.clockin.submitClockInQrCode({
             lat: String(getCounterParams.lat),
             lng: String(getCounterParams.lng),
             code: res.result,
           });
-          console.log(result);
-          getJoinFlag();
+          console.log(res1);
+          await getJoinFlag();
           setTrue();
         }
       },
