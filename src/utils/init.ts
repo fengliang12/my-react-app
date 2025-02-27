@@ -3,7 +3,7 @@ import Taro from "@tarojs/taro";
 import api from "../api";
 import config from "../config";
 import store from "../store";
-import { SET_USER } from "../store/constants";
+import { SET_QY_USER, SET_USER } from "../store/constants";
 
 export const createInit = () => {
   let initPromise: Promise<Store.User> | null = null;
@@ -25,8 +25,16 @@ export const createInit = () => {
           );
 
           if (config.env === "qy") {
+            let res = await api.qy.baDetail();
+            // 视图数据放Store
+            store.dispatch({
+              type: SET_QY_USER,
+              payload: {
+                ...res.data.info,
+              },
+            });
             Taro.hideLoading();
-            return Promise.resolve(data);
+            return store.getState().qyUser;
           } else if (config.env === "weapp") {
             let { customerBasicInfo } = data;
             let shuYunMemberInfo =

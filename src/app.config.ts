@@ -19,7 +19,7 @@ export default {
     "subPages/drawLottery/records/index",
     "subPages/rule/index",
     "pages/qy/home/index",
-    "pages/qy/dataQuery/index",
+    "pages/qy/dashboard/index",
     "pages/qy/recordQuery/index",
     "pages/qy/stockQuery/index",
     "pages/qy/stockSingleQuery/index",

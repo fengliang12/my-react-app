@@ -1,22 +1,40 @@
 import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useAsyncEffect } from "ahooks";
-import { useEffect } from "react";
+import { useMemoizedFn } from "ahooks";
+import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
 const app = Taro.getApp();
 const Index = () => {
-  useAsyncEffect(async () => {
-    // await to("/pages/qy/home/index");
-    await app.init();
-    let res = await api.qy.baDetail();
-    console.log(res);
+  const qyUser = useSelector((state: Store.States) => state.qyUser);
+
+  /**
+   * 点击确认
+   */
+  const onConfirm = useMemoizedFn(async () => {
+    Taro.scanCode({
+      success: async (res) => {
+        console.log("res", res);
+
+        let res1 = await api.qy.orderSubmit({
+          code: res.result,
+          type: "sms",
+        });
+        console.log("res", res1);
+      },
+      fail: (err) => {
+        console.log("err", err);
+        toast("扫码失败");
+      },
+    });
   });
+
   return (
     <View className="bg-[#F8F5F8] min-h-screen">
       <CHeader
@@ -34,7 +52,7 @@ const Index = () => {
         {/* 用户信息展示 */}
         <View className="absolute bottom-74 right-37 text-[#F9F9F9] flex flex-col items-center justify-center">
           <View className="vhCenter mb-34">
-            <Text className="text-36 mr-46">张兰</Text>
+            <Text className="text-36 mr-46">{qyUser.name}</Text>
             <View className="w-106 h-37 bg-[#C5112C] vhCenter text-20">
               彩妆师
             </View>
@@ -80,6 +98,7 @@ const Index = () => {
         <CImage
           className="w-640 mt-156"
           mode="widthFix"
+          onClick={onConfirm}
           src={`${config.imgBaseUrl}/qy/home/scan_btn.png`}
         ></CImage>
         <View className="text-center mt-43 text-20">

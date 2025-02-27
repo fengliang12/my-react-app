@@ -1,14 +1,19 @@
 import { Input, Picker, Text, View } from "@tarojs/components";
-import { useSetState } from "ahooks";
+import Taro, { useReachBottom } from "@tarojs/taro";
+import { useAsyncEffect, useMemoizedFn, useSetState } from "ahooks";
 
+import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import usePagingLoad from "@/src/hooks/usePagingLoad";
 
-import QueryResult from "../components/QueryResult";
+import QueryStaticResult from "../components/QueryStaticResult";
 import QueryTab from "../components/QueryTab";
 import VerifyPopup from "../components/VerifyPopup";
+import { StatusFilterList } from "../config";
 
+const app = Taro.getApp();
 const Index = () => {
   const [state, setState] = useSetState({
     parentRegion: "",
@@ -20,6 +25,37 @@ const Index = () => {
   const regionList = [];
   const storeList = [];
   const pointList = [];
+
+  useAsyncEffect(async () => {}, []);
+
+  /**
+   * 获取记录
+   */
+  const getRecordList = useMemoizedFn(async ({ page }) => {
+    Taro.showLoading({ title: "加载中", mask: true });
+    await app.init();
+    let res = await api.qy.orderList({
+      page,
+      size: 20,
+    });
+    Taro.hideLoading();
+    return res.data;
+  });
+
+  const {
+    loading,
+    /** 记录列表 */
+    list: recordList,
+    /** 滚动到底部加载 */
+    onScrollToLower,
+    resetRefresh,
+  } = usePagingLoad<Api.QYWX.OrderList.IResponse>({
+    getList: getRecordList,
+  });
+
+  useReachBottom(() => {
+    onScrollToLower();
+  });
 
   return (
     <View className="bg-[#F8F5F8] min-h-screen pb-100">
@@ -135,31 +171,46 @@ const Index = () => {
       </View>
 
       {/* 内容 */}
-      <View className="w-700 mt-51 ml-25 bg-white">
+      <View className="w-700 mt-51 ml-25 ">
         {/* tab栏 */}
-        <QueryTab></QueryTab>
+        <QueryTab FilterList={StatusFilterList}></QueryTab>
 
-        <View className="px-25 pb-0 text-24 h-630">
-          {/* 查询结果-静态内容 */}
-          <QueryResult></QueryResult>
+        {recordList && recordList.length > 0
+          ? recordList.map((item: any, index: number) => {
+              return (
+                <View
+                  className="px-25 pb-0 text-24 bg-white h-600 mb-30"
+                  key={index}
+                >
+                  {/* 查询结果-静态内容 */}
+                  <QueryStaticResult info={item}></QueryStaticResult>
 
-          <View className="w-full h-1 bg-[#CCCCCC]"></View>
-          <View className="w-full h-120 flex justify-between items-center">
-            <Text className="text-20 text-[#C5112C]">
-              *该兑礼单还有14天过期
-            </Text>
+                  {item.status !== "wait_pay" && (
+                    <>
+                      <View className="w-full h-1 bg-[#CCCCCC]"></View>
+                      <View className="w-full h-120 flex justify-between items-center">
+                        <Text className="text-20 text-[#C5112C]">
+                          *该兑礼单还有14天过期
+                        </Text>
 
-            <VerifyPopup
-              callback={function (): void {
-                throw new Error("Function not implemented.");
-              }}
-            >
-              <View className="w-170 h-60 bg-black text-white vhCenter text-24">
-                确认核销
-              </View>
-            </VerifyPopup>
-          </View>
-        </View>
+                        <VerifyPopup
+                          orderId={item.orderId}
+                          mobile={item.mobile}
+                          callback={function (): void {
+                            throw new Error("Function not implemented.");
+                          }}
+                        >
+                          <View className="w-170 h-60 bg-black text-white vhCenter text-24">
+                            确认核销
+                          </View>
+                        </VerifyPopup>
+                      </View>
+                    </>
+                  )}
+                </View>
+              );
+            })
+          : null}
       </View>
     </View>
   );

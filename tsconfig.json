@@ -43,6 +43,9 @@
       "@/store/*": [
         "./src/store/*"
       ],
+      "@/qyConfig/*": [
+        "./src/pages/qy/config/*"
+      ],
       "react/jsx-runtime": [
         "./types/jsx-runtime.d.ts"
       ]

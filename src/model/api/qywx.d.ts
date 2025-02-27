@@ -51,5 +51,57 @@ declare namespace Api {
     namespace UpdateRecommandRegister {
       type FuncT = (id: string, type: string) => MRP<any>;
     }
+
+    namespace OrderList {
+      type FuncT = (params: IRequestBody) => PG<IResponse>;
+      interface IRequestBody {
+        page: number;
+        size: number;
+        mobile?: string;
+      }
+      interface IResponse {}
+    }
+
+    namespace OrderSubmit {
+      type FuncT = (params: IRequestBody) => PG<IResponse>;
+      interface IRequestBody {
+        /**
+         * 核销code
+         */
+        code?: string;
+        /**
+         * 订单id
+         */
+        orderId?: string;
+        /**
+         * 手机验证码
+         */
+        smsCode?: string;
+        /**
+         * 核销方式 1.code核销 code 2.验证码核销 sms
+         */
+        type: "code" | "sms";
+      }
+      interface IResponse {}
+    }
+
+    namespace Stock {
+      type FuncT = (params: IRequestBody) => PG<IResponse>;
+      interface IRequestBody {
+        page: number;
+        size: number;
+        counterId: string;
+      }
+      interface IResponse {}
+    }
+
+    namespace SingleCounterStock {
+      type FuncT = (params: IRequestBody) => MRP<Array<IResponse>>;
+      interface IRequestBody {
+        counterId: string;
+        bonusPointId: string;
+      }
+      interface IResponse {}
+    }
   }
 }

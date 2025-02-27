@@ -1,6 +1,8 @@
 import { Text, View } from "@tarojs/components";
 import React, { useEffect, useState } from "react";
 
+import { FilterType } from "@/qyConfig/index";
+
 const FilterList: Array<{
   title: string;
   key: string;
@@ -24,10 +26,11 @@ const FilterList: Array<{
 ];
 
 interface Props {
+  FilterList: Array<FilterType>;
   callback?: (key: string) => void;
 }
 const Index: React.FC<Props> = (props) => {
-  let { callback } = props;
+  let { FilterList = [], callback } = props;
   const [selectIndex, setSelectIndex] = useState(0);
 
   return (

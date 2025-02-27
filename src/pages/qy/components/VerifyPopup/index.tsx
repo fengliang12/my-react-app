@@ -1,25 +1,33 @@
 import { Input, View } from "@tarojs/components";
 import { useBoolean, useMemoizedFn } from "ahooks";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { Close, CloseB } from "@/src/assets/image";
+import api from "@/src/api";
+import { Close } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import SendVerifyCode from "@/src/components/Common/SendVerifyCode";
+import toast from "@/src/utils/toast";
 
 interface Props {
+  orderId: string;
+  mobile?: string;
   children?: React.ReactNode;
   callback?: () => void;
 }
 const Index: React.FC<Props> = (props) => {
-  let { children } = props;
+  let { children, orderId, mobile = "15656180073" } = props;
   const [show, { setTrue, setFalse }] = useBoolean(false);
   const [verifyCode, setVerifyCode] = useState("");
 
   /**
    * 发送验证码
    */
-  const SendVerifyCodeFn = useMemoizedFn(async () => {});
+  const SendVerifyCodeFn = useMemoizedFn(async () => {
+    if (!mobile) return toast("请输入手机号");
+    await api.qy.sendSmsCode({ orderId });
+    toast("发送成功");
+  });
 
   /**
    * 点击确认
@@ -28,6 +36,12 @@ const Index: React.FC<Props> = (props) => {
     if (verifyCode) {
       // TODO: 核销
       setFalse();
+      let res = await api.qy.orderSubmit({
+        smsCode: verifyCode,
+        orderId: orderId,
+        type: "sms",
+      });
+      console.log("res", res);
     }
   });
 
@@ -52,7 +66,7 @@ const Index: React.FC<Props> = (props) => {
 
             <View className="w-full mt-59 vhCenter">
               <Input
-                className="w-289 h-64 px-30 text-24 border border-1 border-solid box-border"
+                className="w-289 h-64 px-30 text-24 border border-1 border-solid box-border rotate-360"
                 placeholder="验证码"
                 onInput={(e) => {
                   setVerifyCode(e.detail.value);
@@ -62,7 +76,7 @@ const Index: React.FC<Props> = (props) => {
               <SendVerifyCode
                 sendApi={SendVerifyCodeFn}
                 className="ml-15 w-142 h-64 vhCenter text-18 bg-[#000000] text-white"
-                mobile=""
+                mobile={mobile}
               ></SendVerifyCode>
             </View>
             <View
