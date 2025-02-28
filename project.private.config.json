@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/register/index",
+          "pathName": "pages/register/index",
+          "query": "scene=4XshBvhytRJZ1wksvWsn1D",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "签到",
           "pathName": "pages/sign/index",
           "query": "from=qy",
@@ -104,13 +111,6 @@
         {
           "name": "卡券中心",
           "pathName": "subPages/coupon/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "",
-          "pathName": "pages/register/index",
           "query": "",
           "launchMode": "default",
           "scene": null

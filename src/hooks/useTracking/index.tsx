@@ -1,8 +1,9 @@
 // import { getSceneObject, init } from "@lw/mini/utils";
 import Taro, { useRouter } from "@tarojs/taro";
 
-import { getSceneObject } from "@/src/utils";
-import AddBehavior from "@/src/utils/addBehavior";
+import api from "@/src/api";
+import { formTime, getSceneObject } from "@/src/utils";
+import { getPages } from "@/src/utils/getPages";
 
 type params = {
   button?: string; //触发按钮 ,
@@ -60,11 +61,7 @@ export const trackingFn = async (params: params) => {
   const query = (await restOption(pageInfo.query)) ?? pageInfo.query;
 
   try {
-    const {
-      pagePath = pageInfo?.route,
-      clickId = query?.gdt_vid || query?.clickId, //朋友圈id
-      channel = query?.channel || "normal", //渠道
-    } = params;
+    const { pagePath = pageInfo?.route } = params;
     /**
      * 兼容remark
      */
@@ -75,37 +72,36 @@ export const trackingFn = async (params: params) => {
     const remarkStr = Object.keys(remark)?.length
       ? JSON.stringify(remark)
       : undefined;
+
     Taro.getApp()
       .init()
       .then(() => {
-        AddBehavior({
-          key: "PAGE_VIEW",
-          customInfos: [
-            {
-              name: "pagePath",
-              value: pagePath || "",
-            },
-            {
-              name: "query",
-              value: query || "",
-            },
-            {
-              name: "remark",
-              value: remarkStr || "",
-            },
-            {
-              name: "scene",
-              value: String(res.scene) || "",
-            },
-            {
-              name: "channel",
-              value: channel || "",
-            },
-            {
-              name: "clickId",
-              value: clickId || "",
-            },
-          ],
+        let customInfos = [
+          {
+            name: "path",
+            value: getPages({ getKey: "$taroPath" }) ?? "",
+          },
+          {
+            name: "query",
+            value: JSON.stringify(query) || "",
+          },
+          {
+            name: "remark",
+            value: remarkStr || "",
+          },
+          {
+            name: "scene",
+            value: String(res.scene) || "",
+          },
+        ];
+
+        api.behavior.behavior({
+          channelId: "wa",
+          customInfos: customInfos,
+          inValid: false,
+          key: params.formId,
+          took: 0,
+          type: "PAGE_VIEW",
         });
       });
   } catch (err) {

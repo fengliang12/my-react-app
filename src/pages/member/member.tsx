@@ -1,7 +1,7 @@
 import { View } from "@tarojs/components";
-import Taro, { useDidShow, useRouter, useShareAppMessage } from "@tarojs/taro";
+import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn } from "ahooks";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import api from "@/src/api";
@@ -12,7 +12,6 @@ import CouponPopup from "@/src/components/CouponPopup";
 import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
 import Page from "@/src/components/Page";
-import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import { isBetween, setShareParams } from "@/src/utils";
 import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
@@ -30,6 +29,7 @@ const Index = () => {
   const { headerHeight } = getHeaderHeight();
   const [giftPop, setGiftPop] = useState<string>("");
   const loading = useRef<boolean>(false);
+  const [sendType, setSendType] = useState<string>("");
 
   const { canActive, inTime, extendInfos, addCustomerBehavior } =
     useActivityHook("VIEW_HOMEPAGE");
@@ -43,6 +43,8 @@ const Index = () => {
 
     /** 获取活动信息 */
     let activityInfo = await api.apply.activityDetail(scene);
+    setSendType(activityInfo?.data?.sendType || "");
+
     if (
       !activityInfo ||
       !isBetween(activityInfo.data.from, activityInfo.data.to)
@@ -65,14 +67,6 @@ const Index = () => {
       setDialogText(`您已参与过此活动,\n敬请期待下次惊喜`);
       setTrue();
     } else {
-      // await api.apply.takeTag({
-      //   customerId: info?.id || "",
-      // });
-      // to(
-      //   `/pages/h5/index?url=${encodeURIComponent(
-      //     `https://www.shyb888.cn/vip/N-009-240204/index.html?id=${userInfo.memberId}`,
-      //   )}`,
-      // );
       setDialogText("参与成功");
       setTrue();
     }
@@ -265,6 +259,9 @@ const Index = () => {
           showHideBtn={false}
           btnText="好的"
           confirm={() => {
+            if (dialogText === "参与成功" && sendType === "coupon") {
+              to("/subPages/coupon/index");
+            }
             setFalse();
           }}
         ></CDialog>

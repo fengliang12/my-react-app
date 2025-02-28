@@ -29,9 +29,7 @@ class Tracking {
     const track = this;
     App = function (conf) {
       // "onLaunch",
-      const methods = ["onShow"];
-      console.log("conf", conf);
-
+      const methods = ["onLaunch"];
       Object.keys(conf).forEach((elem) => {
         if (!methods.includes(elem)) {
           return;
