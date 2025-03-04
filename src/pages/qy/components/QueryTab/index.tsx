@@ -1,29 +1,7 @@
-import { Text, View } from "@tarojs/components";
-import React, { useEffect, useState } from "react";
+import { View } from "@tarojs/components";
+import React, { useState } from "react";
 
 import { FilterType } from "@/qyConfig/index";
-
-const FilterList: Array<{
-  title: string;
-  key: string;
-}> = [
-  {
-    title: "全部",
-    key: "all",
-  },
-  {
-    title: "已预约",
-    key: "all",
-  },
-  {
-    title: "已核销",
-    key: "all",
-  },
-  {
-    title: "已过期",
-    key: "all",
-  },
-];
 
 interface Props {
   FilterList: Array<FilterType>;
@@ -39,14 +17,14 @@ const Index: React.FC<Props> = (props) => {
         return (
           <View
             className="flex-1 h-full vhCenter"
-            key={item.key}
+            key={item.value}
             onClick={() => {
               setSelectIndex(index);
-              callback && callback(item.key);
+              callback && callback(item.value);
             }}
           >
             <View className="relative">
-              {item.title}
+              {item.label}
               {selectIndex === index && (
                 <View className="absolute -bottom-10 left-0 w-full h-4 bg-white"></View>
               )}

@@ -57,7 +57,7 @@ declare namespace Api {
       interface IRequestBody {
         page: number;
         size: number;
-        mobile?: string;
+        expression?: string;
       }
       interface IResponse {}
     }
@@ -86,10 +86,8 @@ declare namespace Api {
     }
 
     namespace Stock {
-      type FuncT = (params: IRequestBody) => PG<IResponse>;
+      type FuncT = (params: IRequestBody) => MRP<Array<IResponse>>;
       interface IRequestBody {
-        page: number;
-        size: number;
         counterId: string;
       }
       interface IResponse {}
@@ -99,7 +97,6 @@ declare namespace Api {
       type FuncT = (params: IRequestBody) => MRP<Array<IResponse>>;
       interface IRequestBody {
         counterId: string;
-        bonusPointId: string;
       }
       interface IResponse {}
     }

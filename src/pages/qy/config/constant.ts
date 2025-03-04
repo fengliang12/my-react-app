@@ -1,3 +1,18 @@
+export enum POSITION_ENUM {
+  SA = "sales_associate",
+  TEMP_STORE_MANAGER = "temp_store_manager",
+  STORE_MANAGER = "store_manager",
+  SENIOR_STORE_MANAGER = "senior_store_manager",
+  CITY_MANAGER = "city_manager",
+  OFFICE_MANAGER = "Admin",
+  AREA_MANAGER = "area_manager",
+  REGION_MANAGER = "region_manager",
+  Retail_Director_South = "retail_director_south",
+  Retail_Director_North = "retail_director_north",
+  Retail_Operations_Manager = "retail_operations_manager",
+  Retail_Operations_Executive = "retail_operations_executive",
+}
+
 export enum OrderStatusEnum {
   待付款 = "wait_pay",
   已取消 = "cancelled",
@@ -21,48 +36,48 @@ export const OrderStatus = {
 };
 
 export type FilterType = {
-  title: string;
-  key: string;
+  label: string;
+  value: string;
 };
 
 export const StatusFilterList: Array<FilterType> = [
   {
-    title: "全部",
-    key: "all",
+    label: "全部",
+    value: "",
   },
   {
-    title: "已预约",
-    key: OrderStatusEnum.待付款,
+    label: "已预约",
+    value: OrderStatusEnum.待付款,
   },
   {
-    title: "已核销",
-    key: OrderStatusEnum.已完成,
+    label: "已核销",
+    value: OrderStatusEnum.已完成,
   },
   {
-    title: "已过期",
-    key: OrderStatusEnum.已取消,
+    label: "已过期",
+    value: OrderStatusEnum.已取消,
   },
 ];
 
 export const PointFilterList: Array<FilterType> = [
   {
-    title: "全部",
-    key: "all",
+    label: "全部",
+    value: "",
   },
   {
-    title: "1000",
-    key: "1000",
+    label: "1000",
+    value: "1000",
   },
   {
-    title: "2000",
-    key: "2000",
+    label: "2000",
+    value: "2000",
   },
   {
-    title: "4000",
-    key: "4000",
+    label: "4000",
+    value: "4000",
   },
   {
-    title: "5000",
-    key: "5000",
+    label: "5000",
+    value: "5000",
   },
 ];

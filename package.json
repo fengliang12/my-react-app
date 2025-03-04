@@ -74,6 +74,7 @@
     "redux-thunk": "^2.4.2",
     "taro-hooks": "latest",
     "taro-plugin-compiler-optimization": "^1.0.4",
+    "taro_picker": "^0.1.8",
     "thread-loader": "^4.0.2",
     "use-immer": "^0.9.0",
     "weapp-qrcode": "^1.0.0"

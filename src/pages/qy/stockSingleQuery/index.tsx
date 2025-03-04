@@ -22,7 +22,6 @@ const Index = () => {
     await app.init();
     let res = await api.qy.singleCounterStock({
       counterId: "00300123",
-      bonusPointId: "D5UYZGzv3xa6H6huj36XDY",
     });
     setStockList(res.data);
     Taro.hideLoading();

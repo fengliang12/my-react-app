@@ -1,49 +1,49 @@
 import { Input, Picker, Text, View } from "@tarojs/components";
 import Taro, { useReachBottom } from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
-import React, { useEffect } from "react";
+import { useMemoizedFn, useSetState } from "ahooks";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
-import config from "@/src/config";
-import usePagingLoad from "@/src/hooks/usePagingLoad";
+import { getComplexExpression } from "@/src/utils/expression";
 import to from "@/src/utils/to";
 
+import OrganizationPicker from "../components/OrganizationPicker";
 import QueryTab from "../components/QueryTab";
 import { PointFilterList } from "../config";
 
 const app = Taro.getApp();
+
+const initialState = {
+  parentRegion: null,
+  region: null,
+  store: null,
+};
 const Index = () => {
+  const qyUser = useSelector((state: Store.States) => state.qyUser);
+  const [point, setPoint] = useState<string>("");
+  const [state, setState] = useSetState<any>(initialState);
+  const [recordList, setRecordList] = useState<Api.QYWX.Stock.IResponse[]>([]);
+
   /**
    * 获取记录
    */
-  const getStockList = useMemoizedFn(async ({ page }) => {
+  const getStockList = useMemoizedFn(async () => {
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     let res = await api.qy.counterStock({
-      page,
-      size: 10,
       counterId: "00300123",
+      ...(point && { point }),
     });
     Taro.hideLoading();
-    return res.data;
+    setRecordList(res.data);
   });
 
-  const {
-    loading,
-    /** 记录列表 */
-    list: recordList,
-    /** 滚动到底部加载 */
-    onScrollToLower,
-    resetRefresh,
-  } = usePagingLoad<Api.QYWX.OrderList.IResponse>({
-    getList: getStockList,
-  });
-
-  useReachBottom(() => {
-    onScrollToLower();
-  });
+  useEffect(() => {
+    getStockList();
+  }, [getStockList, point]);
 
   return (
     <View className="bg-[#F8F5F8] min-h-screen pb-100">
@@ -61,8 +61,6 @@ const Index = () => {
         <View
           className="underline text-right text-white pt-50 text-24 mb-28"
           onClick={() => {
-            console.log(1111);
-
             to("/pages/qy/stockSingleQuery/index");
           }}
         >
@@ -71,53 +69,23 @@ const Index = () => {
         <View className="text-48 text-white font-bold text-center mb-78">
           库存查询
         </View>
-        <View className="flex justify-between items-center mb-24">
-          <Picker
-            className="w-316"
-            mode="selector"
-            range={[]}
-            onChange={() => {}}
-          >
-            <View className="bg-white w-full h-78 px-30 text-24 flex items-center justify-start relative box-border">
-              <View className="picker">东大区</View>
-              <CImage
-                className="absolute right-27 w-14 h-8"
-                src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
-              ></CImage>
-            </View>
-          </Picker>
-          <Picker
-            className="w-316"
-            mode="selector"
-            range={[]}
-            onChange={() => {}}
-          >
-            <View className="bg-white w-full h-78 px-30 text-24 flex items-center justify-start relative box-border">
-              <View className="picker">东一区</View>
-              <CImage
-                className="absolute right-27 w-14 h-8"
-                src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
-              ></CImage>
-            </View>
-          </Picker>
-        </View>
-
-        <View className="mb-24">
-          <Picker mode="selector" range={[]} onChange={() => {}}>
-            <View className="bg-white w-full h-78 px-30 text-24 flex items-center justify-start relative box-border">
-              <View className="picker">上海新世界</View>
-              <CImage
-                className="absolute right-27 w-14 h-8"
-                src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
-              ></CImage>
-            </View>
-          </Picker>
-        </View>
+        <OrganizationPicker
+          state={state}
+          callback={(e) => {
+            //@ts-ignore
+            setState(e);
+          }}
+        ></OrganizationPicker>
       </View>
 
       <View className="w-700 mt-33 ml-25">
         {/* tab栏 */}
-        <QueryTab FilterList={PointFilterList}></QueryTab>
+        <QueryTab
+          FilterList={PointFilterList}
+          callback={(e) => {
+            setPoint(e);
+          }}
+        ></QueryTab>
 
         {recordList && recordList.length > 0
           ? recordList?.map((item: any, index) => {

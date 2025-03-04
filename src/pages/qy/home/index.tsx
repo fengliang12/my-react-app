@@ -10,7 +10,6 @@ import config from "@/src/config";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
-const app = Taro.getApp();
 const Index = () => {
   const qyUser = useSelector((state: Store.States) => state.qyUser);
 
@@ -20,11 +19,9 @@ const Index = () => {
   const onConfirm = useMemoizedFn(async () => {
     Taro.scanCode({
       success: async (res) => {
-        console.log("res", res);
-
         let res1 = await api.qy.orderSubmit({
           code: res.result,
-          type: "sms",
+          type: "code",
         });
         console.log("res", res1);
       },
@@ -91,7 +88,7 @@ const Index = () => {
           mode="widthFix"
           src={`${config.imgBaseUrl}/qy/home/data_query.png`}
           onClick={() => {
-            to("/pages/qy/dataQuery/index");
+            to("/pages/qy/dashboard/index");
           }}
         ></CImage>
 
