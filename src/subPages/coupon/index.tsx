@@ -1,6 +1,6 @@
 import { ScrollView, Text, View } from "@tarojs/components";
 import Taro, { useDidShow, useShareAppMessage } from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
+import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
 import { useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -26,11 +26,21 @@ const Index = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [couponStatus, setCouponStatus] = useState<string>("wait");
   const userInfo = useSelector((state: Store.States) => state.user);
+  const [notShowCounterNameCoupon, setNotShowCounterNameCoupon] =
+    useState<string>("");
+
+  useAsyncEffect(async () => {
+    let ret = await api.kvdata.getKvDataByType("notShowCounterNameCoupon");
+    let kvData = ret?.data?.[0];
+    if (kvData) {
+      setNotShowCounterNameCoupon(kvData?.content || "");
+    }
+  }, []);
 
   useDidShow(async () => {
     Taro.showLoading({ title: "加载中", mask: true });
+    await app.init();
     const { data } = await api.coupon.posCouponDetail({});
-
     setOriginList(data);
     Taro.hideLoading();
   });
@@ -148,12 +158,18 @@ const Index = () => {
                       </View>
 
                       <View className="text-22 mt-10">
-                        {item?.exchangeStoreName || userInfo?.belongShopName
-                          ? `领取柜台:${
-                              item?.exchangeStoreName ||
-                              userInfo?.belongShopName
-                            }`
-                          : ""}
+                        {!notShowCounterNameCoupon?.includes(
+                          item.goodsCode,
+                        ) && (
+                          <>
+                            {item?.exchangeStoreName || userInfo?.belongShopName
+                              ? `领取柜台:${
+                                  item?.exchangeStoreName ||
+                                  userInfo?.belongShopName
+                                }`
+                              : ""}
+                          </>
+                        )}
                       </View>
 
                       <View className="w-full text-20 mt-20 flex items-center justify-between">
