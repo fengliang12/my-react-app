@@ -233,7 +233,12 @@ const Index = () => {
                   className="px-25 pb-50 text-24 bg-white mb-30"
                   key={index}
                 >
-                  <QueryStaticResult info={item}></QueryStaticResult>
+                  <QueryStaticResult
+                    info={item}
+                    callback={() => {
+                      resetRefresh();
+                    }}
+                  ></QueryStaticResult>
                 </View>
               );
             })

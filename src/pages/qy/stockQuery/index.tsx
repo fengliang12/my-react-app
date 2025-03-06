@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
-import { getComplexExpression } from "@/src/utils/expression";
 import to from "@/src/utils/to";
 
 import OrganizationPicker from "../components/OrganizationPicker";

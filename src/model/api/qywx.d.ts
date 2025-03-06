@@ -52,6 +52,34 @@ declare namespace Api {
       type FuncT = (id: string, type: string) => MRP<any>;
     }
 
+    namespace Dashboard {
+      type FuncT = (params: Partial<IRequestBody>) => MRP<IResponse>;
+      interface IRequestBody {
+        /**
+         * 积分商品id
+         */
+        bonusPointId: string;
+        /**
+         * 柜台id列表
+         */
+        counterIds: string;
+        /**
+         * 月，格式MM
+         */
+        month: string;
+        /**
+         * 积分
+         */
+        point: string;
+        /**
+         * 年，格式yyyy
+         */
+        year: string;
+        [property: string]: any;
+      }
+      interface IResponse {}
+    }
+
     namespace OrderList {
       type FuncT = (params: IRequestBody) => PG<IResponse>;
       interface IRequestBody {
@@ -88,7 +116,7 @@ declare namespace Api {
     namespace Stock {
       type FuncT = (params: IRequestBody) => MRP<Array<IResponse>>;
       interface IRequestBody {
-        counterId: string;
+        counterId?: string;
       }
       interface IResponse {}
     }
@@ -96,7 +124,7 @@ declare namespace Api {
     namespace SingleCounterStock {
       type FuncT = (params: IRequestBody) => MRP<Array<IResponse>>;
       interface IRequestBody {
-        counterId: string;
+        counterId?: string;
       }
       interface IResponse {}
     }

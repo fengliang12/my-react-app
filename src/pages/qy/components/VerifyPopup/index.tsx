@@ -16,7 +16,7 @@ interface Props {
   callback?: () => void;
 }
 const Index: React.FC<Props> = (props) => {
-  let { children, orderId, mobile = "15656180073" } = props;
+  let { children, orderId, mobile = "15656180073", callback } = props;
   const [show, { setTrue, setFalse }] = useBoolean(false);
   const [verifyCode, setVerifyCode] = useState("");
 
@@ -36,12 +36,15 @@ const Index: React.FC<Props> = (props) => {
     if (verifyCode) {
       // TODO: 核销
       setFalse();
-      let res = await api.qy.orderSubmit({
+      await api.qy.orderSubmit({
         smsCode: verifyCode,
         orderId: orderId,
         type: "sms",
       });
-      console.log("res", res);
+      toast("核销成功");
+      callback && callback();
+    } else {
+      toast("请输入验证码");
     }
   });
 

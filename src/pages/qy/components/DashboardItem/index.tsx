@@ -1,55 +1,60 @@
 import { Picker, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 import api from "@/src/api";
 import { P11 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
+import { generateYearMonthArray } from "@/src/utils";
+
+import { structure, structure2 } from "../../config";
 
 interface Props {
   type: "country" | "region" | "store" | "ba";
+  pointList?: any[];
 }
 
-const structure = [
-  {
-    label: "会员数",
-    value: "memberCounts",
-  },
-  {
-    label: "订单数",
-    value: "orderCounts",
-  },
-  {
-    label: "礼品数",
-    value: "giftCounts",
-  },
-];
-
-const structure2 = ["waitReceiveCount", "waitEstimateCount", "expiredCount"];
-
 const app: App.GlobalData = Taro.getApp();
-const Index: React.FC<Props> = () => {
+const Index: React.FC<Props> = (props) => {
+  let { type = "country", pointList = [] } = props;
   const [open, { setTrue, setFalse }] = useBoolean(false);
   const [dashboardData, setDashboardData] = useState<any>([]);
+  const [date, setDate] = useState<any>();
+  const [point, setPoint] = useState<any>(null);
+  const yearRange = generateYearMonthArray("2000", dayjs().format("YYYY-MM"));
 
   const getDashboardData = useMemoizedFn(async () => {
     await app.init();
-    let res = await api.qy.dashboard();
+    let res = await api.qy.dashboard({
+      bonusPointId: point?.id,
+      year: date?.year,
+      month: date?.month,
+    });
     setDashboardData(res?.data);
   });
 
   useEffect(() => {
     getDashboardData();
-  }, []);
+  }, [point, date, getDashboardData]);
 
   return (
     <View className="w-656 box-border mt-38 bg-white border border-1 border-[#000]">
-      <View className="w-full h-80 px-34 box-border flex justify-start items-center bg-black text-white">
-        <Text className="text-24 mr-30">彩妆师</Text>
-        <Text className="text-24">张兰</Text>
-      </View>
+      {type === "country" ? (
+        <View className="w-full h-80 px-34 box-border flex justify-start items-center bg-[#C5112C] text-white">
+          <Text className="text-24 mr-30">全国</Text>
+        </View>
+      ) : (
+        <View className="w-full h-80 px-34 box-border flex justify-start items-center bg-[#000] text-white">
+          <Text className="text-24 mr-30">
+            {type === "region" ? "区域" : "门店"}
+          </Text>
+          <Text></Text>
+        </View>
+      )}
+
       {open ? (
         <View className="w-full">
           <View className="w-full pt-40 ">
@@ -61,26 +66,37 @@ const Index: React.FC<Props> = () => {
             <View className="flex justify-center items-center mt-40 mb-37">
               <Picker
                 className="w-280 mr-28"
-                mode="date"
-                value=""
-                onChange={() => {}}
+                mode="selector"
+                range={yearRange}
+                rangeKey="label"
+                onChange={(e) => {
+                  setDate(yearRange[e.detail.value]);
+                }}
               >
                 <View className="w-280 h-80 px-30 text-24 flex items-center justify-start relative box-border border-solid border-2">
-                  <View className="picker">日期</View>
+                  <View className="picker">
+                    {date?.label ? date?.label : "日期"}
+                  </View>
                   <CImage
                     className="absolute right-27 w-14 h-8"
                     src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
                   ></CImage>
                 </View>
               </Picker>
+
               <Picker
                 className="w-280"
                 mode="selector"
-                range={[]}
-                onChange={() => {}}
+                range={pointList}
+                rangeKey="name"
+                onChange={(e) => {
+                  setPoint(pointList[e.detail.value]);
+                }}
               >
                 <View className=" border-solid border-2 w-280 h-80 px-30 text-24 flex items-center justify-start relative box-border">
-                  <View className="picker">积分区间明细</View>
+                  <View className="picker">
+                    {point ? point.name : "积分区间明细"}
+                  </View>
                   <CImage
                     className="absolute right-27 w-14 h-8"
                     src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
@@ -88,7 +104,6 @@ const Index: React.FC<Props> = () => {
                 </View>
               </Picker>
             </View>
-
             <View className="w-593 h-1 ml-35 bg-[#CCCCCC]"></View>
 
             {/* 数据 */}

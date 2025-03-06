@@ -162,7 +162,9 @@ const OrderConfirm = () => {
         </View>
 
         {detail?.status &&
-          ["wait_shipment", "wait_receive"].includes(detail?.status) &&
+          ["wait_shipment", "wait_receive", "wait_pay"].includes(
+            detail?.status,
+          ) &&
           detail?.deliverInfo?.type === "self_pick_up" && (
             <View
               className="text-55 flex flex-col justify-center items-center mt-46 pt-50"

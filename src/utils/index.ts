@@ -144,7 +144,6 @@ export function debounceImme(fn: Function, wait: number, msg?: string) {
   };
 }
 
-
 // 手机号掩码
 export const maskPhone = (phone: string) => {
   if (phone.includes("*")) return phone;
@@ -171,4 +170,37 @@ export const setShareParams = () => {
     path: "/pages/member/member",
     imageUrl: `https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/share/share.png`,
   };
+};
+
+export const generateYearMonthArray = (start, end) => {
+  const result: any = [];
+  let current = dayjs(end); // 从结束日期开始
+  const startDate = dayjs(start); // 开始日期
+
+  // 遍历日期范围（倒序）
+  while (current.isAfter(startDate) || current.isSame(startDate, "month")) {
+    const year = current.year();
+    const month = current.month() + 1; // dayjs 的 month 从 0 开始，需要 +1
+
+    // 添加月份项
+    result.push({
+      label: `${year}年${month}月`,
+      year: year.toString(),
+      month: month.toString(),
+    });
+
+    // 每年的最后一个月添加“全年”项
+    if (month === 12) {
+      result.push({
+        label: `${year}全年`,
+        year: year.toString(),
+        month: "",
+      });
+    }
+
+    // 减少一个月
+    current = current.subtract(1, "month");
+  }
+
+  return result;
 };

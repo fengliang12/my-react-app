@@ -49,10 +49,10 @@ const orderSubmit: Api.QYWX.OrderSubmit.FuncT = (data) =>
  * 订单面板
  * @returns
  */
-const dashboard: any = (params: any) =>
+const dashboard: Api.QYWX.Dashboard.FuncT = (params) =>
   http.get(
     `https://member-front-uat.narscosmetics.com.cn/api/sp-manage/store/${config.storeCode}/wecom/order/dashboard`,
-    params,
+    { params },
   );
 
 /**

@@ -9,9 +9,10 @@ import VerifyPopup from "../VerifyPopup";
 
 interface Props {
   info: any;
+  callback: () => void;
 }
 const Index: React.FC<Props> = (props) => {
-  let { info } = props;
+  let { info, callback } = props;
 
   /**
    * 有效期
@@ -72,7 +73,7 @@ const Index: React.FC<Props> = (props) => {
         </View>
       </View>
 
-      {info.status !== "wait_pay" && availDay > 0 && (
+      {info.status === "wait_pay" && availDay > 0 && (
         <>
           <View className="w-full h-1 bg-[#CCCCCC]"></View>
           <View className="w-full h-120 flex justify-between items-center">
@@ -83,9 +84,7 @@ const Index: React.FC<Props> = (props) => {
             <VerifyPopup
               orderId={info.orderId}
               mobile={info.mobile}
-              callback={function (): void {
-                throw new Error("Function not implemented.");
-              }}
+              callback={callback}
             >
               <View className="w-170 h-60 bg-black text-white vhCenter text-24">
                 确认核销

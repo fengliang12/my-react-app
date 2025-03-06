@@ -19,6 +19,7 @@ export const createInit = () => {
             : api.common.login(code, { checkMember: true }),
         )
         .then(async ({ data }) => {
+          // 设置token
           Taro.setStorageSync(
             "token",
             config.env === "qy" ? `${data}` : data.jwtString,

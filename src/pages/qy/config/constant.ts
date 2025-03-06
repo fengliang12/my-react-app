@@ -13,26 +13,17 @@ export enum POSITION_ENUM {
   Retail_Operations_Executive = "retail_operations_executive",
 }
 
-export enum OrderStatusEnum {
-  待付款 = "wait_pay",
-  已取消 = "cancelled",
-  已支付未发货取消 = "pay_cancelled",
-  待成团 = "wait_group",
-  待发货 = "wait_shipment",
-  待收货 = "wait_receive",
-  待评价 = "wait_estimate",
-  已完成 = "success",
-}
-
 export const OrderStatus = {
-  wait_pay: OrderStatusEnum.待付款,
-  cancelled: OrderStatusEnum.已取消,
-  pay_cancelled: OrderStatusEnum.已支付未发货取消,
-  wait_group: OrderStatusEnum.待成团,
-  wait_shipment: OrderStatusEnum.待发货,
-  wait_receive: OrderStatusEnum.待收货,
-  wait_estimate: OrderStatusEnum.待评价,
-  success: OrderStatusEnum.已完成,
+  wait_pay: "待支付",
+  cancelled: "已取消",
+  pay_cancelled: "已支付未发货取消",
+  wait_group: "待成团",
+  wait_shipment: "待发货",
+  success: "已完成",
+
+  wait_receive: "已预约",
+  wait_estimate: "已核销",
+  expired: "已过期",
 };
 
 export type FilterType = {
@@ -47,15 +38,15 @@ export const StatusFilterList: Array<FilterType> = [
   },
   {
     label: "已预约",
-    value: OrderStatusEnum.待付款,
+    value: "wait_receive",
   },
   {
     label: "已核销",
-    value: OrderStatusEnum.已完成,
+    value: "wait_estimate",
   },
   {
     label: "已过期",
-    value: OrderStatusEnum.已取消,
+    value: "expired",
   },
 ];
 
@@ -80,4 +71,25 @@ export const PointFilterList: Array<FilterType> = [
     label: "5000",
     value: "5000",
   },
+];
+
+export const structure: Array<FilterType> = [
+  {
+    label: "会员数",
+    value: "memberCounts",
+  },
+  {
+    label: "订单数",
+    value: "orderCounts",
+  },
+  {
+    label: "礼品数",
+    value: "giftCounts",
+  },
+];
+
+export const structure2 = [
+  "waitReceiveCount",
+  "waitEstimateCount",
+  "expiredCount",
 ];

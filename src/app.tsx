@@ -45,7 +45,6 @@ class App extends Component<any> {
     /** 短链埋点 */
     schemaTrack();
     // /** 注销用户再次注册需刷新token */
-
     if (
       !userInfo?.isMember &&
       userInfo?.channelName &&

@@ -19,25 +19,27 @@ const Index = () => {
   const onConfirm = useMemoizedFn(async () => {
     Taro.scanCode({
       success: async (res) => {
-        let res1 = await api.qy.orderSubmit({
-          code: res.result,
-          type: "code",
-        });
-        console.log("res", res1);
+        if (res?.result) {
+          await api.qy.orderSubmit({
+            code: res.result,
+            type: "code",
+          });
+          toast("核销成功");
+        }
       },
       fail: (err) => {
         console.log("err", err);
-        toast("扫码失败");
       },
     });
   });
 
   return (
-    <View className="bg-[#F8F5F8] min-h-screen">
+    <View className="bg-[#000] min-h-screen">
       <CHeader
         fill={false}
         titleColor="#FFFFFF"
         backgroundColor="transparent"
+        back={false}
       ></CHeader>
       <View className="relative">
         <CImage
