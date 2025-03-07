@@ -172,6 +172,8 @@ const Index = () => {
           <Input
             className="bg-white w-316 h-78 px-30 text-24 flex items-center justify-start relative box-border"
             placeholder="请输入客户手机号"
+            type="number"
+            maxlength={11}
             onInput={(e) => {
               setState({
                 mobile: e.detail.value,

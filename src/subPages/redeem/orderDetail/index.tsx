@@ -120,13 +120,13 @@ const OrderConfirm = () => {
                 </View>
                 {detail?.simpleCounter?.detailInfo?.name}
               </View>
-              <View
+              {/* <View
                 className="mt-18 text-19"
                 onClick={() => to("/pages/update/index")}
               >
                 *如所选领取柜台与所属柜台不一致，请在核销前
                 <Text className="underline">点击此处</Text>修改所属柜台。
-              </View>
+              </View> */}
             </>
           )}
         </View>

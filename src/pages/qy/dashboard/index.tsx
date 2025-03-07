@@ -1,6 +1,7 @@
 import { View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
+import { isNil, isNumber } from "lodash";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -25,7 +26,22 @@ const Index = () => {
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     let res = await api.qy.counterStock({});
-    setPointList(res.data);
+    let list = res?.data;
+    list.unshift({
+      name: "全部",
+      stock: 0,
+      id: "",
+    });
+    setPointList(
+      list.map((item: any) => {
+        return {
+          ...item,
+          ...(isNumber(item.point) && {
+            name: `${item.point}挡位 ${item.name}`,
+          }),
+        };
+      }),
+    );
     Taro.hideLoading();
     return res.data;
   });

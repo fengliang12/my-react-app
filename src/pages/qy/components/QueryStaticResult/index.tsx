@@ -18,7 +18,7 @@ const Index: React.FC<Props> = (props) => {
    * 有效期
    */
   const availTime = useMemo(() => {
-    return dayjs(info.createTime).add(30, "day").format("YYYY/MM/DD HH:mm:ss");
+    return dayjs(info.createTime).add(30, "day").format("YYYY.MM.DD HH:mm:ss");
   }, [info]);
 
   /**

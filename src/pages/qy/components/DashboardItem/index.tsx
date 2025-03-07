@@ -95,7 +95,7 @@ const Index: React.FC<Props> = (props) => {
               >
                 <View className=" border-solid border-2 w-280 h-80 px-30 text-24 flex items-center justify-start relative box-border">
                   <View className="picker">
-                    {point ? point.name : "积分区间明细"}
+                    {point ? `${point.name}` : "积分区间明细"}
                   </View>
                   <CImage
                     className="absolute right-27 w-14 h-8"

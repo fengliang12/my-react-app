@@ -181,14 +181,6 @@ export const generateYearMonthArray = (start, end) => {
   while (current.isAfter(startDate) || current.isSame(startDate, "month")) {
     const year = current.year();
     const month = current.month() + 1; // dayjs 的 month 从 0 开始，需要 +1
-
-    // 添加月份项
-    result.push({
-      label: `${year}年${month}月`,
-      year: year.toString(),
-      month: month.toString(),
-    });
-
     // 每年的最后一个月添加“全年”项
     if (month === 12) {
       result.push({
@@ -197,6 +189,13 @@ export const generateYearMonthArray = (start, end) => {
         month: "",
       });
     }
+
+    // 添加月份项
+    result.push({
+      label: `${year}年${month}月`,
+      year: year.toString(),
+      month: month.toString(),
+    });
 
     // 减少一个月
     current = current.subtract(1, "month");
