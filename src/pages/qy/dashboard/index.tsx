@@ -37,7 +37,7 @@ const Index = () => {
         return {
           ...item,
           ...(isNumber(item.point) && {
-            name: `${item.point}挡位 ${item.name}`,
+            name: `${item.point}档 ${item.name}`,
           }),
         };
       }),

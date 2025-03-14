@@ -1,9 +1,14 @@
 import { Text, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
+import { useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
 
 import { OrderStatus } from "@/qyConfig/index";
+import { Copy } from "@/src/assets/image";
+import CImage from "@/src/components/Common/CImage";
 import { formatDateTime } from "@/src/utils";
+import toast from "@/src/utils/toast";
 
 import VerifyPopup from "../VerifyPopup";
 
@@ -25,14 +30,29 @@ const Index: React.FC<Props> = (props) => {
    * 有效期天数
    */
   const availDay = useMemo(() => {
-    return dayjs(availTime).diff(dayjs(), "day");
+    if (availTime) {
+      return dayjs(availTime?.replaceAll(".", "/")).diff(dayjs(), "day");
+    }
+    return 0;
   }, [availTime]);
+
+  /**
+   *
+   */
+  const clickCopyPhone = useMemoizedFn((phone) => {
+    Taro.setClipboardData({
+      data: phone,
+      success: () => {
+        toast("复制成功");
+      },
+    });
+  });
 
   return (
     <>
       <View className="w-full h-90 flex justify-between items-center">
         {/* 申请时间 */}
-        <Text>申请时间:{formatDateTime(info?.createTime, 6)}</Text>
+        <Text>申请时间:{formatDateTime(info?.createTime, 6, ".")}</Text>
         <Text>{OrderStatus[info?.status]}</Text>
       </View>
       <View className="w-full h-1 bg-[#CCCCCC]"></View>
@@ -65,7 +85,15 @@ const Index: React.FC<Props> = (props) => {
       <View className="pt-36">
         <View className="w-full flex justify-between items-center mb-36">
           <Text>预约会员:{info?.memberName}</Text>
-          <View>手机号:{info?.mobile}</View>
+          <View
+            className="flex items-center"
+            onClick={() => {
+              clickCopyPhone(info?.mobile);
+            }}
+          >
+            手机号:{info?.mobile}{" "}
+            <CImage src={Copy} className="w-20 h-20 ml-10"></CImage>
+          </View>
         </View>
         <View className="w-full flex justify-between items-center mb-36">
           <Text>所属彩妆师:{info?.baName}</Text>
@@ -73,7 +101,7 @@ const Index: React.FC<Props> = (props) => {
         </View>
       </View>
 
-      {info.status === "wait_pay" && availDay > 0 && (
+      {info.status === "wait_receive" && availDay > 0 && (
         <>
           <View className="w-full h-1 bg-[#CCCCCC]"></View>
           <View className="w-full h-120 flex justify-between items-center">

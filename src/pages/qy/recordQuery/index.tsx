@@ -64,6 +64,11 @@ const Index = () => {
         value: status,
         operator: "eq",
       },
+      {
+        name: "counterId empty",
+        value: false,
+        operator: "eq",
+      },
     ]);
 
     let res = await api.qy.orderList({
@@ -193,7 +198,7 @@ const Index = () => {
           >
             <View className="bg-white w-full h-78 px-30 text-24 flex items-center justify-start relative box-border">
               <View className="picker">
-                {state?.point ? state?.point?.label : "请选择积分挡位"}
+                {state?.point ? state?.point?.label : "请选择积分档位"}
               </View>
               <CImage
                 className="absolute right-27 w-14 h-8"

@@ -119,7 +119,7 @@ const Index = () => {
                                 className="w-full flex justify-between items-center mt-33"
                               >
                                 <Text>{pack.name}</Text>
-                                <View>100</View>
+                                <View>{pack.inventory}</View>
                               </View>
                             );
                           },
