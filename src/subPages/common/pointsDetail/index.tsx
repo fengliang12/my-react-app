@@ -21,6 +21,9 @@ const Index = () => {
       page: 1,
       size: 100,
     });
+    data = data?.filter((item: any) => {
+      return item.changeType !== "TIMER";
+    });
     setList(data);
   }, [mobile]);
 
