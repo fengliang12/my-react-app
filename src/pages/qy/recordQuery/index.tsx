@@ -1,7 +1,8 @@
 import { Input, Picker, Text, View } from "@tarojs/components";
 import Taro, { useReachBottom } from "@tarojs/taro";
 import { useMemoizedFn, useSetState } from "ahooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
@@ -15,7 +16,7 @@ import toast from "@/src/utils/toast";
 import OrganizationPicker from "../components/OrganizationPicker";
 import QueryStaticResult from "../components/QueryStaticResult";
 import QueryTab from "../components/QueryTab";
-import { PointFilterList, StatusFilterList } from "../config";
+import { PointFilterList, POSITION_ENUM, StatusFilterList } from "../config";
 import { RecordQueryInitialState } from "../typing";
 
 const app = Taro.getApp();
@@ -24,14 +25,16 @@ const initialState = {
   startTime: "",
   endTime: "",
   mobile: "",
-  parentRegion: null,
-  region: null,
+  bigRegion: null,
+  smallRegion: null,
   store: null,
   point: null,
 };
 const Index = () => {
   const [state, setState] = useSetState<RecordQueryInitialState>(initialState);
   const [status, setStatus] = useState<string>("");
+  const [init, setInit] = useState<boolean>(false);
+  const qyUser = useSelector((state: Store.States) => state.qyUser);
 
   /**
    * 获取记录
@@ -69,6 +72,22 @@ const Index = () => {
         value: false,
         operator: "eq",
       },
+      ...(state?.store?.id
+        ? [
+            {
+              name: "counterId",
+              value: state.store?.id,
+              operator: "eq",
+            } as any,
+          ]
+        : [
+            {
+              name: "extendInfos.value",
+              value: state.smallRegion?.id ?? state.bigRegion?.id,
+              operator: "eq",
+            },
+          ]),
+      ,
     ]);
 
     let res = await api.qy.orderList({
@@ -89,25 +108,44 @@ const Index = () => {
     resetRefresh,
   } = usePagingLoad<Api.QYWX.OrderList.IResponse>({
     getList: getRecordList,
+    requestOptions: {
+      manual: true,
+    },
+  });
+
+  /**
+   * 滚动到底部
+   */
+  useReachBottom(() => {
+    onScrollToLower();
   });
 
   /**
    * 点击查询按钮
    */
-  const clickQueryFn = useMemoizedFn(() => {
+  const clickQueryBtn = useMemoizedFn(() => {
+    if (
+      qyUser?.position === POSITION_ENUM.BIG_REGION_MANAGER &&
+      !state?.bigRegion?.id
+    ) {
+      toast("请先选择大区");
+      return;
+    } else if (
+      qyUser?.position === POSITION_ENUM.SMALL_REGION_MANAGER &&
+      !state?.smallRegion?.id
+    ) {
+      toast("请先选择区域");
+      return;
+    } else if (
+      (qyUser?.position === POSITION_ENUM.STORE_MANAGER ||
+        qyUser?.position === POSITION_ENUM.AGENT_STORE_MANAGER ||
+        qyUser?.position === POSITION_ENUM.SA) &&
+      !state?.store?.id
+    ) {
+      toast("请先选择门店");
+      return;
+    }
     resetRefresh();
-  });
-
-  /**
-   * 点击重置按钮
-   */
-  const clickResetFn = useMemoizedFn(() => {
-    setState(initialState);
-    resetRefresh();
-  });
-
-  useReachBottom(() => {
-    onScrollToLower();
   });
 
   return (
@@ -121,6 +159,12 @@ const Index = () => {
           callback={(e) => {
             //@ts-ignore
             setState(e);
+            if (!init) {
+              Taro.nextTick(() => {
+                resetRefresh();
+                setInit(true);
+              });
+            }
           }}
         ></OrganizationPicker>
 
@@ -179,6 +223,7 @@ const Index = () => {
             placeholder="请输入客户手机号"
             type="number"
             maxlength={11}
+            value={state.mobile}
             onInput={(e) => {
               setState({
                 mobile: e.detail.value,
@@ -210,13 +255,17 @@ const Index = () => {
 
         <View
           className="w-full h-80 vhCenter text-24 bg-[#C5112C] text-white"
-          onClick={clickQueryFn}
+          onClick={clickQueryBtn}
         >
           查询
         </View>
         <View
           className="w-full h-100 underline text-24 text-white vhCenter"
-          onClick={clickResetFn}
+          onClick={() => {
+            setState({
+              ...initialState,
+            });
+          }}
         >
           重置
         </View>

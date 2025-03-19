@@ -76,6 +76,7 @@ declare namespace Store {
     name: string;
     position: string;
     status: string;
+    storeId: string;
   };
   type Common = {
     /** Nav高度 */

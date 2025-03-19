@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
+import Taro, { useRouter } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
 
@@ -9,6 +9,7 @@ import useNavigationBar from "@/src/hooks/useNavigationBar";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
+  const { params } = useRouter();
   const { contentHeight } = useNavigationBar();
   const [stockList, setStockList] = useState<
     Api.QYWX.SingleCounterStock.IResponse[]
@@ -21,7 +22,7 @@ const Index = () => {
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     let res = await api.qy.singleCounterStock({
-      counterId: "00300123",
+      counterId: params.counterId,
     });
     setStockList(res.data);
     Taro.hideLoading();

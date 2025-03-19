@@ -2,7 +2,7 @@ import { Picker, Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import api from "@/src/api";
 import { P11 } from "@/src/assets/image";
@@ -13,32 +13,50 @@ import { generateYearMonthArray } from "@/src/utils";
 import { structure, structure2 } from "../../config";
 
 interface Props {
-  type: "country" | "region" | "store" | "ba";
+  type?: "country" | "ba";
+  info?: any;
   pointList?: any[];
+  callback?: () => void;
 }
 
 const app: App.GlobalData = Taro.getApp();
 const Index: React.FC<Props> = (props) => {
-  let { type = "country", pointList = [] } = props;
+  let { type = "", pointList = [], info, callback } = props;
+
   const [open, { setTrue, setFalse }] = useBoolean(false);
-  const [dashboardData, setDashboardData] = useState<any>([]);
+  const [dashboardData, setDashboardData] = useState<any>(null);
   const [date, setDate] = useState<any>();
   const [point, setPoint] = useState<any>(null);
   const yearRange = generateYearMonthArray("2000", dayjs().format("YYYY-MM"));
 
+  /**
+   * 获取仪表盘数据
+   */
   const getDashboardData = useMemoizedFn(async () => {
     await app.init();
     let res = await api.qy.dashboard({
       bonusPointId: point?.id,
       year: date?.year,
       month: date?.month,
+      ...(info?.id && { counterIds: [info?.id] }),
     });
     setDashboardData(res?.data);
   });
 
   useEffect(() => {
-    getDashboardData();
-  }, [point, date, getDashboardData]);
+    setFalse();
+    setDate(null);
+    setPoint(null);
+  }, [info, setFalse]);
+
+  /**
+   * 打开时候才会调用接口
+   */
+  useEffect(() => {
+    if (open) {
+      getDashboardData();
+    }
+  }, [point, date, open, getDashboardData]);
 
   return (
     <View className="w-656 box-border mt-38 bg-white border border-1 border-[#000]">
@@ -47,11 +65,17 @@ const Index: React.FC<Props> = (props) => {
           <Text className="text-24 mr-30">全国</Text>
         </View>
       ) : (
-        <View className="w-full h-80 px-34 box-border flex justify-start items-center bg-[#000] text-white">
-          <Text className="text-24 mr-30">
-            {type === "region" ? "区域" : "门店"}
+        <View
+          className="w-full h-80 px-34 box-border flex justify-between items-center bg-[#000] text-white"
+          onClick={() => {
+            callback && callback();
+          }}
+        >
+          <Text className="text-24">
+            {type === "ba" ? "彩妆师：" : ""}
+            {info?.name || ""}
           </Text>
-          <Text></Text>
+          {type !== "ba" && <Text className="text-24">{">"}</Text>}
         </View>
       )}
 
@@ -114,23 +138,24 @@ const Index: React.FC<Props> = (props) => {
                 <View className="flex-1 text-center">已核销</View>
                 <View className="flex-1 text-center">已过期</View>
               </View>
-              {structure.map((item: any) => {
-                return (
-                  <View
-                    key={item.value}
-                    className="w-full flex justify-around items-center mb-44"
-                  >
-                    <View className="flex-1 text-center">{item.label}</View>
-                    {structure2.map((item2: any) => {
-                      return (
-                        <View key={item2} className="flex-1 text-center">
-                          {dashboardData[item.value][item2]}
-                        </View>
-                      );
-                    })}
-                  </View>
-                );
-              })}
+              {dashboardData &&
+                structure?.map((item: any) => {
+                  return (
+                    <View
+                      key={item.value}
+                      className="w-full flex justify-around items-center mb-44"
+                    >
+                      <View className="flex-1 text-center">{item.label}</View>
+                      {structure2?.map((item2: any) => {
+                        return (
+                          <View key={item2} className="flex-1 text-center">
+                            {dashboardData?.[item.value]?.[item2]}
+                          </View>
+                        );
+                      })}
+                    </View>
+                  );
+                })}
             </View>
 
             <View
@@ -148,7 +173,9 @@ const Index: React.FC<Props> = (props) => {
       ) : (
         <View
           className="w-full px-34 h-100 flex justify-between items-center text-24 box-border"
-          onClick={setTrue}
+          onClick={() => {
+            setTrue();
+          }}
         >
           <Text className="font-bold">进入数据看板</Text>
           <View className="w-80 flex justify-between items-center">

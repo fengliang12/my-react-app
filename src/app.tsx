@@ -52,6 +52,10 @@ class App extends Component<any> {
     ) {
       await this.taroGlobalData.init(true);
     }
+
+    // if (config.env === "qy") {
+    //   to(`/pages/qy/home/index`, "reLaunch");
+    // }
   }
   componentDidShow(options) {
     const { query } = options;

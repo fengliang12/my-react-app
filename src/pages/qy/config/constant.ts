@@ -1,17 +1,22 @@
 export enum POSITION_ENUM {
   SA = "sales_associate",
-  TEMP_STORE_MANAGER = "temp_store_manager",
   STORE_MANAGER = "store_manager",
-  SENIOR_STORE_MANAGER = "senior_store_manager",
-  CITY_MANAGER = "city_manager",
-  OFFICE_MANAGER = "Admin",
-  AREA_MANAGER = "area_manager",
-  REGION_MANAGER = "region_manager",
-  Retail_Director_South = "retail_director_south",
-  Retail_Director_North = "retail_director_north",
-  Retail_Operations_Manager = "retail_operations_manager",
-  Retail_Operations_Executive = "retail_operations_executive",
+  AGENT_STORE_MANAGER = "007",
+  BIG_REGION_MANAGER = "001",
+  SMALL_REGION_MANAGER = "002",
+  TRAINER = "003",
+  ADMIN = "009",
 }
+
+export const POSITION_ENUM_TEXT = {
+  [POSITION_ENUM.SA]: "彩妆师",
+  [POSITION_ENUM.STORE_MANAGER]: "店长",
+  [POSITION_ENUM.AGENT_STORE_MANAGER]: "代理店长",
+  [POSITION_ENUM.BIG_REGION_MANAGER]: "大区经理",
+  [POSITION_ENUM.SMALL_REGION_MANAGER]: "区域主管",
+  [POSITION_ENUM.TRAINER]: "培训师",
+  [POSITION_ENUM.ADMIN]: "管理员",
+};
 
 export const OrderStatus = {
   wait_pay: "待支付",

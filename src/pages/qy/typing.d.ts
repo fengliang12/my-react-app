@@ -2,13 +2,13 @@ export type RecordQueryInitialState = {
   startTime: string;
   endTime: string;
   mobile: string;
-  parentRegion: RecordQueryItem | null;
-  region: RecordQueryItem | null;
+  bigRegion: RecordQueryItem | null;
+  smallRegion: RecordQueryItem | null;
   store: RecordQueryItem | null;
-  point: RecordQueryItem | null;
+  point: { value: string; label: string } | null;
 };
 
 export type RecordQueryItem = {
-  label: string;
-  value: string;
+  name: string;
+  id: string;
 };

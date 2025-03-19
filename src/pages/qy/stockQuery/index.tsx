@@ -8,6 +8,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
 import OrganizationPicker from "../components/OrganizationPicker";
 import QueryTab from "../components/QueryTab";
@@ -16,8 +17,8 @@ import { PointFilterList } from "../config";
 const app = Taro.getApp();
 
 const initialState = {
-  parentRegion: null,
-  region: null,
+  bigRegion: null,
+  smallRegion: null,
   store: null,
 };
 const Index = () => {
@@ -30,10 +31,11 @@ const Index = () => {
    * 获取记录
    */
   const getStockList = useMemoizedFn(async () => {
+    if (!state?.store?.id) return;
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     let res = await api.qy.counterStock({
-      counterId: "00300123",
+      ...(state.store?.id && { counterId: state.store?.id }),
       ...(point && { point }),
     });
     Taro.hideLoading();
@@ -42,7 +44,7 @@ const Index = () => {
 
   useEffect(() => {
     getStockList();
-  }, [getStockList, point]);
+  }, [getStockList, point, state]);
 
   return (
     <View className="bg-[#F8F5F8] min-h-screen pb-100">
@@ -60,7 +62,13 @@ const Index = () => {
         <View
           className="underline text-right text-white pt-50 text-24 mb-28"
           onClick={() => {
-            to("/pages/qy/stockSingleQuery/index");
+            if (state?.store?.id) {
+              to(
+                `/pages/qy/stockSingleQuery/index?counterId=${state.store.id}`,
+              );
+            } else {
+              toast({ title: "请先选择查询门店" });
+            }
           }}
         >
           单品实际库存

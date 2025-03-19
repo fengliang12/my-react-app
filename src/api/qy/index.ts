@@ -49,10 +49,10 @@ const orderSubmit: Api.QYWX.OrderSubmit.FuncT = (data) =>
  * 订单面板
  * @returns
  */
-const dashboard: Api.QYWX.Dashboard.FuncT = (params) =>
-  http.get(
+const dashboard: Api.QYWX.Dashboard.FuncT = (data) =>
+  http.post(
     `https://member-front-uat.narscosmetics.com.cn/api/sp-manage/store/${config.storeCode}/wecom/order/dashboard`,
-    { params },
+    data,
   );
 
 /**
@@ -75,6 +75,18 @@ const singleCounterStock: Api.QYWX.SingleCounterStock.FuncT = (params) =>
     { params },
   );
 
+/**
+ * 获取组织门店
+ * @returns
+ */
+const getRegionStore = () =>
+  http.get(`/nars-exchange/shiseido/${config.storeCode}/mini/store/info`);
+
+const getBaList = ({ storeId }) =>
+  http.get(
+    `/work-employee/shiseido/${config.storeCode}/offline_store/${storeId}/store/list`,
+  );
+
 export default {
   baDetail,
   dashboard,
@@ -83,4 +95,6 @@ export default {
   orderList,
   sendSmsCode,
   singleCounterStock,
+  getRegionStore,
+  getBaList,
 };

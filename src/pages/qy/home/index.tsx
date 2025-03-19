@@ -10,6 +10,8 @@ import config from "@/src/config";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
+import { POSITION_ENUM_TEXT } from "../config";
+
 const Index = () => {
   const qyUser = useSelector((state: Store.States) => state.qyUser);
 
@@ -52,8 +54,8 @@ const Index = () => {
         <View className="absolute bottom-74 right-37 text-[#F9F9F9] flex flex-col items-center justify-center">
           <View className="vhCenter mb-34">
             <Text className="text-36 mr-46">{qyUser.name}</Text>
-            <View className="w-106 h-37 bg-[#C5112C] vhCenter text-20">
-              彩妆师
+            <View className="h-37 px-20 bg-[#C5112C] vhCenter text-20">
+              {POSITION_ENUM_TEXT[qyUser.position]}
             </View>
           </View>
           <View className="vhCenter">

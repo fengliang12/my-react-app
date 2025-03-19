@@ -37,7 +37,17 @@ const Index: React.FC<Props> = (props) => {
   }, [availTime]);
 
   /**
-   *
+   * 显示按钮
+   */
+  const showBtn = useMemo(() => {
+    if (availTime) {
+      return dayjs(availTime?.replaceAll(".", "/")).isAfter(dayjs(), "day");
+    }
+    return 0;
+  }, [availTime]);
+
+  /**
+   * 点击复制
    */
   const clickCopyPhone = useMemoizedFn((phone) => {
     Taro.setClipboardData({
@@ -101,7 +111,7 @@ const Index: React.FC<Props> = (props) => {
         </View>
       </View>
 
-      {info.status === "wait_receive" && availDay > 0 && (
+      {info.status === "wait_receive" && showBtn && (
         <>
           <View className="w-full h-1 bg-[#CCCCCC]"></View>
           <View className="w-full h-120 flex justify-between items-center">

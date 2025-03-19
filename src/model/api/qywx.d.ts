@@ -62,7 +62,7 @@ declare namespace Api {
         /**
          * 柜台id列表
          */
-        counterIds: string;
+        counterIds: string[];
         /**
          * 月，格式MM
          */
