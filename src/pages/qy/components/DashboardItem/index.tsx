@@ -72,10 +72,10 @@ const Index: React.FC<Props> = (props) => {
           }}
         >
           <Text className="text-24">
-            {type === "ba" ? "彩妆师：" : ""}
+            {info?.type === "ba" ? "彩妆师：" : ""}
             {info?.name || ""}
           </Text>
-          {type !== "ba" && <Text className="text-24">{">"}</Text>}
+          {info?.type !== "ba" && <Text className="text-24">{">"}</Text>}
         </View>
       )}
 

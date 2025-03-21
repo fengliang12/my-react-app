@@ -1,6 +1,6 @@
 import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
+import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import { useSelector } from "react-redux";
 
 import api from "@/src/api";
@@ -12,6 +12,7 @@ import toast from "@/src/utils/toast";
 
 import { POSITION_ENUM_TEXT } from "../config";
 
+const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const qyUser = useSelector((state: Store.States) => state.qyUser);
 
@@ -64,7 +65,7 @@ const Index = () => {
               mode="widthFix"
               src={`${config.imgBaseUrl}/qy/home/address.png`}
             ></CImage>
-            <Text className="text-30">上海新世界</Text>
+            <Text className="text-30">{qyUser?.storeName}</Text>
           </View>
         </View>
       </View>

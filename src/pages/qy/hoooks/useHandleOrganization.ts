@@ -13,7 +13,13 @@ export const useHandleOrganization = () => {
   useAsyncEffect(async () => {
     await app.init();
     let res = await api.qy.getRegionStore();
-    setOriginData({ children: res.data, id: "1" });
+    if (res?.data?.length) {
+      res.data.forEach((item) => {
+        item.parentId = "root";
+      });
+      setOriginData({ children: res.data, id: "root" });
+      return;
+    }
   }, []);
 
   /**

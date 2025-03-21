@@ -74,12 +74,13 @@ const Index = () => {
         break;
     }
 
-    // sa特殊，直接展示改sa的数据
+    // 用户角色是sa特殊，直接展示改sa的数据
     if (qyUser.position === POSITION_ENUM.SA) {
       setCurrentData([
         {
           name: qyUser.name,
           id: qyUser.id,
+          type: "ba",
         },
       ]);
     } else {
@@ -94,7 +95,11 @@ const Index = () => {
     let res = await api.qy.getBaList({
       storeId: qyUser?.storeId,
     });
-    console.log(res);
+    res?.data?.forEach((item: any) => {
+      item.parentId = currentData[0].id;
+      item.type = "ba";
+    });
+    setCurrentData(res?.data ?? []);
     return;
   });
 
@@ -103,18 +108,19 @@ const Index = () => {
    */
   const [dataList1, setDataList] = useState<any[]>([]);
   const clickDashboardItem = useMemoizedFn((item: any) => {
-    if (!item.parentId) return;
+    // ba 没有下一级
+    if (item?.type === "ba") return;
+
     if (isNil(item.children)) {
+      // 门店调用ba列表接口
       queryBaList();
     } else {
-      if (item?.children?.length > 0) {
-        let temp = item.children;
-        let { dataList } = findPath([originData], item.parentId);
-        setDataList(dataList);
-        setCurrentData(temp);
-        setStep(step + 1);
-      }
+      // 门店以上层级直接存储当前子数据
+      setCurrentData(item?.children ?? []);
     }
+    let { dataList } = findPath([originData], item.parentId);
+    setDataList(dataList);
+    setStep(step + 1);
   });
 
   /**
@@ -123,7 +129,7 @@ const Index = () => {
   const handleComeBack = useMemoizedFn(() => {
     if (step === 0) return;
     let tempStep = step - 1;
-    setCurrentData(dataList1.pop().children);
+    setCurrentData(dataList1?.pop().children);
     setStep(tempStep);
   });
 

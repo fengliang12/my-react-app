@@ -82,9 +82,14 @@ const singleCounterStock: Api.QYWX.SingleCounterStock.FuncT = (params) =>
 const getRegionStore = () =>
   http.get(`/nars-exchange/shiseido/${config.storeCode}/mini/store/info`);
 
+/**
+ * 获取ba列表
+ * @param param0
+ * @returns
+ */
 const getBaList = ({ storeId }) =>
   http.get(
-    `/work-employee/shiseido/${config.storeCode}/offline_store/${storeId}/store/list`,
+    `/nars-exchange/shiseido/${config.storeCode}/mini/store/ba/list/${storeId}`,
   );
 
 export default {
