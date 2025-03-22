@@ -1,7 +1,7 @@
-import { Input, Picker, Text, View } from "@tarojs/components";
+import { Input, Picker, View } from "@tarojs/components";
 import Taro, { useReachBottom } from "@tarojs/taro";
 import { useMemoizedFn, useSetState } from "ahooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import api from "@/src/api";
@@ -19,9 +19,7 @@ import QueryTab from "../components/QueryTab";
 import { PointFilterList, POSITION_ENUM, StatusFilterList } from "../config";
 import { RecordQueryInitialState } from "../typing";
 
-const app = Taro.getApp();
-
-const initialState = {
+const initialState: RecordQueryInitialState = {
   startTime: "",
   endTime: "",
   mobile: "",
@@ -30,6 +28,8 @@ const initialState = {
   store: null,
   point: null,
 };
+
+const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const [state, setState] = useSetState<RecordQueryInitialState>(initialState);
   const [status, setStatus] = useState<string>("");
@@ -40,12 +40,12 @@ const Index = () => {
    * 获取记录
    */
   const getRecordList = useMemoizedFn(async ({ page }) => {
-    Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
 
     if (state?.mobile && !isPhone(state.mobile))
       return toast("请输入正确的手机号");
 
+    // 入参
     let expression = getComplexExpression([
       {
         name: "createTime",
@@ -90,6 +90,7 @@ const Index = () => {
       ,
     ]);
 
+    Taro.showLoading({ title: "加载中", mask: true });
     let res = await api.qy.orderList({
       page,
       size: 20,
@@ -123,7 +124,10 @@ const Index = () => {
   /**
    * 点击查询按钮
    */
-  const clickQueryBtn = useMemoizedFn(() => {
+  const queryResultFn = useMemoizedFn(() => {
+    /**
+     * 根据权限提示
+     */
     if (
       qyUser?.position === POSITION_ENUM.BIG_REGION_MANAGER &&
       !state?.bigRegion?.id
@@ -149,10 +153,10 @@ const Index = () => {
   });
 
   return (
-    <View className="bg-[#F8F5F8] min-h-screen pb-100">
+    <View className="bg-[#F8F5F8] min-h-screen pb-100 box-border">
       <CHeader fill titleColor="#FFFFFF" backgroundColor="#000000"></CHeader>
 
-      {/* 过滤 */}
+      {/* 大区、小区、门店过滤 */}
       <View className="bg-black px-49 pt-30">
         <OrganizationPicker
           state={state}
@@ -169,52 +173,54 @@ const Index = () => {
         ></OrganizationPicker>
 
         {/* 申请时间 */}
-        <View className="flex justify-between items-center bg-white">
-          <Picker
-            mode="date"
-            value={state.startTime}
-            end={state.endTime}
-            onChange={(e) => {
-              setState({
-                startTime: e.detail.value,
-              });
-            }}
-          >
-            <View className=" w-full h-78 px-70 text-24 flex items-center justify-start relative box-border">
-              <CImage
-                className="absolute left-27 w-24 h-24"
-                src={`${config.imgBaseUrl}/qy/home/date_icon.png`}
-              ></CImage>
-              <View className="picker">
-                {state.startTime ? state.startTime : "开始时间"}
+        <>
+          <View className="flex justify-between items-center bg-white">
+            <Picker
+              mode="date"
+              value={state.startTime}
+              end={state.endTime}
+              onChange={(e) => {
+                setState({
+                  startTime: e.detail.value,
+                });
+              }}
+            >
+              <View className=" w-full h-78 px-70 text-24 flex items-center justify-start relative box-border">
+                <CImage
+                  className="absolute left-27 w-24 h-24"
+                  src={`${config.imgBaseUrl}/qy/home/date_icon.png`}
+                ></CImage>
+                <View className="picker">
+                  {state.startTime ? state.startTime : "开始时间"}
+                </View>
               </View>
-            </View>
-          </Picker>
-          <View className="w-20 h-1 bg-black"></View>
-          <Picker
-            mode="date"
-            start={state.startTime}
-            value={state.endTime}
-            onChange={(e) => {
-              setState({
-                endTime: e.detail.value,
-              });
-            }}
-          >
-            <View className="w-full h-78 px-70 text-24 flex items-center justify-start relative box-border">
-              <View className="picker">
-                {state.endTime ? state.endTime : "结束时间"}
+            </Picker>
+            <View className="w-20 h-1 bg-black"></View>
+            <Picker
+              mode="date"
+              start={state.startTime}
+              value={state.endTime}
+              onChange={(e) => {
+                setState({
+                  endTime: e.detail.value,
+                });
+              }}
+            >
+              <View className="w-full h-78 px-70 text-24 flex items-center justify-start relative box-border">
+                <View className="picker">
+                  {state.endTime ? state.endTime : "结束时间"}
+                </View>
+                <CImage
+                  className="absolute right-27 w-14 h-8"
+                  src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
+                ></CImage>
               </View>
-              <CImage
-                className="absolute right-27 w-14 h-8"
-                src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
-              ></CImage>
-            </View>
-          </Picker>
-        </View>
-        <View className="text-white text-18 mt-14 mb-31">
-          *顾客提交兑礼申请的日期
-        </View>
+            </Picker>
+          </View>
+          <View className="text-white text-18 mt-14 mb-31">
+            *顾客提交兑礼申请的日期
+          </View>
+        </>
 
         <View className="flex justify-between items-center mb-45">
           {/* 请输入客户手机号 */}
@@ -255,16 +261,14 @@ const Index = () => {
 
         <View
           className="w-full h-80 vhCenter text-24 bg-[#C5112C] text-white"
-          onClick={clickQueryBtn}
+          onClick={queryResultFn}
         >
           查询
         </View>
         <View
           className="w-full h-100 underline text-24 text-white vhCenter"
           onClick={() => {
-            setState({
-              ...initialState,
-            });
+            setState(initialState);
           }}
         >
           重置
@@ -278,10 +282,11 @@ const Index = () => {
           FilterList={StatusFilterList}
           callback={(status) => {
             setStatus(status);
-            resetRefresh();
+            queryResultFn();
           }}
         ></QueryTab>
 
+        {/* 记录列表 */}
         {recordList && recordList.length > 0
           ? recordList.map((item: any, index: number) => {
               return (

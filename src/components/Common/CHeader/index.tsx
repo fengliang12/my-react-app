@@ -2,8 +2,10 @@ import "src/assets/scss/front.scss";
 
 import { Text, View } from "@tarojs/components";
 import Taro, { usePageScroll } from "@tarojs/taro";
+import { useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
 
+import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import easycolor from "@/utils/easycolor";
 import { getHeaderHeight } from "@/utils/getHeaderHeight";
@@ -115,6 +117,12 @@ const CHeader: React.FC<Partial<CHeaderType>> = (props) => {
     setOpacity(op);
   });
 
+  const click = useMemoizedFn(() => {
+    if (config?.debuggerClass?.toDebug && config.env === "qy") {
+      config.debuggerClass.toDebug();
+    }
+  });
+
   return (
     <>
       {rect && (
@@ -125,6 +133,7 @@ const CHeader: React.FC<Partial<CHeaderType>> = (props) => {
           <View
             className="flex items-center  w-screen justify-center z-10"
             style={`height:${rect.height}Px;margin-top:${rect.top}Px;`}
+            onClick={click}
           >
             {props.children}
             {back && (

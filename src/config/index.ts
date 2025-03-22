@@ -1,6 +1,7 @@
 import Taro from "@tarojs/taro";
 import { merge } from "lodash-es";
 
+import DebugClass from "../utils/DebugClass";
 import getByEnv from "../utils/getByEnv";
 import { BaseConfig } from "./config";
 import dev from "./dev";
@@ -26,6 +27,7 @@ const baseConfig: Partial<BaseConfig> = {
   postageMoney: 9.9,
   key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ",
   DEBUG_TOKEN: "",
+  debuggerClass: DebugClass,
   /**图片前缀**/
   imgBaseUrl: "https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com",
   ...getByEnv(),

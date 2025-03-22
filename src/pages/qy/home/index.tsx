@@ -1,6 +1,6 @@
 import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useAsyncEffect, useMemoizedFn } from "ahooks";
+import { useMemoizedFn } from "ahooks";
 import { useSelector } from "react-redux";
 
 import api from "@/src/api";
@@ -20,9 +20,11 @@ const Index = () => {
    * 点击确认
    */
   const onConfirm = useMemoizedFn(async () => {
-    Taro.scanCode({
+    await Taro.scanCode({
       success: async (res) => {
+        console.log("扫码结果", res);
         if (res?.result) {
+          await app.init();
           await api.qy.orderSubmit({
             code: res.result,
             type: "code",
@@ -40,10 +42,12 @@ const Index = () => {
     <View className="bg-[#000] min-h-screen">
       <CHeader
         fill={false}
+        back={false}
         titleColor="#FFFFFF"
         backgroundColor="transparent"
-        back={false}
       ></CHeader>
+
+      {/* 基础信息 */}
       <View className="relative">
         <CImage
           className="w-full"
@@ -55,9 +59,11 @@ const Index = () => {
         <View className="absolute bottom-74 right-37 text-[#F9F9F9] flex flex-col items-center justify-center">
           <View className="vhCenter mb-34">
             <Text className="text-36 mr-46">{qyUser.name}</Text>
-            <View className="h-37 px-20 bg-[#C5112C] vhCenter text-20">
-              {POSITION_ENUM_TEXT[qyUser.position]}
-            </View>
+            {qyUser?.position && (
+              <View className="h-37 px-20 bg-[#C5112C] vhCenter text-20">
+                {POSITION_ENUM_TEXT[qyUser.position]}
+              </View>
+            )}
           </View>
           <View className="vhCenter">
             <CImage
@@ -70,8 +76,9 @@ const Index = () => {
         </View>
       </View>
 
-      {/* 入口 */}
+      {/* 三个入口 */}
       <View className="w-full bg-[#F8F5F8] pt-37 pb-52 flex flex-col items-center justify-center">
+        {/* 兑礼明细 */}
         <CImage
           className="w-686 mb-33"
           mode="widthFix"
@@ -80,6 +87,7 @@ const Index = () => {
             to("/pages/qy/recordQuery/index");
           }}
         ></CImage>
+        {/* 库存查询 */}
         <CImage
           className="w-686 mb-33"
           mode="widthFix"
@@ -88,6 +96,7 @@ const Index = () => {
             to("/pages/qy/stockQuery/index");
           }}
         ></CImage>
+        {/* 数据看板 */}
         <CImage
           className="w-686"
           mode="widthFix"
@@ -97,6 +106,7 @@ const Index = () => {
           }}
         ></CImage>
 
+        {/* 扫码核销 */}
         <CImage
           className="w-640 mt-156"
           mode="widthFix"

@@ -6,11 +6,11 @@ import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 
 import { useHandleOrganization } from "../../hoooks/useHandleOrganization";
-import { RecordQueryInitialState } from "../../typing";
+import { InitialStateType } from "../../typing";
 
 interface Props {
-  state: RecordQueryInitialState;
-  callback: (e: { [K in keyof RecordQueryInitialState]?: any }) => void;
+  state: InitialStateType;
+  callback: (e: { [K in keyof InitialStateType]?: any }) => void;
 }
 
 const Index: React.FC<Props> = (props) => {

@@ -4,7 +4,7 @@ import { useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
 import React, { useMemo } from "react";
 
-import { OrderStatus } from "@/qyConfig/index";
+import { ORDER_STATUS_ENUM, OrderStatus } from "@/qyConfig/index";
 import { Copy } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import { formatDateTime } from "@/src/utils";
@@ -23,7 +23,7 @@ const Index: React.FC<Props> = (props) => {
    * 有效期
    */
   const availTime = useMemo(() => {
-    return dayjs(info.createTime).add(30, "day").format("YYYY.MM.DD HH:mm:ss");
+    return dayjs(info.createTime).add(30, "day").format("YYYY/MM/DD HH:mm:ss");
   }, [info]);
 
   /**
@@ -31,7 +31,7 @@ const Index: React.FC<Props> = (props) => {
    */
   const availDay = useMemo(() => {
     if (availTime) {
-      return dayjs(availTime?.replaceAll(".", "/")).diff(dayjs(), "day");
+      return dayjs(availTime)?.diff(dayjs(), "day");
     }
     return 0;
   }, [availTime]);
@@ -41,17 +41,19 @@ const Index: React.FC<Props> = (props) => {
    */
   const showBtn = useMemo(() => {
     if (availTime) {
-      return dayjs(availTime?.replaceAll(".", "/")).isAfter(dayjs(), "day");
+      return dayjs(availTime).isAfter(dayjs());
     }
-    return 0;
+    return false;
   }, [availTime]);
 
   /**
    * 点击复制
    */
-  const clickCopyPhone = useMemoizedFn((phone) => {
+  const clickCopyPhone = useMemoizedFn(() => {
+    if (!info?.mobile) return;
+
     Taro.setClipboardData({
-      data: phone,
+      data: info?.mobile,
       success: () => {
         toast("复制成功");
       },
@@ -95,23 +97,20 @@ const Index: React.FC<Props> = (props) => {
       <View className="pt-36">
         <View className="w-full flex justify-between items-center mb-36">
           <Text>预约会员:{info?.memberName}</Text>
-          <View
-            className="flex items-center"
-            onClick={() => {
-              clickCopyPhone(info?.mobile);
-            }}
-          >
+          <View className="flex items-center" onClick={clickCopyPhone}>
             手机号:{info?.mobile}{" "}
             <CImage src={Copy} className="w-20 h-20 ml-10"></CImage>
           </View>
         </View>
         <View className="w-full flex justify-between items-center mb-36">
           <Text>所属彩妆师:{info?.baName}</Text>
-          <View>兑礼有效期至:{availTime}</View>
+          <View>
+            兑礼有效期至:{dayjs(availTime)?.format("YYYY.MM.DD HH:mm:ss")}
+          </View>
         </View>
       </View>
 
-      {info.status === "wait_receive" && showBtn && (
+      {info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE && showBtn && (
         <>
           <View className="w-full h-1 bg-[#CCCCCC]"></View>
           <View className="w-full h-120 flex justify-between items-center">

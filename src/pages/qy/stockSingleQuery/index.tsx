@@ -19,19 +19,20 @@ const Index = () => {
    * 获取记录
    */
   const getStockList = useMemoizedFn(async () => {
-    Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
+
+    Taro.showLoading({ title: "加载中", mask: true });
     let res = await api.qy.singleCounterStock({
       counterId: params.counterId,
     });
-    setStockList(res.data);
     Taro.hideLoading();
+    setStockList(res.data);
     return res.data;
   });
 
   useEffect(() => {
     getStockList();
-  }, []);
+  }, [getStockList]);
 
   return (
     <View className="bg-[#F8F5F8] min-h-screen">
@@ -57,7 +58,6 @@ const Index = () => {
           </View>
           <View className="w-full h-1 bg-[#CCCCCC]"></View>
           {/* 商品信息 */}
-
           <View className="pt-36 text-24">
             {stockList?.length > 0 &&
               stockList?.map((item: any) => {

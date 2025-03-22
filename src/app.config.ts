@@ -23,6 +23,7 @@ export default {
     "pages/qy/recordQuery/index",
     "pages/qy/stockQuery/index",
     "pages/qy/stockSingleQuery/index",
+    "pages/qy/debugger/index",
   ],
   window: {
     backgroundTextStyle: "light",

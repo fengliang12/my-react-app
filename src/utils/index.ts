@@ -172,7 +172,14 @@ export const setShareParams = () => {
   };
 };
 
-export const generateYearMonthArray = (start, end) => {
+export const generateYearMonthArray = (
+  start,
+  end,
+): Array<{
+  label: string;
+  year: string;
+  month: string;
+}> => {
   const result: any = [];
   let current = dayjs(end); // 从结束日期开始
   const startDate = dayjs(start); // 开始日期

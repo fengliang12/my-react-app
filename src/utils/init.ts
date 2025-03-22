@@ -20,40 +20,11 @@ export const createInit = () => {
         )
         .then(async ({ data }) => {
           // 设置token
-          Taro.setStorageSync(
-            "token",
-            config.env === "qy" ? `${data}` : data.jwtString,
-          );
-
+          setToken(data);
           if (config.env === "qy") {
-            let res = await api.qy.baDetail();
-            // 视图数据放Store
-            store.dispatch({
-              type: SET_QY_USER,
-              payload: {
-                ...res.data.info,
-              },
-            });
-            Taro.hideLoading();
-            return store.getState().qyUser;
+            return await getQYUserInfo(data);
           } else if (config.env === "weapp") {
-            let { customerBasicInfo } = data;
-            let shuYunMemberInfo =
-              customerBasicInfo.member && shuYunMember
-                ? await getShuYunMemberInfo()
-                : null;
-
-            // 视图数据放Store
-            store.dispatch({
-              type: SET_USER,
-              payload: {
-                ...shuYunMemberInfo,
-                ...customerBasicInfo,
-                isMember: customerBasicInfo?.member || false,
-              },
-            });
-            Taro.hideLoading();
-            return store.getState().user;
+            return await getMemberInfo(data, shuYunMember);
           }
         })
         .catch(() => {
@@ -62,6 +33,58 @@ export const createInit = () => {
     }
     return initPromise;
   };
+};
+
+// 定义一个名为 setToken 的函数，用于设置存储在本地存储中的 token
+const setToken = (data) => {
+  Taro.setStorageSync(
+    "token",
+    config.env === "qy" ? `${data}` : data.jwtString,
+  );
+};
+
+/**
+ * 获取企业微信用户信息
+ * @param data
+ * @returns
+ */
+const getQYUserInfo = async (data) => {
+  let res = await api.qy.baDetail();
+  // 视图数据放Store
+  store.dispatch({
+    type: SET_QY_USER,
+    payload: {
+      ...res.data.info,
+    },
+  });
+  Taro.hideLoading();
+  return store.getState().qyUser;
+};
+
+/**
+ * 获取小程序用户信息
+ * @param data
+ * @param shuYunMember
+ * @returns
+ */
+const getMemberInfo = async (data, shuYunMember) => {
+  let { customerBasicInfo } = data;
+  let shuYunMemberInfo =
+    customerBasicInfo.member && shuYunMember
+      ? await getShuYunMemberInfo()
+      : null;
+
+  // 视图数据放Store
+  store.dispatch({
+    type: SET_USER,
+    payload: {
+      ...shuYunMemberInfo,
+      ...customerBasicInfo,
+      isMember: customerBasicInfo?.member || false,
+    },
+  });
+  Taro.hideLoading();
+  return store.getState().user;
 };
 
 /**

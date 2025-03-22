@@ -1,10 +1,10 @@
-import { Input, Picker, Text, View } from "@tarojs/components";
-import Taro, { useReachBottom } from "@tarojs/taro";
+import { Text, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
 import { useMemoizedFn, useSetState } from "ahooks";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 import api from "@/src/api";
+import { Warning } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import to from "@/src/utils/to";
@@ -13,18 +13,18 @@ import toast from "@/src/utils/toast";
 import OrganizationPicker from "../components/OrganizationPicker";
 import QueryTab from "../components/QueryTab";
 import { PointFilterList } from "../config";
+import { InitialStateType } from "../typing";
 
 const app = Taro.getApp();
 
-const initialState = {
+const initialState: InitialStateType = {
   bigRegion: null,
   smallRegion: null,
   store: null,
 };
 const Index = () => {
-  const qyUser = useSelector((state: Store.States) => state.qyUser);
   const [point, setPoint] = useState<string>("");
-  const [state, setState] = useSetState<any>(initialState);
+  const [state, setState] = useSetState<InitialStateType>(initialState);
   const [recordList, setRecordList] = useState<Api.QYWX.Stock.IResponse[]>([]);
 
   /**
@@ -32,14 +32,26 @@ const Index = () => {
    */
   const getStockList = useMemoizedFn(async () => {
     if (!state?.store?.id) return;
-    Taro.showLoading({ title: "加载中", mask: true });
+
     await app.init();
+    Taro.showLoading({ title: "加载中", mask: true });
     let res = await api.qy.counterStock({
       ...(state.store?.id && { counterId: state.store?.id }),
       ...(point && { point }),
     });
     Taro.hideLoading();
     setRecordList(res.data);
+  });
+
+  /**
+   * 跳转单品库存查询
+   */
+  const toStockSingleQuery = useMemoizedFn(() => {
+    if (state?.store?.id) {
+      to(`/pages/qy/stockSingleQuery/index?counterId=${state.store.id}`);
+    } else {
+      toast({ title: "请先选择查询门店" });
+    }
   });
 
   useEffect(() => {
@@ -52,24 +64,13 @@ const Index = () => {
 
       {/* 过滤 */}
       <View className="w-full h-55 text-20 text-white bg-[#510712] flex justify-start items-center pl-50 box-border">
-        <CImage
-          className="w-18 h-19 mr-12"
-          src="https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com/qy/home/warning.png"
-        ></CImage>
+        <CImage className="w-18 h-19 mr-12" src={Warning}></CImage>
         库存盘点请以单品实际库存为准；共用产品不重复计算库存
       </View>
       <View className="bg-black px-49 pb-98">
         <View
           className="underline text-right text-white pt-50 text-24 mb-28"
-          onClick={() => {
-            if (state?.store?.id) {
-              to(
-                `/pages/qy/stockSingleQuery/index?counterId=${state.store.id}`,
-              );
-            } else {
-              toast({ title: "请先选择查询门店" });
-            }
-          }}
+          onClick={toStockSingleQuery}
         >
           单品实际库存
         </View>
@@ -79,8 +80,7 @@ const Index = () => {
         <OrganizationPicker
           state={state}
           callback={(e) => {
-            //@ts-ignore
-            setState(e);
+            setState(e as InitialStateType);
           }}
         ></OrganizationPicker>
       </View>
@@ -94,6 +94,7 @@ const Index = () => {
           }}
         ></QueryTab>
 
+        {/* 列表 */}
         {recordList && recordList.length > 0
           ? recordList?.map((item: any, index) => {
               return (

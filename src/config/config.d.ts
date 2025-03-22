@@ -25,6 +25,7 @@ export type BaseConfig = {
   qyBasePathUrl: string;
   /** 环境 */
   env: "h5" | "qy" | "weapp";
+  debuggerClass?: any;
 };
 export type WebViewConfig = {
   /** 页面地址 */

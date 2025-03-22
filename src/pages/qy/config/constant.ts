@@ -18,6 +18,17 @@ export const POSITION_ENUM_TEXT = {
   [POSITION_ENUM.ADMIN]: "管理员",
 };
 
+export enum ORDER_STATUS_ENUM {
+  WAIT_PAY = "wait_pay",
+  CANCELLED = "cancelled",
+  PAY_CANCELLED = "pay_cancelled",
+  WAIT_GROUP = "wait_group",
+  WAIT_SHIPMENT = "wait_shipment",
+  SUCCESS = "success",
+  WAIT_RECEIVE = "wait_receive",
+  WAIT_ESTIMATE = "wait_estimate",
+  EXPIRED = "expired",
+}
 export const OrderStatus = {
   wait_pay: "待支付",
   cancelled: "已取消",

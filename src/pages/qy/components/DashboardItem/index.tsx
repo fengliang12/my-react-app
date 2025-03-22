@@ -13,21 +13,31 @@ import { generateYearMonthArray } from "@/src/utils";
 import { structure, structure2 } from "../../config";
 
 interface Props {
-  type?: "country" | "ba";
+  isCountry?: boolean;
   info?: any;
   pointList?: any[];
   callback?: () => void;
 }
 
 const app: App.GlobalData = Taro.getApp();
+const initialDate: string = "2000";
+
 const Index: React.FC<Props> = (props) => {
-  let { type = "", pointList = [], info, callback } = props;
+  let { isCountry = false, pointList = [], info, callback } = props;
 
   const [open, { setTrue, setFalse }] = useBoolean(false);
-  const [dashboardData, setDashboardData] = useState<any>(null);
-  const [date, setDate] = useState<any>();
+  const [dashboardData, setDashboardData] =
+    useState<Api.QYWX.Dashboard.IResponse | null>(null);
+  const [date, setDate] = useState<{
+    label: string;
+    year: string;
+    month: string;
+  } | null>();
   const [point, setPoint] = useState<any>(null);
-  const yearRange = generateYearMonthArray("2000", dayjs().format("YYYY-MM"));
+  const yearRange = generateYearMonthArray(
+    initialDate,
+    dayjs().format("YYYY-MM"),
+  );
 
   /**
    * 获取仪表盘数据
@@ -60,7 +70,7 @@ const Index: React.FC<Props> = (props) => {
 
   return (
     <View className="w-656 box-border mt-38 bg-white border border-1 border-[#000]">
-      {type === "country" ? (
+      {isCountry ? (
         <View className="w-full h-80 px-34 box-border flex justify-start items-center bg-[#C5112C] text-white">
           <Text className="text-24 mr-30">全国</Text>
         </View>

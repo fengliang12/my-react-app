@@ -92,6 +92,17 @@ const getBaList = ({ storeId }) =>
     `/nars-exchange/shiseido/${config.storeCode}/mini/store/ba/list/${storeId}`,
   );
 
+/**
+ * 根据输入的企业微信用户id获取用户信息。
+ * /api/work-auth/{tenantId}/{buCode}/mini/operation/pts/code4token
+ * @param param0
+ * @returns
+ */
+const getTestToken = ({ userId }) =>
+  http.get(
+    `/work-auth/shiseido/${config.storeCode}/mini/operation/pts/code4token?userId=${userId}`,
+  );
+
 export default {
   baDetail,
   dashboard,
@@ -102,4 +113,5 @@ export default {
   singleCounterStock,
   getRegionStore,
   getBaList,
+  getTestToken,
 };

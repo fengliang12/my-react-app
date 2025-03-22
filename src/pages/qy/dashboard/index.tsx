@@ -149,14 +149,13 @@ const Index = () => {
         </View>
 
         {qyUser?.position === POSITION_ENUM.ADMIN && (
-          <DashboardItem type="country" pointList={pointList}></DashboardItem>
+          <DashboardItem isCountry pointList={pointList}></DashboardItem>
         )}
 
         {currentData?.map((item, index) => {
           return (
             <DashboardItem
               key={index}
-              type={qyUser.position === POSITION_ENUM.SA ? "ba" : undefined}
               info={item}
               pointList={pointList}
               callback={() => clickDashboardItem(item)}
