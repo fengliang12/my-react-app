@@ -4,7 +4,7 @@ declare namespace App {
     init: (
       refresh?: boolean,
       shuYunMember?: boolean,
-    ) => Promise<Store.User> | null;
+    ) => Promise<Store.User & Store.QyUser> | null;
     /** 路由跳转 */
     to: toType;
     /** 所有scope授权封装 */

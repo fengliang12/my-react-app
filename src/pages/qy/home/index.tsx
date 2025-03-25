@@ -20,6 +20,7 @@ const Index = () => {
    * 点击确认
    */
   const onConfirm = useMemoizedFn(async () => {
+    await app.init();
     await Taro.scanCode({
       success: async (res) => {
         console.log("扫码结果", res);
@@ -28,6 +29,7 @@ const Index = () => {
           await api.qy.orderSubmit({
             code: res.result,
             type: "code",
+            storeAdmins: qyUser?.storeAdmins ?? [],
           });
           toast("核销成功");
         }

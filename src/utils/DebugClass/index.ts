@@ -13,9 +13,9 @@ class DebugClass {
     console.log("点击了");
     this.clickNum++;
     if (this.clickNum === 15 || this.debug) {
-      to("/pages/qy/debugger/index");
+      to("/pages/qy/debugger/index", "redirectTo");
       this.clickNum = 0;
-      this.debug = true;
+      this.debug = false;
       clearTimeout(this.time);
       return;
     }
@@ -24,6 +24,7 @@ class DebugClass {
     }
     this.time = setTimeout(() => {
       this.clickNum = 0;
+      this.debug = false;
     }, 1000);
   }
 }

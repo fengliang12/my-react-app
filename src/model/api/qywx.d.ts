@@ -109,6 +109,10 @@ declare namespace Api {
          * 核销方式 1.code核销 code 2.验证码核销 sms
          */
         type: "code" | "sms";
+        /**
+         * 用户id
+         */
+        storeAdmins?: Array<string>;
       }
       interface IResponse {}
     }

@@ -1,4 +1,5 @@
 import { Input, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
 import React, { useState } from "react";
 
@@ -15,6 +16,7 @@ interface Props {
   children?: React.ReactNode;
   callback?: () => void;
 }
+const app: App.GlobalData = Taro.getApp();
 const Index: React.FC<Props> = (props) => {
   let { children, orderId, mobile = "15656180073", callback } = props;
   const [show, { setTrue, setFalse }] = useBoolean(false);
@@ -33,13 +35,14 @@ const Index: React.FC<Props> = (props) => {
    * 点击确认
    */
   const onConfirm = useMemoizedFn(async () => {
+    let userInfo = await app.init();
     if (verifyCode) {
-      // TODO: 核销
       setFalse();
       await api.qy.orderSubmit({
         smsCode: verifyCode,
         orderId: orderId,
         type: "sms",
+        storeAdmins: userInfo?.storeAdmins ?? [],
       });
       toast("核销成功");
       callback && callback();

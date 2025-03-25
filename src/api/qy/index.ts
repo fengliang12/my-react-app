@@ -95,12 +95,13 @@ const getBaList = ({ storeId }) =>
 /**
  * 根据输入的企业微信用户id获取用户信息。
  * /api/work-auth/{tenantId}/{buCode}/mini/operation/pts/code4token
+ * https://wecom-uat.narscosmetics.com.cn/api/member-auth/shiseido/nars/mini/work/mini/code4token?userId=Q4600161
  * @param param0
  * @returns
  */
 const getTestToken = ({ userId }) =>
   http.get(
-    `/work-auth/shiseido/${config.storeCode}/mini/operation/pts/code4token?userId=${userId}`,
+    `/member-auth/shiseido/${config.storeCode}/mini/work/mini/code4token?userId=${userId}`,
   );
 
 export default {

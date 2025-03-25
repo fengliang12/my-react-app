@@ -48,7 +48,7 @@ const Index: React.FC<Props> = (props) => {
       bonusPointId: point?.id,
       year: date?.year,
       month: date?.month,
-      ...(info?.id && { counterIds: [info?.id] }),
+      ...(info?.id && { counterIds: [info?.code ?? info?.id] }),
     });
     setDashboardData(res?.data);
   });

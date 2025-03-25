@@ -31,12 +31,12 @@ const Index = () => {
    * 获取记录
    */
   const getStockList = useMemoizedFn(async () => {
-    if (!state?.store?.id) return;
+    if (!state?.store?.code) return;
 
     await app.init();
     Taro.showLoading({ title: "加载中", mask: true });
     let res = await api.qy.counterStock({
-      ...(state.store?.id && { counterId: state.store?.id }),
+      ...(state.store?.code && { counterId: state.store?.code }),
       ...(point && { point }),
     });
     Taro.hideLoading();
@@ -48,7 +48,7 @@ const Index = () => {
    */
   const toStockSingleQuery = useMemoizedFn(() => {
     if (state?.store?.id) {
-      to(`/pages/qy/stockSingleQuery/index?counterId=${state.store.id}`);
+      to(`/pages/qy/stockSingleQuery/index?counterId=${state.store.code}`);
     } else {
       toast({ title: "请先选择查询门店" });
     }
@@ -59,7 +59,7 @@ const Index = () => {
   }, [getStockList, point, state]);
 
   return (
-    <View className="bg-[#F8F5F8] min-h-screen pb-100">
+    <View className="bg-[#F8F5F8] w-full min-h-screen pb-100">
       <CHeader fill titleColor="#FFFFFF" backgroundColor="#000000"></CHeader>
 
       {/* 过滤 */}

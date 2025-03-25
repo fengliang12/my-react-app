@@ -16,4 +16,5 @@ export type InitialStateType = Pick<
 export type RecordQueryItem = {
   name: string;
   id: string;
+  code?: string;
 };

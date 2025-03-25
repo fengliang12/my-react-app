@@ -53,9 +53,21 @@ class App extends Component<any> {
       await this.taroGlobalData.init(true);
     }
 
-    // if (config.env === "qy") {
-    //   to(`/pages/qy/home/index`, "reLaunch");
-    // }
+    console.log("options", options);
+
+    if (options?.path === "pages/qy/home/index" && config.env !== "qy") {
+      Taro.showModal({
+        title: "提示",
+        content: "请用企业微信登录",
+        showCancel: false,
+        success: () => {},
+      });
+      return;
+    }
+
+    if (config.env === "qy") {
+      to(`/pages/qy/home/index`, "reLaunch");
+    }
   }
   componentDidShow(options) {
     const { query } = options;

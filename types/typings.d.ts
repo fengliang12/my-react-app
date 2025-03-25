@@ -78,6 +78,8 @@ declare namespace Store {
     status: string;
     storeId: string;
     storeName: string;
+    /** 用户id */
+    storeAdmins: Array<string>;
   };
   type Common = {
     /** Nav高度 */

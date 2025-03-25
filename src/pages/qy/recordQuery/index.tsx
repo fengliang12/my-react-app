@@ -72,11 +72,11 @@ const Index = () => {
         value: false,
         operator: "eq",
       },
-      ...(state?.store?.id
+      ...(state?.store?.code
         ? [
             {
               name: "counterId",
-              value: state.store?.id,
+              value: state.store?.code,
               operator: "eq",
             } as any,
           ]

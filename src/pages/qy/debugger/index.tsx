@@ -50,8 +50,7 @@ const Sa: React.FC<propsType> = () => {
   });
 
   return (
-    <View className="bg-white min-h-screen">
-      <CHeader></CHeader>
+    <View className="w-screen bg-white min-h-screen">
       <View className="flex mt-0 items-center  w-screen flex-col bg-white">
         <Input
           onInput={(e) => {
