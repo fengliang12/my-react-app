@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "subPages/redeem/index",
+          "pathName": "subPages/redeem/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "内部调试页面",
           "pathName": "pages/qy/debugger/index",
           "query": "",

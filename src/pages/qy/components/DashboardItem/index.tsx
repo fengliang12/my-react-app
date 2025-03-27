@@ -17,13 +17,20 @@ interface Props {
   info?: any;
   pointList?: any[];
   callback?: () => void;
+  getLastLeafIds?: (code: string) => Array<string>;
 }
 
 const app: App.GlobalData = Taro.getApp();
 const initialDate: string = "2000";
 
 const Index: React.FC<Props> = (props) => {
-  let { isCountry = false, pointList = [], info, callback } = props;
+  let {
+    isCountry = false,
+    pointList = [],
+    info,
+    callback,
+    getLastLeafIds,
+  } = props;
 
   const [open, { setTrue, setFalse }] = useBoolean(false);
   const [dashboardData, setDashboardData] =
@@ -44,11 +51,18 @@ const Index: React.FC<Props> = (props) => {
    */
   const getDashboardData = useMemoizedFn(async () => {
     await app.init();
+    let list: any = [];
+    if (info?.type !== "ba" && !isCountry) {
+      list =
+        info?.children?.length > 0 ? getLastLeafIds?.(info.code) : [info?.code];
+    }
+
     let res = await api.qy.dashboard({
       bonusPointId: point?.id,
       year: date?.year,
       month: date?.month,
-      ...(info?.id && { counterIds: [info?.code ?? info?.id] }),
+      ...(list?.length > 0 && { counterIds: list }),
+      ...(info?.type === "ba" && { baId: info.id }),
     });
     setDashboardData(res?.data);
   });

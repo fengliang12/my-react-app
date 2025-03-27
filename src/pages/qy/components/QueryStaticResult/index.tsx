@@ -8,6 +8,7 @@ import { ORDER_STATUS_ENUM, OrderStatus } from "@/qyConfig/index";
 import { Copy } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import { formatDateTime } from "@/src/utils";
+import { QDayjs } from "@/src/utils/convertEast8Date";
 import toast from "@/src/utils/toast";
 
 import VerifyPopup from "../VerifyPopup";
@@ -77,16 +78,18 @@ const Index: React.FC<Props> = (props) => {
               key={item.id}
               className="w-full flex justify-between items-center mb-36"
             >
-              <Text>{item.name}</Text>
+              <Text className="max-w-480">{item.name}</Text>
               <View>
-                <Text className="mr-43">x{item.quantity}</Text>
-                <Text>{item.actualPoints}积分</Text>
+                <Text className="mr-46">
+                  {item.actualPoints / item.quantity}积分
+                </Text>
+                <Text>x{item.quantity}</Text>
               </View>
             </View>
           );
         })}
 
-        <View className="w-full h-70 flex justify-between items-center mt-12">
+        <View className="w-full flex justify-between items-center mt-12 pb-30">
           <Text>订单积分</Text>
           <View>{info?.totalActualPoints}积分</View>
         </View>
@@ -104,9 +107,16 @@ const Index: React.FC<Props> = (props) => {
         </View>
         <View className="w-full flex justify-between items-center mb-36">
           <Text>所属彩妆师:{info?.baName}</Text>
-          <View>
-            兑礼有效期至:{dayjs(availTime)?.format("YYYY.MM.DD HH:mm:ss")}
-          </View>
+          {info.status === ORDER_STATUS_ENUM.WAIT_ESTIMATE ? (
+            <View>
+              兑礼核销日期:
+              {QDayjs(info.receiveTime)?.format("YYYY.MM.DD HH:mm:ss")}
+            </View>
+          ) : (
+            <View>
+              兑礼有效期至:{QDayjs(availTime)?.format("YYYY.MM.DD HH:mm:ss")}
+            </View>
+          )}
         </View>
       </View>
 

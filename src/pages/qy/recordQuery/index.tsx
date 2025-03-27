@@ -17,6 +17,7 @@ import OrganizationPicker from "../components/OrganizationPicker";
 import QueryStaticResult from "../components/QueryStaticResult";
 import QueryTab from "../components/QueryTab";
 import { PointFilterList, POSITION_ENUM, StatusFilterList } from "../config";
+import { useHandleOrganization } from "../hoooks/useHandleOrganization";
 import { RecordQueryInitialState } from "../typing";
 
 const initialState: RecordQueryInitialState = {
@@ -35,6 +36,8 @@ const Index = () => {
   const [status, setStatus] = useState<string>("");
   const [init, setInit] = useState<boolean>(false);
   const qyUser = useSelector((state: Store.States) => state.qyUser);
+  const { originData, getLastLeafIds } = useHandleOrganization();
+  const [total, setTotal] = useState<number>(0);
 
   /**
    * 获取记录
@@ -44,6 +47,40 @@ const Index = () => {
 
     if (state?.mobile && !isPhone(state.mobile))
       return toast("请输入正确的手机号");
+
+    /**
+     * 根据权限提示
+     */
+    if (
+      qyUser?.position === POSITION_ENUM.BIG_REGION_MANAGER &&
+      !state?.bigRegion?.id
+    ) {
+      toast("请先选择大区");
+      return [];
+    } else if (
+      qyUser?.position === POSITION_ENUM.SMALL_REGION_MANAGER &&
+      !state?.smallRegion?.id
+    ) {
+      toast("请先选择区域");
+      return [];
+    } else if (
+      (qyUser?.position === POSITION_ENUM.STORE_MANAGER ||
+        qyUser?.position === POSITION_ENUM.AGENT_STORE_MANAGER ||
+        qyUser?.position === POSITION_ENUM.SA) &&
+      !state?.store?.id
+    ) {
+      toast("请先选择门店");
+      return [];
+    }
+
+    let list: any[] = [];
+    if (state?.store?.code) {
+      list = [state.store.code];
+    } else if (state?.smallRegion?.id) {
+      list = getLastLeafIds(state.smallRegion.code);
+    } else if (state?.bigRegion?.id) {
+      list = getLastLeafIds(state.bigRegion.code);
+    }
 
     // 入参
     let expression = getComplexExpression([
@@ -68,25 +105,19 @@ const Index = () => {
         operator: "eq",
       },
       {
-        name: "counterId empty",
+        name: "counterId",
         value: false,
-        operator: "eq",
+        operator: "empty",
       },
-      ...(state?.store?.code
+      ...(list.length > 0
         ? [
             {
               name: "counterId",
-              value: state.store?.code,
+              value: list.join(","),
               operator: "eq",
             } as any,
           ]
-        : [
-            {
-              name: "extendInfos.value",
-              value: state.smallRegion?.id ?? state.bigRegion?.id,
-              operator: "eq",
-            },
-          ]),
+        : []),
       ,
     ]);
 
@@ -98,6 +129,7 @@ const Index = () => {
       expression,
     });
     Taro.hideLoading();
+    setTotal(res.data.totalElements);
     return res.data;
   });
 
@@ -125,30 +157,7 @@ const Index = () => {
    * 点击查询按钮
    */
   const queryResultFn = useMemoizedFn(() => {
-    /**
-     * 根据权限提示
-     */
-    if (
-      qyUser?.position === POSITION_ENUM.BIG_REGION_MANAGER &&
-      !state?.bigRegion?.id
-    ) {
-      toast("请先选择大区");
-      return;
-    } else if (
-      qyUser?.position === POSITION_ENUM.SMALL_REGION_MANAGER &&
-      !state?.smallRegion?.id
-    ) {
-      toast("请先选择区域");
-      return;
-    } else if (
-      (qyUser?.position === POSITION_ENUM.STORE_MANAGER ||
-        qyUser?.position === POSITION_ENUM.AGENT_STORE_MANAGER ||
-        qyUser?.position === POSITION_ENUM.SA) &&
-      !state?.store?.id
-    ) {
-      toast("请先选择门店");
-      return;
-    }
+    setTotal(0);
     resetRefresh();
   });
 
@@ -159,6 +168,7 @@ const Index = () => {
       {/* 大区、小区、门店过滤 */}
       <View className="bg-black px-49 pt-30">
         <OrganizationPicker
+          originData={originData}
           state={state}
           callback={(e) => {
             //@ts-ignore
@@ -280,30 +290,31 @@ const Index = () => {
         {/* tab栏 */}
         <QueryTab
           FilterList={StatusFilterList}
+          total={total}
           callback={(status) => {
             setStatus(status);
+            setTotal(0);
             queryResultFn();
           }}
         ></QueryTab>
 
         {/* 记录列表 */}
-        {recordList && recordList.length > 0
-          ? recordList.map((item: any, index: number) => {
-              return (
-                <View
-                  className="px-25 pb-50 text-24 bg-white mb-30"
-                  key={index}
-                >
-                  <QueryStaticResult
-                    info={item}
-                    callback={() => {
-                      resetRefresh();
-                    }}
-                  ></QueryStaticResult>
-                </View>
-              );
-            })
-          : null}
+        {recordList && recordList.length > 0 ? (
+          recordList.map((item: any, index: number) => {
+            return (
+              <View className="px-25 pb-50 text-24 bg-white mb-30" key={index}>
+                <QueryStaticResult
+                  info={item}
+                  callback={() => {
+                    resetRefresh();
+                  }}
+                ></QueryStaticResult>
+              </View>
+            );
+          })
+        ) : (
+          <View className="w-full text-24 text-center mt-150">暂无数据</View>
+        )}
       </View>
     </View>
   );

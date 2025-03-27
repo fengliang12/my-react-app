@@ -21,7 +21,7 @@ const Index = () => {
     Api.QYWX.SingleCounterStock.IResponse[]
   >([]);
 
-  const { originData, findPath } = useHandleOrganization();
+  const { originData, findPath, getLastLeafIds } = useHandleOrganization();
   const [step, setStep] = useState(0);
 
   /**
@@ -158,6 +158,7 @@ const Index = () => {
               key={index}
               info={item}
               pointList={pointList}
+              getLastLeafIds={getLastLeafIds}
               callback={() => clickDashboardItem(item)}
             ></DashboardItem>
           );

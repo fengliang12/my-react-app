@@ -97,6 +97,36 @@ const GoodClass: React.FC<T_Props> = (props) => {
     if (points < item.point) return toast("您的积分不足");
 
     Taro.showLoading({ title: "加载中", mask: true });
+
+    let { data: cartList } = await api.cart.locate({
+      integral: true,
+      counterId: applyType === "self_pick_up" ? counter?.id : undefined,
+      customPointsPayPlan: {
+        usePoints: true,
+        notValidateUsablePoints: true,
+      },
+    });
+
+    // 查询购物测是否有改商品，如果有调更新接口，无调添加接口
+    if (cartList?.goods?.length) {
+      let isExistItem = cartList.goods.find(
+        (item: any) => item.skuId === item.skuId,
+      );
+      if (isExistItem) {
+        Taro.showLoading({ title: "加载中", mask: true });
+        await api.cart.update({
+          cartItemId: isExistItem.cartItemId,
+          counterId: applyType === "self_pick_up" ? counter?.id : undefined,
+          promotionCode: isExistItem.cartItemId,
+          quantity: isExistItem.quantity + 1,
+          selected: isExistItem.selected,
+          skuId: item.skuId,
+        });
+        Taro.hideLoading();
+        return;
+      }
+    }
+
     let { status, data } = await api.cart.append({
       integral: true,
       quantity: 1,

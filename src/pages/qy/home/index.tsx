@@ -46,7 +46,7 @@ const Index = () => {
         fill={false}
         back={false}
         titleColor="#FFFFFF"
-        backgroundColor="transparent"
+        backgroundColor="#000000"
       ></CHeader>
 
       {/* 基础信息 */}

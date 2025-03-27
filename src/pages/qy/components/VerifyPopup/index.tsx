@@ -37,15 +37,17 @@ const Index: React.FC<Props> = (props) => {
   const onConfirm = useMemoizedFn(async () => {
     let userInfo = await app.init();
     if (verifyCode) {
-      setFalse();
+      Taro.showLoading({ title: "核销中", mask: true });
       await api.qy.orderSubmit({
         smsCode: verifyCode,
         orderId: orderId,
         type: "sms",
         storeAdmins: userInfo?.storeAdmins ?? [],
       });
+      Taro.hideLoading();
       toast("核销成功");
       callback && callback();
+      setFalse();
     } else {
       toast("请输入验证码");
     }

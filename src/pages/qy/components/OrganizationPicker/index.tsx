@@ -5,16 +5,16 @@ import React, { useEffect } from "react";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
 
-import { useHandleOrganization } from "../../hoooks/useHandleOrganization";
 import { InitialStateType } from "../../typing";
 
 interface Props {
+  originData?: any;
   state: InitialStateType;
   callback: (e: { [K in keyof InitialStateType]?: any }) => void;
 }
 
 const Index: React.FC<Props> = (props) => {
-  let { state, callback } = props;
+  let { state, originData, callback } = props;
   const [pickerData, setPickerData] = useSetState<any>({
     bigRegionList: [],
     smallRegionList: [],
@@ -26,8 +26,6 @@ const Index: React.FC<Props> = (props) => {
     smallRegionIndex: 0,
     storeIndex: 0,
   });
-
-  const { originData } = useHandleOrganization();
 
   useEffect(() => {
     if (originData?.children) {
