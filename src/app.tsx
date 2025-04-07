@@ -40,30 +40,34 @@ class App extends Component<any> {
     console.log("options----------", options);
     this.taroGlobalData.globalData.initOptions = options;
     updateManager();
-
-    // Taro.loadFontFace({
-    //   family: "CHINESE_F_Z",
-    //   global: true,
-    //   source: `url("${config.imgBaseUrl}/font/FZLTCXHJT.TTF")`,
-    //   success: console.log,
-    //   fail: console.log,
-    // });
-    // Taro.loadFontFace({
-    //   family: "ENGLISH_F_Z",
-    //   global: true,
-    //   source: `url("${config.imgBaseUrl}/font/HelveticaNeueLTStd-Lt.otf")`,
-    //   success: console.log,
-    //   fail: console.log,
-    // });
-
     this.taroGlobalData.globalData.systemInfo = Taro.getSystemInfoSync();
     let userInfo = await this.taroGlobalData.init();
 
     /** 短链埋点 */
     schemaTrack();
-    /** 注销用户再次注册需刷新token */
-    if (!userInfo?.isMember && userInfo?.channelName) {
+    // /** 注销用户再次注册需刷新token */
+    if (
+      !userInfo?.isMember &&
+      userInfo?.channelName &&
+      config?.env === "weapp"
+    ) {
       await this.taroGlobalData.init(true);
+    }
+
+    console.log("options", options);
+
+    if (options?.path === "pages/qy/home/index" && config.env !== "qy") {
+      Taro.showModal({
+        title: "提示",
+        content: "请用企业微信登录",
+        showCancel: false,
+        success: () => {},
+      });
+      return;
+    }
+
+    if (config.env === "qy") {
+      to(`/pages/qy/home/index`, "reLaunch");
     }
   }
   componentDidShow(options) {

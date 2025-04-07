@@ -3,8 +3,8 @@
   "description": "",
   "setting": {
     "urlCheck": true,
-    "es6": false,
-    "enhance": false,
+    "es6": true,
+    "enhance": true,
     "compileHotReLoad": false,
     "postcss": false,
     "preloadBackgroundData": false,
@@ -30,7 +30,7 @@
   "compileType": "miniprogram",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {
-    "qywx_simulator_plugin": "2.4.0"
+    "qywx_simulator_plugin": "2.20.3"
   },
   "condition": {},
   "srcMiniprogramRoot": "dist/",
@@ -43,6 +43,5 @@
   "packOptions": {
     "ignore": [],
     "include": []
-  },
-  "projectname": "mini-nars"
+  }
 }

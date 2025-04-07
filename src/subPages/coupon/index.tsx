@@ -38,6 +38,7 @@ const Index = () => {
   }, []);
 
   useDidShow(async () => {
+    await app.init();
     Taro.showLoading({ title: "加载中", mask: true });
     await app.init();
     const { data } = await api.coupon.posCouponDetail({});
@@ -57,26 +58,42 @@ const Index = () => {
   /**
    * 根据状态获取卡券列表
    */
-  const couponList = useMemo(() => {
-    console.log("originList", originList, couponStatus);
 
+  /**
+   * old逻辑
+   * PAType :      10：试用品活动（查询礼品信 息） 20：积分兑换活动（查询答谢 品信息） 30：优惠券活动（查询券信 息）
+   * GoodsStatus:  1) 类型 10：值定义如下：20：申请成功；30：已领取；85：已过期；
+   *               2) 类型 20：值定义如下：20：预约成功；30：已兑换； 85：已过期
+   *               3) 类型 30：值定义如下： 10：未使用； 15：已预约；20：已使用；70：已冻结； 90：已过期
+   * TicketStatus	 10：未核销；20：已核销；30：已失效
+   */
+
+  /**
+   * new逻辑
+   * PAType :      10：试用品活动（查询礼品信 息） null：优惠券活动（查询券信 息）
+   * GoodsStatus:  1) 类型 10：值定义如下：20：申请成功；30：已领取；85：已过期；
+   *               2) 类型 20：值定义如下：20：预约成功；30：已兑换； 85：已过期
+   *               3) 类型 30：值定义如下： 10：未使用； 15：已预约；20：已使用；70：已冻结； 90：已过期
+   * TicketStatus映射到了券码状态	Status
+   *               10：未使用；15:已预约； 20：已使用； 70： 已冻结； 80：已取消； 90：已过期
+   */
+  const couponList = useMemo(() => {
     if (originList?.length > 0 && couponStatus) {
       if (couponStatus === "wait") {
         return originList.filter((item) => {
           if (
-            (item.pAType != 30 && item.goodsStatus == 20) ||
-            (item.pAType == 30 && item.ticketStatus == 10)
+            (item.pAType == 10 && item.goodsStatus == 20) ||
+            (item.pAType == null &&
+              (item.ticketStatus == 10 || item.ticketStatus == 15))
           ) {
-            console.log(item);
-
             return item;
           }
         });
       } else if (couponStatus === "used") {
         return originList.filter((item) => {
           if (
-            (item.pAType != 30 && item.goodsStatus == 30) ||
-            (item.pAType == 30 && item.ticketStatus == 20)
+            (item.pAType == 10 && item.goodsStatus == 30) ||
+            (item.pAType == null && item.ticketStatus == 20)
           ) {
             return item;
           }
@@ -84,8 +101,8 @@ const Index = () => {
       } else if (couponStatus === "expired") {
         return originList.filter((item) => {
           if (
-            (item.pAType != 30 && item.goodsStatus == 85) ||
-            (item.pAType == 30 && item.ticketStatus == 30)
+            (item.pAType == 10 && item.goodsStatus == 85) ||
+            (item.pAType == null && item.ticketStatus == 90)
           ) {
             return item;
           }
@@ -157,20 +174,14 @@ const Index = () => {
                         {item?.pAName || item?.goodsName}
                       </View>
 
-                      <View className="text-22 mt-10">
-                        {!notShowCounterNameCoupon?.includes(
-                          item.goodsCode,
-                        ) && (
-                          <>
-                            {item?.exchangeStoreName || userInfo?.belongShopName
-                              ? `领取柜台:${
-                                  item?.exchangeStoreName ||
-                                  userInfo?.belongShopName
-                                }`
-                              : ""}
-                          </>
-                        )}
-                      </View>
+                      {/* 门店 */}
+                      {(item.storeDesc || item.exchangeStoreName) && (
+                        <View className="text-22 mt-10">
+                          {item?.storeDesc
+                            ? item.storeDesc
+                            : `使用柜台:${item?.exchangeStoreName}`}
+                        </View>
+                      )}
 
                       <View className="w-full text-20 mt-20 flex items-center justify-between">
                         {item?.exchangeBeginDate ? (
@@ -218,26 +229,20 @@ const Index = () => {
                       style={`background: url(${config.imgBaseUrl}/coupon/detail_bg.png);background-size:100% 100%`}
                     >
                       <View className="text-left flex">
-                        <View>1、</View>
-                        <View>卡券详情：{item.goodsName}</View>
+                        <Text
+                          decode
+                          className=""
+                          style={{
+                            lineHeight: "40rpx",
+                          }}
+                        >
+                          {item?.description}
+                        </Text>
                       </View>
-                      <View
-                        className="text-left my-10 flex"
-                        style="line-height:20px"
-                      >
-                        <View>2、</View>
-                        <View>
-                          请在确认领取到相关礼品后，向专柜彩妆师出示此二维码进行核销
-                        </View>
-                      </View>
-                      <View className="text-left flex">
-                        <View>3、</View>
-                        <View>
-                          礼品仅限会员本人莅临指定专柜领取。礼品一经兑换不退不换
-                        </View>
-                      </View>
-                      {((item.pAType != 30 && item.goodsStatus == 20) ||
-                        (item.pAType == 30 && item.ticketStatus == 10)) && (
+                      {((item.pAType == 10 && item.goodsStatus == 20) ||
+                        (item.pAType == null &&
+                          (item.ticketStatus == 10 ||
+                            item.ticketStatus == 15))) && (
                         <View className="inline-block mt-30 bg-white">
                           <CQRCodeCustom
                             text={item?.applyId || item?.ticketSerialNo}

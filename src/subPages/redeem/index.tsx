@@ -1,6 +1,7 @@
 import { Text, View } from "@tarojs/components";
 import Taro, { useDidShow, useShareAppMessage, useUnload } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn, useUpdateEffect } from "ahooks";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,7 +11,7 @@ import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import config from "@/src/config";
 import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
-import { setShareParams } from "@/src/utils";
+import { formatDateTime, setShareParams } from "@/src/utils";
 import handleGoodClass from "@/src/utils/handleGoodClass";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
@@ -28,7 +29,7 @@ const Index = () => {
   const { applyType, counter } = useSelector(
     (state: Store.States) => state.exchangeGood,
   );
-  const [hideExpress, setHideExpress] = useState<string>("");
+  const [hideExpress, setHideExpress] = useState<string>("false");
 
   /**
    * 获取商品列表
@@ -73,8 +74,13 @@ const Index = () => {
   useDidShow(async () => {
     let ret = await api.kvdata.getKvDataByType("hide_express");
     let kvData = ret?.data?.[0];
-    if (kvData) {
-      setHideExpress(kvData?.content || "");
+    if (
+      kvData?.onlineTime &&
+      dayjs().isAfter(dayjs(formatDateTime(kvData?.onlineTime, 6, "/")))
+    ) {
+      setHideExpress(kvData?.content || "false");
+    } else {
+      setHideExpress("false");
     }
     getGoodList();
   });

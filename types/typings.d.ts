@@ -1,5 +1,10 @@
 declare namespace Store {
-  type States = { user: User; common: Common; exchangeGood: ExchangeGood };
+  type States = {
+    user: User;
+    common: Common;
+    exchangeGood: ExchangeGood;
+    qyUser: QyUser;
+  };
   type User = {
     /** 手机号 */
     mobile: string;
@@ -55,6 +60,28 @@ declare namespace Store {
     invalidPoints: number;
     /** unionId */
     unionId: string;
+  };
+
+  type QyUser = {
+    admins: Array<any>;
+    createUser: string;
+    departments: Array<{
+      departmentId: string;
+      leaderInDept: boolean;
+      order: number;
+    }>;
+    enable: boolean;
+    gender: number;
+    id: string;
+    invite: boolean;
+    mainDepartment: string;
+    name: string;
+    position: string;
+    status: string;
+    storeId: string;
+    storeName: string;
+    /** 用户id */
+    storeAdmins: Array<string>;
   };
   type Common = {
     /** Nav高度 */

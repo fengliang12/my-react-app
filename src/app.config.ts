@@ -22,6 +22,12 @@ export default {
     "pages/sign/index",
     "pages/sign/baLogin/index",
     "pages/sign/qrCode/index",
+    "pages/qy/home/index",
+    "pages/qy/dashboard/index",
+    "pages/qy/recordQuery/index",
+    "pages/qy/stockQuery/index",
+    "pages/qy/stockSingleQuery/index",
+    "pages/qy/debugger/index",
   ],
   window: {
     backgroundTextStyle: "light",

@@ -51,5 +51,86 @@ declare namespace Api {
     namespace UpdateRecommandRegister {
       type FuncT = (id: string, type: string) => MRP<any>;
     }
+
+    namespace Dashboard {
+      type FuncT = (params: Partial<IRequestBody>) => MRP<IResponse>;
+      interface IRequestBody {
+        /**
+         * 积分商品id
+         */
+        bonusPointId: string;
+        /**
+         * 柜台id列表
+         */
+        counterIds: string[];
+        /**
+         * 月，格式MM
+         */
+        month: string;
+        /**
+         * 积分
+         */
+        point: string;
+        /**
+         * 年，格式yyyy
+         */
+        year: string;
+        [property: string]: any;
+      }
+      interface IResponse {}
+    }
+
+    namespace OrderList {
+      type FuncT = (params: IRequestBody) => PG<IResponse>;
+      interface IRequestBody {
+        page: number;
+        size: number;
+        expression?: string;
+      }
+      interface IResponse {}
+    }
+
+    namespace OrderSubmit {
+      type FuncT = (params: IRequestBody) => PG<IResponse>;
+      interface IRequestBody {
+        /**
+         * 核销code
+         */
+        code?: string;
+        /**
+         * 订单id
+         */
+        orderId?: string;
+        /**
+         * 手机验证码
+         */
+        smsCode?: string;
+        /**
+         * 核销方式 1.code核销 code 2.验证码核销 sms
+         */
+        type: "code" | "sms";
+        /**
+         * 用户id
+         */
+        storeAdmins?: Array<string>;
+      }
+      interface IResponse {}
+    }
+
+    namespace Stock {
+      type FuncT = (params: IRequestBody) => MRP<Array<IResponse>>;
+      interface IRequestBody {
+        counterId?: string;
+      }
+      interface IResponse {}
+    }
+
+    namespace SingleCounterStock {
+      type FuncT = (params: IRequestBody) => MRP<Array<IResponse>>;
+      interface IRequestBody {
+        counterId?: string;
+      }
+      interface IResponse {}
+    }
   }
 }

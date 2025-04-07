@@ -4,6 +4,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "subPages/redeem/index",
+          "pathName": "subPages/redeem/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "内部调试页面",
+          "pathName": "pages/qy/debugger/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/register/index",
           "pathName": "pages/register/index",
           "query": "scene=4XshBvhytRJZ1wksvWsn1D",
@@ -11,36 +25,50 @@
           "scene": null
         },
         {
-          "name": "签到",
-          "pathName": "pages/sign/index",
-          "query": "from=qy",
+          "name": "申领",
+          "pathName": "pages/apply/index",
+          "query": "activityId=AxuYznhiKhdTKgUfWx4Z3D&code=friends",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "签到ba的登录页面",
-          "pathName": "pages/sign/baLogin/index",
+          "name": "数据总览",
+          "pathName": "pages/qy/dashboard/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "朋友圈",
-          "pathName": "pages/friends/index",
-          "query": "activityId=FnpPkLs7pexSjdzYzoHwCn&gdt_vid=test11111",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/register/index",
-          "pathName": "pages/register/index",
+          "name": "单品实际库存",
+          "pathName": "pages/qy/stockSingleQuery/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "签到二维码",
-          "pathName": "pages/sign/qrCode/index",
+          "name": "库存查询",
+          "pathName": "pages/qy/stockQuery/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "兑礼明细查询",
+          "pathName": "pages/qy/recordQuery/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "企业微信首页",
+          "pathName": "pages/qy/home/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/user/index",
+          "pathName": "pages/user/index",
           "query": "",
           "launchMode": "default",
           "scene": null

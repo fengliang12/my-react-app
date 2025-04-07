@@ -9,6 +9,8 @@ import api from "@/src/api";
 const schemaTrack = async () => {
   const app: App.GlobalData = Taro.getApp();
   await app.init();
+  await app.init();
+  await app.init();
   const res = Taro.getLaunchOptionsSync();
   const { scene, query } = res;
   const list = [1194, 1065];

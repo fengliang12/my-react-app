@@ -16,6 +16,7 @@ import kvdata from "./kvdata/index";
 import memberOrder from "./memberOrder";
 import memberTrack from "./memberTrack";
 import order from "./order/index";
+import qy from "./qy/index";
 import salesCategory from "./salesCategory";
 import shuYunMember from "./shuYunMember/index";
 import user from "./user/index";
@@ -45,4 +46,5 @@ export default {
   kvdata,
   memberTrack,
   clockin,
+  qy,
 };

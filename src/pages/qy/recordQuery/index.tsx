@@ -1,0 +1,343 @@
+import { Input, Picker, View } from "@tarojs/components";
+import Taro, { useReachBottom } from "@tarojs/taro";
+import { useMemoizedFn, useSetState } from "ahooks";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+
+import api from "@/src/api";
+import CHeader from "@/src/components/Common/CHeader";
+import CImage from "@/src/components/Common/CImage";
+import config from "@/src/config";
+import usePagingLoad from "@/src/hooks/usePagingLoad";
+import { isPhone } from "@/src/utils";
+import { getComplexExpression } from "@/src/utils/expression";
+import toast from "@/src/utils/toast";
+
+import OrganizationPicker from "../components/OrganizationPicker";
+import QueryStaticResult from "../components/QueryStaticResult";
+import QueryTab from "../components/QueryTab";
+import { PointFilterList, POSITION_ENUM, StatusFilterList } from "../config";
+import { useHandleOrganization } from "../hoooks/useHandleOrganization";
+import { RecordQueryInitialState } from "../typing";
+
+const initialState: RecordQueryInitialState = {
+  startTime: "",
+  endTime: "",
+  mobile: "",
+  bigRegion: null,
+  smallRegion: null,
+  store: null,
+  point: null,
+};
+
+const app: App.GlobalData = Taro.getApp();
+const Index = () => {
+  const [state, setState] = useSetState<RecordQueryInitialState>(initialState);
+  const [status, setStatus] = useState<string>("");
+  const [init, setInit] = useState<boolean>(false);
+  const qyUser = useSelector((state: Store.States) => state.qyUser);
+  const { originData, getLastLeafIds } = useHandleOrganization();
+  const [total, setTotal] = useState<number>(0);
+
+  /**
+   * 获取记录
+   */
+  const getRecordList = useMemoizedFn(async ({ page }) => {
+    await app.init();
+
+    if (state?.mobile && !isPhone(state.mobile))
+      return toast("请输入正确的手机号");
+
+    /**
+     * 根据权限提示
+     */
+    if (
+      qyUser?.position === POSITION_ENUM.BIG_REGION_MANAGER &&
+      !state?.bigRegion?.id
+    ) {
+      toast("请先选择大区");
+      return [];
+    } else if (
+      qyUser?.position === POSITION_ENUM.SMALL_REGION_MANAGER &&
+      !state?.smallRegion?.id
+    ) {
+      toast("请先选择区域");
+      return [];
+    } else if (
+      (qyUser?.position === POSITION_ENUM.STORE_MANAGER ||
+        qyUser?.position === POSITION_ENUM.AGENT_STORE_MANAGER ||
+        qyUser?.position === POSITION_ENUM.SA) &&
+      !state?.store?.id
+    ) {
+      toast("请先选择门店");
+      return [];
+    }
+
+    let list: any[] = [];
+    if (state?.store?.code) {
+      list = [state.store.code];
+    } else if (state?.smallRegion?.id) {
+      list = getLastLeafIds(state.smallRegion.code);
+    } else if (state?.bigRegion?.id) {
+      list = getLastLeafIds(state.bigRegion.code);
+    }
+
+    // 入参
+    let expression = getComplexExpression([
+      {
+        name: "createTime",
+        value: state?.startTime ? state.startTime + " 00:00:00" : "",
+        operator: "ge",
+      },
+      {
+        name: "createTime",
+        value: state?.endTime ? state.endTime + " 23:59:59" : "",
+        operator: "le",
+      },
+      {
+        name: "totalRealPayPoints",
+        value: state.point?.value,
+        operator: "eq",
+      },
+      ...(status
+        ? [
+            {
+              name: "status",
+              value: status,
+              operator: "eq",
+            },
+          ]
+        : [
+            {
+              name: "status",
+              value: "cancelled",
+              operator: "ne",
+            },
+          ]),
+      ,
+      {
+        name: "counterId",
+        value: false,
+        operator: "empty",
+      },
+      ...(list.length > 0
+        ? [
+            {
+              name: "counterId",
+              value: list.join(","),
+              operator: "eq",
+            } as any,
+          ]
+        : []),
+      ,
+      ...(qyUser.position === POSITION_ENUM.SA
+        ? [
+            {
+              name: "customInfos.value",
+              value: qyUser?.id,
+              operator: "eq",
+            },
+          ]
+        : []),
+      ,
+    ]);
+
+    Taro.showLoading({ title: "加载中", mask: true });
+    let res = await api.qy.orderList({
+      page,
+      size: 20,
+      ...(state.mobile && { mobile: state.mobile }),
+      expression,
+    });
+    Taro.hideLoading();
+    setTotal(res.data.totalElements);
+    return res.data;
+  });
+
+  const {
+    /** 记录列表 */
+    list: recordList,
+    /** 滚动到底部加载 */
+    onScrollToLower,
+    resetRefresh,
+  } = usePagingLoad<Api.QYWX.OrderList.IResponse>({
+    getList: getRecordList,
+    requestOptions: {
+      manual: true,
+    },
+  });
+
+  /**
+   * 滚动到底部
+   */
+  useReachBottom(() => {
+    onScrollToLower();
+  });
+
+  /**
+   * 点击查询按钮
+   */
+  const queryResultFn = useMemoizedFn(() => {
+    setTotal(0);
+    resetRefresh();
+  });
+
+  return (
+    <View className="bg-[#F8F5F8] min-h-screen pb-100 box-border">
+      <CHeader fill titleColor="#FFFFFF" backgroundColor="#000000"></CHeader>
+
+      {/* 大区、小区、门店过滤 */}
+      <View className="bg-black px-49 pt-30">
+        <OrganizationPicker
+          originData={originData}
+          state={state}
+          callback={(e) => {
+            //@ts-ignore
+            setState(e);
+            if (!init) {
+              Taro.nextTick(() => {
+                resetRefresh();
+                setInit(true);
+              });
+            }
+          }}
+        ></OrganizationPicker>
+
+        {/* 申请时间 */}
+        <>
+          <View className="flex justify-between items-center bg-white">
+            <Picker
+              mode="date"
+              value={state.startTime}
+              end={state.endTime}
+              onChange={(e) => {
+                setState({
+                  startTime: e.detail.value,
+                });
+              }}
+            >
+              <View className=" w-full h-78 px-70 text-24 flex items-center justify-start relative box-border">
+                <CImage
+                  className="absolute left-27 w-24 h-24"
+                  src={`${config.imgBaseUrl}/qy/home/date_icon.png`}
+                ></CImage>
+                <View className="picker">
+                  {state.startTime ? state.startTime : "开始时间"}
+                </View>
+              </View>
+            </Picker>
+            <View className="w-20 h-1 bg-black"></View>
+            <Picker
+              mode="date"
+              start={state.startTime}
+              value={state.endTime}
+              onChange={(e) => {
+                setState({
+                  endTime: e.detail.value,
+                });
+              }}
+            >
+              <View className="w-full h-78 px-70 text-24 flex items-center justify-start relative box-border">
+                <View className="picker">
+                  {state.endTime ? state.endTime : "结束时间"}
+                </View>
+                <CImage
+                  className="absolute right-27 w-14 h-8"
+                  src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
+                ></CImage>
+              </View>
+            </Picker>
+          </View>
+          <View className="text-white text-18 mt-14 mb-31">
+            *顾客提交兑礼申请的日期
+          </View>
+        </>
+
+        <View className="flex justify-between items-center mb-45">
+          {/* 请输入客户手机号 */}
+          <Input
+            className="bg-white w-316 h-78 px-30 text-24 flex items-center justify-start relative box-border"
+            placeholder="请输入客户手机号"
+            type="number"
+            maxlength={11}
+            value={state.mobile}
+            onInput={(e) => {
+              setState({
+                mobile: e.detail.value,
+              });
+            }}
+          ></Input>
+          <Picker
+            className="w-316"
+            mode="selector"
+            rangeKey="label"
+            range={PointFilterList}
+            onChange={(e) => {
+              setState({
+                point: PointFilterList[e.detail.value],
+              });
+            }}
+          >
+            <View className="bg-white w-full h-78 px-30 text-24 flex items-center justify-start relative box-border">
+              <View className="picker">
+                {state?.point ? state?.point?.label : "请选择积分档位"}
+              </View>
+              <CImage
+                className="absolute right-27 w-14 h-8"
+                src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
+              ></CImage>
+            </View>
+          </Picker>
+        </View>
+
+        <View
+          className="w-full h-80 vhCenter text-24 bg-[#C5112C] text-white"
+          onClick={queryResultFn}
+        >
+          查询
+        </View>
+        <View
+          className="w-full h-100 underline text-24 text-white vhCenter"
+          onClick={() => {
+            setState(initialState);
+          }}
+        >
+          重置
+        </View>
+      </View>
+
+      {/* 内容 */}
+      <View className="w-700 mt-51 ml-25 ">
+        {/* tab栏 */}
+        <QueryTab
+          FilterList={StatusFilterList}
+          total={total}
+          callback={(status) => {
+            setStatus(status);
+            setTotal(0);
+            queryResultFn();
+          }}
+        ></QueryTab>
+
+        {/* 记录列表 */}
+        {recordList && recordList.length > 0 ? (
+          recordList.map((item: any, index: number) => {
+            return (
+              <View className="px-25 pb-50 text-24 bg-white mb-30" key={index}>
+                <QueryStaticResult
+                  info={item}
+                  callback={() => {
+                    resetRefresh();
+                  }}
+                ></QueryStaticResult>
+              </View>
+            );
+          })
+        ) : (
+          <View className="w-full text-24 text-center mt-150">暂无数据</View>
+        )}
+      </View>
+    </View>
+  );
+};
+export default Index;

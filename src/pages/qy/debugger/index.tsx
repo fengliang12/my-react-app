@@ -4,14 +4,13 @@ import { useMemoizedFn } from "ahooks";
 import React, { useRef, useState } from "react";
 
 import api from "@/src/api";
-import CHeader from "@/src/components/Common/CHeader";
 import config from "@/src/config";
 import store from "@/src/store";
 import { SET_QY_USER } from "@/src/store/constants";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
-interface propsType { }
+interface propsType {}
 const app: App.GlobalData = Taro.getApp();
 const Sa: React.FC<propsType> = () => {
   const value = useRef<string>();

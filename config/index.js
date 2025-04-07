@@ -20,10 +20,11 @@ const config = {
     "@/assets": path.resolve(__dirname, "..", "src/assets"),
     "@/config": path.resolve(__dirname, "..", "src/config"),
     "@/store": path.resolve(__dirname, "..", "src/store"),
+    "@/qyConfig": path.resolve(__dirname, "..", "src/pages/qy/config"),
   },
   plugins: [
-    "taro-plugin-compiler-optimization",
-    "taro-plugin-tailwind",
+    "@tarojs/plugin-platform-weapp-qy",
+    "@dcasia/mini-program-tailwind-webpack-plugin/dist/taro",
     [
       "@tarojs/plugin-inject",
       {

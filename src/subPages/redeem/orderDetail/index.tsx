@@ -1,7 +1,7 @@
 import { Text, View } from "@tarojs/components";
 import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useMemoizedFn } from "ahooks";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import api from "@/src/api";
 import { P8 } from "@/src/assets/image";
@@ -10,7 +10,6 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
 import { setShareParams } from "@/src/utils";
-import to from "@/src/utils/to";
 
 import OrderGood from "../components/OrderGood";
 import PostageType from "../components/PostageType";
@@ -31,6 +30,14 @@ const OrderConfirm = () => {
     Taro.hideLoading();
     setDetail(res?.data);
   });
+
+  /**
+   * 二维码参数
+   */
+  const reserveId = useMemo(() => {
+    return detail?.extendInfos?.find((item) => item.code === "reserveId")
+      ?.value;
+  }, [detail]);
 
   useEffect(() => {
     getOrderDetail();
@@ -120,13 +127,13 @@ const OrderConfirm = () => {
                 </View>
                 {detail?.simpleCounter?.detailInfo?.name}
               </View>
-              <View
+              {/* <View
                 className="mt-18 text-19"
                 onClick={() => to("/pages/update/index")}
               >
                 *如所选领取柜台与所属柜台不一致，请在核销前
                 <Text className="underline">点击此处</Text>修改所属柜台。
-              </View>
+              </View> */}
             </>
           )}
         </View>
@@ -162,7 +169,9 @@ const OrderConfirm = () => {
         </View>
 
         {detail?.status &&
-          ["wait_shipment", "wait_receive"].includes(detail?.status) &&
+          ["wait_shipment", "wait_receive", "wait_pay"].includes(
+            detail?.status,
+          ) &&
           detail?.deliverInfo?.type === "self_pick_up" && (
             <View
               className="text-55 flex flex-col justify-center items-center mt-46 pt-50"
@@ -170,7 +179,7 @@ const OrderConfirm = () => {
             >
               {detail?.extendInfos?.length > 0 && (
                 <CQRCodeCustom
-                  text={detail?.extendInfos?.[0]?.value}
+                  text={reserveId}
                   width={214}
                   height={214}
                   foreground="#000000"

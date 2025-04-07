@@ -8,7 +8,7 @@ const login = (code, params) =>
 
 const loginQY = (code) =>
   http.get(
-    `/counter-portal/store/${storeCode}/enterpriseWeChat/login/credential/${code}`,
+    `/member-auth/shiseido/${storeCode}/mini/work/code4token?code=${code}`,
   );
 
 const sendSMS = (path) =>

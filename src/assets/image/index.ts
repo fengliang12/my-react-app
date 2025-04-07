@@ -27,6 +27,8 @@ export const CloseB = require("./close_b.png");
 export const CloseW = require("./close_w.png");
 export const Close = require("./close.png");
 export const Delete = require("./delete.png");
+export const Copy = require("./copy.png");
+export const Warning = require("./warning.png");
 
 export const Down = `${config.imgBaseUrl}/icon/down.png`;
 export const Address = `${config.imgBaseUrl}/icon/address.png`;

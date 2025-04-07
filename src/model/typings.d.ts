@@ -27,6 +27,8 @@ declare namespace Model {
     message: string;
   }
 
+  interface IPagingPromise<T = any> extends Promise<IResponse<IPaging<T>>> {}
+
   /** 分页 */
   interface IPaging<T = any> {
     /** 类目下实际信息 */
@@ -90,6 +92,6 @@ type MRP<T> = Model.IResponsePromise<T>;
 /**
  * 通用分页接口 简称
  */
-type PG<T> = Model.IPaging<T>;
+type PG<T> = Model.IPagingPromise<T>;
 
 type IAxiosConfig = Model.IAxiosConfig;

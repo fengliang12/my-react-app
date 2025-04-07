@@ -1,6 +1,9 @@
 import Taro from "@tarojs/taro";
 import { merge } from "lodash-es";
 
+import DebugClass from "../utils/DebugClass";
+import getByEnv from "../utils/getByEnv";
+import { BaseConfig } from "./config";
 import dev from "./dev";
 import prod from "./prod";
 
@@ -10,18 +13,9 @@ import prod from "./prod";
 export const IS_PRO =
   Taro.getAccountInfoSync()?.miniProgram?.appId === "wx7d12b21af0a8bed3";
 
-const baseConfig = {
+const baseConfig: Partial<BaseConfig> = {
   /** 品牌StoreCode */
   storeCode: "nars",
-  /** 主题页面Code配置 */
-  pageCode: {
-    /** 会员中心首页 */
-    home: "home",
-    /** 二级活动页 */
-    activity: "activity",
-    /** 个人中心 */
-    user: "user",
-  },
   /** 内置H5页面 */
   webView: {
     pagePath: "/pages/h5/index",
@@ -31,9 +25,13 @@ const baseConfig = {
   errCodeList: ["10000", "MobileHasRegistered"],
   postagePoints: 100,
   postageMoney: 9.9,
-  key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ", 
+  key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ",
   DEBUG_TOKEN: "",
+  debuggerClass: DebugClass,
+  /**图片前缀**/
+  imgBaseUrl: "https://cna-prd-nars-oss.oss-cn-shanghai.aliyuncs.com",
+  ...getByEnv(),
 };
-const config = merge(baseConfig, IS_PRO ? prod : dev);
+const config: BaseConfig = merge(baseConfig, IS_PRO ? prod : dev);
 config.loginUrl = `${config.basePathUrl}/sp-portal/store/${config.storeCode}/wechat/login/`;
 export default config;

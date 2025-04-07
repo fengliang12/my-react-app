@@ -1,56 +1,31 @@
 import Taro from "@tarojs/taro";
 
 import api from "../api";
+import config from "../config";
 import store from "../store";
-import { SET_USER } from "../store/constants";
+import { SET_QY_USER, SET_USER } from "../store/constants";
 
 export const createInit = () => {
   let initPromise: Promise<Store.User> | null = null;
+
   return (refresh, shuYunMember = true): Promise<Store.User> | null => {
     if (initPromise === null || refresh) {
-      const { environment } = Taro.getSystemInfoSync();
-      const isQyWx = environment === "wxwork";
-      let loginFn: any = isQyWx ? Taro["qy"].login : Taro.login;
+      let loginFn: any = config.env === "qy" ? Taro["qy"].login : Taro.login;
       Taro.showLoading({ title: "加载中", mask: true });
       initPromise = loginFn()
         .then(({ code }) =>
-          isQyWx
+          config.env === "qy"
             ? api.common.loginQY(code)
             : api.common.login(code, { checkMember: true }),
         )
         .then(async ({ data }) => {
-          Taro.setStorageSync("token", data.jwtString);
-
-          if (data.customerBasicInfo.member && shuYunMember) {
-            await getShuYunMemberInfo();
+          // 设置token
+          setToken(data);
+          if (config.env === "qy") {
+            return await getQYUserInfo(data);
+          } else if (config.env === "weapp") {
+            return await getMemberInfo(data, shuYunMember);
           }
-
-          let userInfo = {
-            mobile: data.customerBasicInfo?.mobile || "",
-            isMember: data.customerBasicInfo?.member || false,
-            nickName: data.customerBasicInfo?.nickName || "",
-            realName: data.customerBasicInfo?.realName || "",
-            birthDate: data.customerBasicInfo?.birthDate || "",
-            customInfos: data.customerBasicInfo?.customInfos || [],
-            avatarUrl: data.customerBasicInfo?.avatarUrl || "",
-            gender: data.customerBasicInfo?.gender || 0,
-            province: data.customerBasicInfo?.province || "",
-            city: data.customerBasicInfo?.city || "",
-            district: data.customerBasicInfo?.district || "",
-            country: data.customerBasicInfo?.country || "",
-            marsId: data.customerBasicInfo?.marsId || "",
-            id: data.customerBasicInfo?.id || "",
-            channelName: data.customerBasicInfo?.channelName || "",
-            openId: data.customerBasicInfo?.openId || "",
-            unionId: data.customerBasicInfo?.unionId || "",
-          };
-          // 视图数据放Store
-          store.dispatch({
-            type: SET_USER,
-            payload: userInfo,
-          });
-          Taro.hideLoading();
-          return store.getState().user;
         })
         .catch(() => {
           initPromise = null;
@@ -60,13 +35,64 @@ export const createInit = () => {
   };
 };
 
+// 定义一个名为 setToken 的函数，用于设置存储在本地存储中的 token
+const setToken = (data) => {
+  Taro.setStorageSync(
+    "token",
+    config.env === "qy" ? `${data}` : data.jwtString,
+  );
+};
+
+/**
+ * 获取企业微信用户信息
+ * @param data
+ * @returns
+ */
+const getQYUserInfo = async (data) => {
+  let res = await api.qy.baDetail();
+  // 视图数据放Store
+  store.dispatch({
+    type: SET_QY_USER,
+    payload: {
+      ...res.data.info,
+    },
+  });
+  Taro.hideLoading();
+  return store.getState().qyUser;
+};
+
+/**
+ * 获取小程序用户信息
+ * @param data
+ * @param shuYunMember
+ * @returns
+ */
+const getMemberInfo = async (data, shuYunMember) => {
+  let { customerBasicInfo } = data;
+  let shuYunMemberInfo =
+    customerBasicInfo.member && shuYunMember
+      ? await getShuYunMemberInfo()
+      : null;
+
+  // 视图数据放Store
+  store.dispatch({
+    type: SET_USER,
+    payload: {
+      ...shuYunMemberInfo,
+      ...customerBasicInfo,
+      isMember: customerBasicInfo?.member || false,
+    },
+  });
+  Taro.hideLoading();
+  return store.getState().user;
+};
+
 /**
  * 获取数云接口
  */
 export const getShuYunMemberInfo = async () => {
   let shopName: string = "";
   let { data } = await api.shuYunMember.queryMember();
-  console.log("获取数云接口", data);
 
   if (data?.customizedProperties?.belongShop) {
     let { data: res } = await api.shuYunMember.queryCabinet(
@@ -74,25 +100,9 @@ export const getShuYunMemberInfo = async () => {
     );
     shopName = res?.detailInfo?.name;
   }
-
-  let userInfo = {
-    cardNo: data.cardNo,
-    gradeName: data.gradeName,
-    gradeId: data.gradeId,
-    memberId: data.memberId,
-    needAmount: data.needAmount,
-    nextGradeName: data.nextGradeName,
-    nextGradeNeedAmount: data.nextGradeNeedAmount,
-    points: data.points,
+  return {
+    ...data,
     belongShop: data?.customizedProperties?.belongShop,
     belongShopName: shopName,
-    invalidPoints: data.invalidPoints,
   };
-  console.log("---userInfo", userInfo);
-
-  // 视图数据放Store
-  store.dispatch({
-    type: SET_USER,
-    payload: userInfo,
-  });
 };
