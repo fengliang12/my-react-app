@@ -6,6 +6,8 @@ import React, { useRef, useState } from "react";
 import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import config from "@/src/config";
+import store from "@/src/store";
+import { SET_QY_USER } from "@/src/store/constants";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -28,6 +30,12 @@ const Sa: React.FC<propsType> = () => {
     });
     if (res?.data?.accessToken) {
       config.DEBUG_TOKEN = res?.data?.accessToken ?? "";
+      store.dispatch({
+        type: SET_QY_USER,
+        payload: {
+          storeName: "",
+        },
+      });
       let useInfo = await app.init(true);
       setUserInfo(useInfo);
     }

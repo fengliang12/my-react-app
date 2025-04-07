@@ -109,9 +109,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
 
     // 查询购物测是否有改商品，如果有调更新接口，无调添加接口
     if (cartList?.goods?.length) {
-      let isExistItem = cartList.goods.find(
-        (item: any) => item.skuId === item.skuId,
-      );
+      let isExistItem = cartList.goods.find((x: any) => x.skuId === item.skuId);
       if (isExistItem) {
         Taro.showLoading({ title: "加载中", mask: true });
         await api.cart.update({
@@ -123,6 +121,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
           skuId: item.skuId,
         });
         Taro.hideLoading();
+        toast("已成功添加购物车");
         return;
       }
     }

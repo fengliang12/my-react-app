@@ -46,7 +46,9 @@ const Index: React.FC<Props> = (props) => {
       });
       Taro.hideLoading();
       toast("核销成功");
-      callback && callback();
+      setTimeout(() => {
+        callback && callback();
+      }, 2000);
       setFalse();
     } else {
       toast("请输入验证码");

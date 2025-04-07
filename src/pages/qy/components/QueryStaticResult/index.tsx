@@ -124,9 +124,11 @@ const Index: React.FC<Props> = (props) => {
         <>
           <View className="w-full h-1 bg-[#CCCCCC]"></View>
           <View className="w-full h-120 flex justify-between items-center">
-            <Text className="text-20 text-[#C5112C]">
-              *该兑礼单还有{availDay}天过期
-            </Text>
+            {availDay <= 15 && (
+              <Text className="text-20 text-[#C5112C]">
+                *该兑礼单还有{availDay}天过期
+              </Text>
+            )}
 
             <VerifyPopup
               orderId={info.orderId}

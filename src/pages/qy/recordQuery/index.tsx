@@ -99,11 +99,22 @@ const Index = () => {
         value: state.point?.value,
         operator: "eq",
       },
-      {
-        name: "status",
-        value: status,
-        operator: "eq",
-      },
+      ...(status
+        ? [
+            {
+              name: "status",
+              value: status,
+              operator: "eq",
+            },
+          ]
+        : [
+            {
+              name: "status",
+              value: "cancelled",
+              operator: "ne",
+            },
+          ]),
+      ,
       {
         name: "counterId",
         value: false,
@@ -116,6 +127,16 @@ const Index = () => {
               value: list.join(","),
               operator: "eq",
             } as any,
+          ]
+        : []),
+      ,
+      ...(qyUser.position === POSITION_ENUM.SA
+        ? [
+            {
+              name: "customInfos.value",
+              value: qyUser?.id,
+              operator: "eq",
+            },
           ]
         : []),
       ,

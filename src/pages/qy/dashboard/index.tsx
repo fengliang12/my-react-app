@@ -91,9 +91,9 @@ const Index = () => {
   /**
    * 获取BA列表
    */
-  const queryBaList = useMemoizedFn(async () => {
+  const queryBaList = useMemoizedFn(async (code: string) => {
     let res = await api.qy.getBaList({
-      storeId: qyUser?.storeId,
+      storeId: code ?? qyUser?.storeId,
     });
     res?.data?.forEach((item: any) => {
       item.parentId = currentData[0].id;
@@ -111,9 +111,9 @@ const Index = () => {
     // ba 没有下一级
     if (item?.type === "ba") return;
 
-    if (isNil(item.children)) {
+    if (item.children.length === 0 && item.code.length === 8) {
       // 门店调用ba列表接口
-      queryBaList();
+      queryBaList(item.code);
     } else {
       // 门店以上层级直接存储当前子数据
       setCurrentData(item?.children ?? []);

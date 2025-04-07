@@ -67,14 +67,16 @@ const Index = () => {
               </View>
             )}
           </View>
-          <View className="vhCenter">
-            <CImage
-              className="w-18 mr-24"
-              mode="widthFix"
-              src={`${config.imgBaseUrl}/qy/home/address.png`}
-            ></CImage>
-            <Text className="text-30">{qyUser?.storeName}</Text>
-          </View>
+          {qyUser?.storeName && (
+            <View className="vhCenter">
+              <CImage
+                className="w-18 mr-24"
+                mode="widthFix"
+                src={`${config.imgBaseUrl}/qy/home/address.png`}
+              ></CImage>
+              <Text className="text-30">{qyUser?.storeName}</Text>
+            </View>
+          )}
         </View>
       </View>
 
