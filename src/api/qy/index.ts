@@ -17,7 +17,7 @@ const baDetail: any = () =>
  */
 const orderList: Api.QYWX.OrderList.FuncT = (params) =>
   http.get(
-    `https://member-front-uat.narscosmetics.com.cn/api/sp-manage/store/${config.storeCode}/wecom/order`,
+    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/order`,
     { params },
   );
 
@@ -28,7 +28,7 @@ const orderList: Api.QYWX.OrderList.FuncT = (params) =>
  */
 const sendSmsCode = (params) =>
   http.post(
-    `https://member-front-uat.narscosmetics.com.cn/api/sp-manage/store/${config.storeCode}/wecom/sendSmsCode`,
+    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/sendSmsCode`,
     {},
     {
       params,
@@ -41,7 +41,7 @@ const sendSmsCode = (params) =>
  */
 const orderSubmit: Api.QYWX.OrderSubmit.FuncT = (data) =>
   http.post(
-    `https://member-front-uat.narscosmetics.com.cn/api/sp-manage/store/${config.storeCode}/wecom/order/code/writeOff`,
+    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/order/code/writeOff`,
     data,
   );
 
@@ -51,7 +51,7 @@ const orderSubmit: Api.QYWX.OrderSubmit.FuncT = (data) =>
  */
 const dashboard: Api.QYWX.Dashboard.FuncT = (data) =>
   http.post(
-    `https://member-front-uat.narscosmetics.com.cn/api/sp-manage/store/${config.storeCode}/wecom/order/dashboard`,
+    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/order/dashboard`,
     data,
   );
 
@@ -61,7 +61,7 @@ const dashboard: Api.QYWX.Dashboard.FuncT = (data) =>
  */
 const counterStock: Api.QYWX.Stock.FuncT = (params) =>
   http.get(
-    `https://member-front-uat.narscosmetics.com.cn/api/sp-manage/store/${config.storeCode}/wecom/counter/stock`,
+    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/counter/stock`,
     { params },
   );
 
@@ -71,7 +71,7 @@ const counterStock: Api.QYWX.Stock.FuncT = (params) =>
  */
 const singleCounterStock: Api.QYWX.SingleCounterStock.FuncT = (params) =>
   http.get(
-    `https://member-front-uat.narscosmetics.com.cn/api/sp-manage/store/${config.storeCode}/wecom/goods/stock`,
+    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/goods/stock`,
     { params },
   );
 

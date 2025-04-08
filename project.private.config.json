@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/register/index",
+          "pathName": "pages/register/index",
+          "query": "scene=5TwX9Vgk6yADNzdv3vR4Sm",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "subPages/redeem/index",
           "pathName": "subPages/redeem/index",
           "query": "",
@@ -14,13 +21,6 @@
           "name": "内部调试页面",
           "pathName": "pages/qy/debugger/index",
           "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/register/index",
-          "pathName": "pages/register/index",
-          "query": "scene=4XshBvhytRJZ1wksvWsn1D",
           "launchMode": "default",
           "scene": null
         },

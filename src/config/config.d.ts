@@ -19,6 +19,8 @@ export type BaseConfig = {
   imgBaseUrl: string;
   /** 请求接口基础地址 */
   basePathUrl: string;
+  /** 企业微信基本接口2 */
+  qyBasePathUrl2: string;
   /** 登录地址 */
   loginUrl: string;
   /** 企业微信基础地址 */
