@@ -111,7 +111,10 @@ const Index = () => {
     // ba 没有下一级
     if (item?.type === "ba") return;
 
-    if (item.children.length === 0 && item.code.length === 8) {
+    if (
+      (item?.children?.length === 0 || !item?.children) &&
+      item.code.length >= 8
+    ) {
       // 门店调用ba列表接口
       queryBaList(item.code);
     } else {
