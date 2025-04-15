@@ -29,7 +29,6 @@ instance.interceptors.request.use((_config) => {
 // axios实例添加response阻流器
 instance.interceptors.response.use(
   (res) => {
-    console.log("res", res);
     return res;
   },
   (err: any) => {

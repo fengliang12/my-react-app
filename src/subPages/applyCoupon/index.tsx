@@ -23,7 +23,6 @@ const ApplyCoupon = () => {
 
   useLoad(async () => {
     let res = await api.user.getCustomerPreferredAddress();
-    console.log("res", res);
     if (res?.data) {
       setAddressInfo(res?.data);
     }
@@ -31,7 +30,6 @@ const ApplyCoupon = () => {
 
   useAsyncEffect(async () => {
     let res = await api.birthdayGift.locate({ couponId });
-    console.log("res", res);
   }, []);
 
   /**

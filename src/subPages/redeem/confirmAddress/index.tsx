@@ -25,7 +25,6 @@ const ConfirmAddress = () => {
 
   useLoad(async () => {
     let res = await api.user.getCustomerPreferredAddress();
-    console.log("res", res);
     if (res?.data) {
       setAddressInfo({ ...res?.data, type: "express" });
     }

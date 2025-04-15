@@ -16,10 +16,9 @@ const baDetail: any = () =>
  * @returns
  */
 const orderList: Api.QYWX.OrderList.FuncT = (params) =>
-  http.get(
-    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/order`,
-    { params },
-  );
+  http.get(`/nars-exchange/shiseido/${config.storeCode}/mini/wemall/order`, {
+    params,
+  });
 
 /**
  * 核销发送验证码
@@ -28,7 +27,7 @@ const orderList: Api.QYWX.OrderList.FuncT = (params) =>
  */
 const sendSmsCode = (params) =>
   http.post(
-    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/sendSmsCode`,
+    `/nars-exchange/shiseido/${config.storeCode}/mini/wemall/sendSmsCode`,
     {},
     {
       params,
@@ -41,7 +40,7 @@ const sendSmsCode = (params) =>
  */
 const orderSubmit: Api.QYWX.OrderSubmit.FuncT = (data) =>
   http.post(
-    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/order/code/writeOff`,
+    `/nars-exchange/shiseido/${config.storeCode}/mini/wemall/order/code/writeOff`,
     data,
   );
 
@@ -51,7 +50,7 @@ const orderSubmit: Api.QYWX.OrderSubmit.FuncT = (data) =>
  */
 const dashboard: Api.QYWX.Dashboard.FuncT = (data) =>
   http.post(
-    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/order/dashboard`,
+    `/nars-exchange/shiseido/${config.storeCode}/mini/wemall/order/dashboard`,
     data,
   );
 
@@ -61,8 +60,10 @@ const dashboard: Api.QYWX.Dashboard.FuncT = (data) =>
  */
 const counterStock: Api.QYWX.Stock.FuncT = (params) =>
   http.get(
-    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/counter/stock`,
-    { params },
+    `/nars-exchange/shiseido/${config.storeCode}/mini/wemall/counter/stock`,
+    {
+      params,
+    },
   );
 
 /**
@@ -71,8 +72,10 @@ const counterStock: Api.QYWX.Stock.FuncT = (params) =>
  */
 const singleCounterStock: Api.QYWX.SingleCounterStock.FuncT = (params) =>
   http.get(
-    `${config.qyBasePathUrl2}/sp-manage/store/${config.storeCode}/wecom/goods/stock`,
-    { params },
+    `/nars-exchange/shiseido/${config.storeCode}/mini/wemall/goods/stock`,
+    {
+      params,
+    },
   );
 
 /**
