@@ -18,30 +18,36 @@ import to from "@/src/utils/to";
 
 import AddCart from "./components/AddCart";
 import ApplyType from "./components/ApplyType";
-import ApplyTypeOnlyPickUp from "./components/ApplyTypeOnlyPickUp";
 import MiniGoodClass from "./components/MiniGoodClass";
+import SelectCounter from "./components/SelectCounter";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: Store.States) => state.user);
   const [show, { setTrue, setFalse }] = useBoolean(false);
-  const { applyType, counter } = useSelector(
+  const { applyType } = useSelector(
     (state: Store.States) => state.exchangeGood,
   );
   const [hideExpress, setHideExpress] = useState<string>("false");
+  const [selectCounter, setSelectCounter] = useState<any>(false);
 
   /**
    * 获取商品列表
    */
   const [originList, setOriginList] = useState<any>([]);
   const [goodList, setGoodList] = useState<any>([]);
+
+  /**
+   * 获取商品列表
+   */
   const getGoodList = useMemoizedFn(async () => {
-    if (!applyType) return;
+    if (!applyType || (applyType === "self_pick_up" && !selectCounter?.id))
+      return;
 
     await app.init();
     let params = {
-      counterId: counter?.id || undefined,
+      selectCounterId: selectCounter?.id || undefined,
     };
     await api.buyBonusPoint
       .getBonusPointList(params)
@@ -87,7 +93,7 @@ const Index = () => {
 
   useUpdateEffect(() => {
     getGoodList();
-  }, [applyType, counter, getGoodList]);
+  }, [applyType, selectCounter, getGoodList]);
 
   /**
    * 页面卸载清除缓存
@@ -100,7 +106,7 @@ const Index = () => {
         applyType: "",
         channelType: "immediately",
         postageType: "points",
-        counter: null,
+        selectCounter: null,
         showRedDot: false,
       },
     });
@@ -142,24 +148,27 @@ const Index = () => {
         </View>
       </View>
 
+      {/* 选择领取方式 */}
+      {hideExpress !== "true" && <ApplyType></ApplyType>}
+
       {/* 产品信息 */}
       <View className="flex-1 bg-white rounded-t-50 overflow-hidden">
-        <MiniGoodClass
-          goodClassList={goodList}
-          originList={originList}
-        ></MiniGoodClass>
-      </View>
+        {/* 线下兑礼需要选中门店 */}
+        {applyType === "self_pick_up" && (
+          <SelectCounter
+            callback={(counter) => {
+              setSelectCounter(counter);
+            }}
+          ></SelectCounter>
+        )}
 
-      {/* 选择领取方式 */}
-      {hideExpress && (
-        <>
-          {hideExpress === "true" ? (
-            <ApplyTypeOnlyPickUp></ApplyTypeOnlyPickUp>
-          ) : (
-            <ApplyType></ApplyType>
-          )}
-        </>
-      )}
+        {originList?.length > 0 && (
+          <MiniGoodClass
+            goodClassList={goodList}
+            originList={originList}
+          ></MiniGoodClass>
+        )}
+      </View>
 
       {/* 购物车 */}
       {applyType && <AddCart></AddCart>}

@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "积分商城",
+          "pathName": "subPages/redeem/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/register/index",
           "pathName": "pages/register/index",
           "query": "scene=5TwX9Vgk6yADNzdv3vR4Sm",

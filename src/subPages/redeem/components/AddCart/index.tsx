@@ -52,7 +52,6 @@ const Index = () => {
    */
   useAsyncEffect(async () => {
     if (applyType === "self_pick_up" && !counter) {
-      toast("门店不能为空");
       return;
     }
 
@@ -82,7 +81,6 @@ const Index = () => {
    */
   const handleDelete = useMemoizedFn(async (item) => {
     if (applyType === "self_pick_up" && !counter) {
-      toast("门店不能为空");
       return;
     }
 
@@ -118,7 +116,6 @@ const Index = () => {
    */
   const updateCart = useMemoizedFn(async (item, type) => {
     if (applyType === "self_pick_up" && !counter) {
-      toast("门店不能为空");
       return;
     }
 
