@@ -1,9 +1,8 @@
-import Taro, { getCurrentPages, useDidShow } from "@tarojs/taro";
-import { useMemoizedFn, useRequest } from "ahooks";
+import Taro, { useDidShow } from "@tarojs/taro";
+import { useRequest } from "ahooks";
 import { useEffect, useState } from "react";
 
 import api from "@/src/api";
-import { getPages } from "@/src/utils/getPages";
 
 const app: App.GlobalData = Taro.getApp();
 
@@ -45,18 +44,11 @@ const useProject = (currentIndex: number = 0) => {
   const [selectIndex, setSelectIndex] = useState<number>(currentIndex);
 
   useEffect(() => {
-    let currentPage = getPages({});
-    if (
-      projectList &&
-      projectList?.length > 0 &&
-      currentPage === "subPages/service/index"
-    ) {
-      if (projectList && projectList?.length > 0) {
-        let tempItem = projectList?.[selectIndex] || {};
-        setProject(tempItem);
-        getNum(tempItem?.projectCode);
-        setReason(JSON.parse(tempItem?.reason));
-      }
+    if (projectList && projectList?.length > 0) {
+      let tempItem = projectList?.[selectIndex] || {};
+      setProject(tempItem);
+      getNum(tempItem?.projectCode);
+      setReason(JSON.parse(tempItem?.reason));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList, selectIndex]);

@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "会员节首页",
+          "pathName": "pages/memberFestival/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/register/index",
           "pathName": "pages/register/index",
           "query": "scene=5TwX9Vgk6yADNzdv3vR4Sm",

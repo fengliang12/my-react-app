@@ -28,6 +28,7 @@ export default {
     "pages/qy/stockQuery/index",
     "pages/qy/stockSingleQuery/index",
     "pages/qy/debugger/index",
+    "pages/memberFestival/index",
   ],
   window: {
     backgroundTextStyle: "light",
