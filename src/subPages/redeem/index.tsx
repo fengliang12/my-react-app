@@ -1,7 +1,6 @@
 import { Text, View } from "@tarojs/components";
 import Taro, { useDidShow, useShareAppMessage, useUnload } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn, useUpdateEffect } from "ahooks";
-import dayjs from "dayjs";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,7 +10,7 @@ import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
 import config from "@/src/config";
 import { SET_EXCHANGE_GOOD } from "@/src/store/constants";
-import { formatDateTime, setShareParams } from "@/src/utils";
+import { isBetween, setShareParams } from "@/src/utils";
 import handleGoodClass from "@/src/utils/handleGoodClass";
 import setShow from "@/src/utils/setShow";
 import to from "@/src/utils/to";
@@ -29,7 +28,7 @@ const Index = () => {
   const { applyType, counter } = useSelector(
     (state: Store.States) => state.exchangeGood,
   );
-  const [hideExpress, setHideExpress] = useState<string>("false");
+  const [showExpress, setShowExpress] = useState<boolean>(false);
 
   /**
    * 获取商品列表
@@ -72,16 +71,19 @@ const Index = () => {
   });
 
   useDidShow(async () => {
-    let ret = await api.kvdata.getKvDataByType("hide_express");
+    let ret = await api.kvdata.getKvDataByType("show_express_time");
     let kvData = ret?.data?.[0];
+    let timeInfo = JSON.parse(kvData?.content || "{}");
     if (
-      kvData?.onlineTime &&
-      dayjs().isAfter(dayjs(formatDateTime(kvData?.onlineTime, 6, "/")))
+      timeInfo?.from &&
+      timeInfo?.to &&
+      isBetween(timeInfo?.from, timeInfo?.to)
     ) {
-      setHideExpress(kvData?.content || "false");
+      setShowExpress(true);
     } else {
-      setHideExpress("false");
+      setShowExpress(false);
     }
+
     getGoodList();
   });
 
@@ -151,15 +153,13 @@ const Index = () => {
       </View>
 
       {/* 选择领取方式 */}
-      {hideExpress && (
-        <>
-          {hideExpress === "true" ? (
-            <ApplyTypeOnlyPickUp></ApplyTypeOnlyPickUp>
-          ) : (
-            <ApplyType></ApplyType>
-          )}
-        </>
-      )}
+      <>
+        {showExpress ? (
+          <ApplyType></ApplyType>
+        ) : (
+          <ApplyTypeOnlyPickUp></ApplyTypeOnlyPickUp>
+        )}
+      </>
 
       {/* 购物车 */}
       {applyType && <AddCart></AddCart>}
@@ -167,10 +167,11 @@ const Index = () => {
       {/* 活动规则 */}
       <View style={setShow(show)}>
         <CPopup maskClose closePopup={setFalse}>
-          <View className="w-640 h-1037 bg-white rounded-20 overflow-hidden">
+          <View className="w-640 bg-white rounded-20 overflow-hidden">
             <CImage
               className="w-full h-full"
-              src={`${config.imgBaseUrl}/redeem/rule_02.png`}
+              mode="widthFix"
+              src={`${config.imgBaseUrl}/redeem/rule_04.png`}
             ></CImage>
             <View
               className="absolute w-80 h-80 top-0 right-10 vhCenter"
