@@ -312,14 +312,9 @@ export const getBaseComponent = (actionCom, pageId?: string) => {
     }
   }
   if (actionCom.type === 'text') {
-    let txt = actionCom.nodes
-    if (startsWith(txt, 'swiperCurrent_')) {
-      const swiperId = replace(txt, 'swiperCurrent_', '')
-      txt = (get(store.updateCom.current, `${pageId}_${swiperId}`) ?? 0) + 1
-    }
     result = {
       key: actionCom.id,
-      value: txt + '',
+      value: actionCom.nodes,
       type: 'nodes'
     }
   }
@@ -546,14 +541,14 @@ export const subscribeMsg = async (
 /** rpx to px */
 export const rpxTopx = (rpx, deviceWidth?) => {
   return parseInt(
-    String((Number(rpx) / 750) * (deviceWidth || (appStore?.systemInfo?.windowWidth || Taro.getSystemInfoSync?.()?.windowWidth)))
+    String((Number(rpx) / 750) * (deviceWidth || Taro.getSystemInfoSync?.()?.windowWidth))
   )
 }
 
 /** px to rpx */
 export const pxTorpx = (px, deviceWidth?) => {
   return parseInt(
-    String((Number(px) * 750) / (deviceWidth || (appStore?.systemInfo?.windowWidth || Taro.getSystemInfoSync?.()?.windowWidth)))
+    String((Number(px) * 750) / (deviceWidth || Taro.getSystemInfoSync?.()?.windowWidth))
   )
 }
 
@@ -1277,13 +1272,7 @@ const parsingAction = async (action: Edit.IActions, pageId, templateInfo, layout
     if (layoutData?.registerPath) {
       to(layoutData?.registerPath, 'navigateTo', pageId)
     } else if (layout.config.registerPath) {
-      if (isString(layout.config.registerPath)) {
-        to(layout.config.registerPath, 'navigateTo', pageId)
-      }
-      if (isFunction(layout.config.registerPath)) {
-        const path = layout.config.registerPath?.()
-        path && to(path, 'navigateTo', pageId)
-      }
+      to(layout.config.registerPath, 'navigateTo', pageId)
     }
     return false
   }
@@ -2537,7 +2526,7 @@ export const computedTextLabel = (data: any, pageId: string, templateId: string)
 }
 
 /** 品牌探索组件特殊处理 */
-export const computedKIEHLSA = (data: any, pageId: string, templateId: string, aType: string) => {
+export const computedKIEHLSA = (data: any, pageId: string, templateId: string) => {
   const { defaultCurrentId, type, keyType, actions0, actions1, actions2 } = data
   const storeRef = get(store.ref, `${pageId}.${templateId}`)
   if (isNil(type)) {
@@ -2568,16 +2557,6 @@ export const computedKIEHLSA = (data: any, pageId: string, templateId: string, a
     parsingActions(actions2, pageId, {})
     store.setRef({ currentId: 2 }, pageId, templateId)
   }
-
-  Taro.eventCenter.trigger(`layout_trackingCallBack_${pageId}`, {
-    component: {
-      code: 'KIEHLSA',
-    },
-    target: {
-      index: get(store.ref, `${pageId}.${templateId}`)?.currentId,
-      type: aType
-    },
-  });
 }
 
 /** 会员卡组件-E模型特殊处理 */
@@ -2725,34 +2704,3 @@ export const getSystemInfo = () => {
   systemInfo.ios = ios //是否ios//将信息保存到全局变量中,后边再用就不用重新异步获取了
   return systemInfo
 }
-
-/** 计算动态变量数据 */
-export const getDynaimcNumByStore = (data: any) => {
-  const getValue = (item: any) => {
-    let num = 0
-    if (endsWith(item, 'px')) {
-      num = rpxTopx(parseInt(item));
-    } else if (startsWith(item, 'systemInfo')) {
-      num = get(appStore, item);
-    } else {
-      num = parseInt(item);
-    }
-    return num
-  }
-  if (isString(data)) {
-    return getValue(data)
-  } else {
-    const { leftArr, rightArr } = data
-    let [leftResult, rightResult] = [0, 0]
-    leftArr?.forEach(item => {
-      leftResult += getValue(item)
-    })
-    rightArr?.forEach(item => {
-      rightResult += getValue(item)
-    })
-    return leftResult - rightResult
-  }
-
-}
-
-

@@ -1006,11 +1006,11 @@ declare namespace Edit {
     // 昵称
     nickName: string;
     // 头像
-    avatarUrl: string | null;
+    avatarUrl: string;
     // 头像额外样式
     avatarStyle: React.CSSProperties
     // 头像边框
-    avatarBorderUrl: string | null;
+    avatarBorderUrl: string;
     // 头像边框额外样式
     avatarBorderStyle: React.CSSProperties
     // 性别
@@ -1061,7 +1061,5 @@ declare namespace Edit {
     isShowMemberLevelDeadline: boolean
     // 是否显示即将到期积分截止时间
     isShowPointATime: boolean;
-    // 生日Logo图片
-    birthdayLogoUrl: string
   };
 }

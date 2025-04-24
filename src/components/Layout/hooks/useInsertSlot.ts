@@ -9,7 +9,7 @@ export default function useInsertSlot({ path }) {
     if (iSlot) {
       return {
         index: iSlot.index,
-        element: iSlot.getElement?.(iSlot.customData, templateCustomData)
+        element: iSlot.getElement?.(iSlot.customData ?? templateCustomData)
       };
     }
     return null;

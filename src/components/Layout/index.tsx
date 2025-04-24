@@ -27,6 +27,7 @@ import {
 import React, {
   CSSProperties,
   useEffect,
+  useMemo,
   useRef,
   useState
 } from 'react';
@@ -71,8 +72,7 @@ import {
   setNewSwiperConfig,
   setPageScroll,
   storage,
-  computeSize,
-  getDynaimcNumByStore
+  computeSize
 } from './helper';
 import usePage from './hooks/usePage';
 import useShowRule from './hooks/useShowRule';
@@ -163,7 +163,7 @@ export type LayoutProps = {
     /** 返回插入元素的方法
      * @param data 组件的自定义数据
      */
-    getElement?: (data: any, parentData?: any) => React.ReactElement;
+    getElement?: (data: any) => React.ReactElement;
   }[];
   /** 页面插槽 */
   pageSlot?: {
@@ -214,7 +214,7 @@ export type LayoutProps = {
       /** 返回插入组件的方法
        * @param data 组件的自定义数据
        */
-      getElement?: (data: any, parentData?: any) => React.ReactElement;
+      getElement?: (data: any) => React.ReactElement;
     }[];
   }[];
   /** 弹窗注入 */
@@ -264,7 +264,6 @@ export type LayoutProps = {
     name?: string;
     likeName?: string;
     style?: React.CSSProperties;
-    getStyle?: ((data: any) => React.CSSProperties)
     outside?: boolean
   }[];
   /** 轮播类型组件上下文 */
@@ -496,7 +495,7 @@ type TemplateContextType = {
     path?: string;
     index?: number;
     customData?: any
-    getElement?: (data: any, parentData?: any) => React.ReactElement;
+    getElement?: (data: any) => React.ReactElement;
   }[];
   viewOverFlowShow?: boolean
 };
@@ -933,10 +932,14 @@ const Layout: React.FC<LayoutProps> = ({
   })
   const initCustomNavHeight = useMemoizedFn(() => {
     if (pageRef.current?.preCompile?.customData?.navHeight) {
-      const customNavHeight = getDynaimcNumByStore(pageRef.current?.preCompile?.customData?.navHeight) ?? 0
-      console.log('customNavHeight', customNavHeight)
-      storage.set(`layout_navHeightPxNum_${pageRef.current?.id}`, customNavHeight);
-      navHeightPxNumRef.current = customNavHeight
+      if (pageRef.current?.preCompile?.customData?.navHeight?.indexOf('rpx')) {
+        const customNavHeight: any = rpxTopx(parseInt(pageRef.current?.preCompile?.customData?.navHeight || '0'), deviceWidth);
+        storage.set(
+          `layout_navHeightPxNum_${pageRef.current?.id}`,
+          customNavHeight
+        );
+        navHeightPxNumRef.current = customNavHeight
+      }
     }
   })
   const computedTask = useMemoizedFn((tasks) => {
@@ -1143,7 +1146,7 @@ const Layout: React.FC<LayoutProps> = ({
   const computedPage = useMemoizedFn(() => {
     if (pageRef.current) {
       const page = pageRef.current;
-      if (page && !page.config?.openShare && !closeShare) {
+      if (page && !page.config.openShare && !closeShare) {
         Taro.hideShareMenu();
       }
       if (page?.titleNav) {
@@ -2310,7 +2313,7 @@ const Layout: React.FC<LayoutProps> = ({
           pre.push({
             path: l.comPath,
             index: l.index,
-            customData: l.customData,
+            customData: l.templateCustomData,
             getElement: cur.getElement
           })
         })
@@ -2321,7 +2324,7 @@ const Layout: React.FC<LayoutProps> = ({
   });
   /** 获取插入样式 */
   const getInjectStyle = useMemoizedFn(item => {
-    let si = styleInject?.find((x: any) => {
+    return styleInject?.find((x: any) => {
       let result = false;
       if (!isNil(x.likeName)) {
         result = item.templateName?.indexOf(x.likeName) !== -1;
@@ -2331,10 +2334,6 @@ const Layout: React.FC<LayoutProps> = ({
       }
       return result;
     });
-    if (si?.getStyle) {
-      si.style = merge(si.style ?? {}, si.getStyle(item.templateCustomData))
-    }
-    return si
   });
   /** 获取置顶样式 */
   const getTopDataStyle = useMemoizedFn((item, index) => {

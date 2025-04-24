@@ -12,7 +12,6 @@ export default function useSwiperCurrent(comInfo) {
   const { sCurrent } = useStore(comInfo);
   const [swiperCurrentStyle, setSwiperCurrentStyle] = useState<any>({});
   const [swiperCurrentSrc, setSwiperCurrentSrc] = useState();
-  const [swiperCurrentNodes, setSwiperCurrentNodes] = useState<any>();
 
   const init = useMemoizedFn(() => {
     // 处理轮播切换样式变更
@@ -107,9 +106,6 @@ export default function useSwiperCurrent(comInfo) {
         parsingActions(unCheckAction ?? [], pageId, {});
       }
     }
-    if (customData?.swiperCurrentNodes) {
-      setSwiperCurrentNodes(((sCurrent ?? 0) + 1) + '')
-    }
   });
 
   useUpdateEffect(() => {
@@ -122,7 +118,6 @@ export default function useSwiperCurrent(comInfo) {
 
   return {
     swiperCurrentStyle,
-    swiperCurrentSrc,
-    swiperCurrentNodes
+    swiperCurrentSrc
   };
 }
