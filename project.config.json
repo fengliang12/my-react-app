@@ -43,5 +43,6 @@
   "packOptions": {
     "ignore": [],
     "include": []
-  }
+  },
+  "projectname": "mini-nars"
 }

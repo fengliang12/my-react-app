@@ -4,7 +4,14 @@
     "miniprogram": {
       "list": [
         {
-          "name": "积分商城",
+          "name": "会员节首页",
+          "pathName": "pages/memberFestival/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "subPages/redeem/index",
           "pathName": "subPages/redeem/index",
           "query": "",
           "launchMode": "default",

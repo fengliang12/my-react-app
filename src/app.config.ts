@@ -30,6 +30,7 @@ export default {
     "pages/qy/stockSingleQuery/index",
     "pages/qy/debugger/index",
     "pages/authorize/index",
+    "pages/memberFestival/index",
   ],
   window: {
     backgroundTextStyle: "light",
