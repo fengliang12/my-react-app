@@ -1,6 +1,6 @@
 import { Text, View } from "@tarojs/components";
 import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
+import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import { useEffect, useMemo, useState } from "react";
 
 import api from "@/src/api";
@@ -10,6 +10,7 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
 import { setShareParams } from "@/src/utils";
+import to from "@/src/utils/to";
 
 import OrderGood from "../components/OrderGood";
 import PostageType from "../components/PostageType";
@@ -19,6 +20,8 @@ const OrderConfirm = () => {
   const router = useRouter();
   const { orderId = "", from = "" } = router.params;
   const [detail, setDetail] = useState<Api.Order.GetOrderDetail.IResponse>();
+  const [tips, setTips] = useState<string>("");
+  const [customInfos, setCustomInfos] = useState<Record<string, string>>();
 
   /**
    * 获取订单详情
@@ -42,6 +45,28 @@ const OrderConfirm = () => {
   useEffect(() => {
     getOrderDetail();
   }, [getOrderDetail, orderId]);
+
+  /**
+   * 获取兑换过期提示
+   */
+  useAsyncEffect(async () => {
+    if (!detail?.deliverInfo?.type) return;
+    let customInfos = Object.fromEntries(
+      detail?.customInfos.map((elem) => {
+        return [elem.name, elem.value];
+      }),
+    );
+    setCustomInfos(customInfos);
+
+    let ret = await api.kvdata.getKvDataByType("redeem_expire_tips");
+    let kvData = ret?.data?.[0];
+    let tipInfo = JSON.parse(kvData?.content || "{}");
+    if (customInfos?.memberDayCoupon || customInfos?.memberDayGood) {
+      setTips(tipInfo["member_day"]);
+    } else {
+      setTips(tipInfo[detail?.deliverInfo?.type]);
+    }
+  }, [detail?.deliverInfo?.type]);
 
   useShareAppMessage(() => {
     return setShareParams();
@@ -71,9 +96,7 @@ const OrderConfirm = () => {
           className="text-27 mt-25"
           style={{ textAlign: from === "confirm" ? "center" : "left" }}
         >
-          {detail?.deliverInfo?.type === "express"
-            ? "* 礼品将于10个工作日内发货"
-            : "* 礼品请于30天内至所选柜台领取"}
+          {tips}
         </View>
         {detail?.deliverInfo?.type === "express" && (
           <View className="mt-30 text-28">
@@ -105,7 +128,12 @@ const OrderConfirm = () => {
               <Text>状</Text>
               <Text>态：</Text>
             </View>
-            {detail?.statusName === "待评价" ? "已完成" : detail?.statusName}
+            {detail?.statusName === "待评价"
+              ? "已完成"
+              : detail?.deliverInfo?.type === "self_pick_up" &&
+                detail?.statusName === "待收货"
+              ? "待领取"
+              : detail?.statusName}
           </View>
           <View className="mt-16 flex">
             <View className="w-150 flex justify-between items-center">
@@ -127,13 +155,6 @@ const OrderConfirm = () => {
                 </View>
                 {detail?.simpleCounter?.detailInfo?.name}
               </View>
-              {/* <View
-                className="mt-18 text-19"
-                onClick={() => to("/pages/update/index")}
-              >
-                *如所选领取柜台与所属柜台不一致，请在核销前
-                <Text className="underline">点击此处</Text>修改所属柜台。
-              </View> */}
             </>
           )}
         </View>
@@ -177,18 +198,31 @@ const OrderConfirm = () => {
               className="text-55 flex flex-col justify-center items-center mt-46 pt-50"
               style="border-top:1px solid #000"
             >
-              {detail?.extendInfos?.length > 0 && (
-                <CQRCodeCustom
-                  text={reserveId}
-                  width={214}
-                  height={214}
-                  foreground="#000000"
-                ></CQRCodeCustom>
+              {customInfos?.memberDayCoupon ? (
+                <>
+                  <View
+                    className="w-423 h-78 vhCenter bg-black text-white text-29 m-auto mt-157 mb-100"
+                    onClick={() => to("/subPages/coupon/index", "reLaunch")}
+                  >
+                    查看卡券
+                  </View>
+                </>
+              ) : (
+                <>
+                  {detail?.extendInfos?.length > 0 && (
+                    <CQRCodeCustom
+                      text={reserveId}
+                      width={214}
+                      height={214}
+                      foreground="#000000"
+                    ></CQRCodeCustom>
+                  )}
+                  <View className="text-23 flex flex-col text-center mt-39">
+                    <Text>到柜后凭此核销码</Text>
+                    <Text className="mt-10">到领取柜台核销领取礼遇</Text>
+                  </View>
+                </>
               )}
-              <View className="text-23 flex flex-col text-center mt-39">
-                <Text>到柜后凭此核销码</Text>
-                <Text className="mt-10">到领取柜台核销领取礼遇</Text>
-              </View>
             </View>
           )}
       </View>

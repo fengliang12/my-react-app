@@ -8,6 +8,7 @@ const INITIAL_STATE: Store.ExchangeGood = {
   applyType: "self_pick_up",
   channelType: "immediately",
   counter: null,
+  showExpress: false,
 };
 
 export default createReducer(

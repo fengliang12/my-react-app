@@ -4,6 +4,34 @@
     "miniprogram": {
       "list": [
         {
+          "name": "subPages/redeem/orderDetail/index",
+          "pathName": "subPages/redeem/orderDetail/index",
+          "query": "orderId=nars2503280000001011",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "卡券中心",
+          "pathName": "subPages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "subPages/redeem/orderDetail/index",
+          "pathName": "subPages/redeem/orderDetail/index",
+          "query": "orderId=nars2504240000001015&from=confirm",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "积分生产",
+          "pathName": "subPages/redeem/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "会员节首页",
           "pathName": "pages/memberFestival/index",
           "query": "",

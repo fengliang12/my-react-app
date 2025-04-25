@@ -25,11 +25,9 @@ const Index = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: Store.States) => state.user);
   const [show, { setTrue, setFalse }] = useBoolean(false);
-  const { applyType } = useSelector(
+  const { applyType, showExpress, counter } = useSelector(
     (state: Store.States) => state.exchangeGood,
   );
-  const [selectCounter, setSelectCounter] = useState<any>(false);
-  const [showExpress, setShowExpress] = useState<boolean>(false);
 
   /**
    * 获取商品列表
@@ -41,12 +39,12 @@ const Index = () => {
    * 获取商品列表
    */
   const getGoodList = useMemoizedFn(async () => {
-    if (!applyType || (applyType === "self_pick_up" && !selectCounter?.id))
-      return;
+    if (!applyType || (applyType === "self_pick_up" && !counter?.id)) return;
 
     await app.init();
     let params = {
-      selectCounterId: selectCounter?.id || undefined,
+      counterId:
+        applyType === "self_pick_up" && counter?.id ? counter?.id : undefined,
     };
     await api.buyBonusPoint
       .getBonusPointList(params)
@@ -68,6 +66,9 @@ const Index = () => {
           setOriginList(tempList);
           const list = handleGoodClass(tempList);
           setGoodList(list);
+        } else {
+          setOriginList([]);
+          setGoodList([]);
         }
       })
       .catch(() => {
@@ -80,22 +81,29 @@ const Index = () => {
     let ret = await api.kvdata.getKvDataByType("show_express_time");
     let kvData = ret?.data?.[0];
     let timeInfo = JSON.parse(kvData?.content || "{}");
+    let tempExpress = false;
     if (
       timeInfo?.from &&
       timeInfo?.to &&
       isBetween(timeInfo?.from, timeInfo?.to)
     ) {
-      setShowExpress(true);
+      tempExpress = true;
     } else {
-      setShowExpress(false);
+      tempExpress = false;
     }
 
     getGoodList();
+    dispatch({
+      type: SET_EXCHANGE_GOOD,
+      payload: {
+        showExpress: tempExpress,
+      },
+    });
   });
 
   useUpdateEffect(() => {
     getGoodList();
-  }, [applyType, selectCounter, getGoodList]);
+  }, [applyType, counter, getGoodList]);
 
   /**
    * 页面卸载清除缓存
@@ -105,11 +113,12 @@ const Index = () => {
       type: SET_EXCHANGE_GOOD,
       payload: {
         goods: [],
-        applyType: "",
+        applyType: "self_pick_up",
         channelType: "immediately",
         postageType: "points",
         selectCounter: null,
         showRedDot: false,
+        showExpress: false,
       },
     });
   });
@@ -159,16 +168,27 @@ const Index = () => {
         {applyType === "self_pick_up" && (
           <SelectCounter
             callback={(counter) => {
-              setSelectCounter(counter);
+              dispatch({
+                type: SET_EXCHANGE_GOOD,
+                payload: {
+                  counter: counter,
+                },
+              });
             }}
           ></SelectCounter>
         )}
 
-        {originList?.length > 0 && (
+        {originList?.length > 0 ? (
           <MiniGoodClass
             goodClassList={goodList}
             originList={originList}
           ></MiniGoodClass>
+        ) : (
+          <View className="mt-300 text-center text-24 color-[#333333]">
+            {!counter?.id && applyType === "self_pick_up"
+              ? "请选择领取柜台"
+              : "暂无商品"}
+          </View>
         )}
       </View>
 

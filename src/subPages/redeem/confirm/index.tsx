@@ -1,7 +1,7 @@
 import { Text, View } from "@tarojs/components";
 import { useShareAppMessage } from "@tarojs/taro";
 import { useBoolean, useMemoizedFn } from "ahooks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import CDialog from "@/src/components/Common/CDialog";
 import CHeader from "@/src/components/Common/CHeader";
@@ -20,7 +20,9 @@ const OrderConfirm = () => {
   const dispatch = useDispatch();
   const [showDialog, { setTrue, setFalse }] = useBoolean(false);
   const { applyType, goods, counter, totalPoints, confirm } = useRedeem();
-
+  const { showExpress } = useSelector(
+    (state: Store.States) => state.exchangeGood,
+  );
   /**
    * 点击兑换
    */
@@ -66,36 +68,43 @@ const OrderConfirm = () => {
         ></CHeader>
 
         {/* 领取方式 */}
-        <View className="w-690 text-26 bg-white px-30 py-40 box-border text-black">
-          <CImage
-            className="w-126"
-            mode="widthFix"
-            src={`${config.imgBaseUrl}/redeem/apply_type.jpg`}
-          ></CImage>
-          <View className="text-23 mb-40  text-left mt-22">
-            *切换领取方式后礼品库存可能产生变化
-          </View>
-
-          <View className="w-full flex justify-between items-end">
-            {applyType === "express" ? (
-              <View>邮寄到家</View>
-            ) : (
-              <View>
-                <View>到柜领取</View>
-                <View className="mt-10 ENGLISH_FAMILY">{counter?.name}</View>
-              </View>
-            )}
+        {showExpress && (
+          <View className="w-690 text-26 bg-white px-30 py-40 box-border text-black">
             <CImage
-              className="w-160"
+              className="w-126"
               mode="widthFix"
-              onClick={changeExchangeType}
-              src={`${config.imgBaseUrl}/redeem/change_apply_type.jpg`}
+              src={`${config.imgBaseUrl}/redeem/apply_type.jpg`}
             ></CImage>
+            <View className="text-23 mb-40  text-left mt-22">
+              *切换领取方式后礼品库存可能产生变化
+            </View>
+
+            <View className="w-full flex justify-between items-end">
+              {applyType === "express" ? (
+                <View>邮寄到家</View>
+              ) : (
+                <View>
+                  <View>到柜领取</View>
+                  <View className="mt-10 ENGLISH_FAMILY">{counter?.name}</View>
+                </View>
+              )}
+              <CImage
+                className="w-160"
+                mode="widthFix"
+                onClick={changeExchangeType}
+                src={`${config.imgBaseUrl}/redeem/change_apply_type.jpg`}
+              ></CImage>
+            </View>
           </View>
-        </View>
+        )}
 
         {/* 兑换礼品详情 */}
-        <View className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black">
+        <View
+          className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black"
+          style={{
+            height: "calc(100vh - 100px - 80px)",
+          }}
+        >
           <View className="mb-50">
             <CImage
               className="w-180"

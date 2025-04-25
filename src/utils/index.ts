@@ -283,3 +283,13 @@ export const generateYearMonthArray = (
 
   return result;
 };
+
+export const replaceNumberWithText = (str) => {
+  const pattern = /(\d+)/;
+  const match = str.match(pattern);
+  if (match) {
+    const number = match[0];
+    return `该礼品仅可兑礼${number}件`;
+  }
+  return str;
+};

@@ -101,5 +101,6 @@ declare namespace Store {
     goods: Array<any>;
     counter: any;
     channelType: ChannelType;
+    showExpress: boolean;
   };
 }

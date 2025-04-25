@@ -152,8 +152,8 @@ const GoodClass: React.FC<T_Props> = (props) => {
     <View className="MiniGoodClass h-full text-black text-center py-40 flex flex-col">
       {/* 积分导航 */}
       <View
-        className="w-600 mx-75 h-50 text-black text-28 borderBottomBlack box-border overflow-x-scroll"
-        style="white-space: nowrap;height:100rpx"
+        className="w-600 mx-75 h-50 text-black text-28 borderBottomBlack box-border overflow-y-scroll"
+        style="white-space: nowrap;height:70rpx"
       >
         {goodClassList?.length > 0 &&
           goodClassList.map((item, index: number) => {
@@ -215,18 +215,20 @@ const GoodClass: React.FC<T_Props> = (props) => {
                     style={{ border: "1px solid #000" }}
                   >
                     <View
-                      className="w-150 h-full bg-black vhCenter"
+                      className="flex-1 h-full bg-black vhCenter"
                       onClick={() => goPage(child)}
                     >
                       立即兑换
                     </View>
-                    <View
-                      className="flex-1 vhCenter"
-                      style="border-right:1px solid #ffffff"
-                      onClick={() => addCart(child)}
-                    >
-                      <CImage className="w-44 h-44" src={cart1}></CImage>
-                    </View>
+                    {child.type !== "PRODUCTCOUPON" && (
+                      <View
+                        className="w-80 vhCenter"
+                        style="border-right:1px solid #ffffff"
+                        onClick={() => addCart(child)}
+                      >
+                        <CImage className="w-44 h-44" src={cart1}></CImage>
+                      </View>
+                    )}
                   </View>
                 </View>
               );

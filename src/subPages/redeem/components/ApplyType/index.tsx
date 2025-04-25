@@ -4,11 +4,8 @@ import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import api from "@/src/api";
-import { P2, P6, P9 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
-import MultiplePicker from "@/src/components/Common/MultiplePicker";
 import config from "@/src/config";
 import { SET_COMMON, SET_EXCHANGE_GOOD } from "@/src/store/constants";
 import toast from "@/src/utils/toast";

@@ -26,16 +26,6 @@ const Index = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [couponStatus, setCouponStatus] = useState<string>("wait");
   const userInfo = useSelector((state: Store.States) => state.user);
-  const [notShowCounterNameCoupon, setNotShowCounterNameCoupon] =
-    useState<string>("");
-
-  useAsyncEffect(async () => {
-    let ret = await api.kvdata.getKvDataByType("notShowCounterNameCoupon");
-    let kvData = ret?.data?.[0];
-    if (kvData) {
-      setNotShowCounterNameCoupon(kvData?.content || "");
-    }
-  }, []);
 
   useDidShow(async () => {
     await app.init();
@@ -83,6 +73,7 @@ const Index = () => {
         return originList.filter((item) => {
           if (
             (item.pAType == 10 && item.goodsStatus == 20) ||
+            (item.pAType == "LOCAL" && item.goodsStatus == 10) ||
             (item.pAType == null &&
               (item.ticketStatus == 10 || item.ticketStatus == 15))
           ) {
@@ -93,6 +84,7 @@ const Index = () => {
         return originList.filter((item) => {
           if (
             (item.pAType == 10 && item.goodsStatus == 30) ||
+            (item.pAType == "LOCAL" && item.goodsStatus == 20) ||
             (item.pAType == null && item.ticketStatus == 20)
           ) {
             return item;
@@ -102,6 +94,7 @@ const Index = () => {
         return originList.filter((item) => {
           if (
             (item.pAType == 10 && item.goodsStatus == 85) ||
+            (item.pAType == "LOCAL" && item.goodsStatus == 90) ||
             (item.pAType == null && item.ticketStatus == 90)
           ) {
             return item;
