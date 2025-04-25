@@ -116,9 +116,9 @@ const Index = () => {
         applyType: "self_pick_up",
         channelType: "immediately",
         postageType: "points",
-        selectCounter: null,
         showRedDot: false,
         showExpress: false,
+        counter: null,
       },
     });
   });
@@ -166,16 +166,19 @@ const Index = () => {
       <View className="flex-1 bg-white rounded-t-50 overflow-hidden">
         {/* 线下兑礼需要选中门店 */}
         {applyType === "self_pick_up" && (
-          <SelectCounter
-            callback={(counter) => {
-              dispatch({
-                type: SET_EXCHANGE_GOOD,
-                payload: {
-                  counter: counter,
-                },
-              });
-            }}
-          ></SelectCounter>
+          <>
+            <View className="mt-47 ml-73">请选择领取柜台</View>
+            <SelectCounter
+              callback={(counter) => {
+                dispatch({
+                  type: SET_EXCHANGE_GOOD,
+                  payload: {
+                    counter: counter,
+                  },
+                });
+              }}
+            ></SelectCounter>
+          </>
         )}
 
         {originList?.length > 0 ? (
@@ -184,10 +187,17 @@ const Index = () => {
             originList={originList}
           ></MiniGoodClass>
         ) : (
-          <View className="mt-300 text-center text-24 color-[#333333]">
-            {!counter?.id && applyType === "self_pick_up"
-              ? "请选择领取柜台"
-              : "暂无商品"}
+          <View className="mt-300 text-center text-26 color-[#333333] vhCenter flex-col">
+            {!counter?.id && applyType === "self_pick_up" ? (
+              <>
+                <CImage
+                  className="w-60 h-60 mb-39"
+                  mode="widthFix"
+                  src={`${config.imgBaseUrl}/redeem/gantanhao-xianxingyuankuang_03.png`}
+                ></CImage>
+                <Text>请先选择领取柜台</Text>
+              </>
+            ) : null}
           </View>
         )}
       </View>

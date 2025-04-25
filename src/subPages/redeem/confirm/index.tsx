@@ -68,41 +68,43 @@ const OrderConfirm = () => {
         ></CHeader>
 
         {/* 领取方式 */}
-        {showExpress && (
-          <View className="w-690 text-26 bg-white px-30 py-40 box-border text-black">
-            <CImage
-              className="w-126"
-              mode="widthFix"
-              src={`${config.imgBaseUrl}/redeem/apply_type.jpg`}
-            ></CImage>
-            <View className="text-23 mb-40  text-left mt-22">
+        <View className="w-690 text-26 bg-white px-30 py-40 box-border text-black">
+          <CImage
+            className="w-126 mb-22"
+            mode="widthFix"
+            src={`${config.imgBaseUrl}/redeem/apply_type.jpg`}
+          ></CImage>
+          {showExpress && (
+            <View className="text-23 mb-40 text-left ">
               *切换领取方式后礼品库存可能产生变化
             </View>
+          )}
 
-            <View className="w-full flex justify-between items-end">
-              {applyType === "express" ? (
-                <View>邮寄到家</View>
-              ) : (
-                <View>
-                  <View>到柜领取</View>
-                  <View className="mt-10 ENGLISH_FAMILY">{counter?.name}</View>
-                </View>
-              )}
+          <View className="w-full flex justify-between items-end">
+            {applyType === "express" ? (
+              <View>邮寄到家</View>
+            ) : (
+              <View>
+                <View>到柜领取</View>
+                <View className="mt-10 ENGLISH_FAMILY">{counter?.name}</View>
+              </View>
+            )}
+            {showExpress && (
               <CImage
                 className="w-160"
                 mode="widthFix"
                 onClick={changeExchangeType}
                 src={`${config.imgBaseUrl}/redeem/change_apply_type.jpg`}
               ></CImage>
-            </View>
+            )}
           </View>
-        )}
+        </View>
 
         {/* 兑换礼品详情 */}
         <View
           className="w-690 bg-white px-30 pt-40 pb-100 box-border mt-28 text-black"
           style={{
-            height: "calc(100vh - 100px - 80px)",
+            minHeight: `calc(100vh - 100px - ${showExpress ? 200 : 150}px)`,
           }}
         >
           <View className="mb-50">

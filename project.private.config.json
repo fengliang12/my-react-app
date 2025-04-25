@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "subPages/redeem/orderList/index",
+          "pathName": "subPages/redeem/orderList/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "subPages/redeem/orderDetail/index",
           "pathName": "subPages/redeem/orderDetail/index",
           "query": "orderId=nars2503280000001011",

@@ -149,7 +149,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
   });
 
   return (
-    <View className="MiniGoodClass h-full text-black text-center py-40 flex flex-col">
+    <View className="MiniGoodClass h-full text-black text-center py-60 flex flex-col">
       {/* 积分导航 */}
       <View
         className="w-600 mx-75 h-50 text-black text-28 borderBottomBlack box-border overflow-y-scroll"
@@ -159,7 +159,7 @@ const GoodClass: React.FC<T_Props> = (props) => {
           goodClassList.map((item, index: number) => {
             return (
               <View
-                className={`h-50 leading-50 mx-20 vhCenter ${
+                className={`mx-20 vhCenter ${
                   item.point === activeIndex ? "active" : ""
                 }`}
                 key={index}

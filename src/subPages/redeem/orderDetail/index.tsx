@@ -9,7 +9,7 @@ import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
-import { setShareParams } from "@/src/utils";
+import { codeMapValue, handleGoodStatus, setShareParams } from "@/src/utils";
 import to from "@/src/utils/to";
 
 import OrderGood from "../components/OrderGood";
@@ -51,11 +51,7 @@ const OrderConfirm = () => {
    */
   useAsyncEffect(async () => {
     if (!detail?.deliverInfo?.type) return;
-    let customInfos = Object.fromEntries(
-      detail?.customInfos.map((elem) => {
-        return [elem.name, elem.value];
-      }),
-    );
+    let customInfos = codeMapValue(detail?.customInfos, "name");
     setCustomInfos(customInfos);
 
     let ret = await api.kvdata.getKvDataByType("redeem_expire_tips");
@@ -128,12 +124,7 @@ const OrderConfirm = () => {
               <Text>状</Text>
               <Text>态：</Text>
             </View>
-            {detail?.statusName === "待评价"
-              ? "已完成"
-              : detail?.deliverInfo?.type === "self_pick_up" &&
-                detail?.statusName === "待收货"
-              ? "待领取"
-              : detail?.statusName}
+            <Text>{handleGoodStatus(detail)}</Text>
           </View>
           <View className="mt-16 flex">
             <View className="w-150 flex justify-between items-center">
