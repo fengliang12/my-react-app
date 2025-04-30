@@ -1,29 +1,50 @@
 import { Text, View } from "@tarojs/components";
-import { useCountDown } from "ahooks";
-import { useEffect, useState } from "react";
+import { useCountDown, useMemoizedFn } from "ahooks";
+import { useEffect, useRef, useState } from "react";
 
 import Layout from "@/src/components/Layout";
 import to from "@/src/utils/to";
 
 const Authorize = () => {
   const [targetDate, setTargetDate] = useState<any>();
+  const jumpStatus = useRef(true);
   const [countDown, FormattedRes] = useCountDown({
     targetDate: targetDate,
     interval: 1000,
     onEnd: () => {
-      to("/pages/member/member", "reLaunch");
+      console.log("jumpStatus", jumpStatus.current);
+      if (jumpStatus.current) {
+        to("/pages/member/member", "reLaunch");
+      }
     },
   });
   const { seconds } = FormattedRes;
+
   useEffect(() => {
     // 跳转
     setTargetDate(new Date(Date.now() + 5 * 1000));
   }, []);
 
+  /**
+   * 自定义事件
+   * @param params
+   */
+  const customAction = useMemoizedFn((params) => {
+    let { code, data } = params;
+    if (code === "judgeMemberFestival") {
+      let { path, type = "navigateTo" } = JSON.parse(data) || {};
+      if (path) {
+        to(path, type);
+        setTargetDate(undefined);
+      }
+    }
+  });
+
   return (
     <>
       <Layout
         code="authorize"
+        onCustomAction={customAction}
         customSlot={[
           {
             likeName: "首页开屏图",
@@ -42,7 +63,7 @@ const Authorize = () => {
                     to("/pages/member/member", "reLaunch");
                   }}
                 >
-                  跳过 <Text className="mt-6 ml-6">{seconds}</Text>
+                  跳过 <Text className="mt-2 ml-6">{seconds}</Text>
                 </View>
               );
             },

@@ -10,6 +10,7 @@ import { cart1, Close } from "@/assets/image/index";
 import api from "@/src/api";
 import CImage from "@/src/components/Common/CImage";
 import CPopup from "@/src/components/Common/CPopup";
+import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import { SET_EXCHANGE_GOOD, SET_RED_DOT } from "@/src/store/constants";
 import setShow from "@/src/utils/setShow";
@@ -151,9 +152,11 @@ const GoodClass: React.FC<T_Props> = (props) => {
   return (
     <View className="MiniGoodClass h-full text-black text-center py-60 flex flex-col">
       {/* 积分导航 */}
-      <View
-        className="w-600 mx-75 h-50 text-black text-28 borderBottomBlack box-border overflow-y-scroll"
+      <ScrollView
+        scrollX
+        className="w-600 mx-75 h-50 text-black text-28 borderBottomBlack box-border"
         style="white-space: nowrap;height:70rpx"
+        showScrollbar={false}
       >
         {goodClassList?.length > 0 &&
           goodClassList.map((item, index: number) => {
@@ -170,10 +173,10 @@ const GoodClass: React.FC<T_Props> = (props) => {
               </View>
             );
           })}
-      </View>
+      </ScrollView>
 
       {/* 商品列表 */}
-      <ScrollView className="flex-1 overflow-hidden" scrollY>
+      <ScrollView className="flex-1 overflow-hidden pb-300" scrollY>
         <View className="w-full flex flex-wrap justify-between px-70 box-border py-40">
           {selectList?.length ? (
             selectList.map((child: any, index) => {
@@ -189,6 +192,10 @@ const GoodClass: React.FC<T_Props> = (props) => {
                       setTrue();
                     }}
                   >
+                    <CImage
+                      className="w-25 h-25 absolute top-190 left-10"
+                      src={`${config.imgBaseUrl}/redeem/search_icon.png`}
+                    />
                     <CImage className="w-230 h-230" src={child.mainImage} />
                     <View className="w-full h-1 bg-black opacity-0"></View>
                     <View className="text-22 h-60 leading-30 mt-18 w-full text-left ENGLISH_FAMILY text-overflow-more">
@@ -242,37 +249,55 @@ const GoodClass: React.FC<T_Props> = (props) => {
       <View style={setShow(show)}>
         <CPopup
           maskClose
+          className="relative"
           closePopup={() => {
             setClickGood(null);
             setFalse();
           }}
         >
-          <View className="w-647 pt-30 pb-50 bg-white rounded-20 overflow-hidden flex flex-col justify-center items-center">
-            <CImage
-              className="absolute w-34 h-34 top-53 right-40"
-              onClick={() => {
-                setClickGood(null);
-                setFalse();
-              }}
-              src={Close}
-            ></CImage>
-            <CImage className="w-400 h-400" src={clickGood?.mainImage}></CImage>
-            <Text decode className="w-450 text-27 text-center ENGLISH_FAMILY">
-              {clickGood?.description}
-            </Text>
-            <View className="w-450 mt-41 mb-56 text-38 ENGLISH_FAMILY">
-              {clickGood?.point}积分
-            </View>
+          <CImage
+            className="absolute w-30 h-30 top-30 right-30 z-99"
+            onClick={() => {
+              setClickGood(null);
+              setFalse();
+            }}
+            src={Close}
+          ></CImage>
+
+          <ScrollView
+            className="w-650 h-952 box-border rounded-20 overflow-hidden relative"
+            scrollY
+          >
             <View
-              className="w-410 h-67 text-26 rounded-4 bg-black vhCenter text-white"
-              onClick={() => {
-                setClickGood(null);
-                setFalse();
+              className="w-650 bg-white"
+              style={{
+                minHeight: "952rpx",
               }}
             >
-              我知道了
+              {clickGood?.detailImages?.length > 0 ? (
+                clickGood?.detailImages?.map((item, index) => {
+                  return (
+                    <CImage
+                      key={index}
+                      className="w-full h-500"
+                      mode="widthFix"
+                      src={item}
+                    ></CImage>
+                  );
+                })
+              ) : (
+                <CImage
+                  className="w-full h-500"
+                  mode="widthFix"
+                  src={
+                    clickGood?.description?.includes("http")
+                      ? clickGood?.description
+                      : ``
+                  }
+                ></CImage>
+              )}
             </View>
-          </View>
+          </ScrollView>
         </CPopup>
       </View>
     </View>

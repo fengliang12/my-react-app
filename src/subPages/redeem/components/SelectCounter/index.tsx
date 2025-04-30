@@ -58,10 +58,7 @@ const Index: React.FC<PropsType> = (props) => {
           <View className="w-full h-full flex justify-between items-center">
             <View className="w-auto leading-60 flex justify-between items-center px-20">
               {selectCounter?.id ? (
-                <Text>
-                  {selectCounter?.province} / {selectCounter?.city} /{" "}
-                  {selectCounter?.name}
-                </Text>
+                <Text>{selectCounter?.name}</Text>
               ) : (
                 <Text className="text-[#999999]">请选择门店</Text>
               )}

@@ -25,6 +25,7 @@ const Index = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: Store.States) => state.user);
   const [show, { setTrue, setFalse }] = useBoolean(false);
+  const [ruleImg, setRuleImg] = useState<string>("");
   const { applyType, showExpress, counter } = useSelector(
     (state: Store.States) => state.exchangeGood,
   );
@@ -80,6 +81,8 @@ const Index = () => {
   useDidShow(async () => {
     let ret = await api.kvdata.getKvDataByType("show_express_time");
     let kvData = ret?.data?.[0];
+    setRuleImg(kvData.icon || "");
+
     let timeInfo = JSON.parse(kvData?.content || "{}");
     let tempExpress = false;
     if (
@@ -212,7 +215,7 @@ const Index = () => {
             <CImage
               className="w-full h-full"
               mode="widthFix"
-              src={`${config.imgBaseUrl}/redeem/rule_04.png`}
+              src={ruleImg}
             ></CImage>
             <View
               className="absolute w-80 h-80 top-0 right-10 vhCenter"
@@ -229,4 +232,5 @@ export default Index;
 definePageConfig({
   navigationStyle: "custom",
   enableShareAppMessage: true,
+  disableScroll: false,
 });

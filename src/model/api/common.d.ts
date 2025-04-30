@@ -343,6 +343,23 @@ declare namespace Api {
       type IResponse = IPopupInfo[];
     }
 
+    namespace PopupConfirmSpace {
+      type FuncT = (e: {
+        /**
+         * 活动编号
+         */
+        activityCode?: string;
+        /**
+         * 当前等级名称
+         */
+        gradeName?: string;
+        /**
+         * 弹窗类型
+         */
+        popupType?: FindPopupList.PopupType;
+      }) => MRP<any>;
+    }
+
     /** 查询单条配置信息
      *  @URL {basePathUrl}/api/sp-portal/store/{storeCode}/config/kvdata/findFirst/{type}
      *  @Method POST

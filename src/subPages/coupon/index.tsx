@@ -73,7 +73,7 @@ const Index = () => {
         return originList.filter((item) => {
           if (
             (item.pAType == 10 && item.goodsStatus == 20) ||
-            (item.pAType == "LOCAL" && item.goodsStatus == 10) ||
+            (item.pAType == "LOCAL" && item.ticketStatus === "usable") ||
             (item.pAType == null &&
               (item.ticketStatus == 10 || item.ticketStatus == 15))
           ) {
@@ -84,7 +84,7 @@ const Index = () => {
         return originList.filter((item) => {
           if (
             (item.pAType == 10 && item.goodsStatus == 30) ||
-            (item.pAType == "LOCAL" && item.goodsStatus == 20) ||
+            (item.pAType == "LOCAL" && item.ticketStatus === "redeem") ||
             (item.pAType == null && item.ticketStatus == 20)
           ) {
             return item;
@@ -94,7 +94,7 @@ const Index = () => {
         return originList.filter((item) => {
           if (
             (item.pAType == 10 && item.goodsStatus == 85) ||
-            (item.pAType == "LOCAL" && item.goodsStatus == 90) ||
+            (item.pAType == "LOCAL" && item.ticketStatus === "expire") ||
             (item.pAType == null && item.ticketStatus == 90)
           ) {
             return item;

@@ -11,6 +11,7 @@ import CPopup from "@/src/components/Common/CPopup";
 import CouponPopup from "@/src/components/CouponPopup";
 import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
+import MemberFestivalCard from "@/src/components/MemberFestivalCard";
 import Page from "@/src/components/Page";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import { isBetween, setShareParams } from "@/src/utils";
@@ -152,14 +153,17 @@ const Index = () => {
 
   return (
     <Page
+      style={{ backgroundColor: "#c5a8cb" }}
       navConfig={{
-        title: "MY NARS",
-        fill: true,
-        backgroundColor: "#000000",
-        titleColor: "#FFFFFF",
+        // title: "MY NARS",
+        // fill: true,
+        fill: false,
+        backgroundColor: "transparent",
+        // backgroundColor: "#000000",
+        // titleColor: "#FFFFFF",
       }}
     >
-      <MemberCard showBindPopup={showBind}></MemberCard>
+      <MemberFestivalCard showBindPopup={showBind}></MemberFestivalCard>
 
       {/* 新品活动 */}
       {canActive && inTime && (
@@ -179,9 +183,9 @@ const Index = () => {
       )}
 
       <Layout
-        code="index"
+        code="memberHome"
         navHeight={String(headerHeight)}
-        globalStyle={{ backgroundColor: "#000000" }}
+        globalStyle={{ backgroundColor: "#c5a8cb" }}
         onCustomAction={customAction}
         onLoadCustomData={loadCustomData}
         openMovableAreaHeight100VH

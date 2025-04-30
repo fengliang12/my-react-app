@@ -1,11 +1,12 @@
 import { View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useAsyncEffect } from "ahooks";
+import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import api from "@/src/api";
 import { SET_COMMON } from "@/src/store/constants";
+import to from "@/src/utils/to";
 
 import CImage from "../Common/CImage";
 import CPopup from "../Common/CPopup";
@@ -53,7 +54,14 @@ const Index: React.FC<PropsType> = (props) => {
     if (Array.isArray(data) && data.length > 0) {
       let popup = data[0];
       setSubDialogConfig(popup);
-      setShowDialog(popup?.show);
+
+      let res = await api.common.checkAlert(popup);
+
+      setShowDialog(res?.data);
+      /** 弹窗不需要手动确认 直接调用确认 */
+      if (!popup?.manualConfirm && res?.data) {
+        api.common.dayConfirm(popup);
+      }
     }
     Taro.hideLoading();
   }, [type]);
@@ -66,19 +74,40 @@ const Index: React.FC<PropsType> = (props) => {
       },
     });
   };
+
+  /**
+   * 关闭弹窗
+   */
+  const closePopup = useMemoizedFn(() => {
+    if (subDialogConfig?.manualConfirm) {
+      api.common.dayConfirm(subDialogConfig);
+    }
+    setShowDialog(false);
+  });
+
+  /**
+   * 点击图片
+   */
+  const clickImg = useMemoizedFn(() => {
+    if (subDialogConfig?.page) {
+      to(subDialogConfig?.page, "navigateTo");
+    }
+    closePopup();
+  });
   return (
     <>
       {showDialog && subDialogConfig && (
-        <CPopup maskClose closePopup={() => setShowDialog(false)}>
-          <View className="w-524 relative flex flex-col justify-center items-center">
+        <CPopup maskClose closePopup={closePopup}>
+          <View className="w-600 relative flex flex-col justify-center items-center">
             <CImage
               className="w-full"
               mode="widthFix"
               src={subDialogConfig.img}
+              onClick={clickImg}
             ></CImage>
             <View
               className="w-100 h-100 absolute top-0 right-0"
-              onClick={() => setShowDialog(false)}
+              onClick={closePopup}
             ></View>
           </View>
         </CPopup>

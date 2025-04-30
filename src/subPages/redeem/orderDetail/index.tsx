@@ -57,6 +57,7 @@ const OrderConfirm = () => {
     let ret = await api.kvdata.getKvDataByType("redeem_expire_tips");
     let kvData = ret?.data?.[0];
     let tipInfo = JSON.parse(kvData?.content || "{}");
+
     if (customInfos?.memberDayCoupon || customInfos?.memberDayGood) {
       setTips(tipInfo["member_day"]);
     } else {
@@ -126,26 +127,53 @@ const OrderConfirm = () => {
             </View>
             <Text>{handleGoodStatus(detail)}</Text>
           </View>
-          <View className="mt-16 flex">
-            <View className="w-150 flex justify-between items-center">
-              <Text>领</Text>
-              <Text>取</Text>
-              <Text>方</Text>
-              <Text>式：</Text>
+          {customInfos?.memberDayCoupon ? (
+            <View className="mt-16 flex">
+              <View className="w-150 flex justify-between items-center">
+                <Text>使</Text>
+                <Text>用</Text>
+                <Text>方</Text>
+                <Text>式：</Text>
+              </View>
+              进入卡券中心查看我的卡券
             </View>
-            {detail?.deliverInfo?.type === "express" ? "邮寄到家" : "到柜领取"}
-          </View>
+          ) : (
+            <View className="mt-16 flex">
+              <View className="w-150 flex justify-between items-center">
+                <Text>领</Text>
+                <Text>取</Text>
+                <Text>方</Text>
+                <Text>式：</Text>
+              </View>
+
+              {detail?.deliverInfo?.type === "express"
+                ? "邮寄到家"
+                : "到柜领取"}
+            </View>
+          )}
           {detail?.deliverInfo?.type === "self_pick_up" && (
             <>
-              <View className="mt-16 flex">
-                <View className="w-150 flex justify-between items-center ENGLISH_FAMILY">
-                  <Text>领</Text>
-                  <Text>取</Text>
-                  <Text>柜</Text>
-                  <Text>台：</Text>
+              {customInfos?.memberDayCoupon ? (
+                <View className="mt-16 flex">
+                  <View className="w-150 flex justify-between items-center ENGLISH_FAMILY">
+                    <Text>使</Text>
+                    <Text>用</Text>
+                    <Text>柜</Text>
+                    <Text>台：</Text>
+                  </View>
+                  详见卡券详情
                 </View>
-                {detail?.simpleCounter?.detailInfo?.name}
-              </View>
+              ) : (
+                <View className="mt-16 flex">
+                  <View className="w-150 flex justify-between items-center ENGLISH_FAMILY">
+                    <Text>领</Text>
+                    <Text>取</Text>
+                    <Text>柜</Text>
+                    <Text>台：</Text>
+                  </View>
+                  {detail?.simpleCounter?.detailInfo?.name}
+                </View>
+              )}
             </>
           )}
         </View>
@@ -171,7 +199,7 @@ const OrderConfirm = () => {
               <View className="w-full h-1 bg-black mt-40"></View>
             </View>
           )}
-          <View className="flex justify-between items-center text-29 mt-40 font-normal">
+          <View className="flex justify-between items-center text-29 mt-40 font-normal py-20">
             <Text>消耗积分</Text>
             <Text className="ENGLISH_FAMILY text-47">
               {detail?.totalRealPayPoints}
@@ -180,26 +208,26 @@ const OrderConfirm = () => {
           </View>
         </View>
 
-        {detail?.status &&
-          ["wait_shipment", "wait_receive", "wait_pay"].includes(
-            detail?.status,
-          ) &&
-          detail?.deliverInfo?.type === "self_pick_up" && (
+        {customInfos?.memberDayCoupon ? (
+          <>
             <View
-              className="text-55 flex flex-col justify-center items-center mt-46 pt-50"
-              style="border-top:1px solid #000"
+              className="w-423 h-78 vhCenter bg-black text-white text-29 m-auto mt-157 mb-100"
+              onClick={() => to("/subPages/coupon/index", "reLaunch")}
             >
-              {customInfos?.memberDayCoupon ? (
-                <>
-                  <View
-                    className="w-423 h-78 vhCenter bg-black text-white text-29 m-auto mt-157 mb-100"
-                    onClick={() => to("/subPages/coupon/index", "reLaunch")}
-                  >
-                    查看卡券
-                  </View>
-                </>
-              ) : (
-                <>
+              查看卡券
+            </View>
+          </>
+        ) : (
+          <>
+            {detail?.status &&
+              ["wait_shipment", "wait_receive", "wait_pay"].includes(
+                detail?.status,
+              ) &&
+              detail?.deliverInfo?.type === "self_pick_up" && (
+                <View
+                  className="text-55 flex flex-col justify-center items-center mt-46 pt-50"
+                  style="border-top:1px solid #000"
+                >
                   {detail?.extendInfos?.length > 0 && (
                     <CQRCodeCustom
                       text={reserveId}
@@ -212,10 +240,10 @@ const OrderConfirm = () => {
                     <Text>到柜后凭此核销码</Text>
                     <Text className="mt-10">到领取柜台核销领取礼遇</Text>
                   </View>
-                </>
+                </View>
               )}
-            </View>
-          )}
+          </>
+        )}
       </View>
     </View>
   );

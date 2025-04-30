@@ -299,7 +299,7 @@ export const handleGoodStatus = (detail) => {
 
   if (customInfos?.memberDayCoupon) {
     return "已成功";
-  } else if (detail?.type === "self_pick_up") {
+  } else if (detail?.deliverInfo?.type === "self_pick_up") {
     if (
       detail?.statusName === "待付款" ||
       detail?.statusName === "待发货" ||
@@ -312,7 +312,7 @@ export const handleGoodStatus = (detail) => {
     ) {
       return "已领取";
     }
-  } else if (detail?.type === "express") {
+  } else if (detail?.deliverInfo?.type === "express") {
     if (detail?.statusName === "待评价") {
       return "已发货";
     }

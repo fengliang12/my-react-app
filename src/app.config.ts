@@ -31,6 +31,7 @@ export default {
     "pages/qy/debugger/index",
     "pages/authorize/index",
     "pages/memberFestival/index",
+    "pages/memberFestival/rule/index",
   ],
   window: {
     backgroundTextStyle: "light",

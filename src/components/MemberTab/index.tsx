@@ -6,7 +6,11 @@ import config from "@/src/config";
 
 import CImage from "../Common/CImage";
 
-const Index = () => {
+interface T_Props {
+  style?: string;
+}
+const Index: React.FC<T_Props> = (props) => {
+  let { style } = props;
   const [tabList] = useState([
     { title: "玩妆入门", value: "primary03" },
     { title: "玩妆达人", value: "intermediate03" },
@@ -21,17 +25,17 @@ const Index = () => {
   return (
     <>
       {/* 查看会员权益 */}
-      <View className="w-full" style="margin-top:-60rpx">
+      <View className="w-full py-20" style={`margin-top:-60rpx;${style}`}>
         {!tabShow ? (
           <View
-            className="text-white text-18 text-center p-20 vhCenter"
+            className="text-white text-18 text-center vhCenter"
             onClick={() => setTabShow(true)}
           >
             会员权益
             <CImage className="w-18 h-12 ml-10" src={P6}></CImage>
           </View>
         ) : (
-          <View className="w-full flex">
+          <View className="w-full flex pt-40">
             {tabList?.length &&
               tabList.map((item: any, index) => {
                 return (
