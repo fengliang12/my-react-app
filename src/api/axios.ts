@@ -6,6 +6,8 @@ import axios, {
   AxiosResponse,
 } from "@/src/plugins/cg-axios/index";
 
+import { replaceNumberWithText } from "../utils";
+
 interface CustomConfig {
   /**是否toast报错 */
   showError?: boolean;
@@ -61,7 +63,14 @@ instance.interceptors.response.use(
         return Promise.resolve(err);
       }
       if (err?.config?.showError !== false) {
-        Taro.showToast({ title: err.data?.message, icon: "none" });
+        console.log(111, err);
+
+        if (err.data?.code === "40000015") {
+          let message = replaceNumberWithText(err.data.message);
+          Taro.showToast({ title: message, icon: "none" });
+        } else {
+          Taro.showToast({ title: err.data?.message, icon: "none" });
+        }
       }
     }
 

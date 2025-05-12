@@ -5,9 +5,10 @@ import { createReducer } from "../help";
 const INITIAL_STATE: Store.ExchangeGood = {
   goods: [],
   showRedDot: false,
-  applyType: "",
+  applyType: "self_pick_up",
   channelType: "immediately",
   counter: null,
+  showExpress: false,
 };
 
 export default createReducer(

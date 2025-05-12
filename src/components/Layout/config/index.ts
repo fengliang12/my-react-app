@@ -41,19 +41,19 @@ type InitArgument = {
   /** 设置组件渲染层级 */
   customWrapperLevel?: number;
   /** 注册路径 */
-  registerPath?: (() => string) | string;
+  registerPath?: string;
   /** 接口弹窗配置 */
   interfacePopupType?: {
-    success: "modal" | "toast";
-    fail: "modal" | "toast";
-  };
+    success: 'modal' | 'toast'
+    fail: 'modal' | 'toast'
+  }
   /** 离开页面是否停止视频播放 */
-  stopVideoByLeavePage?: boolean;
+  stopVideoByLeavePage?: boolean
   /** 媒体数据替换配置 */
   mediaReplaceConfig?: {
-    oldDomain: string;
-    newDomain: string;
-  };
+    oldDomain: string
+    newDomain: string
+  }
 };
 
 type LayoutType = {
@@ -69,26 +69,26 @@ export const layout: LayoutType = {
     errCodeList: [],
     webView: {
       pagePath: "/pages/h5/index",
-      queryName: "url",
+      queryName: "url"
     },
     idPrefix: "gg_",
     openLog: false,
-    version: "1.5.36",
+    version: "1.5.29",
     scrollText: "<&>",
     liveStagePrefix: "liveView_",
     livePluginName: "livePlayerPlugin",
     openMovableAreaHeight100VH: false,
     textTemplate: {
       startStr: "{{",
-      endStr: "}}",
+      endStr: "}}"
     },
     interfacePopupType: {
-      success: "modal",
-      fail: "modal",
+      success: 'modal',
+      fail: 'modal'
     },
     stopVideoByLeavePage: false,
   },
   init(data: InitArgument) {
     this.config = { ...this.config, ...data };
-  },
+  }
 };

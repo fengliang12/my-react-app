@@ -4,9 +4,72 @@
     "miniprogram": {
       "list": [
         {
+          "name": "subPages/redeem/orderDetail/index",
+          "pathName": "subPages/redeem/orderDetail/index",
+          "query": "orderId=nars2503260000007001",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "subPages/redeem/confirm/index",
+          "pathName": "subPages/redeem/confirm/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "积分生产",
+          "pathName": "subPages/redeem/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "会员节首页",
           "pathName": "pages/memberFestival/index",
+          "query": "source=1111",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "subPages/redeem/orderDetail/index",
+          "pathName": "subPages/redeem/orderDetail/index",
+          "query": "orderId=nars2504270000002046&from=confirm",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "首页",
+          "pathName": "pages/member/member",
           "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "subPages/redeem/orderList/index",
+          "pathName": "subPages/redeem/orderList/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "subPages/redeem/orderDetail/index",
+          "pathName": "subPages/redeem/orderDetail/index",
+          "query": "orderId=nars2503280000001011",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "卡券中心",
+          "pathName": "subPages/coupon/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "subPages/redeem/orderDetail/index",
+          "pathName": "subPages/redeem/orderDetail/index",
+          "query": "orderId=nars2504240000001015&from=confirm",
           "launchMode": "default",
           "scene": null
         },
@@ -223,5 +286,6 @@
     "preloadBackgroundData": false,
     "bigPackageSizeSupport": true
   },
-  "projectname": "mini-nars"
+  "projectname": "mini-nars",
+  "libVersion": "3.8.3"
 }

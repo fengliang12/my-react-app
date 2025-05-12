@@ -9,7 +9,13 @@ import { P6, P9 } from "@/src/assets/image";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import config from "@/src/config";
-import { formatDateTime, getTimeStamp, setShareParams } from "@/src/utils";
+import {
+  codeMapValue,
+  formatDateTime,
+  getTimeStamp,
+  handleGoodStatus,
+  setShareParams,
+} from "@/src/utils";
 import to from "@/src/utils/to";
 import toast from "@/src/utils/toast";
 
@@ -157,7 +163,7 @@ const Index = () => {
             return (
               <>
                 <View
-                  className="w-680 py-30 px-60 box-border m-auto bg-white font-thin text-26"
+                  className="w-680 py-30 px-60 box-border m-auto bg-white font-thin text-26 relative"
                   onClick={() =>
                     to(`/subPages/redeem/orderDetail/index?orderId=${item.id}`)
                   }
@@ -167,11 +173,7 @@ const Index = () => {
                     <Text className="flex-1 ENGLISH_FAMILY">
                       {formatDateTime(item.createTime, 6)}
                     </Text>
-                    <Text>
-                      {item.statusName === "待评价"
-                        ? "已完成"
-                        : item.statusName}
-                    </Text>
+                    <Text>{handleGoodStatus(item)}</Text>
                   </View>
                   <View className="flex items-start mt-20 text-24">
                     <Text>领取方式：</Text>
@@ -197,6 +199,17 @@ const Index = () => {
                         </View>
                       ))}
                   </View>
+
+                  {codeMapValue(item?.customInfos, "name")?.memberDayCoupon && (
+                    <>
+                      <View
+                        className="w-196 h-60 vhCenter bg-black text-white text-29 absolute bottom-54 right-34"
+                        onClick={() => to("/subPages/coupon/index", "reLaunch")}
+                      >
+                        查看卡券
+                      </View>
+                    </>
+                  )}
                 </View>
                 <View className="w-full h-40"></View>
               </>

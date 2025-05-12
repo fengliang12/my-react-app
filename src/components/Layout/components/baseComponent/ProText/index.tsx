@@ -20,10 +20,8 @@ import useStore from '../../../hooks/useStore';
 import useStyle from '../../../hooks/useStyle';
 import { LayoutContext } from '../../../index';
 import useDynamic from '../../../hooks/useDynamic';
-import useSwiperCurrent from '../../../hooks/useSwiperCurrent';
 
 import './index.less';
-
 
 type ProTextProps = {
   comInfo: Edit.IComponents;
@@ -51,7 +49,6 @@ const ProText: React.FC<ProTextProps> = ({ comInfo, dynamicInfo }) => {
   const { countDownValue, isShowCountDown } = useCountDown(comInfo);
   const { isNowPage } = usePage();
   const { dynamicData } = useDynamic(comInfo, dynamicInfo)
-  const { swiperCurrentNodes } = useSwiperCurrent(comInfo ?? {})
   const [myContent, setMyContent] = useSetState<MyContentType>({
     list: [],
     len: 0,
@@ -75,14 +72,11 @@ const ProText: React.FC<ProTextProps> = ({ comInfo, dynamicInfo }) => {
     if (!isNil(dv?.value)) {
       result = dv.value
     }
-    if (!isNil(swiperCurrentNodes)) {
-      result = swiperCurrentNodes
-    }
     if (!isNil(updateNodes)) {
       result = updateNodes
     }
     return result + '';
-  }, [comInfo?.text?.nodes, swiperCurrentNodes, updateNodes, dynamicData, dynamicInfo]);
+  }, [comInfo?.text?.nodes, updateNodes, dynamicData, dynamicInfo]);
 
   const textStyle = useMemo(() => {
     let result: CSSProperties = cloneDeep(baseStyle);

@@ -1,26 +1,9 @@
-import { useMemoizedFn } from "ahooks";
-import { useSelector } from "react-redux";
-
 import Layout from "@/src/components/Layout";
 import Page from "@/src/components/Page";
 import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
-import to from "@/src/utils/to";
 
 const Index = () => {
-  const userInfo = useSelector((state: Store.States) => state.user);
   const { headerHeight } = getHeaderHeight();
-
-  /**
-   * 自定义事件
-   * @param params
-   */
-  const customAction = useMemoizedFn((params) => {
-    let { code } = params;
-    if (code === "judgeMember" && !userInfo?.isMember) {
-      to("/pages/registerSecond/index");
-      throw new Error("未注册");
-    }
-  });
 
   return (
     <Page
@@ -31,10 +14,9 @@ const Index = () => {
       }}
     >
       <Layout
-        code="memberFestival"
+        code="memberFestivalRule"
         navHeight={String(headerHeight)}
         globalStyle={{ backgroundColor: "#c5a8cb" }}
-        onCustomAction={customAction}
         openMovableAreaHeight100VH
       />
     </Page>

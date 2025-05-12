@@ -7,7 +7,7 @@ import React, { useMemo } from "react";
 import { ORDER_STATUS_ENUM, OrderStatus } from "@/qyConfig/index";
 import { Copy } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
-import { formatDateTime } from "@/src/utils";
+import { codeMapValue, formatDateTime } from "@/src/utils";
 import { QDayjs } from "@/src/utils/convertEast8Date";
 import toast from "@/src/utils/toast";
 
@@ -25,6 +25,13 @@ const Index: React.FC<Props> = (props) => {
    */
   const availTime = useMemo(() => {
     return dayjs(info.createTime).add(30, "day").format("YYYY/MM/DD HH:mm:ss");
+  }, [info]);
+
+  /**
+   * 自定义信息
+   */
+  const customInfos = useMemo(() => {
+    return codeMapValue(info?.customInfos, "name");
   }, [info]);
 
   /**
@@ -114,7 +121,14 @@ const Index: React.FC<Props> = (props) => {
             </View>
           ) : (
             <View>
-              兑礼有效期至:{QDayjs(availTime)?.format("YYYY.MM.DD HH:mm:ss")}
+              {customInfos?.memberDayCoupon || customInfos?.memberDayGood ? (
+                <>兑礼有效期至:2025.5.12 23:59:59</>
+              ) : (
+                <>
+                  兑礼有效期至:
+                  {QDayjs(availTime)?.format("YYYY.MM.DD HH:mm:ss")}
+                </>
+              )}
             </View>
           )}
         </View>
@@ -124,11 +138,9 @@ const Index: React.FC<Props> = (props) => {
         <>
           <View className="w-full h-1 bg-[#CCCCCC]"></View>
           <View className="w-full h-120 flex justify-between items-center">
-            {availDay <= 15 && (
-              <Text className="text-20 text-[#C5112C]">
-                *该兑礼单还有{availDay}天过期
-              </Text>
-            )}
+            <Text className="text-20 text-[#C5112C]">
+              {availDay <= 15 && `*该兑礼单还有${availDay}天过期`}
+            </Text>
 
             <VerifyPopup
               orderId={info.orderId}

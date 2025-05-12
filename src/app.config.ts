@@ -1,4 +1,5 @@
 export default {
+  // entryPagePath: "pages/authorize/index",
   pages: [
     "pages/member/member",
     "pages/user/index",
@@ -28,7 +29,9 @@ export default {
     "pages/qy/stockQuery/index",
     "pages/qy/stockSingleQuery/index",
     "pages/qy/debugger/index",
+    // "pages/authorize/index",
     "pages/memberFestival/index",
+    "pages/memberFestival/rule/index",
   ],
   window: {
     backgroundTextStyle: "light",

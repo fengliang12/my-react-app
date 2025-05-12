@@ -271,7 +271,7 @@ export default function useEvent(props, dynamicInfo?) {
       }
     }
     if (templateCode === "KIEHLSA") {
-      computedKIEHLSA(data, pageId!, templateId!, 'click');
+      computedKIEHLSA(data, pageId!, templateId!);
     }
     if (templateCode === "ONEMEMBERCARDE") {
       computedOneMemberCardE(data, pageId!, templateId!)
@@ -282,7 +282,7 @@ export default function useEvent(props, dynamicInfo?) {
   const touchHanlderEvent = useMemoizedFn(direction => {
     if (templateCode === "KIEHLSA") {
       if (customData?.touchEvent?.direction === direction) {
-        computedKIEHLSA(customData?.touchEvent, pageId!, templateId!, 'touch')
+        computedKIEHLSA(customData?.touchEvent, pageId!, templateId!)
       }
     } else {
       // 只执行一次
@@ -301,7 +301,7 @@ export default function useEvent(props, dynamicInfo?) {
   const scrollToLowerEvent = useMemoizedFn(() => {
     if (templateCode === "KIEHLSA") {
       if (customData?.scrollViewProps?.scrollToLower) {
-        computedKIEHLSA(customData?.scrollViewProps?.scrollToLower, pageId!, templateId!, 'scroll');
+        computedKIEHLSA(customData?.scrollViewProps?.scrollToLower, pageId!, templateId!);
       }
     }
   });

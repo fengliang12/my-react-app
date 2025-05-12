@@ -17,30 +17,35 @@ import to from "@/src/utils/to";
 
 import AddCart from "./components/AddCart";
 import ApplyType from "./components/ApplyType";
-import ApplyTypeOnlyPickUp from "./components/ApplyTypeOnlyPickUp";
 import MiniGoodClass from "./components/MiniGoodClass";
+import SelectCounter from "./components/SelectCounter";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: Store.States) => state.user);
   const [show, { setTrue, setFalse }] = useBoolean(false);
-  const { applyType, counter } = useSelector(
+  const [ruleImg, setRuleImg] = useState<string>("");
+  const { applyType, showExpress, counter } = useSelector(
     (state: Store.States) => state.exchangeGood,
   );
-  const [showExpress, setShowExpress] = useState<boolean>(false);
 
   /**
    * 获取商品列表
    */
   const [originList, setOriginList] = useState<any>([]);
   const [goodList, setGoodList] = useState<any>([]);
+
+  /**
+   * 获取商品列表
+   */
   const getGoodList = useMemoizedFn(async () => {
-    if (!applyType) return;
+    if (!applyType || (applyType === "self_pick_up" && !counter?.id)) return;
 
     await app.init();
     let params = {
-      counterId: counter?.id || undefined,
+      counterId:
+        applyType === "self_pick_up" && counter?.id ? counter?.id : undefined,
     };
     await api.buyBonusPoint
       .getBonusPointList(params)
@@ -62,6 +67,9 @@ const Index = () => {
           setOriginList(tempList);
           const list = handleGoodClass(tempList);
           setGoodList(list);
+        } else {
+          setOriginList([]);
+          setGoodList([]);
         }
       })
       .catch(() => {
@@ -73,18 +81,27 @@ const Index = () => {
   useDidShow(async () => {
     let ret = await api.kvdata.getKvDataByType("show_express_time");
     let kvData = ret?.data?.[0];
+    setRuleImg(kvData.icon || "");
+
     let timeInfo = JSON.parse(kvData?.content || "{}");
+    let tempExpress = false;
     if (
       timeInfo?.from &&
       timeInfo?.to &&
       isBetween(timeInfo?.from, timeInfo?.to)
     ) {
-      setShowExpress(true);
+      tempExpress = true;
     } else {
-      setShowExpress(false);
+      tempExpress = false;
     }
 
     getGoodList();
+    dispatch({
+      type: SET_EXCHANGE_GOOD,
+      payload: {
+        showExpress: tempExpress,
+      },
+    });
   });
 
   useUpdateEffect(() => {
@@ -99,11 +116,12 @@ const Index = () => {
       type: SET_EXCHANGE_GOOD,
       payload: {
         goods: [],
-        applyType: "",
+        applyType: "self_pick_up",
         channelType: "immediately",
         postageType: "points",
-        counter: null,
         showRedDot: false,
+        showExpress: false,
+        counter: null,
       },
     });
   });
@@ -144,22 +162,48 @@ const Index = () => {
         </View>
       </View>
 
+      {/* 选择领取方式 */}
+      {showExpress && <ApplyType></ApplyType>}
+
       {/* 产品信息 */}
       <View className="flex-1 bg-white rounded-t-50 overflow-hidden">
-        <MiniGoodClass
-          goodClassList={goodList}
-          originList={originList}
-        ></MiniGoodClass>
-      </View>
-
-      {/* 选择领取方式 */}
-      <>
-        {showExpress ? (
-          <ApplyType></ApplyType>
-        ) : (
-          <ApplyTypeOnlyPickUp></ApplyTypeOnlyPickUp>
+        {/* 线下兑礼需要选中门店 */}
+        {applyType === "self_pick_up" && (
+          <>
+            <View className="mt-47 ml-73">请选择领取柜台</View>
+            <SelectCounter
+              callback={(counter) => {
+                dispatch({
+                  type: SET_EXCHANGE_GOOD,
+                  payload: {
+                    counter: counter,
+                  },
+                });
+              }}
+            ></SelectCounter>
+          </>
         )}
-      </>
+
+        {originList?.length > 0 ? (
+          <MiniGoodClass
+            goodClassList={goodList}
+            originList={originList}
+          ></MiniGoodClass>
+        ) : (
+          <View className="mt-300 text-center text-26 color-[#333333] vhCenter flex-col">
+            {!counter?.id && applyType === "self_pick_up" ? (
+              <>
+                <CImage
+                  className="w-60 h-60 mb-39"
+                  mode="widthFix"
+                  src={`${config.imgBaseUrl}/redeem/gantanhao-xianxingyuankuang_03.png`}
+                ></CImage>
+                <Text>请先选择领取柜台</Text>
+              </>
+            ) : null}
+          </View>
+        )}
+      </View>
 
       {/* 购物车 */}
       {applyType && <AddCart></AddCart>}
@@ -171,7 +215,7 @@ const Index = () => {
             <CImage
               className="w-full h-full"
               mode="widthFix"
-              src={`${config.imgBaseUrl}/redeem/rule_04.png`}
+              src={ruleImg}
             ></CImage>
             <View
               className="absolute w-80 h-80 top-0 right-10 vhCenter"
@@ -188,4 +232,5 @@ export default Index;
 definePageConfig({
   navigationStyle: "custom",
   enableShareAppMessage: true,
+  disableScroll: false,
 });

@@ -92,11 +92,7 @@ const ButtonAuth: React.FC<ButtonAuthProps> = ({
           'transform',
           'opacity',
           'pointerEvents',
-          'flex',
-          'marginLeft',
-          'marginRight',
-          'marginTop',
-          'marginBottom'
+          'flex'
         ]);
         result = addButtonImportant(result);
       }

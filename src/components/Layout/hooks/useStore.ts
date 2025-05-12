@@ -167,18 +167,6 @@ export default function useStore(comInfo) {
             }
           }
         );
-        if (customData?.swiperCurrentNodes?.swiperId) {
-          sCurrentReactionRef.current = reaction(
-            () => {
-              return store.updateCom.current.get(getId(customData?.swiperCurrentNodes?.swiperId));
-            },
-            current => {
-              if (!isNil(current)) {
-                setSCurrent(current);
-              }
-            }
-          );
-        }
         break;
       case "view":
         if (swiperNav?.swiperId) {

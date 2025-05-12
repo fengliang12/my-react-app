@@ -93,12 +93,14 @@ declare namespace Store {
   };
   type ChannelType = "cart" | "immediately";
   type PostageType = "money" | "points";
+  type ApplyType = "self_pick_up" | "express";
 
   type ExchangeGood = {
-    applyType: string;
+    applyType: ApplyType;
     showRedDot: boolean;
     goods: Array<any>;
     counter: any;
     channelType: ChannelType;
+    showExpress: boolean;
   };
 }

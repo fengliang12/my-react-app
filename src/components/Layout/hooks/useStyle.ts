@@ -44,11 +44,7 @@ export default function useStyle(comInfo) {
         "transform",
         "width",
         "height",
-        "flex",
-        "marginLeft",
-        "marginRight",
-        "marginTop",
-        "marginBottom"
+        "flex"
       ]);
       result.width = '100%'
       result.height = '100%'

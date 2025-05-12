@@ -1,0 +1,97 @@
+import { Swiper, SwiperItem, View } from "@tarojs/components";
+import React, { useState } from "react";
+
+import { P6, P11 } from "@/src/assets/image";
+import config from "@/src/config";
+
+import CImage from "../Common/CImage";
+
+interface T_Props {
+  style?: string;
+}
+const Index: React.FC<T_Props> = (props) => {
+  let { style } = props;
+  const [tabList] = useState([
+    { title: "玩妆入门", value: "primary03" },
+    { title: "玩妆达人", value: "intermediate03" },
+    { title: "玩妆先锋", value: "pioneer03" },
+    { title: "玩妆大师", value: "master03" },
+  ]);
+  const [tabShow, setTabShow] = useState<boolean>(false);
+  const [tabIndex, setTabIndex] = useState<number>(0);
+  const tabClick = (value) => {
+    setTabIndex(value);
+  };
+  return (
+    <>
+      {/* 查看会员权益 */}
+      <View className="w-full py-20" style={`margin-top:-60rpx;${style};`}>
+        {!tabShow ? (
+          <View
+            className="text-white text-18 text-center vhCenter"
+            onClick={() => setTabShow(true)}
+          >
+            会员权益
+            <CImage className="w-18 h-12 ml-10" src={P6}></CImage>
+          </View>
+        ) : (
+          <View
+            style={{
+              background: `url(${config.imgBaseUrl}/memberFestivalGrade/bg.jpg?V=1)`,
+              backgroundSize: "100% 100%",
+            }}
+          >
+            <View className="w-full flex pt-20">
+              {tabList?.length &&
+                tabList.map((item: any, index) => {
+                  return (
+                    <View
+                      className={`flex-1 text-center h-60 leading-60 text-26 text-black ${
+                        index === tabIndex ? "home_tab_active_black" : ""
+                      }`}
+                      onClick={() => tabClick?.(index)}
+                      key={item.title}
+                    >
+                      {item.title}
+                    </View>
+                  );
+                })}
+            </View>
+            {tabShow && (
+              <View className="relative">
+                <Swiper
+                  current={tabIndex}
+                  className="w-full h-584"
+                  onChange={(e) => setTabIndex(e.detail.current)}
+                >
+                  {tabList?.length &&
+                    tabList.map((item: any, index) => {
+                      return (
+                        <SwiperItem key={index} className="w-full h-full">
+                          <CImage
+                            className="w-full h-full"
+                            src={`${config.imgBaseUrl}/memberFestivalGrade/${item.value}.jpg?V=1`}
+                          ></CImage>
+                        </SwiperItem>
+                      );
+                    })}
+                </Swiper>
+                <View
+                  className="text-black w-full text-20 text-center py-20 vhCenter absolute bottom-30 opacity-60"
+                  onClick={() => setTabShow(false)}
+                >
+                  点击收起会员权益
+                  <CImage
+                    className="w-18 h-12 ml-10 transform rotate-180"
+                    src={P11}
+                  ></CImage>
+                </View>
+              </View>
+            )}
+          </View>
+        )}
+      </View>
+    </>
+  );
+};
+export default React.memo(Index);

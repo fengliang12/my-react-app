@@ -65,6 +65,45 @@ const findPopupListByType: Api.Common.FindPopupList.FuncT = (typeList) =>
     typeList,
   );
 
+/**
+ * 确认弹窗
+ * /api/sp-portal/store/{storeCode}/activity/confirm/one
+ */
+const popupConfirm: Api.Common.PopupConfirmSpace.FuncT = ({
+  activityCode,
+  gradeName,
+  popupType,
+}) => {
+  return http.post(
+    `/sp-portal/store/${config.storeCode}/activity/confirm/one`,
+    {
+      activityCode,
+      gradeName,
+      popupType,
+    },
+  );
+};
+
+/**
+ * 确认弹窗
+ * /api/${msf.application.name}/store/{storeCode}/activity/dayCheck/confirm/{activityCode}
+ */
+const dayConfirm: Api.Common.PopupConfirmSpace.FuncT = ({ activityCode }) => {
+  return http.post(
+    `/sp-portal/store/${config.storeCode}/activity/dayCheck/confirm/${activityCode}`,
+  );
+};
+
+/**
+ * 确认弹窗
+ * /api/${msf.application.name}/store/{storeCode}/activity/checkAlert/confirm/{activityCode}
+ */
+const checkAlert: Api.Common.PopupConfirmSpace.FuncT = ({ activityCode }) => {
+  return http.post(
+    `/sp-portal/store/${config.storeCode}/activity/checkAlert/confirm/${activityCode}`,
+  );
+};
+
 /** 本地埋点 */
 const addBehavior: Api.Common.AddBehavior.FuncT = (data) =>
   http.post(`/sp-portal/store/${storeCode}/memberTrackBehavior/behavior`, data);
@@ -91,4 +130,7 @@ export default {
   address,
   update,
   addBehavior,
+  popupConfirm,
+  dayConfirm,
+  checkAlert,
 };

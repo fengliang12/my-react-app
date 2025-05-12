@@ -236,11 +236,11 @@ const validateQueryString = (str) => {
 /**
  * 数组中codeValue转换为对象
  */
-export const codeMapValue = (e?: ExtendInfo[]) => {
+export const codeMapValue = (e?: ExtendInfo[], key?: string) => {
   if (!e?.length) return {};
   return Object.fromEntries(
     e.map((elem) => {
-      return [elem.code, elem.value];
+      return [elem[key ?? "code"], elem.value];
     }),
   );
 };
@@ -282,4 +282,40 @@ export const generateYearMonthArray = (
   }
 
   return result;
+};
+
+export const replaceNumberWithText = (str) => {
+  const pattern = /(\d+)/;
+  const match = str.match(pattern);
+  if (match) {
+    const number = match[0];
+    return `该礼品仅可兑礼${number}件`;
+  }
+  return str;
+};
+
+export const handleGoodStatus = (detail) => {
+  let customInfos = codeMapValue(detail?.customInfos, "name");
+
+  if (customInfos?.memberDayCoupon) {
+    return "已成功";
+  } else if (detail?.deliverInfo?.type === "self_pick_up") {
+    if (
+      detail?.statusName === "待付款" ||
+      detail?.statusName === "待发货" ||
+      detail?.statusName === "待收货"
+    ) {
+      return "待领取";
+    } else if (
+      detail?.statusName === "已发货" ||
+      detail?.statusName === "待评价"
+    ) {
+      return "已领取";
+    }
+  } else if (detail?.deliverInfo?.type === "express") {
+    if (detail?.statusName === "待评价") {
+      return "已发货";
+    }
+  }
+  return detail?.statusName;
 };
