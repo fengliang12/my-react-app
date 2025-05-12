@@ -10,6 +10,7 @@ import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
 import config from "@/src/config";
 import { codeMapValue, handleGoodStatus, setShareParams } from "@/src/utils";
+import { QDayjs } from "@/src/utils/convertEast8Date";
 import to from "@/src/utils/to";
 
 import OrderGood from "../components/OrderGood";
@@ -60,6 +61,11 @@ const OrderConfirm = () => {
 
     if (customInfos?.memberDayCoupon || customInfos?.memberDayGood) {
       setTips(tipInfo["member_day"]);
+    } else if (detail?.deliverInfo?.type === "self_pick_up") {
+      let time = QDayjs(detail?.createTime)
+        .add(30, "day")
+        .format("YYYY年MM月DD日");
+      setTips(`*礼品请于${time}至所选柜台领取`);
     } else {
       setTips(tipInfo[detail?.deliverInfo?.type]);
     }

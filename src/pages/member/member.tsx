@@ -155,15 +155,16 @@ const Index = () => {
     <Page
       style={{ backgroundColor: "#c5a8cb" }}
       navConfig={{
-        // title: "MY NARS",
-        // fill: true,
-        fill: false,
-        backgroundColor: "transparent",
-        // backgroundColor: "#000000",
-        // titleColor: "#FFFFFF",
+        title: "MY NARS",
+        fill: true,
+        // fill: false,
+        // backgroundColor: "transparent",
+        backgroundColor: "#000000",
+        titleColor: "#FFFFFF",
       }}
     >
-      <MemberFestivalCard showBindPopup={showBind}></MemberFestivalCard>
+      {/* <MemberFestivalCard showBindPopup={showBind}></MemberFestivalCard> */}
+      <MemberCard showBindPopup={showBind}></MemberCard>
 
       {/* 新品活动 */}
       {canActive && inTime && (
@@ -183,7 +184,7 @@ const Index = () => {
       )}
 
       <Layout
-        code="memberHome"
+        code="index"
         navHeight={String(headerHeight)}
         globalStyle={{ backgroundColor: "#c5a8cb" }}
         onCustomAction={customAction}

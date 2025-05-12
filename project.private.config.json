@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "subPages/redeem/orderDetail/index",
+          "pathName": "subPages/redeem/orderDetail/index",
+          "query": "orderId=nars2503260000007001",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "subPages/redeem/confirm/index",
           "pathName": "subPages/redeem/confirm/index",
           "query": "",
@@ -280,5 +287,5 @@
     "bigPackageSizeSupport": true
   },
   "projectname": "mini-nars",
-  "libVersion": "3.8.2"
+  "libVersion": "3.8.3"
 }
