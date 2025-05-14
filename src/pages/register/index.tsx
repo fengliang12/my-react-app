@@ -308,7 +308,7 @@ const Index = () => {
                     </View>
                     或
                     <View className="underline relative">
-                      一键授权微信手机号
+                      一键授权手机号
                       <GetPhoneNumber
                         callback={(mobile) =>
                           setUser({

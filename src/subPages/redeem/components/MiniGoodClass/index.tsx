@@ -176,8 +176,8 @@ const GoodClass: React.FC<T_Props> = (props) => {
       </ScrollView>
 
       {/* 商品列表 */}
-      <ScrollView className="flex-1 overflow-hidden pb-300" scrollY>
-        <View className="w-full flex flex-wrap justify-between px-70 box-border py-40">
+      <ScrollView className="flex-1 overflow-hidden" scrollY>
+        <View className="w-full flex flex-wrap justify-between px-70 box-border py-40 pb-240">
           {selectList?.length ? (
             selectList.map((child: any, index) => {
               return (
