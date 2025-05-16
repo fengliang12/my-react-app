@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "首页",
+          "pathName": "pages/member/member",
+          "query": "source=home",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/register/index",
           "pathName": "pages/register/index",
           "query": "",
@@ -42,13 +49,6 @@
           "name": "subPages/redeem/orderDetail/index",
           "pathName": "subPages/redeem/orderDetail/index",
           "query": "orderId=nars2504270000002046&from=confirm",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "首页",
-          "pathName": "pages/member/member",
-          "query": "",
           "launchMode": "default",
           "scene": null
         },

@@ -2,8 +2,7 @@
 import Taro, { useRouter } from "@tarojs/taro";
 
 import api from "@/src/api";
-import { formTime, getSceneObject } from "@/src/utils";
-import { getPages } from "@/src/utils/getPages";
+import { getSceneObject } from "@/src/utils";
 
 type params = {
   button?: string; //触发按钮 ,
@@ -12,9 +11,6 @@ type params = {
   formType: string; //业务类型 ,
   pagePath?: string; //页面url ,
   pageName?: string; //页面名称
-  remark?: string; //备注 ,
-  scene?: any; //场景值
-  channel?: string; //渠道
 };
 
 const getCurrentPage = () => {
@@ -33,6 +29,28 @@ const restOption = async (option) => {
     ...res,
   };
 };
+
+/**
+ * 创建路径
+ * @param pageInfo 页面信息
+ * @param query
+ * @param scene
+ * @returns
+ */
+export const buildPath = (
+  pageInfo: { route?: string; [key: string]: any },
+  query: Record<string, any>,
+  scene: number,
+): string => {
+  const params = new URLSearchParams();
+  Object.entries(query).forEach(([key, value]) => {
+    if (value !== undefined) params.append(key, String(value));
+  });
+
+  params.append("scene", String(scene));
+  return `${pageInfo.route}?${params.toString()}`;
+};
+
 export const trackingFn = async (params: params) => {
   /**
    * 企业微信不执行 tracking
@@ -40,7 +58,7 @@ export const trackingFn = async (params: params) => {
   if (Taro.getSystemInfoSync().environment == "wxwork") {
     return;
   }
-  const res = Taro.getEnterOptionsSync();
+  const { scene } = Taro.getEnterOptionsSync();
   const page = getCurrentPage();
   let pageInfo: {
     route?: string;
@@ -59,54 +77,17 @@ export const trackingFn = async (params: params) => {
    * 兼容无限制太阳码配置
    */
   const query = (await restOption(pageInfo.query)) ?? pageInfo.query;
-
+  let path = buildPath(pageInfo, query, scene);
   try {
-    const { pagePath = pageInfo?.route } = params;
-    /**
-     * 兼容remark
-     */
-    const remark = query ?? {};
-    if (params?.remark) {
-      remark.remark = params.remark;
-    }
-    const remarkStr = Object.keys(remark)?.length
-      ? JSON.stringify(remark)
-      : undefined;
-
     Taro.getApp()
       .init()
       .then(() => {
-        let customInfos = [
-          {
-            name: "path",
-            value: getPages({ getKey: "$taroPath" }) ?? "",
-          },
-          {
-            name: "query",
-            value: JSON.stringify(query) || "",
-          },
-          {
-            name: "remark",
-            value: remarkStr || "",
-          },
-          {
-            name: "scene",
-            value: String(res.scene) || "",
-          },
-        ];
-
         api.behavior.behavior({
-          channelId: "wa",
-          customInfos: customInfos,
-          inValid: false,
-          key: params.formId,
-          took: 0,
+          key: path,
           type: "PAGE_VIEW",
         });
       });
-  } catch (err) {
-    console.error("埋点失败", err);
-  }
+  } catch (err) {}
 };
 
 const useTracking = () => {
