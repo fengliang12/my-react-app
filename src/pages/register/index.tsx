@@ -4,7 +4,7 @@ import { Image, Input, Picker, Text, View } from "@tarojs/components";
 import Taro, { useLoad, useRouter, useShareAppMessage } from "@tarojs/taro";
 import { useAsyncEffect, useBoolean, useMemoizedFn, useSetState } from "ahooks";
 import dayjs from "dayjs";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { LogoB, P6, P7 } from "@/assets/image/index";
@@ -22,17 +22,15 @@ import usePrivacyAuth from "@/src/components/PrivacyAuth/hooks/usePrivacyAuth";
 import config from "@/src/config";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
 import useAddUserActions from "@/src/hooks/useAddUserActions";
+import useCounterActivity from "@/src/hooks/useCounterActivity";
 import useSubMsg from "@/src/hooks/useSubMsg";
-import {
-  formatDateTime,
-  isNickname,
-  isPhone,
-  setShareParams,
-} from "@/src/utils";
+import { isNickname, isPhone, setShareParams } from "@/src/utils";
 import Authorization from "@/src/utils/authorize";
+import getChineseInitials from "@/src/utils/getChineseInitials";
 import { getPages } from "@/src/utils/getPages";
 import handleRoute from "@/src/utils/handleRoute";
 import to from "@/src/utils/to";
+import toast from "@/src/utils/toast";
 
 import QQMapWX from "../../libs/qqmap-wx-jssdk";
 
@@ -42,15 +40,16 @@ let qqmapsdk: any = null;
 
 const Index = () => {
   const router = useRouter();
-  const { scene = "" } = router.params;
-  const isMember = useSelector((state: Store.States) => state.user.isMember);
+  // jumpType : h5 | home
+  const { scene = "", jumpType = "" } = router.params;
+  const { isMember } = useSelector((state: Store.States) => state.user);
   const [showDialog, { setTrue: setDialogTrue, setFalse }] = useBoolean(false);
-  const [applyInfo, setApplyInfo] = useState<any>(null);
   const subMsg = useSubMsg();
   const [inputMobileType, { setTrue }] = useBoolean(false);
   const [agree, setAgree] = useState<boolean>(false);
   const { addActions } = useAddUserActions();
-
+  const [cityList, setCityList] = useState<any>();
+  const isNewMember = useRef<boolean>(false);
   const [user, setUser] = useSetState<any>({
     avatarUrl: "",
     nickName: "",
@@ -64,7 +63,30 @@ const Index = () => {
     smsCode: "",
   });
 
-  const [cityList, setCityList] = useState<any>();
+  /**
+   * 门店活动跳到H5页面
+   */
+  const { applyInfo, getActivityDetail, joinActivity } = useCounterActivity({
+    scene,
+    callback: async (res) => {
+      let userInfo = await app.init(true);
+      let dictData = await api.common.findKvDataByType({
+        type: "counterActivityH5Url",
+      });
+      if (!dictData?.data?.[0]?.content) return toast("活动未配置H5地址");
+
+      if (res?.type === "success" || res?.type === "joined") {
+        let code = applyInfo?.current?.counterList?.[0]?.code || "";
+        let id = userInfo?.memberId || "";
+        if (!code) return toast("活动未配置门店");
+        let url = `${dictData?.data?.[0]?.content}?cityname=${code}&isnewmember=${isNewMember.current}&memberid=${id}`;
+        console.log("门店活动跳到路径", url);
+        to(`/pages/h5/index?url=${encodeURIComponent(url)}`, "reLaunch");
+      } else {
+        toast(res?.tipText || "");
+      }
+    },
+  });
 
   useLoad(async () => {
     qqmapsdk = new QQMapWX({ key: config.key });
@@ -77,14 +99,18 @@ const Index = () => {
    */
   useAsyncEffect(async () => {
     let userInfo = await app.init();
-    if (userInfo?.isMember) {
+    if (userInfo?.isMember && jumpType !== "h5") {
       let path = handleRoute(pageSettingConfig.homePath, router.params);
       to(path, "reLaunch");
       return;
     }
+
     if (scene) {
-      let res = await api.apply.activityDetail(scene);
-      setApplyInfo(res.data);
+      await getActivityDetail();
+      if (userInfo?.isMember && jumpType === "h5") {
+        isNewMember.current = false;
+        joinActivity();
+      }
     }
   }, [scene]);
 
@@ -140,15 +166,15 @@ const Index = () => {
       registerChannel: user.shopType,
       withSmsCode: inputMobileType,
       customInfos:
-        applyInfo?.counterList?.length > 0
+        applyInfo?.current?.counterList?.length > 0
           ? [
               {
                 name: "shopCode",
-                value: applyInfo?.counterList?.[0]?.code || "",
+                value: applyInfo?.current?.counterList?.[0]?.code || "",
               },
               {
                 name: "registerSource",
-                value: applyInfo?.shortTitle || "",
+                value: applyInfo?.current?.shortTitle || "",
               },
             ]
           : undefined,
@@ -174,14 +200,19 @@ const Index = () => {
       mask: true,
       duration: 3000,
     });
+
     setTimeout(async () => {
-      await app.init(true);
-      let list: any = getPages({ getKey: "route", getCurrentPage: false });
-      if (list.length > 1) {
-        app.to(1);
+      if (jumpType === "h5") {
+        isNewMember.current = true;
+        joinActivity();
       } else {
-        let path = handleRoute(pageSettingConfig.homePath, router.params);
-        app.to(path, "reLaunch");
+        let list: any = getPages({ getKey: "route", getCurrentPage: false });
+        if (list.length > 1) {
+          app.to(1);
+        } else {
+          let path = handleRoute(pageSettingConfig.homePath, router.params);
+          app.to(path, "reLaunch");
+        }
       }
     }, 2000);
   });

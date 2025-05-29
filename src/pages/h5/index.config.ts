@@ -1,4 +1,6 @@
 export default {
-  navigationStyle: "custom",
   enableShareAppMessage: true,
+  navigationBarTitleText: "MY NARS",
+  navigationBarBackgroundColor: "#fff",
+  navigationBarTextStyle: "black",
 };

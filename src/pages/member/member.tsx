@@ -11,10 +11,10 @@ import CPopup from "@/src/components/Common/CPopup";
 import CouponPopup from "@/src/components/CouponPopup";
 import Layout from "@/src/components/Layout";
 import MemberCard from "@/src/components/MemberCard";
-import MemberFestivalCard from "@/src/components/MemberFestivalCard";
 import Page from "@/src/components/Page";
 import pageSettingConfig from "@/src/config/pageSettingConfig";
-import { isBetween, setShareParams } from "@/src/utils";
+import useCounterActivity from "@/src/hooks/useCounterActivity";
+import { setShareParams } from "@/src/utils";
 import { getHeaderHeight } from "@/src/utils/getHeaderHeight";
 import to from "@/src/utils/to";
 
@@ -30,47 +30,28 @@ const Index = () => {
   const { headerHeight } = getHeaderHeight();
   const [giftPop, setGiftPop] = useState<string>("");
   const loading = useRef<boolean>(false);
-  const [sendType, setSendType] = useState<string>("");
 
   const { canActive, inTime, extendInfos, addCustomerBehavior } =
     useActivityHook("VIEW_HOMEPAGE");
 
+  // 扫码领券活动
+  const { sendType, getActivityDetail, joinActivity } = useCounterActivity({
+    scene,
+    callback: (res) => {
+      setDialogText(res?.tipText || "");
+      setTrue();
+    },
+  });
+
   useAsyncEffect(async () => {
-    if (!scene || loading.current) return;
+    let info = await app.init(true);
+    if (!info?.isMember || !scene || loading.current) return;
+
     loading.current = true;
-
-    let info = await app.init();
-    if (!info?.isMember) return;
-
-    /** 获取活动信息 */
-    let activityInfo = await api.apply.activityDetail(scene);
-    setSendType(activityInfo?.data?.sendType || "");
-
-    if (
-      !activityInfo ||
-      !isBetween(activityInfo.data.from, activityInfo.data.to)
-    ) {
-      setDialogText(`当前时间不在活动时间范围内`);
-      setTrue();
-      return;
-    }
-
-    /** 参加申领 */
-    Taro.showLoading({ title: "加载中", mask: true });
-    let res = await api.apply.reserve({
-      arrivalDate: new Date(),
-      counterCode: activityInfo?.data?.counterList?.[0]?.code,
-      id: scene,
-      mobile: info.mobile,
-    });
-    Taro.hideLoading();
-    if (res.data.code === "10000") {
-      setDialogText(`您已参与过此活动,\n敬请期待下次惊喜`);
-      setTrue();
-    } else {
-      setDialogText("参与成功");
-      setTrue();
-    }
+    // 获取活动详情
+    await getActivityDetail();
+    // 参加活动
+    await joinActivity();
     loading.current = false;
   }, []);
 

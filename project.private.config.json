@@ -4,6 +4,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/sign/index",
+          "pathName": "pages/sign/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "门店扫码活动",
+          "pathName": "pages/register/index",
+          "query": "scene=5NSf3QSv9HwnFqQFHQEofu&jumpType=h5",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "首页",
           "pathName": "pages/member/member",
           "query": "source=home",
@@ -84,13 +98,6 @@
           "name": "subPages/redeem/index",
           "pathName": "subPages/redeem/index",
           "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/register/index",
-          "pathName": "pages/register/index",
-          "query": "scene=5TwX9Vgk6yADNzdv3vR4Sm",
           "launchMode": "default",
           "scene": null
         },
