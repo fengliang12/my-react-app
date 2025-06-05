@@ -65,7 +65,7 @@ const OrderConfirm = () => {
       let time = QDayjs(detail?.createTime)
         .add(30, "day")
         .format("YYYY年MM月DD日");
-      setTips(`*礼品请于${time}至所选柜台领取`);
+      setTips(`*礼品请于${time}前至所选柜台领取`);
     } else {
       setTips(tipInfo[detail?.deliverInfo?.type]);
     }
