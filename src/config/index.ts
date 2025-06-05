@@ -1,4 +1,6 @@
 import Taro from "@tarojs/taro";
+// 从lodash-es导入merge方法
+// @ts-ignore
 import { merge } from "lodash-es";
 
 import DebugClass from "../utils/DebugClass";

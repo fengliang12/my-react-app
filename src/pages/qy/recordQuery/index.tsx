@@ -274,7 +274,7 @@ const Index = () => {
             range={PointFilterList}
             onChange={(e) => {
               setState({
-                point: PointFilterList[e.detail.value],
+                point: PointFilterList[e.detail.value as number],
               });
             }}
           >

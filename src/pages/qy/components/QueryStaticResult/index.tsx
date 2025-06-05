@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import React, { useMemo } from "react";
 
 import { ORDER_STATUS_ENUM, OrderStatus } from "@/qyConfig/index";
-import { Copy } from "@/src/assets/image";
+import { Copy, qiyeweixin2 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import { codeMapValue, formatDateTime } from "@/src/utils";
 import { QDayjs } from "@/src/utils/convertEast8Date";
@@ -68,12 +68,31 @@ const Index: React.FC<Props> = (props) => {
     });
   });
 
+  /**
+   * 聊天
+   * @param customerId
+   * @returns
+   */
+  const wecom = (memberId: string) => {
+    console.log("memberiD", memberId);
+
+    if (!memberId) {
+      toast("customerId不能为空");
+      return;
+    }
+    Taro?.qy?.openEnterpriseChat?.({
+      externalUserIds: memberId,
+    });
+  };
+
   return (
     <>
       <View className="w-full h-90 flex justify-between items-center">
         {/* 申请时间 */}
         <Text>申请时间:{formatDateTime(info?.createTime, 6, ".")}</Text>
-        <Text>{OrderStatus[info?.status]}</Text>
+        <Text className="text-[#C5112C]">
+          {OrderStatus[info?.status as keyof typeof OrderStatus]}
+        </Text>
       </View>
       <View className="w-full h-1 bg-[#CCCCCC]"></View>
 
@@ -105,8 +124,21 @@ const Index: React.FC<Props> = (props) => {
 
       {/* 客人信息 */}
       <View className="pt-36">
-        <View className="w-full flex justify-between items-center mb-36">
-          <Text>预约会员:{info?.memberName}</Text>
+        <View className="w-full flex justify-between items-center mb-36 relative">
+          <View className="flex">
+            <Text>预约会员:{info?.memberName}</Text>
+            <CImage
+              className="w-35 h-28 ml-20"
+              mode="widthFix"
+              src={qiyeweixin2}
+              onClick={() => {
+                wecom(info?.memberId);
+              }}
+            ></CImage>
+            <View className="text-16 text-[#C5112C] absolute -bottom-24 left-0">
+              *已点击超过2次，请勿过于频繁沟通
+            </View>
+          </View>
           <View className="flex items-center" onClick={clickCopyPhone}>
             手机号:{info?.mobile}{" "}
             <CImage src={Copy} className="w-20 h-20 ml-10"></CImage>
@@ -132,11 +164,16 @@ const Index: React.FC<Props> = (props) => {
             </View>
           )}
         </View>
+        {info.status === ORDER_STATUS_ENUM.WAIT_ESTIMATE && (
+          <View className="w-full flex justify-between items-center mb-36">
+            <Text>核销彩妆师:{info?.baName}</Text>
+          </View>
+        )}
       </View>
+      <View className="w-full h-1 bg-[#CCCCCC]"></View>
 
       {info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE && showBtn && (
         <>
-          <View className="w-full h-1 bg-[#CCCCCC]"></View>
           <View className="w-full h-120 flex justify-between items-center">
             <Text className="text-20 text-[#C5112C]">
               {availDay <= 15 && `*该兑礼单还有${availDay}天过期`}

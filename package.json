@@ -92,6 +92,7 @@
     "@tarojs/plugin-react-devtools": "^3.6.8",
     "@tarojs/webpack5-runner": "3.6.8",
     "@types/react": "^18.0.0",
+    "@types/sass": "^1.45.0",
     "@types/webpack-env": "^1.13.6",
     "@typescript-eslint/eslint-plugin": "^5.20.0",
     "@typescript-eslint/parser": "^5.20.0",

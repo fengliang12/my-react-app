@@ -99,8 +99,32 @@ const Index: React.FC<Props> = (props) => {
       </View>
 
       {/* 门店 */}
-      <View className="mb-24">
+      <View className="mb-24 flex justify-between items-center">
         <Picker
+          className="w-316"
+          mode="selector"
+          range={pickerData.storeList}
+          value={indexObj.storeIndex}
+          rangeKey="name"
+          onChange={(e) => {
+            setIndexObj({ storeIndex: e.detail.value });
+          }}
+        >
+          <View className="bg-white w-full h-78 px-30 text-24 flex items-center justify-start relative box-border">
+            <View className="picker">
+              {state?.store ? state?.store?.name : "请选择门店"}
+            </View>
+
+            <CImage
+              className="absolute right-27 w-14 h-8"
+              src={`${config.imgBaseUrl}/qy/home/down_icon.png`}
+            ></CImage>
+          </View>
+        </Picker>
+
+        {/* ba列表 */}
+        <Picker
+          className="w-316"
           mode="selector"
           range={pickerData.storeList}
           value={indexObj.storeIndex}
