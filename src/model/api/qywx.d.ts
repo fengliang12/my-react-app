@@ -132,5 +132,26 @@ declare namespace Api {
       }
       interface IResponse {}
     }
+    namespace SubmitClick {
+      type FuncT = (data: IRequestBody) => MRP<unknown>;
+      interface IRequestBody {
+        /**
+         * 按钮id
+         */
+        id: string;
+      }
+    }
+    namespace CheckClick {
+      type FuncT = (data: IRequestBody) => MRP<{
+        code: string;
+        message: string;
+      }>;
+      interface IRequestBody {
+        /**
+         * 按钮id
+         */
+        id: string;
+      }
+    }
   }
 }

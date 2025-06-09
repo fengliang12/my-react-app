@@ -67,7 +67,7 @@ class App extends Component<any> {
     }
 
     if (config.env === "qy") {
-      to(`/pages/qy/home/index`, "reLaunch");
+      // to(`/pages/qy/home/index`, "reLaunch");
     }
   }
   componentDidShow(options) {

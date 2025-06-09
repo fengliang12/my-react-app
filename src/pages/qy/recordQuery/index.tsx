@@ -28,6 +28,7 @@ const initialState: RecordQueryInitialState = {
   smallRegion: null,
   store: null,
   point: null,
+  baId: null,
 };
 
 const app: App.GlobalData = Taro.getApp();
@@ -130,11 +131,11 @@ const Index = () => {
           ]
         : []),
       ,
-      ...(qyUser.position === POSITION_ENUM.SA
+      ...(state?.baId
         ? [
             {
               name: "customInfos.value",
-              value: qyUser?.id,
+              value: state?.baId,
               operator: "eq",
             },
           ]
@@ -191,7 +192,10 @@ const Index = () => {
         <OrganizationPicker
           originData={originData}
           state={state}
+          needShowBa
           callback={(e) => {
+            console.log(e);
+
             //@ts-ignore
             setState(e);
             if (!init) {

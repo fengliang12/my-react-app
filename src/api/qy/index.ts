@@ -25,7 +25,7 @@ const orderList: Api.QYWX.OrderList.FuncT = (params) =>
  * @param path
  * @returns
  */
-const sendSmsCode = (params) =>
+const sendSmsCode = (params: { [key: string]: any }) =>
   http.post(
     `/nars-exchange/shiseido/${config.storeCode}/mini/wemall/sendSmsCode`,
     {},
@@ -90,7 +90,7 @@ const getRegionStore = () =>
  * @param param0
  * @returns
  */
-const getBaList = ({ storeId }) =>
+const getBaList = ({ storeId }: { storeId: string }) =>
   http.get(
     `/nars-exchange/shiseido/${config.storeCode}/mini/store/ba/list/${storeId}`,
   );
@@ -102,9 +102,27 @@ const getBaList = ({ storeId }) =>
  * @param param0
  * @returns
  */
-const getTestToken = ({ userId }) =>
+const getTestToken = ({ userId }: { userId: string }) =>
   http.get(
     `/member-auth/shiseido/${config.storeCode}/mini/work/mini/code4token?userId=${userId}`,
+  );
+
+/**
+ * 点击客服按钮调用
+ * POST 'https://wecom-uat.narscosmetics.com.cn/api/nars-exchange/shiseido/nars/mini/wemall/behavior/submit/icon'
+ */
+const submitClick: Api.QYWX.SubmitClick.FuncT = (data) =>
+  http.post(
+    `/nars-exchange/shiseido/${config.storeCode}/mini/wemall/behavior/submit/${data?.id}`,
+  );
+
+/**
+ * 检查是否上限
+ * POST 'https://wecom-uat.narscosmetics.com.cn/api/nars-exchange/shiseido/nars/mini/wemall/behavior/check/icon'
+ */
+const checkClick: Api.QYWX.CheckClick.FuncT = (data) =>
+  http.post(
+    `/nars-exchange/shiseido/${config.storeCode}/mini/wemall/behavior/check/${data?.id}`,
   );
 
 export default {
@@ -118,4 +136,6 @@ export default {
   getRegionStore,
   getBaList,
   getTestToken,
+  submitClick,
+  checkClick,
 };

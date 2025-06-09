@@ -1,16 +1,18 @@
 import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
+import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { ORDER_STATUS_ENUM, OrderStatus } from "@/qyConfig/index";
+import api from "@/src/api";
 import { Copy, qiyeweixin2 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import { codeMapValue, formatDateTime } from "@/src/utils";
 import { QDayjs } from "@/src/utils/convertEast8Date";
 import toast from "@/src/utils/toast";
 
+import qy from "../../utils/qy";
 import VerifyPopup from "../VerifyPopup";
 
 interface Props {
@@ -19,6 +21,18 @@ interface Props {
 }
 const Index: React.FC<Props> = (props) => {
   let { info, callback } = props;
+  const [showTip, setShowTip] = useState<boolean>(false);
+
+  useAsyncEffect(async () => {
+    let res = await api.qy.checkClick({
+      id: info?.orderId,
+    });
+    if (res?.data?.code === "51216600") {
+      setShowTip(true);
+    } else {
+      setShowTip(false);
+    }
+  }, [info]);
 
   /**
    * 有效期
@@ -73,15 +87,22 @@ const Index: React.FC<Props> = (props) => {
    * @param customerId
    * @returns
    */
-  const wecom = (memberId: string) => {
-    console.log("memberiD", memberId);
-
-    if (!memberId) {
+  const wecom = async () => {
+    if (!info?.customerId) {
       toast("customerId不能为空");
       return;
     }
-    Taro?.qy?.openEnterpriseChat?.({
-      externalUserIds: memberId,
+
+    //记录点击次数
+    await api.qy.submitClick({
+      id: info?.orderId,
+    });
+
+    qy?.openEnterpriseChat?.({
+      externalUserIds: info?.customerId,
+      complete: (res) => {
+        console.log("openEnterpriseChat", res);
+      },
     });
   };
 
@@ -127,17 +148,19 @@ const Index: React.FC<Props> = (props) => {
         <View className="w-full flex justify-between items-center mb-36 relative">
           <View className="flex">
             <Text>预约会员:{info?.memberName}</Text>
-            <CImage
-              className="w-35 h-28 ml-20"
-              mode="widthFix"
-              src={qiyeweixin2}
-              onClick={() => {
-                wecom(info?.memberId);
-              }}
-            ></CImage>
-            <View className="text-16 text-[#C5112C] absolute -bottom-24 left-0">
-              *已点击超过2次，请勿过于频繁沟通
-            </View>
+            {!!info?.iconFlag && (
+              <CImage
+                className="w-35 h-28 ml-20"
+                mode="widthFix"
+                src={qiyeweixin2}
+                onClick={wecom}
+              ></CImage>
+            )}
+            {showTip && (
+              <View className="text-16 text-[#C5112C] absolute -bottom-24 left-0">
+                *已点击超过2次，请勿过于频繁沟通
+              </View>
+            )}
           </View>
           <View className="flex items-center" onClick={clickCopyPhone}>
             手机号:{info?.mobile}{" "}
@@ -166,7 +189,7 @@ const Index: React.FC<Props> = (props) => {
         </View>
         {info.status === ORDER_STATUS_ENUM.WAIT_ESTIMATE && (
           <View className="w-full flex justify-between items-center mb-36">
-            <Text>核销彩妆师:{info?.baName}</Text>
+            <Text>核销彩妆师:{customInfos?.Write0ffBaName}</Text>
           </View>
         )}
       </View>

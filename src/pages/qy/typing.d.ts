@@ -6,11 +6,12 @@ export type RecordQueryInitialState = {
   smallRegion: RecordQueryItem | null;
   store: RecordQueryItem | null;
   point: { value: string; label: string } | null;
+  baId?: string | null;
 };
 
 export type InitialStateType = Pick<
   RecordQueryInitialState,
-  "bigRegion" | "smallRegion" | "store"
+  "bigRegion" | "smallRegion" | "store" | "baId"
 >;
 
 export type RecordQueryItem = {

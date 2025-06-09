@@ -28,3 +28,9 @@ declare namespace NodeJS {
     [key: string]: any;
   }
 }
+
+declare type LABEL = {
+  label: string;
+  value: string;
+};
+declare type ARRAY_LABEL = Array<LABEL>;
