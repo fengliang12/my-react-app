@@ -8,6 +8,7 @@ import { ORDER_STATUS_ENUM, OrderStatus } from "@/qyConfig/index";
 import api from "@/src/api";
 import { Copy, qiyeweixin2 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
+import RangeExpands from "@/src/components/RangeExpands";
 import { codeMapValue, formatDateTime } from "@/src/utils";
 import { QDayjs } from "@/src/utils/convertEast8Date";
 import toast from "@/src/utils/toast";
@@ -24,15 +25,24 @@ const Index: React.FC<Props> = (props) => {
   const [showTip, setShowTip] = useState<boolean>(false);
 
   useAsyncEffect(async () => {
-    let res = await api.qy.checkClick({
-      id: info?.orderId,
-    });
-    if (res?.data?.code === "51216600") {
-      setShowTip(true);
-    } else {
-      setShowTip(false);
-    }
+    getCheckClick();
   }, [info]);
+
+  /**
+   * 获取点击次数
+   */
+  const getCheckClick = useMemoizedFn(async () => {
+    if (info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE) {
+      let res = await api.qy.checkClick({
+        id: info?.orderId,
+      });
+      if (res?.data?.code === "51216600") {
+        setShowTip(true);
+      } else {
+        setShowTip(false);
+      }
+    }
+  });
 
   /**
    * 有效期
@@ -46,6 +56,10 @@ const Index: React.FC<Props> = (props) => {
    */
   const customInfos = useMemo(() => {
     return codeMapValue(info?.customInfos, "name");
+  }, [info]);
+
+  const extendInfos = useMemo(() => {
+    return codeMapValue(info?.extendInfos, "code");
   }, [info]);
 
   /**
@@ -102,6 +116,7 @@ const Index: React.FC<Props> = (props) => {
       externalUserIds: info?.customerId,
       complete: (res) => {
         console.log("openEnterpriseChat", res);
+        getCheckClick();
       },
     });
   };
@@ -148,15 +163,18 @@ const Index: React.FC<Props> = (props) => {
         <View className="w-full flex justify-between items-center mb-36 relative">
           <View className="flex">
             <Text>预约会员:{info?.memberName}</Text>
-            {!!info?.iconFlag && (
-              <CImage
-                className="w-35 h-28 ml-20"
-                mode="widthFix"
-                src={qiyeweixin2}
-                onClick={wecom}
-              ></CImage>
-            )}
-            {showTip && (
+            {!!info?.iconFlag &&
+              info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE && (
+                <CImage
+                  className="w-35 h-28 ml-20 relative overflow-visible"
+                  mode="widthFix"
+                  src={qiyeweixin2}
+                  onClick={wecom}
+                >
+                  <RangeExpands></RangeExpands>
+                </CImage>
+              )}
+            {showTip && info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE && (
               <View className="text-16 text-[#C5112C] absolute -bottom-24 left-0">
                 *已点击超过2次，请勿过于频繁沟通
               </View>
@@ -168,7 +186,7 @@ const Index: React.FC<Props> = (props) => {
           </View>
         </View>
         <View className="w-full flex justify-between items-center mb-36">
-          <Text>所属彩妆师:{info?.baName}</Text>
+          <Text className="text-overflow w-250">所属彩妆师:{info?.baName}</Text>
           {info.status === ORDER_STATUS_ENUM.WAIT_ESTIMATE ? (
             <View>
               兑礼核销日期:
@@ -177,11 +195,11 @@ const Index: React.FC<Props> = (props) => {
           ) : (
             <View>
               {customInfos?.memberDayCoupon || customInfos?.memberDayGood ? (
-                <>兑礼有效期至:2025.5.12 23:59:59</>
+                <>兑礼有效期至:2025.5.12</>
               ) : (
                 <>
                   兑礼有效期至:
-                  {QDayjs(availTime)?.format("YYYY.MM.DD HH:mm:ss")}
+                  {QDayjs(availTime)?.format("YYYY.MM.DD")}
                 </>
               )}
             </View>
@@ -189,7 +207,7 @@ const Index: React.FC<Props> = (props) => {
         </View>
         {info.status === ORDER_STATUS_ENUM.WAIT_ESTIMATE && (
           <View className="w-full flex justify-between items-center mb-36">
-            <Text>核销彩妆师:{customInfos?.Write0ffBaName}</Text>
+            <Text>核销彩妆师:{extendInfos?.WriteOffBaName}</Text>
           </View>
         )}
       </View>

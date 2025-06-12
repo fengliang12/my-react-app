@@ -75,13 +75,15 @@ const Index: React.FC<Props> = (props) => {
             </View>
 
             <View className="w-full mt-59 vhCenter">
-              <Input
-                className="w-289 h-64 px-30 text-24 border border-1 border-solid box-border rotate-360"
-                placeholder="验证码"
-                onInput={(e) => {
-                  setVerifyCode(e.detail.value);
-                }}
-              ></Input>
+              <View className="w-289 h-64 px-30 text-24 border border-1 border-solid box-border rotate-360">
+                <Input
+                  className="w-full h-full"
+                  placeholder="验证码"
+                  onInput={(e) => {
+                    setVerifyCode(e.detail.value);
+                  }}
+                ></Input>
+              </View>
 
               <SendVerifyCode
                 sendApi={SendVerifyCodeFn}

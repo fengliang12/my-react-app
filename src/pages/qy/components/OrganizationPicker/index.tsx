@@ -73,10 +73,7 @@ const Index: React.FC<Props> = (props) => {
     let userInfo = await app.init();
     let tempList: ARRAY_LABEL = [];
     if (userInfo?.position === POSITION_ENUM.SA) {
-      tempList = [
-        { label: "全部", value: "" },
-        { label: userInfo?.name, value: userInfo?.id },
-      ];
+      tempList = [{ label: userInfo?.name, value: userInfo?.id }];
     } else {
       let res = await api.qy.getBaList({
         storeId: code,

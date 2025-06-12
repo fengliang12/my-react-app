@@ -139,3 +139,18 @@ export default {
   submitClick,
   checkClick,
 };
+
+export {
+  baDetail,
+  checkClick,
+  counterStock,
+  dashboard,
+  getBaList,
+  getRegionStore,
+  getTestToken,
+  orderList,
+  orderSubmit,
+  sendSmsCode,
+  singleCounterStock,
+  submitClick,
+};
