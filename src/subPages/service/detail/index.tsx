@@ -8,6 +8,7 @@ import api from "@/src/api";
 import CHeader from "@/src/components/Common/CHeader";
 import CImage from "@/src/components/Common/CImage";
 import CQRCodeCustom from "@/src/components/Common/CQRCodeCustom";
+import { IS_PRO } from "@/src/config";
 import useAddUserActions from "@/src/hooks/useAddUserActions";
 import useSubMsg from "@/src/hooks/useSubMsg";
 import { setShareParams } from "@/src/utils";
@@ -16,7 +17,6 @@ import toast from "@/src/utils/toast";
 
 import ServiceBox from "../components/ServiceBox";
 import useProject from "../hooks/useProject";
-import { IS_PRO } from "@/src/config";
 
 const app: App.GlobalData = Taro.getApp();
 const Index = () => {
@@ -152,11 +152,11 @@ const Index = () => {
    * 添加ba
    */
   const addBa = useMemoizedFn(() => {
-    if(IS_PRO){
+    if (IS_PRO) {
       Taro.navigateTo({
         url: `/pages/h5/index?url=https://cnaipswx1v1.shiseido.cn/nars/home`,
       });
-    }else{
+    } else {
       Taro.navigateTo({
         url: `/pages/h5/index?url=https://cnaipswx1v1-stg.shiseido.cn/nars/home`,
       });

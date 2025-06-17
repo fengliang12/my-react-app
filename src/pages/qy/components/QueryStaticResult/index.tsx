@@ -1,16 +1,19 @@
 import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useMemoizedFn } from "ahooks";
+import { useAsyncEffect, useMemoizedFn } from "ahooks";
 import dayjs from "dayjs";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { ORDER_STATUS_ENUM, OrderStatus } from "@/qyConfig/index";
-import { Copy } from "@/src/assets/image";
+import api from "@/src/api";
+import { Copy, qiyeweixin2 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
-import { codeMapValue, formatDateTime } from "@/src/utils";
+import RangeExpands from "@/src/components/RangeExpands";
+import { codeMapValue, debounceImme, formatDateTime } from "@/src/utils";
 import { QDayjs } from "@/src/utils/convertEast8Date";
 import toast from "@/src/utils/toast";
 
+import qy from "../../utils/qy";
 import VerifyPopup from "../VerifyPopup";
 
 interface Props {
@@ -19,12 +22,33 @@ interface Props {
 }
 const Index: React.FC<Props> = (props) => {
   let { info, callback } = props;
+  const [showTip, setShowTip] = useState<boolean>(false);
+
+  useAsyncEffect(async () => {
+    getCheckClick();
+  }, [info]);
+
+  /**
+   * 获取点击次数
+   */
+  const getCheckClick = useMemoizedFn(async () => {
+    if (info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE) {
+      let res = await api.qy.checkClick({
+        id: info?.orderId,
+      });
+      if (res?.data?.code === "51216600") {
+        setShowTip(true);
+      } else {
+        setShowTip(false);
+      }
+    }
+  });
 
   /**
    * 有效期
    */
   const availTime = useMemo(() => {
-    return dayjs(info.createTime).add(30, "day").format("YYYY/MM/DD HH:mm:ss");
+    return dayjs(info.createTime).add(30, "day").format("YYYY/MM/DD 23:59:59");
   }, [info]);
 
   /**
@@ -32,6 +56,10 @@ const Index: React.FC<Props> = (props) => {
    */
   const customInfos = useMemo(() => {
     return codeMapValue(info?.customInfos, "name");
+  }, [info]);
+
+  const extendInfos = useMemo(() => {
+    return codeMapValue(info?.extendInfos, "code");
   }, [info]);
 
   /**
@@ -68,12 +96,39 @@ const Index: React.FC<Props> = (props) => {
     });
   });
 
+  /**
+   * 聊天
+   * @param customerId
+   * @returns
+   */
+  const wecom = async () => {
+    if (!info?.customerId) {
+      toast("customerId不能为空");
+      return;
+    }
+
+    //记录点击次数
+    await api.qy.submitClick({
+      id: info?.orderId,
+    });
+
+    qy?.openEnterpriseChat?.({
+      externalUserIds: info?.customerId,
+      complete: (res) => {
+        console.log("openEnterpriseChat", res);
+        getCheckClick();
+      },
+    });
+  };
+
   return (
     <>
       <View className="w-full h-90 flex justify-between items-center">
         {/* 申请时间 */}
         <Text>申请时间:{formatDateTime(info?.createTime, 6, ".")}</Text>
-        <Text>{OrderStatus[info?.status]}</Text>
+        <Text className="text-[#C5112C]">
+          {OrderStatus[info?.status as keyof typeof OrderStatus]}
+        </Text>
       </View>
       <View className="w-full h-1 bg-[#CCCCCC]"></View>
 
@@ -105,15 +160,33 @@ const Index: React.FC<Props> = (props) => {
 
       {/* 客人信息 */}
       <View className="pt-36">
-        <View className="w-full flex justify-between items-center mb-36">
-          <Text>预约会员:{info?.memberName}</Text>
+        <View className="w-full flex justify-between items-center mb-36 relative">
+          <View className="flex">
+            <Text>预约会员:{info?.memberName}</Text>
+            {!!info?.iconFlag &&
+              info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE && (
+                <CImage
+                  className="w-35 h-28 ml-20 relative overflow-visible"
+                  mode="widthFix"
+                  src={qiyeweixin2}
+                  onClick={debounceImme(wecom, 1000)}
+                >
+                  <RangeExpands></RangeExpands>
+                </CImage>
+              )}
+            {showTip && info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE && (
+              <View className="text-16 text-[#C5112C] absolute -bottom-24 left-0">
+                *已点击超过2次，请勿过于频繁沟通
+              </View>
+            )}
+          </View>
           <View className="flex items-center" onClick={clickCopyPhone}>
             手机号:{info?.mobile}{" "}
             <CImage src={Copy} className="w-20 h-20 ml-10"></CImage>
           </View>
         </View>
         <View className="w-full flex justify-between items-center mb-36">
-          <Text>所属彩妆师:{info?.baName}</Text>
+          <Text className="text-overflow w-250">所属彩妆师:{info?.baName}</Text>
           {info.status === ORDER_STATUS_ENUM.WAIT_ESTIMATE ? (
             <View>
               兑礼核销日期:
@@ -122,21 +195,26 @@ const Index: React.FC<Props> = (props) => {
           ) : (
             <View>
               {customInfos?.memberDayCoupon || customInfos?.memberDayGood ? (
-                <>兑礼有效期至:2025.5.12 23:59:59</>
+                <>兑礼有效期至:2025.5.12</>
               ) : (
                 <>
                   兑礼有效期至:
-                  {QDayjs(availTime)?.format("YYYY.MM.DD HH:mm:ss")}
+                  {QDayjs(availTime)?.format("YYYY.MM.DD")}
                 </>
               )}
             </View>
           )}
         </View>
+        {info.status === ORDER_STATUS_ENUM.WAIT_ESTIMATE && (
+          <View className="w-full flex justify-between items-center mb-36">
+            <Text>核销彩妆师:{extendInfos?.WriteOffBaName}</Text>
+          </View>
+        )}
       </View>
+      <View className="w-full h-1 bg-[#CCCCCC]"></View>
 
       {info.status === ORDER_STATUS_ENUM.WAIT_RECEIVE && showBtn && (
         <>
-          <View className="w-full h-1 bg-[#CCCCCC]"></View>
           <View className="w-full h-120 flex justify-between items-center">
             <Text className="text-20 text-[#C5112C]">
               {availDay <= 15 && `*该兑礼单还有${availDay}天过期`}

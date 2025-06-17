@@ -63,7 +63,11 @@ const Index = () => {
             <Text className="text-36 mr-46">{qyUser.name}</Text>
             {qyUser?.position && (
               <View className="h-37 px-20 bg-[#C5112C] vhCenter text-20">
-                {POSITION_ENUM_TEXT[qyUser.position]}
+                {
+                  POSITION_ENUM_TEXT[
+                    qyUser.position as keyof typeof POSITION_ENUM_TEXT
+                  ]
+                }
               </View>
             )}
           </View>

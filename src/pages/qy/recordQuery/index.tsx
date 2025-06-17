@@ -1,6 +1,6 @@
 import { Input, Picker, View } from "@tarojs/components";
 import Taro, { useReachBottom } from "@tarojs/taro";
-import { useMemoizedFn, useSetState } from "ahooks";
+import { useAsyncEffect, useMemoizedFn, useSetState } from "ahooks";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -16,7 +16,7 @@ import toast from "@/src/utils/toast";
 import OrganizationPicker from "../components/OrganizationPicker";
 import QueryStaticResult from "../components/QueryStaticResult";
 import QueryTab from "../components/QueryTab";
-import { PointFilterList, POSITION_ENUM, StatusFilterList } from "../config";
+import { POSITION_ENUM, StatusFilterList } from "../config";
 import { useHandleOrganization } from "../hoooks/useHandleOrganization";
 import { RecordQueryInitialState } from "../typing";
 
@@ -28,6 +28,7 @@ const initialState: RecordQueryInitialState = {
   smallRegion: null,
   store: null,
   point: null,
+  baId: null,
 };
 
 const app: App.GlobalData = Taro.getApp();
@@ -38,6 +39,45 @@ const Index = () => {
   const qyUser = useSelector((state: Store.States) => state.qyUser);
   const { originData, getLastLeafIds } = useHandleOrganization();
   const [total, setTotal] = useState<number>(0);
+  const [pointList, setPointList] = useState<
+    Api.QYWX.SingleCounterStock.IResponse[]
+  >([]);
+
+  /**
+   * 获取积分区间值
+   */
+  useAsyncEffect(async () => {
+    Taro.showLoading({ title: "加载中", mask: true });
+    await app.init();
+    let res = await api.qy.counterStock({});
+
+    let tempList: Array<{
+      label: string;
+      value: string | number;
+      [key: string]: any;
+    }> = res?.data
+      .map((item: any) => {
+        return {
+          ...item,
+          label: `${item.point}`,
+          value: item.point,
+        };
+      })
+      .sort((a, b) => {
+        return a.value - b.value;
+      })
+      .filter((item, index, arr) => {
+        // 去重value值
+        return arr.findIndex((el) => el.value === item.value) === index;
+      });
+
+    tempList.unshift({
+      label: "全部",
+      value: "",
+    });
+    setPointList(tempList);
+    Taro.hideLoading();
+  }, []);
 
   /**
    * 获取记录
@@ -130,11 +170,11 @@ const Index = () => {
           ]
         : []),
       ,
-      ...(qyUser.position === POSITION_ENUM.SA
+      ...(state?.baId
         ? [
             {
               name: "customInfos.value",
-              value: qyUser?.id,
+              value: state?.baId,
               operator: "eq",
             },
           ]
@@ -191,7 +231,10 @@ const Index = () => {
         <OrganizationPicker
           originData={originData}
           state={state}
+          needShowBa
           callback={(e) => {
+            console.log(e);
+
             //@ts-ignore
             setState(e);
             if (!init) {
@@ -271,10 +314,10 @@ const Index = () => {
             className="w-316"
             mode="selector"
             rangeKey="label"
-            range={PointFilterList}
+            range={pointList}
             onChange={(e) => {
               setState({
-                point: PointFilterList[e.detail.value],
+                point: pointList[e.detail.value],
               });
             }}
           >

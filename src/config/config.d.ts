@@ -28,6 +28,7 @@ export type BaseConfig = {
   /** 环境 */
   env: "h5" | "qy" | "weapp";
   debuggerClass?: any;
+  IS_PRO: boolean;
 };
 export type WebViewConfig = {
   /** 页面地址 */

@@ -1,4 +1,6 @@
 import Taro from "@tarojs/taro";
+// 从lodash-es导入merge方法
+// @ts-ignore
 import { merge } from "lodash-es";
 
 import DebugClass from "../utils/DebugClass";
@@ -22,7 +24,7 @@ const baseConfig: Partial<BaseConfig> = {
     queryName: "url",
   },
   refreshCodeList: ["401", "50020003"],
-  errCodeList: ["10000", "MobileHasRegistered"],
+  errCodeList: ["10000", "MobileHasRegistered", "51216600"],
   postagePoints: 100,
   postageMoney: 9.9,
   key: "FCIBZ-CHU3G-2DZQK-QBDPK-HNSD3-QVBZQ",

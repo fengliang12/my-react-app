@@ -12,7 +12,6 @@ import toast from "@/src/utils/toast";
 
 import OrganizationPicker from "../components/OrganizationPicker";
 import QueryTab from "../components/QueryTab";
-import { PointFilterList } from "../config";
 import { useHandleOrganization } from "../hoooks/useHandleOrganization";
 import { InitialStateType } from "../typing";
 
