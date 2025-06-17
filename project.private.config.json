@@ -4,8 +4,8 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/sign/index",
-          "pathName": "pages/sign/index",
+          "name": "pages/qy/stockQuery/index",
+          "pathName": "pages/qy/stockQuery/index",
           "query": "",
           "launchMode": "default",
           "scene": null
@@ -13,7 +13,14 @@
         {
           "name": "门店扫码活动",
           "pathName": "pages/register/index",
-          "query": "scene=5NSf3QSv9HwnFqQFHQEofu&jumpType=h5",
+          "query": "scene=GGx5RWdCXrB5MuAySJ1VNF&jumpType=h5",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/sign/index",
+          "pathName": "pages/sign/index",
+          "query": "",
           "launchMode": "default",
           "scene": null
         },
@@ -301,5 +308,5 @@
     "bigPackageSizeSupport": true
   },
   "projectname": "mini-nars",
-  "libVersion": "3.8.3"
+  "libVersion": "3.8.7"
 }
