@@ -9,7 +9,7 @@ import api from "@/src/api";
 import { Copy, qiyeweixin2 } from "@/src/assets/image";
 import CImage from "@/src/components/Common/CImage";
 import RangeExpands from "@/src/components/RangeExpands";
-import { codeMapValue, formatDateTime } from "@/src/utils";
+import { codeMapValue, debounceImme, formatDateTime } from "@/src/utils";
 import { QDayjs } from "@/src/utils/convertEast8Date";
 import toast from "@/src/utils/toast";
 
@@ -48,7 +48,7 @@ const Index: React.FC<Props> = (props) => {
    * 有效期
    */
   const availTime = useMemo(() => {
-    return dayjs(info.createTime).add(30, "day").format("YYYY/MM/DD HH:mm:ss");
+    return dayjs(info.createTime).add(30, "day").format("YYYY/MM/DD 23:59:59");
   }, [info]);
 
   /**
@@ -169,7 +169,7 @@ const Index: React.FC<Props> = (props) => {
                   className="w-35 h-28 ml-20 relative overflow-visible"
                   mode="widthFix"
                   src={qiyeweixin2}
-                  onClick={wecom}
+                  onClick={debounceImme(wecom, 1000)}
                 >
                   <RangeExpands></RangeExpands>
                 </CImage>
