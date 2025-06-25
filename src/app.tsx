@@ -54,8 +54,6 @@ class App extends Component<any> {
       await this.taroGlobalData.init(true);
     }
 
-    console.log("options", options);
-
     if (options?.path === "pages/qy/home/index" && config.env !== "qy") {
       Taro.showModal({
         title: "提示",
